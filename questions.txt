@@ -1,6 +1,0 @@
-5. 
-how to create the vectors? what is in the vector ? on the different experiments
-
-9.
-prunning
-why for the 50 MFW-token the vocabulary size is smaller
