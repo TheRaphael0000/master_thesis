@@ -15,7 +15,7 @@ def parse():
     x = [list(filter("".__ne__, xi)) for xi in x]
 
     y = open(os.path.join(folder, y_file)).read().split("\n")
-    y = [yi for yi in y if yi != ""][:-2]
+    y = [yi for yi in y if yi != ""][:len(x)]
 
     return id, x, y
 

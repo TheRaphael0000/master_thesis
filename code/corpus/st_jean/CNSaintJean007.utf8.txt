@@ -1,5 +1,5 @@
 11664
-<Corpus Saint-Jean (Dominique Labbé et Jacques Savoy 2017) - Septième extrait>,<>,<>>,<>,<>
+<Corpus Saint-Jean (Dominique Labbé et Jacques Savoy 2017) - Septième extrait>,<>,<>
 la,le,71
 chute,chute,22
 /.,/.,P
