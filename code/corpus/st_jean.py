@@ -28,12 +28,11 @@ def parse():
             # special cases: comma and dot
             if m == ['"', '"', '"', '"', 'p']:
                 m = [",", ",", "p"]
-            if m == ['/.', '/.', 'p']:
-                m = [".", ".", "P"]
+            if m[-1] == "P":
+                m = [w.replace("/", "") for w in m]
 
             if 3 != len(m):
-                print(f"Error in {f}")
-                print(m)
+                raise Exception(f"Error in {f}\n {m} is not a 3 value field")
                 continue
 
             if "<Fin nombre>" == m[0]:
@@ -57,7 +56,6 @@ def parse():
         x_token.append(token)
 
     id = [re.search(r"CNSaintJean(...).*", f)[1] for f in x_files]
-    print(id)
 
     y = open(os.path.join(folder, y_file)).read().split("\n")
     y = [yi for yi in y if yi != ""]
