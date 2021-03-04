@@ -8,14 +8,16 @@ y_file = "Author.txt"
 
 
 def parse():
-    x_lemma_files = glob.glob(os.path.join(folder,"*lemma*"))
-    x_lemma = [open(f, "rb").read().decode("utf8").split("\r\n") for f in x_lemma_files]
+    x_lemma_files = glob.glob(os.path.join(folder, "*lemma*"))
+    x_lemma = [open(f, "rb").read().decode("utf8").split("\r\n")
+               for f in x_lemma_files]
     x_lemma = [list(filter("".__ne__, xi)) for xi in x_lemma]
 
     id = [re.search(r"Tex(..).*", f)[1] for f in x_lemma_files]
 
-    x_token_files = glob.glob(os.path.join(folder,"*token*"))
-    x_token = [open(f, "rb").read().decode("utf8").split("\r\n") for f in x_token_files]
+    x_token_files = glob.glob(os.path.join(folder, "*token*"))
+    x_token = [open(f, "rb").read().decode("utf8").split("\r\n")
+               for f in x_token_files]
     x_token = [list(filter("".__ne__, xi)) for xi in x_token]
 
     y = open(os.path.join(folder, y_file)).read().split("\n")

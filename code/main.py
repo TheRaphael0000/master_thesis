@@ -1,48 +1,34 @@
-from corpus import brunet, oxquaary, st_jean
-from features import normalize, create_n_grams
-from collections import Counter
-from functools import reduce
 from pprint import pprint
+import itertools
+
 import matplotlib.pyplot as plt
 
-# def use_case_oxquaary():
-#     id, x, y = oxquaary.parse()
-#     print(id)
-#
-#
-# def use_case_brunet():
-#     id, x_lemma, x_token, y = brunet.parse()
-#     print(id)
-#
-#
-# def use_case_st_jean():
-#     id, x_lemma, x_token, y = st_jean.parse()
-#     print(id)
+from corpus import brunet, oxquarry, st_jean
+from features import normalize, create_n_grams, mfw
+import distances
 
-# use_case_brunet()
-# use_case_oxquaary()
-# use_case_st_jean()
+id, x, y = oxquarry.parse()
 
-id, x_lemma, x_token, y = brunet.parse()
+X = x
+Y = y
 
-X = x_token
+# id, x_lemma, x_token, y = brunet.parse()
+# X = x_token
 
 X = [[normalize(w) for w in xi] for xi in X]
 
 # to n_grams
-# X = [create_n_grams(xi, 5) for xi in X]
+X = [create_n_grams(xi, 5) for xi in X]
 
-counters = [Counter(xi) for xi in X]
-total = reduce(lambda x, y: x + y, counters)
-print(total.most_common(100))
+features = mfw(X, 100)
 
-# zipf law
-distribution = dict(Counter(total.values()))
-keys = distribution.keys()
-A = list(range(1, 21))
-B = [distribution[i] if i in distribution else 0 for i in A]
-plt.figure()
-plt.xscale("log")
-plt.yscale("log")
-plt.plot(A,B)
-plt.savefig("zipf.png")
+results = {}
+for ai, bi in itertools.combinations(range(len(features)), 2):
+    xa = features[ai]
+    xb = features[bi]
+    results[(ai, bi)] = distances.manhattan(xa, xb)
+
+sorted_results_keys = sorted(results.keys(), key=lambda k: results[k])
+
+for i in sorted_results_keys[0:30]:
+    print(Y[i[0]], Y[i[1]], id[i[0]], id[i[1]], results[i])

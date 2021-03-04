@@ -8,7 +8,7 @@ y_file = "Author.txt"
 
 
 def parse():
-    x_files = glob.glob(os.path.join(folder,"CNSaintJean*"))[:100]
+    x_files = glob.glob(os.path.join(folder, "CNSaintJean*"))[:100]
     x_lemma = []
     x_token = []
 
@@ -38,7 +38,7 @@ def parse():
             if "<Fin nombre>" == m[0]:
                 number = False
 
-            s = re.search(r"<Nombre (\d+)>",m[0])
+            s = re.search(r"<Nombre (\d+)>", m[0])
             if s:
                 number = True
                 token.append(s[1])
