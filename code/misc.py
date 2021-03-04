@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 def zipflaw(total, n=21):
     distribution = dict(Counter(total.values()))
     keys = distribution.keys()
