@@ -30,6 +30,9 @@ def parse():
                 m = [",", ",", "p"]
             if m[-1] == "P":
                 m = [w.replace("/", "") for w in m]
+            # ignore double "des"
+            if m == ["des", "le", "71"]:
+                continue
 
             if 3 != len(m):
                 raise Exception(f"Error in {f}\n {m} is not a 3 value field")

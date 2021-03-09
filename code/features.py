@@ -17,7 +17,7 @@ def create_n_grams(words, n):
     return n_grams
 
 
-def mfw(X, n):
+def mfw(X, n, skip_n=0):
     counters = [Counter(xi) for xi in X]
     total = reduce(lambda x, y: x + y, counters)
     mfw = dict(total.most_common(n))

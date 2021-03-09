@@ -17,8 +17,14 @@ def matusita(A, B):
 
 
 def clark(A, B):
-    s = sum([(abs(ai - bi) / (ai + bi))**2 for ai, bi in zip(A, B)])
-    return s ** 0.5
+    sum = 0
+    for ai, bi in zip(A, B):
+        try:
+            v = (abs(ai - bi) / (ai + bi))**2
+        except ZeroDivisionError:
+            v = 0
+        sum += v
+    return sum ** 0.5
 
 
 def cosine_sim(A, B):

@@ -12,21 +12,24 @@ def precision_at_k(links_distances, Y, k):
 
 
 def ap(links_distances, Y):
-    sum = 0
+    sum_precisions = 0
     correct = 0
     for i, (link, distance) in enumerate(links_distances):
         ai, bi = link
         ya, yb = Y[ai], Y[bi]
         if ya == yb:
             correct += 1
-            sum += correct / (i + 1)
-    return sum / len(links_distances)
+            precision_at_i = correct / (i + 1)
+            sum_precisions += precision_at_i
+    return sum_precisions / correct
+
+
+def compute_r(Y):
+    return int(sum([(n * (n - 1)) / 2 for n in dict(Counter(Y)).values()]))
 
 
 def rprec(links_distances, Y):
-    # find R
-    R = int(sum([(n * (n - 1)) / 2 for n in dict(Counter(Y)).values()]))
-    print(R)
+    R = compute_r(Y)
     return precision_at_k(links_distances, Y, R)
 
 
