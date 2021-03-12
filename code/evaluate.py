@@ -1,9 +1,18 @@
 from collections import Counter
+import itertools
 
+def rank_list_from_distances_matrix(distances_matrix):
+    rank_list = []
+    for a, b in itertools.combinations(range(distances_matrix.shape[0]), 2):
+        link = a, b
+        dist = distances_matrix[link]
+        rank_list.append((link, dist))
+    rank_list.sort(key=lambda x:x[-1])
+    return rank_list
 
-def precision_at_k(links_distances, Y, k):
+def precision_at_k(rank_list, Y, k):
     sum = 0
-    for link, distance in links_distances[0:k]:
+    for link, distance in rank_list[0:k]:
         ai, bi = link
         ya, yb = Y[ai], Y[bi]
         if ya == yb:
@@ -11,10 +20,10 @@ def precision_at_k(links_distances, Y, k):
     return sum / k
 
 
-def ap(links_distances, Y):
+def ap(rank_list, Y):
     sum_precisions = 0
     correct = 0
-    for i, (link, distance) in enumerate(links_distances):
+    for i, (link, distance) in enumerate(rank_list):
         ai, bi = link
         ya, yb = Y[ai], Y[bi]
         if ya == yb:
@@ -28,14 +37,14 @@ def compute_r(Y):
     return int(sum([(n * (n - 1)) / 2 for n in dict(Counter(Y)).values()]))
 
 
-def rprec(links_distances, Y):
+def rprec(rank_list, Y):
     R = compute_r(Y)
-    return precision_at_k(links_distances, Y, R)
+    return precision_at_k(rank_list, Y, R), R
 
 
-def hprec(links_distances, Y):
+def hprec(rank_list, Y):
     i = 0
-    for link, distance in links_distances:
+    for link, distance in rank_list:
         ai, bi = link
         ya, yb = Y[ai], Y[bi]
         if ya == yb:

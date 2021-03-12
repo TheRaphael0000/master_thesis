@@ -2,6 +2,8 @@ import unicodedata
 from collections import Counter
 from functools import reduce
 
+import numpy as np
+
 
 def normalize(s):
     # remove accents
@@ -17,11 +19,14 @@ def create_n_grams(words, n):
     return n_grams
 
 
-def mfw(X, n, skip_n=0):
+def mfw(X, n, z_score=False):
     counters = [Counter(xi) for xi in X]
     total = reduce(lambda x, y: x + y, counters)
     mfw = dict(total.most_common(n))
-    normalized_mfw_counters = [
-        {k: c[k] / v for k, v in mfw.items()} for c in counters]
-    features = [c.values() for c in normalized_mfw_counters]
+    features = [[c[k] / v for k, v in mfw.items()] for c in counters]
+    features = np.array(features)
+    if z_score:
+        means = np.mean(features, axis=0)
+        stds = np.std(features, axis=0)
+        features = (features - means) / stds
     return features
