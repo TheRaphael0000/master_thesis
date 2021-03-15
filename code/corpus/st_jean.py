@@ -8,7 +8,7 @@ y_file = "Author.txt"
 
 
 def parse():
-    x_files = glob.glob(os.path.join(folder, "CNSaintJean*"))[:100]
+    x_files = glob.glob(os.path.join(folder, "CNSaintJean*"))
     x_lemma = []
     x_token = []
 

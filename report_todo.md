@@ -1,0 +1,7 @@
+- introduction
+- state of the art
+- les corpus
+- la méthode / les méthodes
+- evaluation
+- conclusion
+  - comment on peut généraliser au fake news le clustering
