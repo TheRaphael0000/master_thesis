@@ -1,6 +1,11 @@
 - introduction
 - state of the art
+	- pan clef
+	- verification
+	- stylometry
 - les corpus
+	- taille du voc, les hapax legomena, dis legomena, mean length + std, mfw
+	- etc..
 - la méthode / les méthodes
 - evaluation
 - conclusion

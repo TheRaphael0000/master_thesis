@@ -1,0 +1,20 @@
+[
+	{"document1": "document0032.txt",
+	"document2": "document0035.txt",
+	"score":  1},
+	{"document1": "document0037.txt",
+	"document2": "document0041.txt",
+	"score":  1},
+	{"document1": "document0010.txt",
+	"document2": "document0015.txt",
+	"score":  1},
+	{"document1": "document0025.txt",
+	"document2": "document0028.txt",
+	"score":  1},
+	{"document1": "document0025.txt",
+	"document2": "document0045.txt",
+	"score":  1},
+	{"document1": "document0028.txt",
+	"document2": "document0045.txt",
+	"score":  1}
+]

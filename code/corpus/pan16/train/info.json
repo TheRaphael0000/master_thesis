@@ -1,0 +1,20 @@
+[
+	{"language": "en",	"genre": "articles",	"folder": "problem001"},
+	{"language": "en",	"genre": "articles",	"folder": "problem002"},
+	{"language": "en",	"genre": "articles",	"folder": "problem003"},
+	{"language": "en",	"genre": "reviews",		"folder": "problem004"},
+	{"language": "en",	"genre": "reviews",		"folder": "problem005"},
+	{"language": "en",	"genre": "reviews",		"folder": "problem006"},
+	{"language": "nl",	"genre": "articles",	"folder": "problem007"},
+	{"language": "nl",	"genre": "articles",	"folder": "problem008"},
+	{"language": "nl",	"genre": "articles",	"folder": "problem009"},
+	{"language": "nl",	"genre": "reviews",		"folder": "problem010"},
+	{"language": "nl",	"genre": "reviews",		"folder": "problem011"},
+	{"language": "nl",	"genre": "reviews",		"folder": "problem012"},
+	{"language": "gr",	"genre": "articles",	"folder": "problem013"},
+	{"language": "gr",	"genre": "articles",	"folder": "problem014"},
+	{"language": "gr",	"genre": "articles",	"folder": "problem015"},
+	{"language": "gr",	"genre": "reviews",		"folder": "problem016"},
+	{"language": "gr",	"genre": "reviews",		"folder": "problem017"},
+	{"language": "gr",	"genre": "reviews",		"folder": "problem018"}
+]

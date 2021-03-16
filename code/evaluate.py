@@ -39,7 +39,7 @@ def compute_r(Y):
 
 def rprec(rank_list, Y):
     R = compute_r(Y)
-    return precision_at_k(rank_list, Y, R), R
+    return precision_at_k(rank_list, Y, R)
 
 
 def hprec(rank_list, Y):
