@@ -56,7 +56,7 @@ def compute_links(X, n_grams, n_mfw, z_score, distance_func):
 def experiment(X, Y, n_grams, n_mfw, z_score, distance_func):
     distances_matrix = compute_links(X, n_grams, n_mfw, z_score, distance_func)
     rank_list = rank_list_from_distances_matrix(distances_matrix)
-    mesures = ap(rank_list, Y), rprec(rank_list, Y), hprec(rank_list, Y),
+    mesures = ap(rank_list, Y), rprec(rank_list, Y), hprec(rank_list, Y)
     return distances_matrix, rank_list, mesures
 
 

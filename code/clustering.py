@@ -12,43 +12,60 @@ import numpy as np
 import distances
 from corpus import oxquarry, brunet, st_jean
 from linking import experiment, compute_links
+from rank_list_fusion import fusion
+from evaluate import hprec, precision_at_k, rprec, ap, rank_list_from_distances_matrix, distances_matrix_from_rank_list, dataset_infos
+import s_curves
 
 print("--Loading dataset--")
 # Loading dataset
 # id, x, y = oxquarry.parse()
-id, x_lemma, x_token, y = st_jean.parse()
+id, x_lemma, x_token, y = brunet.parse()
 
 # Select data
-X = x_token[0:200]
-Y = y[0:200]
+start = 0
+lim = -1
+X = x_token[start:]
+X2 = x_lemma[start:]
+Y = y[start:]
+
+print(f"#Texts #Authors Mean_length #Links")
+print(*dataset_infos(X, Y))
 
 
 print("--Linking--")
-distances_matrix, rank_list, mesures = experiment(
+distances_matrix_A, rank_list_A, mesures_A = experiment(
     X, Y, 6, 500, True, distances.manhattan)
-print(f"AP RPrec HPrec", *mesures)
+print(f"AP RPrec HPrec", *mesures_A)
 
 distances_matrix_B, rank_list_B, mesures_B = experiment(
     X, Y, 0, 500, True, distances.manhattan)
 print(f"AP RPrec HPrec", *mesures_B)
 
+distances_matrix_C, rank_list_C, mesures_C = experiment(
+    X2, Y, 0, 500, True, distances.manhattan)
+print(f"AP RPrec HPrec", *mesures_C)
+
+rank_lists = [rank_list_A, rank_list_B, rank_list_C]
+rank_list_overall = fusion(rank_lists, s_curve=s_curves.sigmoid, args={"alpha":10e-10})
+distances_matrix_overall = distances_matrix_from_rank_list(rank_list_overall)
+
+mesures_overall = ap(rank_list_overall, Y), rprec(
+    rank_list_overall, Y), hprec(rank_list_overall, Y)
+print(f"AP RPrec HPrec", *mesures_overall)
+
 print("--Linking analysis")
 
-pos = round(len(rank_list) ** 0.46)
-distance_threshold = rank_list[pos][-1]
-distance_threshold *= 1.28
+distance_threshold = 0.36
+pos = len([d for indices, d in rank_list_overall if d < distance_threshold])
 print(f"distance_threshold", distance_threshold, pos)
 
-
-original = np.array(list(dict(rank_list).values()))
+original = np.array(list(dict(rank_list_overall).values()))
 plt.figure()
 plt.plot(range(len(original)), original)
 plt.vlines([pos], ymin=min(original), ymax=max(original), colors="r")
 plt.savefig("distance_over_rank.png")
 
 print("--Clustering--")
-
-
 args = {
     "n_clusters": None,
     "affinity": "precomputed",
@@ -56,7 +73,7 @@ args = {
     "distance_threshold": distance_threshold
 }
 ac = AgglomerativeClustering(**args)
-ac.fit(distances_matrix)
+ac.fit(distances_matrix_overall)
 
 print("--Clustering Evaluation--")
 

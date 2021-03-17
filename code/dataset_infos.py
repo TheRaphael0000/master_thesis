@@ -1,13 +1,12 @@
 from pprint import pprint
 
 from corpus import brunet, oxquarry, st_jean
-from evaluate import compute_r
-from statistics import mean
+from evaluate import dataset_infos
 
-print(f"Name, Language, #Texts, #Authors, Mean length, #Links")
+print(f"Name Language #Texts #Authors Mean_length #Links")
 id, x, y = oxquarry.parse()
-print(f"Oxquarry, EN, {len(y)}, {len(set(y))}, {mean([len(xi) for xi in x]):.2f}, {compute_r(y)}")
+print("Oxquarry EN", *dataset_infos(x, y))
 id, x_lemma, x, y = brunet.parse()
-print(f"Brunet, FR, {len(y)}, {len(set(y))}, {mean([len(xi) for xi in x]):.2f}, {compute_r(y)}")
+print("Brunet FR", *dataset_infos(x, y))
 id, x_lemma, x, y = st_jean.parse()
-print(f"St Jean, FR, {len(y)}, {len(set(y))}, {mean([len(xi) for xi in x]):.2f}, {compute_r(y)}")
+print("St Jean FR", *dataset_infos(x, y))
