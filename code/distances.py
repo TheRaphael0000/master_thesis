@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 
 def manhattan(A, B):
@@ -12,7 +13,12 @@ def tanimoto(A, B):
 
 
 def matusita(A, B):
-    s = sum([(ai**0.5 - bi**0.5)**2 for ai, bi in zip(A, B)])
+    s = sum([(np.sqrt(ai) - np.sqrt(bi))**2 for ai, bi in zip(A, B)])
+    return np.sqrt(s)
+
+
+def euclidean(A, B):
+    s = sum([(ai - bi)**2 for ai, bi in zip(A, B)])
     return s ** 0.5
 
 

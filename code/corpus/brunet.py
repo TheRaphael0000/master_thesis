@@ -11,7 +11,11 @@ def parse():
     x_lemma_files = glob.glob(os.path.join(folder, "*lemma*"))
     x_lemma = [open(f, "rb").read().decode("utf8").split("\r\n")
                for f in x_lemma_files]
+    # remove empty words
     x_lemma = [list(filter("".__ne__, xi)) for xi in x_lemma]
+    # remove repetitions
+    x_lemma = [[a for a, b in zip(xi[:-1], xi[1:]) if a != b]
+               for xi in x_lemma]
 
     id = [re.search(r"Tex(..).*", f)[1] for f in x_lemma_files]
 
@@ -19,6 +23,8 @@ def parse():
     x_token = [open(f, "rb").read().decode("utf8").split("\r\n")
                for f in x_token_files]
     x_token = [list(filter("".__ne__, xi)) for xi in x_token]
+    x_token = [[a for a, b in zip(xi[:-1], xi[1:]) if a != b]
+               for xi in x_token]
 
     y = open(os.path.join(folder, y_file)).read().split("\n")
     y = [yi for yi in y if yi != ""]

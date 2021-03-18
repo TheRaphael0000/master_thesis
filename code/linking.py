@@ -27,7 +27,7 @@ def create_n_grams(words, n):
     return n_grams
 
 
-def mfw(X, n, z_score=False):
+def most_frequent_word(X, n, z_score=False):
     counters = [Counter(xi) for xi in X]
     total = reduce(lambda x, y: x + y, counters)
     mfw = dict(total.most_common(n))
@@ -37,7 +37,7 @@ def mfw(X, n, z_score=False):
         means = np.mean(features, axis=0)
         stds = np.std(features, axis=0)
         features = (features - means) / stds
-    return features
+    return features, mfw
 
 
 def compute_links(X, n_grams, n_mfw, z_score, distance_func):
@@ -47,17 +47,17 @@ def compute_links(X, n_grams, n_mfw, z_score, distance_func):
     if n_grams > 0:
         X = [create_n_grams(xi, n_grams) for xi in X]
     # Create features
-    features = mfw(X, n_mfw, z_score)
+    features, mfw = most_frequent_word(X, n_mfw, z_score)
     # Compute link distances
     distances_matrix = squareform(pdist(features, metric=distance_func))
-    return distances_matrix
+    return distances_matrix, mfw
 
 
 def experiment(X, Y, n_grams, n_mfw, z_score, distance_func):
-    distances_matrix = compute_links(X, n_grams, n_mfw, z_score, distance_func)
+    distances_matrix, mfw = compute_links(X, n_grams, n_mfw, z_score, distance_func)
     rank_list = rank_list_from_distances_matrix(distances_matrix)
     mesures = ap(rank_list, Y), rprec(rank_list, Y), hprec(rank_list, Y)
-    return distances_matrix, rank_list, mesures
+    return distances_matrix, rank_list, mfw, mesures
 
 
 if __name__ == '__main__':
@@ -66,8 +66,9 @@ if __name__ == '__main__':
     id, x_lemma, x_token, y = brunet.parse()
 
     # Select data
-    X = x_lemma
+    X = x_token
     Y = y
 
     print(f"AP RPrec HPrec")
-    print(experiment(X, Y, 5, 500, False, distances.tanimoto)[-1])
+    distances_matrix, rank_list, mfw, mesures = experiment(X, Y, 4, 500, True, distances.manhattan)
+    print(mesures)

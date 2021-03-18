@@ -5,8 +5,9 @@ def zipflaw(total, n=21):
     keys = distribution.keys()
     A = list(range(1, n))
     B = [distribution[i] if i in distribution else 0 for i in A]
-    plt.figure()
+    plt.figure(figsize=(4, 3), dpi=200)
     plt.xscale("log")
     plt.yscale("log")
     plt.plot(A, B)
+    plt.tight_layout()
     plt.savefig("zipf.png")
