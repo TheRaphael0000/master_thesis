@@ -1,27 +1,30 @@
 from collections import Counter
 import itertools
-import numpy as np
 from statistics import mean
 
+from misc import compute_r
 
-def rank_list_from_distances_matrix(distances_matrix):
-    rank_list = []
-    for a, b in itertools.combinations(range(distances_matrix.shape[0]), 2):
-        link = a, b
-        dist = distances_matrix[link]
-        rank_list.append((link, dist))
-    rank_list.sort(key=lambda x: x[-1])
-    return rank_list
+import numpy as np
+import bcubed
+from sklearn.metrics.cluster import adjusted_mutual_info_score
 
 
-def distances_matrix_from_rank_list(rank_list):
-    indices = list(itertools.chain.from_iterable([i[0] for i in rank_list]))
-    max_ = max(indices) + 1
-    distances_matrix = np.zeros((max_, max_,))
-    for (a, b), dist in rank_list:
-        distances_matrix[a, b] = dist
-        distances_matrix[b, a] = dist
-    return distances_matrix
+def evaluate_linking(rank_list, Y):
+    return ap(rank_list, Y), rprec(rank_list, Y), hprec(rank_list, Y)
+
+
+def evaluate_clustering(Y, pred):
+    # change clustering representation for bcubed computations
+    ldict = {}
+    cdict = {}
+    for i, (l, c) in enumerate(zip(Y, pred)):
+        ldict[i] = set([l])
+        cdict[i] = set([c])
+    bcubed_precision = bcubed.precision(cdict, ldict)
+    bcubed_recall = bcubed.recall(cdict, ldict)
+    bcubed_fscore = bcubed.fscore(bcubed_precision, bcubed_recall)
+    mutual_info_score = adjusted_mutual_info_score(Y, pred)
+    return bcubed_precision, bcubed_recall, bcubed_fscore, mutual_info_score
 
 
 def precision_at_k(rank_list, Y, k):
@@ -47,10 +50,6 @@ def ap(rank_list, Y):
     return sum_precisions / correct
 
 
-def compute_r(Y):
-    return int(sum([(n * (n - 1)) / 2 for n in dict(Counter(Y)).values()]))
-
-
 def rprec(rank_list, Y):
     R = compute_r(Y)
     return precision_at_k(rank_list, Y, R)
@@ -66,8 +65,3 @@ def hprec(rank_list, Y):
         else:
             break
     return i
-
-
-def dataset_infos(x, y):
-    # #Texts, #Authors, Mean length, #Links
-    return len(y), len(set(y)), round(mean([len(xi) for xi in x])), compute_r(y)

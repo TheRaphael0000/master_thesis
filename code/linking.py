@@ -1,16 +1,17 @@
 from pprint import pprint
-import itertools
 import unicodedata
 from collections import Counter
 from functools import reduce
+from collections import defaultdict
 
 import numpy as np
 import scipy as sp
 from scipy.spatial.distance import pdist, squareform
 from corpus import brunet, oxquarry, st_jean
-from misc import zipflaw
+from misc import zipf_law
 import distances
-from evaluate import hprec, precision_at_k, rprec, ap, rank_list_from_distances_matrix
+from misc import rank_list_from_distances_matrix
+from evaluate import evaluate_linking
 
 
 def normalize(s):
@@ -37,7 +38,7 @@ def most_frequent_word(X, n, z_score=False):
         means = np.mean(features, axis=0)
         stds = np.std(features, axis=0)
         features = (features - means) / stds
-    return features, mfw
+    return features
 
 
 def compute_links(X, n_grams, n_mfw, z_score, distance_func):
@@ -47,17 +48,11 @@ def compute_links(X, n_grams, n_mfw, z_score, distance_func):
     if n_grams > 0:
         X = [create_n_grams(xi, n_grams) for xi in X]
     # Create features
-    features, mfw = most_frequent_word(X, n_mfw, z_score)
+    features = most_frequent_word(X, n_mfw, z_score)
     # Compute link distances
     distances_matrix = squareform(pdist(features, metric=distance_func))
-    return distances_matrix, mfw
-
-
-def experiment(X, Y, n_grams, n_mfw, z_score, distance_func):
-    distances_matrix, mfw = compute_links(X, n_grams, n_mfw, z_score, distance_func)
     rank_list = rank_list_from_distances_matrix(distances_matrix)
-    mesures = ap(rank_list, Y), rprec(rank_list, Y), hprec(rank_list, Y)
-    return distances_matrix, rank_list, mfw, mesures
+    return rank_list
 
 
 if __name__ == '__main__':
@@ -69,6 +64,7 @@ if __name__ == '__main__':
     X = x_token
     Y = y
 
+    rank_list = compute_links(X, 4, 500, True, distances.manhattan)
+    mesures = evaluate_linking(rank_list, Y)
     print(f"AP RPrec HPrec")
-    distances_matrix, rank_list, mfw, mesures = experiment(X, Y, 4, 500, True, distances.manhattan)
-    print(mesures)
+    print(*mesures)
