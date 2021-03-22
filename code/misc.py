@@ -1,7 +1,8 @@
-import matplotlib.pyplot as plt
 import itertools
 import numpy as np
 from collections import Counter
+
+import matplotlib.pyplot as plt
 
 
 def compute_r(Y):
@@ -9,8 +10,11 @@ def compute_r(Y):
 
 
 def dataset_infos(x, y):
-    # #Texts, #Authors, Mean length, #Links
-    return len(y), len(set(y)), round(np.mean([len(xi) for xi in x])), compute_r(y)
+    texts = len(y)
+    authors = len(set(y))
+    mean_length = round(np.mean([len(xi) for xi in x]))
+    links = compute_r(y)
+    return texts, authors, mean_length, links
 
 
 def zipf_law(total, n=21):

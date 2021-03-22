@@ -1,3 +1,5 @@
+"""Rank list fusion module."""
+
 import s_curves
 import distances
 from corpus import brunet, oxquarry, st_jean
@@ -48,10 +50,10 @@ if __name__ == '__main__':
     s_curve = s_curves.sigmoid
 
     rank_list_overall, rank_lists = compute_multiple_links(experiments, s_curve)
-    print(f"AP RPrec HPrec (Used for overall)")
+    print("AP RPrec HPrec (Used for overall)")
     for rank_list in rank_lists:
         mesures = evaluate_linking(rank_list, Y)
         print(*mesures)
-    print(f"AP RPrec HPrec (Overall)")
+    print("AP RPrec HPrec (Overall)")
     mesures = evaluate_linking(rank_list_overall, Y)
     print(*mesures)

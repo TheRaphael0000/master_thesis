@@ -1,10 +1,7 @@
-from collections import Counter
-import itertools
-from statistics import mean
+"""Evaluation module."""
 
 from misc import compute_r
 
-import numpy as np
 import bcubed
 from sklearn.metrics.cluster import adjusted_mutual_info_score
 

@@ -1,0 +1,56 @@
+\documentclass[twocolumn]{article}
+\usepackage[margin=0.7in]{geometry}
+
+\usepackage[english]{babel}
+
+\usepackage[parfill]{parskip}
+\usepackage{xcolor}
+
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+
+\usepackage{subfiles}
+\usepackage[ruled,vlined]{algorithm2e}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+
+\begin{document}
+
+\date{}
+\author{Raphaël Margueron}
+
+\begin{titlepage}
+\begin{center}
+{\large Master Thesis}
+\\[0.5cm]
+{\LARGE \textbf{Authorship clustering}}
+\\[0.5cm]
+{\large Raphaël Margueron (16-858-839), University of Bern / Neuchâtel / Fribourg}
+\\[0.5cm]
+{\large Mars-August, 2021}
+\\[0.5cm]
+\end{center}
+
+\tableofcontents
+\end{titlepage}
+
+\subfile{sections/1_introduction}
+\subfile{sections/2_state_of_the_art}
+\subfile{sections/3_theoretical_concepts}
+\subfile{sections/4_corpus}
+\subfile{sections/5_methods}
+\subfile{sections/6_evaluations}
+\subfile{sections/7_conclusion}
+
+\clearpage
+\subfile{sections/8_annex}
+\clearpage
+\subfile{sections/9_references}
+
+\end{document}

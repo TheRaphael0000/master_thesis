@@ -1,14 +1,12 @@
-from pprint import pprint
+"""Linking module"""
+
 import unicodedata
 from collections import Counter
 from functools import reduce
-from collections import defaultdict
 
 import numpy as np
-import scipy as sp
 from scipy.spatial.distance import pdist, squareform
 from corpus import brunet, oxquarry, st_jean
-from misc import zipf_law
 import distances
 from misc import rank_list_from_distances_matrix
 from evaluate import evaluate_linking
@@ -66,5 +64,5 @@ if __name__ == '__main__':
 
     rank_list = compute_links(X, 4, 500, True, distances.manhattan)
     mesures = evaluate_linking(rank_list, Y)
-    print(f"AP RPrec HPrec")
+    print("AP RPrec HPrec")
     print(*mesures)

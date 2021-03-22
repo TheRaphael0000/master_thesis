@@ -1,4 +1,5 @@
-from scipy.stats import beta
+"""S-curves module"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 import math
