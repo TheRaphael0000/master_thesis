@@ -1,3 +1,132 @@
 \section{Theoretical concepts}
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+This section contain basic notions commonly used in the authorship attribution and author profiling literature.
+
+\begin{definition}[Document]
+  A document $X$ is a ordered list of token. A token is a non empty string. Example:
+  \begin{equation}
+    X = ("\text{the}", "\text{quick}", "\text{brown}", "\text{fox}", "\text{.}")
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Author]
+  An author $Y$ is a string describing the author. Example:
+  \begin{equation}
+    Y = "\text{Zola}"
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Corpus]
+  The corpus is a set of document containing $S$ documents.
+  \begin{equation}
+    C = {X_1, X_2, X_3, X_{...}, X_S}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[$N$-Grams]
+  A $N$-gram is a special type of tokenization which is constructed by creating a token for the substrings from $0$ to \textit{text\_size} - $N$ of size $N$.
+  Example: Using 3-grams The string: "brown fox" is converted to: \\
+  $("\text{bro}", "\text{row}", "\text{own}", "\text{wn\_}", "\text{n\_f}", "\text{\_fo}", "\text{fox}")$
+\end{definition}
+
+\begin{definition}[Text Authorship]
+  The function $f$, is a surjective-only function which map the every text $X$ to a single author $Y$
+  \begin{equation}
+    Y = f(X)
+  \end{equation}
+  The set of $Y_a$ is the set of document written by $a$.
+  \begin{equation}
+    Y_a = \{X_i | f(X_i) = a\}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Relevant set]
+  The relevant set contain every possible pairs (also called links) of document with the same authors.
+  \begin{equation}
+    R = \{(X_a, X_b) | f(X_a) = f(X_b) \land X_a \neq X_b) \forall (X_a, X_b)\}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Ranked list]
+  A ranked list is a ordered list of pair of document.
+  \begin{equation}
+    L = ((X_a, X_b) | X_a \neq X_b \forall (X_a, X_b))
+  \end{equation}
+  \begin{equation}
+    |L| = \frac{|C| \cdot (|C| - 1)}{2}
+  \end{equation}
+\end{definition}
+
+\subsection{Documentpp comparaison}
+
+\begin{definition}[Manhanttan Distance]
+  To compute the manhanttan distance the following equation is used.
+  \begin{equation}
+    dist_{Manhanttan}(A, B) = \sum_{i=1}^{m} |a_i - b_i|
+  \end{equation}
+\end{definition}
+
+\subsection{Rank list evaluation}
+
+\begin{definition}[Relevant link]
+  A relevant link is a link in the relevant set.
+  \begin{equation}
+    relevant(l_i) =
+    \begin{cases}
+      1, & if\ l_i \in R \\
+      0, & otherwise
+    \end{cases}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Precision@k]
+  The precision@k is a function which take a integer k, with k < |L|
+  \begin{equation}
+    precision(k) = \frac{1}{k} \sum_{j=1}^{k} relevant(j)
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Average Precision (AP)]
+
+  \begin{equation}
+    AP = \frac{1}{|L|} \sum_{j=1}^{|L|} precision(j) \cdot relevant(j)
+  \end{equation}
+\end{definition}
+
+\begin{definition}[RPrec]
+  The RPrec is the precision in the rank list at rank |R|.
+  With R being the relevant set.
+  \begin{equation}
+    RPrec = precision(|R|)
+  \end{equation}
+\end{definition}
+
+\begin{definition}[HPrec]
+  The HPrec represent a maximal rank j in the rank list where the precision is still 100\%.
+  This value is in the range [0 - |R|].
+  0 means the first pair in the rank list is incorrect.
+  |R| means every true links are ranked in the top part of the rank list.
+  \begin{equation}
+    HPrec = \max\{i \in \mathbf{N} | precision(i) = 1\}
+  \end{equation}
+\end{definition}
+
+\subsection{Clustering evaluation}
+
+\begin{definition}[Precision $BCubed$]
+
+  \begin{equation}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Recall $BCubed$]
+
+  \begin{equation}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[$BCubed F_1$ Score]
+
+  \begin{equation}
+  \end{equation}
+\end{definition}
