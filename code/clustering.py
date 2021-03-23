@@ -7,7 +7,7 @@ from sklearn.metrics import silhouette_score
 import numpy as np
 
 import distances
-from corpus import oxquarry, brunet, st_jean
+from corpus import oxquarry, brunet, st_jean, pan16
 from rank_list_fusion import compute_multiple_links
 from misc import dataset_infos, distances_matrix_from_rank_list
 from evaluate import evaluate_linking, evaluate_clustering
@@ -46,11 +46,13 @@ def clustering(rank_list):
 if __name__ == '__main__':
     print("--Loading dataset--")
     # id, x, y = oxquarry.parse()
-    id, x_lemma, x_token, y = brunet.parse()
+    # id, x_lemma, x_token, y = brunet.parse()
+    info, id, x, y = pan16.parse_train()[0]
+
 
     # Select data
-    X = x_token
-    X2 = x_lemma
+    X = x
+    # X2 = x_lemma
     Y = y
 
     print("#Texts #Authors Mean_length #Links")
@@ -60,8 +62,8 @@ if __name__ == '__main__':
     experiments = [
         [X, 5, 500, True, distances.manhattan],
         [X, 0, 500, True, distances.manhattan],
-        [X2, 5, 500, True, distances.manhattan],
-        [X2, 0, 500, True, distances.manhattan],
+        # [X2, 5, 500, True, distances.manhattan],
+        # [X2, 0, 500, True, distances.manhattan],
     ]
     s_curve = s_curves.sigmoid
 

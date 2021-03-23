@@ -14,7 +14,8 @@ def dataset_infos(x, y):
     authors = len(set(y))
     mean_length = round(np.mean([len(xi) for xi in x]))
     links = compute_r(y)
-    return texts, authors, mean_length, links
+    r = round(authors / texts, 2)
+    return texts, authors, mean_length, links, r
 
 
 def zipf_law(total, n=21):

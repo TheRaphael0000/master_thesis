@@ -1,32 +1,38 @@
 \section{Theoretical concepts}
 
 This section contain basic notions commonly used in the authorship attribution and author profiling literature.
+The definitions in this sections are an adapted version of the ones in~\cite{savoy_stylo},~\cite{kocher_linking},~\cite{bcubed}.
+Some others are specifically related to this study.
+
 
 \begin{definition}[Document]
-  A document $X$ is a ordered list of token. A token is a non empty string. Example:
+  A document $X_i$ is a ordered list of token. A token is a non empty string. Example:
   \begin{equation}
-    X = ("\text{the}", "\text{quick}", "\text{brown}", "\text{fox}", "\text{.}")
+    X_i = ("\text{the}", "\text{quick}", "\text{brown}", "\text{fox}", "\text{.}")
   \end{equation}
 \end{definition}
 
 \begin{definition}[Author]
-  An author $Y$ is a string describing the author. Example:
+  An author $Y_i$ is a string describing the author. Example:
   \begin{equation}
-    Y = "\text{Zola}"
+    Y_i = "\text{Zola}"
   \end{equation}
 \end{definition}
 
 \begin{definition}[Corpus]
-  The corpus is a set of document containing $S$ documents.
+  The corpus is a list of document X of size s and a list of authors Y of size k.
   \begin{equation}
-    C = {X_1, X_2, X_3, X_{...}, X_S}
+    X = (X_1, X_2, X_3, X_{...}, X_s)
   \end{equation}
-\end{definition}
-
-\begin{definition}[$N$-Grams]
-  A $N$-gram is a special type of tokenization which is constructed by creating a token for the substrings from $0$ to \textit{text\_size} - $N$ of size $N$.
-  Example: Using 3-grams The string: "brown fox" is converted to: \\
-  $("\text{bro}", "\text{row}", "\text{own}", "\text{wn\_}", "\text{n\_f}", "\text{\_fo}", "\text{fox}")$
+  \begin{equation}
+    N = |X|
+  \end{equation}
+  \begin{equation}
+    Y = (Y_1, Y_2, Y_3, Y_{...}, Y_k)
+  \end{equation}
+  \begin{equation}
+    k = |Y|
+  \end{equation}
 \end{definition}
 
 \begin{definition}[Text Authorship]
@@ -36,7 +42,10 @@ This section contain basic notions commonly used in the authorship attribution a
   \end{equation}
   The set of $Y_a$ is the set of document written by $a$.
   \begin{equation}
-    Y_a = \{X_i | f(X_i) = a\}
+    \hat{Y}_a = \{X_i | f(X_i) = a\}
+  \end{equation}
+  \begin{equation}
+    N = \sum_{i} |\hat{Y}_i|
   \end{equation}
 \end{definition}
 
@@ -53,11 +62,30 @@ This section contain basic notions commonly used in the authorship attribution a
     L = ((X_a, X_b) | X_a \neq X_b \forall (X_a, X_b))
   \end{equation}
   \begin{equation}
-    |L| = \frac{|C| \cdot (|C| - 1)}{2}
+    |L| = \frac{N \cdot (N - 1)}{2}
   \end{equation}
 \end{definition}
 
-\subsection{Documentpp comparaison}
+\begin{definition}[$N$-Grams]
+  A $N$-gram is a special type of tokenization which is constructed by creating a token for the substrings from $0$ to \textit{text\_size} - $N$ of size $N$.
+  Example: Using 3-grams The string: "brown fox" is converted to: \\
+  $("\text{bro}", "\text{row}", "\text{own}", "\text{wn\_}", "\text{n\_f}", "\text{\_fo}", "\text{fox}")$
+\end{definition}
+
+\begin{definition}[r ratio~\cite{pan16}]
+  The ratio between the number of clusters k and the number of documents N in a given corpus.
+  If r is close to 0, most documents are in multi-documents clusters and there is a great density of relevant links.
+  In this other hand if r is close to 1, most of the document belong to single document clusters and there are few relevant links.
+  \begin{equation}
+    r = \frac{k}{N}
+  \end{equation}
+  The inverse of the r ratio is equaivalent to the mean number of documents per authors.
+  \begin{equation}
+    \frac{1}{r} = \frac{N}{k} = \frac{1}{k} \cdot \sum_{i} |\hat{Y}_i|
+  \end{equation}
+\end{definition}
+
+\subsection{Document distances}
 
 \begin{definition}[Manhanttan Distance]
   To compute the manhanttan distance the following equation is used.
@@ -68,7 +96,7 @@ This section contain basic notions commonly used in the authorship attribution a
 
 \subsection{Rank list evaluation}
 
-\begin{definition}[Relevant link]
+\begin{definition}[Relevant link~\cite{kocher_linking}]
   A relevant link is a link in the relevant set.
   \begin{equation}
     relevant(l_i) =
@@ -79,7 +107,7 @@ This section contain basic notions commonly used in the authorship attribution a
   \end{equation}
 \end{definition}
 
-\begin{definition}[Precision@k]
+\begin{definition}[Precision@k~\cite{kocher_linking}]
   The precision@k is a function which take a integer k, with k < |L|
   \begin{equation}
     precision(k) = \frac{1}{k} \sum_{j=1}^{k} relevant(j)
@@ -87,21 +115,21 @@ This section contain basic notions commonly used in the authorship attribution a
 \end{definition}
 
 \begin{definition}[Average Precision (AP)]
-
+  The mean over the precision@k each time a relevant link is retrieved.
   \begin{equation}
-    AP = \frac{1}{|L|} \sum_{j=1}^{|L|} precision(j) \cdot relevant(j)
+    AveragePrecision = \frac{1}{|R|} \sum_{j=1}^{|L|} precision(j) \cdot relevant(j)
   \end{equation}
 \end{definition}
 
-\begin{definition}[RPrec]
+\begin{definition}[RPrec~\cite{kocher_linking}]
   The RPrec is the precision in the rank list at rank |R|.
-  With R being the relevant set.
+  With R being the relevant set. (Not to be confused with the r ratio)
   \begin{equation}
     RPrec = precision(|R|)
   \end{equation}
 \end{definition}
 
-\begin{definition}[HPrec]
+\begin{definition}[HPrec~\cite{kocher_linking}]
   The HPrec represent a maximal rank j in the rank list where the precision is still 100\%.
   This value is in the range [0 - |R|].
   0 means the first pair in the rank list is incorrect.
@@ -113,20 +141,37 @@ This section contain basic notions commonly used in the authorship attribution a
 
 \subsection{Clustering evaluation}
 
-\begin{definition}[Precision $BCubed$]
+\begin{definition}[Correctness~\cite{bcubed}]
+  Let L(e) and C(e) be the category and the cluster of an element e.
+  The correctness has a value of one if the two elements are in the both in the same cluster and has the same category OR both in a different cluster and a different category. ($A \Longleftrightarrow B \equiv (A \land B) \lor (\neg A \land \neg B)$)
+  \begin{gather*}
+    Correctness(e, e') = \\
+    \begin{cases}
+      1, & if (L(e) = L(e')) \Longleftrightarrow (C(e) = C(e'))\\
+      0, & otherwise
+    \end{cases}
+  \end{gather*}
+\end{definition}
 
+\begin{definition}[Precision $BCubed$~\cite{bcubed}]
+  The average of correctness for all elements on the average of all element such that their cluster is the same.
   \begin{equation}
+    BCubed_{precision} = \text{Avg}_{e}[\text{Avg}_{e' C(e)=C(e')}[Correctness(e, e')]]
   \end{equation}
 \end{definition}
 
-\begin{definition}[Recall $BCubed$]
-
+\begin{definition}[Recall $BCubed$~\cite{bcubed}]
+  The average of correctness for all elements on the average of all element such that their category is the same.
   \begin{equation}
+    BCubed_{recall} = \text{Avg}_{e}[\text{Avg}_{e' L(e)=L(e')}[Correctness(e, e')]]
   \end{equation}
 \end{definition}
 
-\begin{definition}[$BCubed F_1$ Score]
-
+\begin{definition}[$BCubed F_1$ Score~\cite{bcubed}]
+  The harmonic mean between the $BCubed_{precision}$ and $BCubed_{recall}$
   \begin{equation}
+    BCubed_{F_1} =
+    2 \cdot \frac{BCubed_{precision} \cdot BCubed_{recall}}
+    {BCubed_{precision} + BCubed_{recall}}
   \end{equation}
 \end{definition}
