@@ -15,39 +15,39 @@ def linear(n):
     return x, y
 
 
-def sigmoid(n, alpha=8):
+def sigmoid(n, zoom_factor=2**3):
     def f(x):
         return 1 / (1 + math.exp(-x))
 
     def f_r(x):
         return np.log((1 - x) / x)
-    x = np.linspace(f(-alpha), f(alpha), n)
+    x = np.linspace(f(-zoom_factor), f(zoom_factor), n)
     y = np.array([-f_r(xi) for xi in x])
     # normalize
     x, y = norm(x), norm(y)
     return x, y
 
 
-def tanh(n, alpha=8):
+def tanh(n, zoom_factor=2**3):
     def f(x):
         return np.tanh(x)
 
     def f_r(x):
         return np.arctanh(x)
-    x = np.linspace(f(-alpha), f(alpha), n)
+    x = np.linspace(f(-zoom_factor), f(zoom_factor), n)
     y = np.array([f_r(xi) for xi in x])
     # normalize
     x, y = norm(x), norm(y)
     return x, y
 
 
-def arctan(n, alpha=8):
+def arctan(n, zoom_factor=2**3):
     def f(x):
         return np.arctan(x)
 
     def f_r(x):
         return np.tan(x)
-    x = np.linspace(f(-alpha), f(alpha), n)
+    x = np.linspace(f(-zoom_factor), f(zoom_factor), n)
     y = np.array([f_r(xi) for xi in x])
     # normalize
     x, y = norm(x), norm(y)

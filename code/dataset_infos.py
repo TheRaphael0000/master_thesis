@@ -14,6 +14,6 @@ print("St Jean 1-100 FR", *dataset_infos(x[:100], y[:100]))
 print("St Jean 101-200 FR", *dataset_infos(x[100:], y[100:]))
 
 
-(infos, ids, Xs, Ys) = pan16.parse_train()
-for id, x, y in zip(ids, Xs, Ys):
-    print(*dataset_infos(x, y))
+problems = pan16.parse_train()
+for (info, _, x, y) in problems:
+    print(f"PAN16 {info['language']} {info['folder']}", *dataset_infos(x, y))

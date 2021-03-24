@@ -7,7 +7,11 @@ from sklearn.metrics.cluster import adjusted_mutual_info_score
 
 
 def evaluate_linking(rank_list, Y):
-    return ap(rank_list, Y), rprec(rank_list, Y), hprec(rank_list, Y)
+    ap_ = ap(rank_list, Y)
+    rprec_ = rprec(rank_list, Y)
+    p10_ = precision_at_k(rank_list, Y, 10)
+    hprec_ = hprec(rank_list, Y)
+    return ap_, rprec_, p10_, hprec_
 
 
 def evaluate_clustering(Y, pred):

@@ -6,7 +6,7 @@ from functools import reduce
 
 import numpy as np
 from scipy.spatial.distance import pdist, squareform
-from corpus import brunet, oxquarry, st_jean
+from corpus import brunet, oxquarry, st_jean, pan16
 import distances
 from misc import rank_list_from_distances_matrix
 from evaluate import evaluate_linking
@@ -28,6 +28,9 @@ def create_n_grams(words, n):
 
 def most_frequent_word(X, n, z_score=False):
     counters = [Counter(xi) for xi in X]
+    # remove hapax legomenon for each texts
+    counters = [Counter({w: n for w, n in dict(c).items() if n > 1})
+                for c in counters]
     total = reduce(lambda x, y: x + y, counters)
     mfw = dict(total.most_common(n))
     features = [[c[k] / v for k, v in mfw.items()] for c in counters]
@@ -54,15 +57,9 @@ def compute_links(X, n_grams, n_mfw, z_score, distance_func):
 
 
 if __name__ == '__main__':
-    # Loading dataset
-    # id, x, y = oxquarry.parse()
-    id, x_lemma, x_token, y = brunet.parse()
+    _, _, X, Y = brunet.parse()
 
-    # Select data
-    X = x_token
-    Y = y
-
-    rank_list = compute_links(X, 4, 500, True, distances.manhattan)
+    print("AP RPrec P@10 HPrec")
+    rank_list = compute_links(X, 0, 500, True, distances.manhattan)
     mesures = evaluate_linking(rank_list, Y)
-    print("AP RPrec HPrec")
     print(*mesures)

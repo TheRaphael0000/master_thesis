@@ -49,3 +49,11 @@ def distances_matrix_from_rank_list(rank_list):
         distances_matrix[a, b] = dist
         distances_matrix[b, a] = dist
     return distances_matrix
+
+
+def division(A, B):
+    return np.divide(A, B, where=B!=0, out=np.zeros(A.shape))
+
+
+def log(A):
+    return np.log(A, where=A>0, out=np.zeros(A.shape))

@@ -55,8 +55,7 @@ def parse_problem(documents_paths, clustering_file):
 def parse_file(file_path):
     txt = open(file_path, "rb").read().decode("utf8")
     txt = txt.lower()
-    txt = "".join([l for l in txt if l in string.printable])
-    for a in string.punctuation:
+    for a in list(string.punctuation) + ["\r", "\n"]:
         txt = txt.replace(a, f" {a} ")
     tokens = txt.split(" ")
     tokens = [t for t in tokens if t != ""]

@@ -16,7 +16,8 @@ import s_curves
 
 def clustering(rank_list):
     distances_matrix = distances_matrix_from_rank_list(rank_list)
-    distance_thresholds = [i[-1] for i in rank_list[0:int(len(rank_list) / 3)]]
+    rank_list_threshold = int(len(rank_list) / 3)
+    distance_thresholds = [i[-1] for i in rank_list[0:rank_list_threshold]]
     silhouette_scores = []
     best_score = -np.inf
     best_ac = None
@@ -45,25 +46,20 @@ def clustering(rank_list):
 
 if __name__ == '__main__':
     print("--Loading dataset--")
-    # id, x, y = oxquarry.parse()
-    # id, x_lemma, x_token, y = brunet.parse()
-    info, id, x, y = pan16.parse_train()[0]
+    _, X, Y = oxquarry.parse()
+    # _, _, X, Y = brunet.parse()
+    # _, _, X, Y = pan16.parse_train()[0]
 
-
-    # Select data
-    X = x
-    # X2 = x_lemma
-    Y = y
 
     print("#Texts #Authors Mean_length #Links")
     print(*dataset_infos(X, Y))
 
     print("--Linking--")
     experiments = [
-        [X, 5, 500, True, distances.manhattan],
+        [X, 0, 500, False, distances.clark],
+        [X, 0, 500, False, distances.tanimoto],
         [X, 0, 500, True, distances.manhattan],
-        # [X2, 5, 500, True, distances.manhattan],
-        # [X2, 0, 500, True, distances.manhattan],
+        [X, 8, 500, False, distances.tanimoto],
     ]
     s_curve = s_curves.sigmoid
 
