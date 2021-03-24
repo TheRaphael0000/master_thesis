@@ -1,6 +1,7 @@
 """S-curves module"""
 
 import matplotlib.pyplot as plt
+from matplotlib import colors
 import numpy as np
 import math
 
@@ -15,26 +16,30 @@ def linear(n):
     return x, y
 
 
-def sigmoid(n, zoom_factor=2**3):
+def sigmoid(n, zoom_factor=3):
+    alpha = 2 ** zoom_factor
+
     def f(x):
         return 1 / (1 + math.exp(-x))
 
     def f_r(x):
         return np.log((1 - x) / x)
-    x = np.linspace(f(-zoom_factor), f(zoom_factor), n)
+    x = np.linspace(f(-alpha), f(alpha), n)
     y = np.array([-f_r(xi) for xi in x])
     # normalize
     x, y = norm(x), norm(y)
     return x, y
 
 
-def tanh(n, zoom_factor=2**3):
+def tanh(n, zoom_factor=3):
+    alpha = 2 ** zoom_factor
+
     def f(x):
         return np.tanh(x)
 
     def f_r(x):
         return np.arctanh(x)
-    x = np.linspace(f(-zoom_factor), f(zoom_factor), n)
+    x = np.linspace(f(-alpha), f(alpha), n)
     y = np.array([f_r(xi) for xi in x])
     # normalize
     x, y = norm(x), norm(y)
@@ -42,12 +47,14 @@ def tanh(n, zoom_factor=2**3):
 
 
 def arctan(n, zoom_factor=2**3):
+    alpha = 2 ** zoom_factor
+
     def f(x):
         return np.arctan(x)
 
     def f_r(x):
         return np.tan(x)
-    x = np.linspace(f(-zoom_factor), f(zoom_factor), n)
+    x = np.linspace(f(-alpha), f(alpha), n)
     y = np.array([f_r(xi) for xi in x])
     # normalize
     x, y = norm(x), norm(y)
@@ -55,30 +62,22 @@ def arctan(n, zoom_factor=2**3):
 
 
 if __name__ == '__main__':
-    scale = 1000
+    scale = 500
     plt.figure(figsize=(4, 3), dpi=200)
 
-    x1, y1 = linear(scale)
-    plt.plot(x1, y1, label="linear")
+    min_ = 0
+    max_ = 4
+    zoom_factors = np.arange(min_, max_, 0.06)
 
-    x2, y2 = sigmoid(scale)
-    plt.plot(x2, y2, label="sigmoid")
+    plt.rcParams["axes.prop_cycle"] = plt.cycler(
+        "color", plt.cm.hsv(np.linspace(0, 1, len(zoom_factors))))
 
-    x3, y3 = tanh(scale)
-    plt.plot(x3, y3, label="tanh")
+    for i in zoom_factors:
+        x, y = tanh(scale, i)
+        plt.plot(x, y, linewidth=0.2)
 
-    x4, y4 = arctan(scale)
-    plt.plot(x4, y4, label="arctan")
-
-    plt.legend()
+    plt.colorbar(plt.cm.ScalarMappable(
+        norm=colors.Normalize(min_, max_), cmap="hsv"))
+    # plt.legend()
     plt.tight_layout()
     plt.savefig("s_curves.png")
-
-    assert x1[0] == 0.0 and x1[-1] == 1.0
-    assert y1[0] == 0.0 and y1[-1] == 1.0
-    assert x2[0] == 0.0 and x2[-1] == 1.0
-    assert y2[0] == 0.0 and y2[-1] == 1.0
-    assert x3[0] == 0.0 and x3[-1] == 1.0
-    assert y3[0] == 0.0 and y3[-1] == 1.0
-    assert x4[0] == 0.0 and x4[-1] == 1.0
-    assert y4[0] == 0.0 and y4[-1] == 1.0
