@@ -29,25 +29,22 @@ def compute_multiple_links(experiments, s_curve):
     for exp in experiments:
         rank_list = compute_links(*exp)
         rank_lists.append(rank_list)
+    if s_curve is None:
+        return None, rank_lists
     rank_list_overall = rank_list_fusion(rank_lists, s_curve)
     return rank_list_overall, rank_lists
 
 
 if __name__ == '__main__':
-    id, x_lemma, x_token, y = brunet.parse()
-
-    # Select data
-    X = x_token
-    X2 = x_lemma
-    Y = y
+    _, X2, X, Y = brunet.parse()
 
     experiments = [
-        [X, 5, 500, True, distances.manhattan],
-        [X, 0, 500, True, distances.manhattan],
-        [X2, 5, 500, True, distances.manhattan],
-        [X2, 0, 500, True, distances.manhattan],
+        [X, 5, 500, True, 0.1, distances.manhattan],
+        [X, 0, 500, True, 0.1, distances.manhattan],
+        [X2, 5, 500, True, 0.1, distances.manhattan],
+        [X2, 0, 500, True, 0.1, distances.manhattan],
     ]
-    s_curve = s_curves.sigmoid
+    s_curve = s_curves.sigmoid_reciprocal
 
     rank_list_overall, rank_lists = compute_multiple_links(experiments, s_curve)
     print("AP RPrec HPrec (Used for overall)")

@@ -56,12 +56,12 @@ if __name__ == '__main__':
 
     print("--Linking--")
     experiments = [
-        [X, 0, 500, False, distances.clark],
-        [X, 0, 500, False, distances.tanimoto],
-        [X, 0, 500, True, distances.manhattan],
-        [X, 8, 500, False, distances.tanimoto],
+        [X, 0, 500, False, 0.1, distances.clark],
+        [X, 0, 500, False, 0.1, distances.tanimoto],
+        [X, 0, 500, True, 0.1, distances.manhattan],
+        [X, 5, 500, False, 0.1, distances.tanimoto],
     ]
-    s_curve = s_curves.sigmoid
+    s_curve = s_curves.sigmoid_reciprocal
 
     rank_list_overall, rank_lists = compute_multiple_links(
         experiments, s_curve)

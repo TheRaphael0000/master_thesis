@@ -6,10 +6,12 @@ import matplotlib.pyplot as plt
 
 
 def compute_r(Y):
+    """Find the number of true links in a dataset"""
     return int(sum([(n * (n - 1)) / 2 for n in dict(Counter(Y)).values()]))
 
 
 def dataset_infos(x, y):
+    """Different basic metrics used to evaluate a dataset"""
     texts = len(y)
     authors = len(set(y))
     mean_length = round(np.mean([len(xi) for xi in x]))
@@ -19,6 +21,7 @@ def dataset_infos(x, y):
 
 
 def zipf_law(total, n=21):
+    """Plot the zipf law of a dictionary of words frequencies"""
     distribution = dict(Counter(total.values()))
     keys = distribution.keys()
     A = list(range(1, n))
@@ -32,6 +35,7 @@ def zipf_law(total, n=21):
 
 
 def rank_list_from_distances_matrix(distances_matrix):
+    """Create a rank list from a distance matrix"""
     rank_list = []
     for a, b in itertools.combinations(range(distances_matrix.shape[0]), 2):
         link = a, b
@@ -42,6 +46,7 @@ def rank_list_from_distances_matrix(distances_matrix):
 
 
 def distances_matrix_from_rank_list(rank_list):
+    """Create a distance matrix from a rank list"""
     indices = list(itertools.chain.from_iterable([i[0] for i in rank_list]))
     max_ = max(indices) + 1
     distances_matrix = np.zeros((max_, max_,))
@@ -52,8 +57,15 @@ def distances_matrix_from_rank_list(rank_list):
 
 
 def division(A, B):
+    """Shorthand for the numpy division replacing division by 0 with 0"""
     return np.divide(A, B, where=B!=0, out=np.zeros(A.shape))
 
 
 def log(A):
+    """Shorthand for the numpy logarithm replacing 0 or negative log by 0"""
     return np.log(A, where=A>0, out=np.zeros(A.shape))
+
+
+def normalize(x):
+    """Normalize between 0-1 an array like"""
+    return (x - min(x)) / (max(x) - min(x))

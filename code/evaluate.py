@@ -7,6 +7,7 @@ from sklearn.metrics.cluster import adjusted_mutual_info_score
 
 
 def evaluate_linking(rank_list, Y):
+    """Combination of metrics used for evaluating the linking task"""
     ap_ = ap(rank_list, Y)
     rprec_ = rprec(rank_list, Y)
     p10_ = precision_at_k(rank_list, Y, 10)
@@ -15,6 +16,7 @@ def evaluate_linking(rank_list, Y):
 
 
 def evaluate_clustering(Y, pred):
+    """Combination of metrics used for evaluating the clustering task"""
     # change clustering representation for bcubed computations
     ldict = {}
     cdict = {}
@@ -24,11 +26,13 @@ def evaluate_clustering(Y, pred):
     bcubed_precision = bcubed.precision(cdict, ldict)
     bcubed_recall = bcubed.recall(cdict, ldict)
     bcubed_fscore = bcubed.fscore(bcubed_precision, bcubed_recall)
+    # computing mutual info score
     mutual_info_score = adjusted_mutual_info_score(Y, pred)
     return bcubed_precision, bcubed_recall, bcubed_fscore, mutual_info_score
 
 
 def precision_at_k(rank_list, Y, k):
+    """Evaluate the precision at K in a rank list"""
     sum = 0
     for link, distance in rank_list[0:k]:
         ai, bi = link
@@ -39,6 +43,7 @@ def precision_at_k(rank_list, Y, k):
 
 
 def ap(rank_list, Y):
+    """Compute the average precision on a rank list"""
     sum_precisions = 0
     correct = 0
     for i, (link, distance) in enumerate(rank_list):
@@ -52,17 +57,19 @@ def ap(rank_list, Y):
 
 
 def rprec(rank_list, Y):
+    """Find the number of links in a dataset than compute the precision@r"""
     R = compute_r(Y)
     return precision_at_k(rank_list, Y, R)
 
 
 def hprec(rank_list, Y):
-    i = 0
-    for link, distance in rank_list:
+    """Find the number of first correct links in the rank list"""
+    for i, (link, distance) in enumerate(rank_list):
         ai, bi = link
         ya, yb = Y[ai], Y[bi]
-        if ya == yb:
-            i += 1
-        else:
-            break
-    return i
+        # once the first incorrect sample is found
+        # we can iterating on the list the list
+        if ya != yb:
+            return i
+    # every documents in the list are relevant at this point
+    return len(rank_list)

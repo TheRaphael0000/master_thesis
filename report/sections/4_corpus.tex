@@ -2,22 +2,30 @@
 
 \subsection{Literature corpus}
 
-Table~\ref{tab:datasets} show corupus informations and statistics on the datasets.
-The corpus used are Oxquarry, which contain excerpts from English novels from 9 different authors.
-The Brunet french corpus contain exactly 4 excerpts of novels for the 11 authors.
+Table~\ref{tab:datasets} show corpus informations and statistics on the datasets.
+These dataset contain large texts with 10'000 tokens in averages.
+
+The corpus Oxquarry contain 52 excerpts from English novels from 9 different authors (Butler, Chesterton, Conrad, Forster, Hardy, Morris, Orczy, Tressel, Stevenson).
+The dataset Oxquarry is already tokenized, which means every each words are on a seperated line.
+The Brunet french corpus contain exactly 4 excerpts of novels for each of the 11 authors for a total of 44 excerpts.
+Authors present in this dataset : Balzac, Chateaubriand, Flaubert, Marivaux, Maupassant, Proust, Rousseau, Sand, Vernes, Voltaire, Zola.
+St-Jean dataset was also used.
+It contains 200 excepts of french novels from 30 different authors.
+
+
+
 
 \begin{table*}[t]
   \caption{General information on the datasets}
   \label{tab:datasets}
   \begin{tabular}{|l|l|l|l|l|l|l|}
-    Name & Language & |C| & \#Distinct\_Authors & Mean\_length & \#Links & r ratio \\
+    Name & Language & N & \#Authors & Mean\_length & \#Links & r \\
     Oxquarry & EN & 52 & 9 & 11650 & 160 & 0.17\\
     Brunet & FR & 44 & 11 & 9778 & 66 & 0.25\\
-    St Jean & FR & 200 & 30 & 11533 & 670 & 0.15\\
-    St Jean 1-100 & FR & 100 & 17 & 11552 & 330 & 0.17\\
-    St Jean 101-200 & FR & 100 & 19 & 11513 & 258 & 0.19 \\
+    St-Jean & FR & 200 & 30 & 11533 & 670 & 0.15\\
   \end{tabular}
 \end{table*}
+
 
 
 \subsection{}

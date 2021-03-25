@@ -5,18 +5,19 @@ from matplotlib import colors
 import numpy as np
 import math
 
-
-def norm(x):
-    return (x - min(x)) / (max(x) - min(x))
+from misc import normalize
 
 
 def linear(n):
+    """Return a linear function with n points"""
     x = np.linspace(0, 1.0, n)
     y = x
     return x, y
 
 
-def sigmoid(n, zoom_factor=3):
+def sigmoid_reciprocal(n, zoom_factor=3):
+    """Return a sigmoid reciprocal function with n points,
+    the zoom factor is based on the sigmoid function"""
     alpha = 2 ** zoom_factor
 
     def f(x):
@@ -27,7 +28,7 @@ def sigmoid(n, zoom_factor=3):
     x = np.linspace(f(-alpha), f(alpha), n)
     y = np.array([-f_r(xi) for xi in x])
     # normalize
-    x, y = norm(x), norm(y)
+    x, y = normalize(x), normalize(y)
     return x, y
 
 
@@ -42,7 +43,7 @@ def tanh(n, zoom_factor=3):
     x = np.linspace(f(-alpha), f(alpha), n)
     y = np.array([f_r(xi) for xi in x])
     # normalize
-    x, y = norm(x), norm(y)
+    x, y = normalize(x), normalize(y)
     return x, y
 
 
@@ -57,7 +58,7 @@ def arctan(n, zoom_factor=2**3):
     x = np.linspace(f(-alpha), f(alpha), n)
     y = np.array([f_r(xi) for xi in x])
     # normalize
-    x, y = norm(x), norm(y)
+    x, y = normalize(x), normalize(y)
     return x, y
 
 
@@ -65,7 +66,7 @@ if __name__ == '__main__':
     scale = 500
     plt.figure(figsize=(4, 3), dpi=200)
 
-    min_ = 0
+    min_ = -1
     max_ = 4
     zoom_factors = np.arange(min_, max_, 0.06)
 
