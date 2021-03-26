@@ -15,9 +15,10 @@ def dataset_infos(x, y):
     texts = len(y)
     authors = len(set(y))
     mean_length = round(np.mean([len(xi) for xi in x]))
-    links = compute_r(y)
-    r = round(authors / texts, 2)
-    return texts, authors, mean_length, links, r
+    true_links = compute_r(y)
+    r = round(authors / texts, 3)
+    true_links_ratio = round(true_links / (texts * (texts - 1) / 2), 3)
+    return texts, authors, mean_length, true_links, r, true_links_ratio
 
 
 def zipf_law(total, n=21):
@@ -58,14 +59,26 @@ def distances_matrix_from_rank_list(rank_list):
 
 def division(A, B):
     """Shorthand for the numpy division replacing division by 0 with 0"""
-    return np.divide(A, B, where=B!=0, out=np.zeros(A.shape))
+    return np.divide(A, B, where=B != 0, out=np.zeros(A.shape))
 
 
 def log(A):
     """Shorthand for the numpy logarithm replacing 0 or negative log by 0"""
-    return np.log(A, where=A>0, out=np.zeros(A.shape))
+    return np.log(A, where=A > 0, out=np.zeros(A.shape))
 
 
 def normalize(x):
     """Normalize between 0-1 an array like"""
-    return (x - min(x)) / (max(x) - min(x))
+    num = x - min(x)
+    div = max(x) - min(x)
+    if div == 0:
+        raise Exception("can't normalize")
+    return num / div
+
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+
+def sigmoid_reciprocal(x):
+    return - np.log((1 - x) / x)

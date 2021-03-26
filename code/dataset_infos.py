@@ -3,7 +3,7 @@
 from corpus import brunet, oxquarry, st_jean, pan16
 from misc import dataset_infos
 
-print("Name Language #Texts #Authors Mean_length #Links r")
+print("Name Language #Texts #Authors Mean_length #Links r true_links_ratio")
 id, x, y = oxquarry.parse()
 print("Oxquarry EN", *dataset_infos(x, y))
 id, x_lemma, x, y = brunet.parse()

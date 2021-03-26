@@ -1,18 +1,62 @@
+import itertools
+
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import colors
+
 from corpus import brunet, oxquarry, st_jean, pan16
-import distances
+from rank_list_fusion import compute_multiple_links, rank_list_fusion
 from evaluate import evaluate_linking
 from linking import compute_links
-from rank_list_fusion import compute_multiple_links, rank_list_fusion
-import matplotlib.pyplot as plt
-import itertools
+import distances
 import s_curves
+
+
+def main():
+    # distance_over_rank()
+    # zoom_influance()
+    # find_best_mfw()
+    test_rank_list_fusion()
+
+
+def zoom_influance():
+    scale = 500
+    plt.figure(figsize=(4, 3), dpi=200)
+
+    min_ = 1e-10
+    max_ = 20
+    zoom_factors = np.arange(min_, max_, 0.06)
+
+    plt.rcParams["axes.prop_cycle"] = plt.cycler(
+        "color", plt.cm.hsv(np.linspace(0, 1, len(zoom_factors))))
+
+    for i in zoom_factors:
+        x, y = s_curves.sigmoid_reciprocal(i)(scale)
+        plt.plot(x, y, linewidth=0.2)
+
+    plt.colorbar(plt.cm.ScalarMappable(
+        norm=colors.Normalize(min_, max_), cmap="hsv"))
+    # plt.legend()
+    plt.tight_layout()
+    plt.savefig("zoom_influance.png")
+
+
+def distance_over_rank():
+    _, _, X, _ = brunet.parse()
+
+    rank_list = compute_links(X, 0, 500, False, 0.1, distances.manhattan)
+    plt.figure(figsize=(4, 3), dpi=200)
+    plt.plot(range(len(rank_list)), [r[-1] for r in rank_list])
+    plt.xlabel("Rank")
+    plt.ylabel("Distance")
+    plt.tight_layout()
+    plt.savefig("distance_over_rank.png")
 
 
 def find_best_mfw():
     _, _, X, Y = brunet.parse()
     # _, _, X, Y = st_jean.parse()
-    _, X, Y = oxquarry.parse()
+    # _, X, Y = oxquarry.parse()
 
     M = []
 
@@ -28,6 +72,7 @@ def find_best_mfw():
     axs[0].plot(M[:, 0], M[:, 1])
     axs[1].plot(M[:, 0], M[:, 2])
     axs[2].plot(M[:, 0], M[:, 4])
+    plt.tight_layout()
     plt.savefig("mfw.png")
 
 
@@ -49,7 +94,7 @@ def test_rank_list_fusion():
         [X, 6, 500, False, 1e-1, distances.matusita],
         [X, 6, 500, True, 1e-1, distances.cosine_distance],
     ]
-    s_curve = s_curves.sigmoid_reciprocal
+    s_curve = s_curves.sigmoid_reciprocal()
 
     M_fusion = []
     M_single = []
@@ -96,9 +141,9 @@ def test_rank_list_fusion():
     plt.ylabel("Average precision (AP)")
     cbar.set_label("RPrec")
     plt.legend()
+    plt.tight_layout()
     plt.savefig("fusion.png")
 
 
 if __name__ == '__main__':
-    # find_best_mfw()
-    test_rank_list_fusion()
+    main()

@@ -1,84 +1,40 @@
 """S-curves module"""
 
 import matplotlib.pyplot as plt
-from matplotlib import colors
 import numpy as np
-import math
 
-from misc import normalize
+from misc import normalize, sigmoid, sigmoid_reciprocal
 
 
-def linear(n):
+def linear():
     """Return a linear function with n points"""
-    x = np.linspace(0, 1.0, n)
-    y = x
-    return x, y
+    def generator(n):
+        x = np.linspace(0, 1.0, n)
+        y = x
+        return x, y
+    return generator
 
 
-def sigmoid_reciprocal(n, zoom_factor=3):
+def sigmoid_reciprocal(c=4, r=0.25):
     """Return a sigmoid reciprocal function with n points,
     the zoom factor is based on the sigmoid function"""
-    alpha = 2 ** zoom_factor
-
-    def f(x):
-        return 1 / (1 + math.exp(-x))
-
-    def f_r(x):
-        return np.log((1 - x) / x)
-    x = np.linspace(f(-alpha), f(alpha), n)
-    y = np.array([-f_r(xi) for xi in x])
-    # normalize
-    x, y = normalize(x), normalize(y)
-    return x, y
-
-
-def tanh(n, zoom_factor=3):
-    alpha = 2 ** zoom_factor
-
-    def f(x):
-        return np.tanh(x)
-
-    def f_r(x):
-        return np.arctanh(x)
-    x = np.linspace(f(-alpha), f(alpha), n)
-    y = np.array([f_r(xi) for xi in x])
-    # normalize
-    x, y = normalize(x), normalize(y)
-    return x, y
-
-
-def arctan(n, zoom_factor=2**3):
-    alpha = 2 ** zoom_factor
-
-    def f(x):
-        return np.arctan(x)
-
-    def f_r(x):
-        return np.tan(x)
-    x = np.linspace(f(-alpha), f(alpha), n)
-    y = np.array([f_r(xi) for xi in x])
-    # normalize
-    x, y = normalize(x), normalize(y)
-    return x, y
+    def generator(n):
+        alpha = c
+        n1 = int(n * r)
+        n2 = int(n - n1)
+        x1 = np.linspace(sigmoid(-alpha), sigmoid(0), n1, endpoint=False)
+        x2 = np.linspace(sigmoid(0), 1 - sigmoid(-alpha), n2)
+        x = np.array(list(x1) + list(x2))
+        y = np.array([sigmoid_reciprocal(xi) for xi in x])
+        x = np.array(range(n))
+        # normalize
+        x, y = normalize(x), normalize(y)
+        return x, y
+    return generator
 
 
 if __name__ == '__main__':
-    scale = 500
     plt.figure(figsize=(4, 3), dpi=200)
-
-    min_ = -1
-    max_ = 4
-    zoom_factors = np.arange(min_, max_, 0.06)
-
-    plt.rcParams["axes.prop_cycle"] = plt.cycler(
-        "color", plt.cm.hsv(np.linspace(0, 1, len(zoom_factors))))
-
-    for i in zoom_factors:
-        x, y = tanh(scale, i)
-        plt.plot(x, y, linewidth=0.2)
-
-    plt.colorbar(plt.cm.ScalarMappable(
-        norm=colors.Normalize(min_, max_), cmap="hsv"))
-    # plt.legend()
+    plt.plot(*sigmoid_reciprocal()(500))
     plt.tight_layout()
     plt.savefig("s_curves.png")

@@ -9,11 +9,11 @@ import numpy as np
 from evaluate import evaluate_linking
 
 
-def rank_list_fusion(rank_lists, s_curve, args={}):
+def rank_list_fusion(rank_lists, s_curve):
     # grouping same links
     grouped_by_link = defaultdict(list)
     for rank_list in rank_lists:
-        x, y = s_curve(len(rank_list), **args)
+        x, y = s_curve(len(rank_list))
         for i, (link, dist) in enumerate(rank_list):
             grouped_by_link[link].append(y[i])
     # average
@@ -44,7 +44,7 @@ if __name__ == '__main__':
         [X2, 5, 500, True, 0.1, distances.manhattan],
         [X2, 0, 500, True, 0.1, distances.manhattan],
     ]
-    s_curve = s_curves.sigmoid_reciprocal
+    s_curve = s_curves.sigmoid_reciprocal()
 
     rank_list_overall, rank_lists = compute_multiple_links(experiments, s_curve)
     print("AP RPrec HPrec (Used for overall)")
