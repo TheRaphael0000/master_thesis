@@ -21,11 +21,18 @@ def normalize(s):
     return s
 
 
-def create_n_grams(words, n):
+def create_n_grams(words, ns):
+    if type(ns) is int:
+        ns = [ns]
     # Joining every words into a long string (using a _)
     text = "_".join(words)
+    n_grams = []
     # Creating n-grams from the long text
-    n_grams = [text[i:i + n] for i in range(0, len(text) - n)]
+    for i in range(len(text)):
+        for n in ns:
+            n_gram = text[i:i + n]
+            if len(n_gram) == n:
+                n_grams.append(n_gram)
     return n_grams
 
 
@@ -40,7 +47,8 @@ def most_frequent_word(X, n, z_score=False, lidstone_lambda=0.1):
     # Selecting n mfw
     mfw = dict(total.most_common(n))
     # tf to rtf or MLE probablity + lidstone smoothing
-    features = [[(c[k] + lidstone_lambda) / (v + lidstone_lambda * len(total)) for k, v in mfw.items()] for c in counters]
+    features = [[(c[k] + lidstone_lambda) / (v + lidstone_lambda * len(total))
+                 for k, v in mfw.items()] for c in counters]
     # Transforming the rtf to a 2D numpy array
     features = np.array(features)
     # Zscoring if needed

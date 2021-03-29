@@ -3,6 +3,7 @@ import itertools
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import colors
+from scipy.stats import binom_test
 
 from corpus import brunet, oxquarry, st_jean, pan16
 from rank_list_fusion import compute_multiple_links, rank_list_fusion
@@ -77,8 +78,8 @@ def find_best_mfw():
 
 
 def test_rank_list_fusion():
-    # _, _, X, Y = st_jean.parse()
-    _, _, X, Y = brunet.parse()
+    _, _, X, Y = st_jean.parse()
+    # _, _, X, Y = brunet.parse()
     # _, X, Y = oxquarry.parse()
 
     experiments = [
@@ -125,9 +126,12 @@ def test_rank_list_fusion():
             if mesures[i] < max_ap:
                 neg[i] += 1
 
+
     print(pos)
     print(eq)
     print(neg)
+    for i in range(len(M_single[0])):
+        print(binom_test([pos[i], neg[i]]))
 
     M_fusion = np.array(M_fusion)
 
@@ -137,9 +141,9 @@ def test_rank_list_fusion():
     x, y, c = M_single[:, 0], M_single[:, 1], M_single[:, 3]
     plt.scatter(x, y, c=c, marker="^", label="Single rank list", alpha=1)
     cbar = plt.colorbar()
-    plt.xlabel("HPrec")
+    plt.xlabel("RPrec")
     plt.ylabel("Average precision (AP)")
-    cbar.set_label("RPrec")
+    cbar.set_label("HPrec")
     plt.legend()
     plt.tight_layout()
     plt.savefig("fusion.png")

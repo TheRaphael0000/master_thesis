@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from misc import normalize, sigmoid, sigmoid_reciprocal
+from misc import normalize, sigmoid, sigmoid_r
 
 
 def linear():
@@ -25,7 +25,7 @@ def sigmoid_reciprocal(c=4, r=0.25):
         x1 = np.linspace(sigmoid(-alpha), sigmoid(0), n1, endpoint=False)
         x2 = np.linspace(sigmoid(0), 1 - sigmoid(-alpha), n2)
         x = np.array(list(x1) + list(x2))
-        y = np.array([sigmoid_reciprocal(xi) for xi in x])
+        y = np.array([sigmoid_r(xi) for xi in x])
         x = np.array(range(n))
         # normalize
         x, y = normalize(x), normalize(y)

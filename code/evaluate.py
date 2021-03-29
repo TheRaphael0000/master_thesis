@@ -68,7 +68,7 @@ def hprec(rank_list, Y):
         ai, bi = link
         ya, yb = Y[ai], Y[bi]
         # once the first incorrect sample is found
-        # we can iterating on the list the list
+        # we can return the iterator position
         if ya != yb:
             return i
     # every documents in the list are relevant at this point

@@ -12,13 +12,14 @@ def compute_r(Y):
 
 def dataset_infos(x, y):
     """Different basic metrics used to evaluate a dataset"""
-    texts = len(y)
     authors = len(set(y))
-    mean_length = round(np.mean([len(xi) for xi in x]))
-    true_links = compute_r(y)
+    texts = len(y)
     r = round(authors / texts, 3)
-    true_links_ratio = round(true_links / (texts * (texts - 1) / 2), 3)
-    return texts, authors, mean_length, true_links, r, true_links_ratio
+    true_links = compute_r(y)
+    links = (texts * (texts - 1)) // 2
+    true_links_ratio = round(true_links / links, 3)
+    mean_length = round(np.mean([len(xi) for xi in x]))
+    return authors, texts, r, true_links, links, true_links_ratio, mean_length
 
 
 def zipf_law(total, n=21):
@@ -69,8 +70,8 @@ def log(A):
 
 def normalize(x):
     """Normalize between 0-1 an array like"""
-    num = x - min(x)
-    div = max(x) - min(x)
+    num = x - np.min(x)
+    div = np.max(x) - np.min(x)
     if div == 0:
         raise Exception("can't normalize")
     return num / div
@@ -80,5 +81,5 @@ def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
 
-def sigmoid_reciprocal(x):
+def sigmoid_r(x):
     return - np.log((1 - x) / x)
