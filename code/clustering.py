@@ -9,7 +9,7 @@ import numpy as np
 import distances
 from corpus import oxquarry, brunet, st_jean, pan16
 from rank_list_fusion import compute_multiple_links
-from misc import dataset_infos, distances_matrix_from_rank_list
+from misc import dataset_infos, distances_matrix_from_rank_list, rank_list_to_txt
 from evaluate import evaluate_linking, evaluate_clustering
 import s_curves
 
@@ -115,6 +115,9 @@ def main():
     # _, X, Y = oxquarry.parse()
     # _, _, X, Y = brunet.parse()
     _, _, X, Y = st_jean.parse()
+
+    X = X[0:100]
+    Y = Y[0:100]
     #
     # _, _, X, Y = pan16.parse_train()[0]
     #

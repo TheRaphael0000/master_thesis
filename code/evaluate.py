@@ -10,9 +10,8 @@ def evaluate_linking(rank_list, Y):
     """Combination of metrics used for evaluating the linking task"""
     ap_ = ap(rank_list, Y)
     rprec_ = rprec(rank_list, Y)
-    p10_ = precision_at_k(rank_list, Y, 10)
     hprec_ = hprec(rank_list, Y)
-    return ap_, rprec_, p10_, hprec_
+    return ap_, rprec_, hprec_
 
 
 def evaluate_clustering(Y, pred):

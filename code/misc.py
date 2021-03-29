@@ -1,7 +1,8 @@
 import itertools
-import numpy as np
 from collections import Counter
 
+import numpy as np
+from scipy.stats import binom_test
 import matplotlib.pyplot as plt
 
 
@@ -83,3 +84,23 @@ def sigmoid(x):
 
 def sigmoid_r(x):
     return - np.log((1 - x) / x)
+
+
+def sign_test(A, B):
+    pos = np.sum(A > B, axis=0)
+    eq = np.sum(A == B, axis=0)
+    neg = np.sum(A < B, axis=0)
+
+    print(pos)
+    print(eq)
+    print(neg)
+
+    binom_tests = [binom_test([pos[i], neg[i]]) for i in range(pos.shape[0])]
+    binom_tests = np.array(binom_tests)
+    print(binom_tests)
+
+
+def rank_list_to_txt(rank_list, Y):
+    with open("rank_list.txt", "w") as f:
+        for rank, ((a,b), score) in enumerate(rank_list):
+            f.write(f"{rank}, {'1' if Y[a] == Y[b] else '0'}, {str(score)}\n")
