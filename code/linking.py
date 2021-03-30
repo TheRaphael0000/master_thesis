@@ -24,8 +24,12 @@ def normalize(s):
 def create_n_grams(words, ns):
     if type(ns) is int:
         ns = [ns]
-    # Joining every words into a long string (using a _)
-    text = "_".join(words)
+    # if it's a list of numbers creating a long text of joined single character
+    if type(words[0]) == int:
+        text = "".join([chr(i) for i in words])
+    # if it's a list of string create a text by joining them with a _
+    if type(words[0]) == str:
+        text = "_".join(words)
     n_grams = []
     # Creating n-grams from the long text
     for i in range(len(text)):
@@ -45,7 +49,10 @@ def most_frequent_word(X, n, z_score=False, lidstone_lambda=0.1):
     # Computing the corpus word frequency
     total = reduce(lambda x, y: x + y, counters)
     # Selecting n mfw
-    mfw = dict(total.most_common(n))
+    if n > 0:
+        mfw = dict(total.most_common(n))
+    else:
+        mfw = dict(total)
     # tf to rtf or MLE probablity + lidstone smoothing
     features = [[(c[k] + lidstone_lambda) / (v + lidstone_lambda * len(total))
                  for k, v in mfw.items()] for c in counters]
@@ -61,9 +68,10 @@ def most_frequent_word(X, n, z_score=False, lidstone_lambda=0.1):
 
 def compute_links(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func):
     # Tokens normalization
-    X = [[normalize(t) for t in xi] for xi in X]
+    if type(X[0]) == str:
+        X = [[normalize(t) for t in xi] for xi in X]
     # Convert text to n_grams
-    if n_grams > 0:
+    if type(n_grams) == list or n_grams > 0:
         X = [create_n_grams(xi, n_grams) for xi in X]
     # Create features
     features = most_frequent_word(X, n_mfw, z_score, lidstone_lambda)

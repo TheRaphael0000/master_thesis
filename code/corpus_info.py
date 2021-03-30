@@ -8,12 +8,15 @@ id, x, y = oxquarry.parse()
 print("Oxquarry EN", *dataset_infos(x, y))
 id, x_lemma, x, y = brunet.parse()
 print("Brunet FR", *dataset_infos(x, y))
-id, x_lemma, x, y = st_jean.parse()
-print("St Jean FR", *dataset_infos(x, y))
-print("St Jean 1-100 FR", *dataset_infos(x[:100], y[:100]))
-print("St Jean 101-200 FR", *dataset_infos(x[100:], y[100:]))
+id, x_pos, x_lemma, x, y = st_jean.parse()
+print("St-Jean FR", *dataset_infos(x, y))
+print("St-Jean A 001-100 FR", *dataset_infos(x[:100], y[:100]))
+print("St-Jean B 101-200 FR", *dataset_infos(x[100:], y[100:]))
 
 
 problems = pan16.parse_train()
+for (info, _, x, y) in problems:
+    print(f"PAN16 {info['language']} {info['folder']}", *dataset_infos(x, y))
+problems = pan16.parse_test()
 for (info, _, x, y) in problems:
     print(f"PAN16 {info['language']} {info['folder']}", *dataset_infos(x, y))

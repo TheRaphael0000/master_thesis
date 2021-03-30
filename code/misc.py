@@ -66,7 +66,7 @@ def division(A, B):
 
 def log(A):
     """Shorthand for the numpy logarithm replacing 0 or negative log by 0"""
-    return np.log(A, where=A > 0, out=np.zeros(A.shape))
+    return np.log(A, where=A > 0, out=np.full(A.shape, np.inf))
 
 
 def normalize(x):
@@ -102,5 +102,14 @@ def sign_test(A, B):
 
 def rank_list_to_txt(rank_list, Y):
     with open("rank_list.txt", "w") as f:
-        for rank, ((a,b), score) in enumerate(rank_list):
+        for rank, ((a, b), score) in enumerate(rank_list):
             f.write(f"{rank}, {'1' if Y[a] == Y[b] else '0'}, {str(score)}\n")
+
+
+def simple_plot(X, Y, X_label, Y_label, filename):
+    plt.figure(figsize=(4, 3), dpi=200)
+    plt.plot(X, Y)
+    plt.xlabel(X_label)
+    plt.ylabel(Y_label)
+    plt.tight_layout()
+    plt.savefig(f"{filename}.png")

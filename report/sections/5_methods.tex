@@ -12,15 +12,17 @@ To try to increase the quality of the rank list, the proposed method is to use a
 
 \subsubsection{Rank list fusion}
 
-Each rank list is ordered using a different distance measure. The order of magnitude of each rank list is different. To avoid this problem, the solution opted is to only use the rank of each link.
+Each rank list is ordered using a different distance measure.
+The order of magnitude of each rank list is different.
+To avoid this problem, the solution opted is to only use the rank of each link.
 
 An additional constraint desired is to favor top ranked link and penalize bottom ranked links when fusing rank lists.
-This constraint can be easy to explain by observing the distance over the rank graph of the rank list.
-Figure~\ref{fig:distance_over_rank} clearly show us the top ranked links and bottom ranked links have more certainity.
+This constraint can be easily explained by observing the distance over the rank graph of the rank list.
+Figure~\ref{fig:distance_over_rank} clearly show us the top ranked links and bottom ranked links are fewer than the middle section.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{img/distance_over_rank.png}
-  \caption{Manhattan distances in the rank list of the 500 most frequent tokens using Brunet dataset.}
+  \caption{Distance over rank in the links of the Brunet dataset using Manhattan distances using the 500 most frequent tokens.}
   \label{fig:distance_over_rank}
 \end{figure}
 
@@ -51,3 +53,5 @@ Using the reciprocal of the sigmoid function we can modelize such curve. Sigmoid
 \end{figure}
 
 \subsection{Authors Clustering}
+
+To find clusters of authors, a possible way is to use aglomeratives clustering on a rank list.

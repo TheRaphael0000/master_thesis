@@ -53,6 +53,10 @@ def angular_distance(A, B):
     return np.arccos(cosine_sim(A, B)) / math.pi
 
 
+def kld(A, B):
+    return np.sum(A * log(division(A, B)))
+
+
 def j_divergence(A, B):
     A = np.array(A)
     B = np.array(B)

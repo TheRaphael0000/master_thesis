@@ -114,7 +114,7 @@ def main():
     print(" -- Loading dataset -- ")
     # _, X, Y = oxquarry.parse()
     # _, _, X, Y = brunet.parse()
-    _, _, X, Y = st_jean.parse()
+    _, _, _, X, Y = st_jean.parse()
 
     X = X[0:100]
     Y = Y[0:100]

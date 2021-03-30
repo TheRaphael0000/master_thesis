@@ -11,6 +11,7 @@ def parse():
     x_files = glob.glob(os.path.join(folder, "CNSaintJean*"))
     x_lemma = []
     x_token = []
+    x_pos = []
 
     for f in x_files:
         text = open(f, "rb").read().decode("utf8")
@@ -19,6 +20,7 @@ def parse():
 
         lemma = []
         token = []
+        pos = []
 
         number = False
 
@@ -46,6 +48,7 @@ def parse():
                 number = True
                 token.append(s[1])
                 lemma.append(s[1])
+                pos.append(72)
                 continue
 
             if number:
@@ -53,26 +56,34 @@ def parse():
 
             token.append(m[0])
             lemma.append(m[1])
+            try:
+                pos.append(int(m[2]))
+            except ValueError:
+                pos.append(100 if m[2] == 'p' else 101)
 
         assert len(lemma) == len(token)
+        assert len(lemma) == len(pos)
         x_lemma.append(lemma)
         x_token.append(token)
+        x_pos.append(pos)
 
     id = [re.search(r"CNSaintJean(...).*", f)[1] for f in x_files]
 
     y = open(os.path.join(folder, y_file)).read().split("\n")
     y = [yi for yi in y if yi != ""]
 
-    return id, x_lemma, x_token, y
+    return id, x_pos, x_lemma, x_token, y
 
 
 if __name__ == '__main__':
-    id, x_lemma, x_token, y = parse()
+    id, x_pos, x_lemma, x_token, y = parse()
     lid = len(id)
     lx_lemma = len(x_lemma)
     lx_token = len(x_token)
+    lx_pos = len(x_pos)
     ly = len(y)
     assert lid == lx_lemma
     assert lid == lx_token
+    assert lid == lx_pos
     assert lid == ly
     print(f"{lid} texts loaded")

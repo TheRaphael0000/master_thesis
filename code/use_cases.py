@@ -8,7 +8,7 @@ from corpus import brunet, oxquarry, st_jean, pan16
 from rank_list_fusion import compute_multiple_links, rank_list_fusion
 from evaluate import evaluate_linking
 from linking import compute_links
-from misc import sign_test
+from misc import sign_test, simple_plot
 import distances
 import s_curves
 
@@ -19,7 +19,51 @@ def main():
     # distance_over_rank()
     # zoom_influance()
     # find_best_mfw()
-    test_rank_list_fusion()
+    # test_rank_list_fusion()
+    # degradation()
+    pos_ngrams()
+
+
+def pos_ngrams():
+    print("loading")
+    _, X, _, _, Y = st_jean.parse()
+
+    for mfw in np.arange(200, 3000, 200):
+        rl = compute_links(X, [2, 3], mfw, False, 1e-1, distances.matusita)
+        m = evaluate_linking(rl, Y)
+        print(mfw, m)
+
+def degradation():
+    print("loading")
+    _, _, _, X, Y = st_jean.parse()
+
+    M = []
+
+    sizes = np.arange(9000, 0, -250, dtype=int)
+
+    for i in sizes:
+        # limitate the data size
+        Xi = [x[:i] for x in X]
+        rl = compute_links(Xi, 0, 500, True, 0.1, distances.cosine_distance)
+        m = evaluate_linking(rl, Y)
+        print(i, m)
+        M.append(m)
+
+    M = np.array(M)
+
+    fig, ax1 = plt.subplots(figsize=(6, 4), dpi=200)
+    ax2 = ax1.twinx()
+    ax1.plot(sizes, M[:,0], c="C0", ls="solid", label="Average Precision (AP)")
+    ax1.plot(sizes, M[:,1], c="C0", ls="dashed", label="RPrec")
+    ax2.plot(sizes, M[:,2], c="C0", ls="dotted", label="HPRec")
+    ax1.set_xlabel("#Tokens per texts")
+    plt.gca().invert_xaxis()
+    ax1.set_ylabel("AP/RPrec")
+    ax2.set_ylabel("HPrec")
+    plt.xticks(np.arange(9000, -1, -1000, dtype=int))
+    fig.legend()
+    plt.tight_layout()
+    plt.savefig(f"degradation.png")
 
 
 def zoom_influance():
@@ -58,7 +102,7 @@ def distance_over_rank():
 
 def find_best_mfw():
     _, _, X, Y = brunet.parse()
-    # _, _, X, Y = st_jean.parse()
+    # _, _, _, X, Y = st_jean.parse()
     # _, X, Y = oxquarry.parse()
 
     M = []
@@ -80,7 +124,7 @@ def find_best_mfw():
 
 
 def test_rank_list_fusion():
-    _, _, X, Y = st_jean.parse()
+    _, _, _, X, Y = st_jean.parse()
     # _, _, X, Y = brunet.parse()
     # _, X, Y = oxquarry.parse()
 
