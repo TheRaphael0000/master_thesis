@@ -66,12 +66,6 @@ Some others are specifically related to this study.
   \end{equation}
 \end{definition}
 
-\begin{definition}[$N$-Grams]
-  A $N$-gram is a special type of tokenization which is constructed by creating a token for the substrings from $0$ to \textit{text\_size} - $N$ of size $N$.
-  Example: Using 3-grams The string: "brown fox" is converted to: \\
-  $("\text{bro}", "\text{row}", "\text{own}", "\text{wn\_}", "\text{n\_f}", "\text{\_fo}", "\text{fox}")$
-\end{definition}
-
 \begin{definition}[r ratio~\cite{pan16}]
   The ratio between the number of clusters k and the number of documents N in a given corpus.
   If r is close to 0, most documents are in multi-documents clusters and there is a great density of relevant links.
@@ -87,10 +81,54 @@ Some others are specifically related to this study.
 
 \subsection{Document distances}
 
-\begin{definition}[Manhanttan Distance]
-  To compute the manhanttan distance the following equation is used.
+\begin{definition}[Manhanttan Distance ($L^1$ based)]
+  To compute the Manhanttan distance the following equation is used.
   \begin{equation}
-    dist_{Manhanttan}(A, B) = \sum_{i=1}^{m} |a_i - b_i|
+    dist_{Manhanttan}(A, B) = \sum_{i=1}^{m} |A_i - B_i|
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Tanimoto Distance ($L^1$ based, normalized)]
+  To compute the Tanimoto Distance the following equation is used. It's a components-wised normalized version of the manhattan distance.
+  \begin{equation}
+    dist_{Tanimoto}(A, B) = \frac{dist_{Manhattan}(A, B)}{\sum_{i=1}^{m} max(A_i, B_i)}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Euclidean Distance ($L^2$ based)]
+  To compute the Euclidean Distance the following equation is used.
+  \begin{equation}
+    dist_{Euclidian}(A, B) = \sqrt{\sum_{i=0}^{m}(A_i - B_i)^2}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Matusita Distance ($L^2$ based, square rooted values)]
+  To compute the Matusita Distance the following equation is used.
+  \begin{equation}
+    \begin{split}
+      dist_{Matusita}(A, B) &= dist_{Euclidian}(A', B') \\
+      \text{with }A' &= \sqrt{A}\text{ and }B' = \sqrt{B}
+    \end{split}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Clark Distance ($L^2$ based)]
+  To compute the Clark Distance the following equation is used.
+  \begin{equation}
+    dist_{Clark}(A, B) = \sqrt{\sum_{i=0}^{m}\left(\frac{|A_i - B_i|}{A_i + B_i}\right)^2}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Cosine Distance (Inner product based)]
+  To compute the Cosine Distance to first the Cosine similarity to compote the cosine distance.
+  \begin{equation}
+    sim_{Cosine}(A, B) = \frac{A \cdot B}{\sqrt{A \cdot A}\sqrt{B \cdot B}}
+  \end{equation}
+  \begin{equation}
+    dist_{Cosine}(A, B) = 1 - sim_{Cosine}(A, B)
+  \end{equation}
+  \begin{equation}
+    angular_dist_{Cosine}(A, B) = \frac{cos^{-1}sim_{Cosine}(A, B)}{\pi}
   \end{equation}
 \end{definition}
 

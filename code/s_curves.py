@@ -37,4 +37,4 @@ if __name__ == '__main__':
     plt.figure(figsize=(4, 3), dpi=200)
     plt.plot(*sigmoid_reciprocal()(500))
     plt.tight_layout()
-    plt.savefig("s_curves.png")
+    plt.savefig("img/s_curves.png")

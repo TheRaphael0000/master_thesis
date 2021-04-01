@@ -83,7 +83,7 @@ def clustering_case(X, Y, plot=False):
         plt.figure(figsize=(4, 3), dpi=200)
         plt.plot(range(len(silhouette_scores)), silhouette_scores)
         plt.tight_layout()
-        plt.savefig("silhouette_score.png")
+        plt.savefig("img/img/silhouette_score.png")
 
     d_threshold = ac.get_params()["distance_threshold"]
     pos = len([d for indices, d in rank_list_overall if d < d_threshold])
@@ -97,7 +97,7 @@ def clustering_case(X, Y, plot=False):
         plt.hlines([d_threshold], xmin=0, xmax=len(original), colors="r")
         plt.plot(range(len(original)), original)
         plt.tight_layout()
-        plt.savefig("distance_over_rank.png")
+        plt.savefig("img/distance_over_rank.png")
 
     print(" -- Clustering Evaluation -- ")
     b3_precision, b3_recall, b3_fscore, mis = evaluate_clustering(

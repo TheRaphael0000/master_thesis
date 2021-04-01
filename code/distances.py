@@ -15,14 +15,14 @@ def tanimoto(A, B):
     return manhattan(A, B) / np.sum(np.maximum(A, B))
 
 
+def euclidean(A, B):
+    return sp_euclidean(A, B)
+
+
 def matusita(A, B):
     A = np.sqrt(A)
     B = np.sqrt(B)
     return euclidean(A, B)
-
-
-def euclidean(A, B):
-    return sp_euclidean(A, B)
 
 
 def clark(A, B):

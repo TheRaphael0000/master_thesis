@@ -63,7 +63,7 @@ def most_frequent_word(X, n, z_score=False, lidstone_lambda=0.1):
         means = np.mean(features, axis=0)
         stds = np.std(features, axis=0)
         features = (features - means) / stds
-    return features
+    return features, mfw
 
 
 def compute_links(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func):
@@ -71,10 +71,10 @@ def compute_links(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func):
     if type(X[0]) == str:
         X = [[normalize(t) for t in xi] for xi in X]
     # Convert text to n_grams
-    if type(n_grams) == list or n_grams > 0:
+    if type(n_grams) == list or type(n_grams) == tuple or n_grams > 0:
         X = [create_n_grams(xi, n_grams) for xi in X]
     # Create features
-    features = most_frequent_word(X, n_mfw, z_score, lidstone_lambda)
+    features, mfw = most_frequent_word(X, n_mfw, z_score, lidstone_lambda)
     # Compute link distances into a 2D matrix
     distances_matrix = squareform(pdist(features, metric=distance_func))
     # Computing the rank list of for this distance matrix

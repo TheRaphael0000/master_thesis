@@ -34,7 +34,7 @@ def zipf_law(total, n=21):
     plt.yscale("log")
     plt.plot(A, B)
     plt.tight_layout()
-    plt.savefig("zipf.png")
+    plt.savefig("img/zipf.png")
 
 
 def rank_list_from_distances_matrix(distances_matrix):
@@ -113,3 +113,11 @@ def simple_plot(X, Y, X_label, Y_label, filename):
     plt.ylabel(Y_label)
     plt.tight_layout()
     plt.savefig(f"{filename}.png")
+
+
+def first_letters_cut(X, n):
+    return [[x[:n] for x in Xi] for Xi in X]
+
+
+def last_letters_cut(X, n):
+    return [[x[-n:] for x in Xi] for Xi in X]
