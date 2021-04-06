@@ -64,9 +64,9 @@ def clustering_case(X, Y, plot=False):
 
         [X, 6, 500, True, 1e-1, distances.manhattan],
         [X, 6, 500, False, 1e-1, distances.tanimoto],
-        [X, 6, 500, False, 1e-1, distances.clark],
+        # [X, 6, 500, False, 1e-1, distances.clark],
         [X, 6, 500, False, 1e-1, distances.matusita],
-        [X, 6, 500, False, 1e-1, distances.cosine_distance],
+        # [X, 6, 500, False, 1e-1, distances.cosine_distance],
     ]
     s_curve = s_curves.sigmoid_reciprocal()
 

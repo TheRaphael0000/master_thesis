@@ -99,6 +99,10 @@ def sign_test(A, B):
     binom_tests = np.array(binom_tests)
     print(binom_tests)
 
+def print_side_by_side_clusters(Y_true, Y_pred):
+    for a in sorted(zip(Y_true, Y_pred), key=lambda x:x[-1]):
+        print(a)
+
 
 def rank_list_to_txt(rank_list, Y):
     with open("rank_list.txt", "w") as f:

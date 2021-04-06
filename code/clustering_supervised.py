@@ -21,16 +21,9 @@ from evaluate import evaluate_clustering
 
 
 def clustering(rank_list, clf):
-    X = [[np.log(i+1), score] for i, (link, score) in enumerate(rank_list)]
-    Y_pred = clf.predict(X)
-
-    # the sum give the position n of the "flip" in the rank list since
-    # the n first should be ones
-    i = np.sum(Y_pred)
-    ajusted_i = i#int(i * 1.4)
-    distance_threshold = rank_list[ajusted_i][-1]
-    print(i, ajusted_i, distance_threshold)
-
+    print(" -- Clustering -- ")
+    distance_threshold = compute_distance_threshold(rank_list, clf)
+    print("distance_threshold:", distance_threshold)
     args = {
         "n_clusters": None,
         "affinity": "precomputed",
@@ -43,9 +36,65 @@ def clustering(rank_list, clf):
     return ac
 
 
+def clustering_eval(Y_pred, Y):
+    b3_prec, b3_rec, b3_fscore, mis = evaluate_clustering(Y_pred, Y)
+    print("bcubed.precision", b3_prec)
+    print("bcubed.recall", b3_rec)
+    print("bcubed.fscore", b3_fscore)
+    print("adjusted_mutual_info_score", mis)
+
+
+def rank_list_feature_extraction(rank_list):
+    X = [[np.log((i + 1) / len(rank_list)), score]
+         for i, (link, score) in enumerate(rank_list)]
+    return X
+
+
+def compute_distance_threshold(rank_list, clf):
+    X = rank_list_feature_extraction(rank_list)
+    Y_pred = clf.predict(X)
+
+    # the sum give the position n of the "flip" in the rank list since
+    # the n first should be ones
+    i = np.sum(Y_pred)
+    distance_threshold = rank_list[i][-1]
+    return distance_threshold
+
+
+def experiments(Xi):
+    return [
+        [Xi, 0, 500, True, 1e-1, distances.manhattan],
+        [Xi, 0, 500, False, 1e-1, distances.tanimoto],
+        [Xi, 0, 500, False, 1e-1, distances.clark],
+        [Xi, 0, 500, False, 1e-1, distances.matusita],
+        [Xi, 0, 500, True, 1e-1, distances.cosine_distance],
+
+        [Xi, 6, 500, True, 1e-1, distances.manhattan],
+        # [Xi, 6, 500, False, 1e-1, distances.tanimoto],
+        # [Xi, 6, 500, False, 1e-1, distances.clark],
+        # [Xi, 6, 500, False, 1e-1, distances.matusita],
+        # [Xi, 6, 500, False, 1e-1, distances.cosine_distance],
+    ]
+
+
+def linking(X):
+    print(" -- Linking -- ")
+    experiments_ = experiments(X)
+    s_curve = s_curves.sigmoid_reciprocal()
+    rl, rls = compute_multiple_links(experiments_, s_curve)
+    return rl, rls
+
+
+def linking_evaluation(rl, rls, Y):
+    print("AP RPrec HPrec (Used for overall)")
+    for rl_ in rls:
+        print(*evaluate_linking(rl_, Y))
+    print("AP RPrec HPrec (Overall)")
+    print(*evaluate_linking(rl, Y))
+
+
 def clustering_case():
     _, _, _, X, Y = st_jean.parse()
-    # _, _, X, Y = brunet.parse()
 
     n = len(X) // 2
     X_train = X[:n]
@@ -53,85 +102,35 @@ def clustering_case():
     X_test = X[n:]
     Y_test = Y[n:]
 
-    print("authors, texts, r, true_links, links, true_links_ratio, mean_length")
-    print(*dataset_infos(X_train, Y_train))
-    print(*dataset_infos(X_test, Y_test))
+    print("\n -- Training on st-jean -- ")
+    rl_train = linking(X_train, Y_train)
 
-    print()
-    print(" -- Training -- ")
-    print()
-
-    def experiments(Xi):
-        return [
-            [Xi, 0, 500, True, 1e-1, distances.manhattan],
-            [Xi, 0, 500, False, 1e-1, distances.tanimoto],
-            [Xi, 0, 500, False, 1e-1, distances.clark],
-            [Xi, 0, 500, False, 1e-1, distances.matusita],
-            [Xi, 0, 500, True, 1e-1, distances.cosine_distance],
-
-            [Xi, 6, 500, True, 1e-1, distances.manhattan],
-            [Xi, 6, 500, False, 1e-1, distances.tanimoto],
-            # [Xi, 6, 500, False, 1e-1, distances.clark],
-            [Xi, 6, 500, False, 1e-1, distances.matusita],
-            # [Xi, 6, 500, False, 1e-1, distances.cosine_distance],
-        ]
-    s_curve = s_curves.sigmoid_reciprocal()
-
-    print(" -- Linking -- ")
-    experiments_train = experiments(X_train)
-    rl_train, rls_train = compute_multiple_links(
-        experiments_train, s_curve)
-
-    print(" -- Linking evaluation -- ")
-    print("AP RPrec HPrec (Used for overall)")
-    for rl in rls_train:
-        print(*evaluate_linking(rl, Y_train))
-    print("AP RPrec HPrec (Overall)")
-    print(*evaluate_linking(rl_train, Y_train))
-
-    X_rl = [[np.log(i+1), score] for i, ((a, b), score) in enumerate(rl_train)]
+    X_rl = rank_list_feature_extraction(rl_train)
     Y_rl = [1 if Y_train[a] == Y_train[b] else 0 for (a, b), score in rl_train]
     clf = LogisticRegression(random_state=0).fit(X_rl, Y_rl)
 
-    print(" -- Clustering -- ")
     ac = clustering(rl_train, clf)
+    clustering_eval(Y_train, ac.labels_)
 
-    print(" -- Clustering Evaluation -- ")
-    b3_prec, b3_rec, b3_fscore, mis = evaluate_clustering(Y_train, ac.labels_)
-    print("bcubed.precision", b3_prec)
-    print("bcubed.recall", b3_rec)
-    print("bcubed.fscore", b3_fscore)
-    print("adjusted_mutual_info_score", mis)
+    print("\n -- Testing on st-jean-- ")
+    rl, rls = linking(X_test, Y_test)
+    linking_evaluation(rl, rls, Y)
+    ac = clustering(rl, clf)
+    clustering_eval(Y_test, ac.labels_)
 
+    print("\n -- Testing on brunet -- ")
+    _, _, X, Y = brunet.parse()
+    rl, rls = linking(X, Y)
+    linking_evaluation(rl, rls, Y)
+    ac = clustering(rl, clf)
+    clustering_eval(Y, ac.labels_)
 
-    print()
-    print(" -- Testing -- ")
-    print()
-
-    print(" -- Linking -- ")
-    experiments_test = experiments(X_test)
-    rl_test, rls_test = compute_multiple_links(
-        experiments_test, s_curve)
-
-    print(" -- Linking evaluation -- ")
-    print("AP RPrec HPrec (Used for overall)")
-    for rl in rls_test:
-        print(*evaluate_linking(rl, Y_test))
-    print("AP RPrec HPrec (Overall)")
-    print(*evaluate_linking(rl_test, Y_test))
-
-    print(" -- Clustering -- ")
-    ac = clustering(rl_test, clf)
-
-    # for a in sorted(zip(Y_test, ac.labels_), key=lambda x:x[-1]):
-    #     print(a)
-
-    print(" -- Clustering Evaluation -- ")
-    b3_prec, b3_rec, b3_fscore, mis = evaluate_clustering(Y_test, ac.labels_)
-    print("bcubed.precision", b3_prec)
-    print("bcubed.recall", b3_rec)
-    print("bcubed.fscore", b3_fscore)
-    print("adjusted_mutual_info_score", mis)
+    print("\n -- Testing on oxquarry -- ")
+    _, X, Y = oxquarry.parse()
+    rl, rls = linking(X, Y)
+    linking_evaluation(rl, rls, Y)
+    ac = clustering(rl, clf)
+    clustering_eval(Y, ac.labels_)
 
 
 if __name__ == '__main__':
