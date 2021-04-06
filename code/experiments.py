@@ -28,7 +28,7 @@ from misc import simple_plot
 from misc import first_letters_cut
 from misc import last_letters_cut
 from misc import sigmoid
-from misc import sigmoid_reciprocal
+from misc import sigmoid_r
 
 
 def main():
@@ -37,10 +37,11 @@ def main():
     # mfw()
     # fusion()
     # degradation()
-    pos_ngrams()
-    first_last_letters_ngrams()
-    letter_ngrams()
+    # pos_ngrams()
+    # first_last_letters_ngrams()
+    # letter_ngrams()
     # recurrent_errors()
+    pass
 
 
 def recurrent_errors():
@@ -51,8 +52,8 @@ def recurrent_errors():
         [X, 0, 500, True, 1e-1, distances.manhattan],
         [X, 0, 500, False, 1e-1, distances.tanimoto],
         [X, 0, 500, False, 1e-1, distances.clark],
-        [X, 0, 500, False, 1e-1, distances.matusita],
-        [X, 0, 500, True, 1e-1, distances.cosine_distance],
+        # [X, 0, 500, False, 1e-1, distances.matusita],
+        # [X, 0, 500, True, 1e-1, distances.cosine_distance],
 
         # [X, 6, 500, True, 1e-1, distances.manhattan],
         # [X, 6, 500, False, 1e-1, distances.tanimoto],
@@ -71,7 +72,7 @@ def recurrent_errors():
         print(m)
         i = 0
         for (a, b), s in rl:
-            if Y[a] != Y[b]:
+            if Y[a] == Y[b]:
                 i += 1
                 incorrectly_ranked[(a, b)] += 1
                 if i > top_n:
@@ -80,10 +81,7 @@ def recurrent_errors():
     print(top_errors)
     for (a, b), errors in top_errors:
         X_a_b = [X[a], X[b]]
-        _, mfw = most_frequent_word()
-        print(Counter().most_common(50))
-        print(Counter().most_common(50))
-        print()
+        features, mfw = most_frequent_word(X_a_b, 500, lidstone_lambda=0)
 
 
 def first_last_letters_ngrams():

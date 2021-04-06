@@ -1,17 +1,23 @@
 """Clustering module."""
 
+import numpy as np
+
 import matplotlib.pyplot as plt
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.metrics import silhouette_score
 
-import numpy as np
-
 import distances
-from corpus import oxquarry, brunet, st_jean, pan16
-from rank_list_fusion import compute_multiple_links
-from misc import dataset_infos, distances_matrix_from_rank_list, rank_list_to_txt
-from evaluate import evaluate_linking, evaluate_clustering
 import s_curves
+from corpus import oxquarry
+from corpus import brunet
+from corpus import st_jean
+from corpus import pan16
+from rank_list_fusion import compute_multiple_links
+from misc import dataset_infos
+from misc import distances_matrix_from_rank_list
+from misc import rank_list_to_txt
+from evaluate import evaluate_linking
+from evaluate import evaluate_clustering
 
 
 def clustering(rank_list):
@@ -58,9 +64,9 @@ def clustering_case(X, Y, plot=False):
 
         [X, 6, 500, True, 1e-1, distances.manhattan],
         [X, 6, 500, False, 1e-1, distances.tanimoto],
-        # no clark since too bad results
+        [X, 6, 500, False, 1e-1, distances.clark],
         [X, 6, 500, False, 1e-1, distances.matusita],
-        [X, 6, 500, True, 1e-1, distances.cosine_distance],
+        [X, 6, 500, False, 1e-1, distances.cosine_distance],
     ]
     s_curve = s_curves.sigmoid_reciprocal()
 

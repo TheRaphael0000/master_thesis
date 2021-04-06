@@ -49,15 +49,15 @@ def most_frequent_word(X, n, z_score=False, lidstone_lambda=0.1):
     # Computing the corpus word frequency
     total = reduce(lambda x, y: x + y, counters)
     # Selecting n mfw
-    if n > 0:
-        mfw = dict(total.most_common(n))
-    else:
-        mfw = dict(total)
-    # tf to rtf or MLE probablity + lidstone smoothing
-    features = [[(c[k] + lidstone_lambda) / (v + lidstone_lambda * len(total))
-                 for k, v in mfw.items()] for c in counters]
-    # Transforming the rtf to a 2D numpy array
+    mfw = dict(total.most_common(n))
+    # keep only the mfw in each counter
+    features = [[c[k] for k in mfw.keys()] for c in counters]
+    # Transforming the tf to a 2D numpy array
     features = np.array(features)
+    # normalize tf to rtf or MLE probablity + lidstone smoothing
+    num = features + lidstone_lambda
+    den = np.sum(features, axis=1) + lidstone_lambda * features.shape[1]
+    features = (num.T / den).T
     # Zscoring if needed
     if z_score:
         means = np.mean(features, axis=0)
