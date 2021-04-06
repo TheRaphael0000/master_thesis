@@ -103,31 +103,32 @@ def clustering_case():
     Y_test = Y[n:]
 
     print("\n -- Training on st-jean -- ")
-    rl_train = linking(X_train, Y_train)
+    rl, rls = linking(X_train)
+    linking_evaluation(rl, rls, Y_train)
 
-    X_rl = rank_list_feature_extraction(rl_train)
-    Y_rl = [1 if Y_train[a] == Y_train[b] else 0 for (a, b), score in rl_train]
+    X_rl = rank_list_feature_extraction(rl)
+    Y_rl = [1 if Y_train[a] == Y_train[b] else 0 for (a, b), score in rl]
     clf = LogisticRegression(random_state=0).fit(X_rl, Y_rl)
 
-    ac = clustering(rl_train, clf)
+    ac = clustering(rl, clf)
     clustering_eval(Y_train, ac.labels_)
 
     print("\n -- Testing on st-jean-- ")
-    rl, rls = linking(X_test, Y_test)
+    rl, rls = linking(X_test)
     linking_evaluation(rl, rls, Y)
     ac = clustering(rl, clf)
     clustering_eval(Y_test, ac.labels_)
 
     print("\n -- Testing on brunet -- ")
     _, _, X, Y = brunet.parse()
-    rl, rls = linking(X, Y)
+    rl, rls = linking(X)
     linking_evaluation(rl, rls, Y)
     ac = clustering(rl, clf)
     clustering_eval(Y, ac.labels_)
 
     print("\n -- Testing on oxquarry -- ")
     _, X, Y = oxquarry.parse()
-    rl, rls = linking(X, Y)
+    rl, rls = linking(X)
     linking_evaluation(rl, rls, Y)
     ac = clustering(rl, clf)
     clustering_eval(Y, ac.labels_)
