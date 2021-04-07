@@ -40,7 +40,7 @@ def main():
     # pos_ngrams()
     # first_last_letters_ngrams()
     # letter_ngrams()
-    # recurrent_errors()
+    recurrent_errors()
     pass
 
 
@@ -52,8 +52,8 @@ def recurrent_errors():
         [X, 0, 500, True, 1e-1, distances.manhattan],
         [X, 0, 500, False, 1e-1, distances.tanimoto],
         [X, 0, 500, False, 1e-1, distances.clark],
-        # [X, 0, 500, False, 1e-1, distances.matusita],
-        # [X, 0, 500, True, 1e-1, distances.cosine_distance],
+        [X, 0, 500, False, 1e-1, distances.matusita],
+        [X, 0, 500, True, 1e-1, distances.cosine_distance],
 
         # [X, 6, 500, True, 1e-1, distances.manhattan],
         # [X, 6, 500, False, 1e-1, distances.tanimoto],
@@ -62,7 +62,8 @@ def recurrent_errors():
         # [X, 6, 500, True, 1e-1, distances.cosine_distance],
     ]
 
-    top_n = 10
+    top_n = 15
+    keep = 3
 
     incorrectly_ranked = defaultdict(lambda: 0)
 
@@ -72,16 +73,21 @@ def recurrent_errors():
         print(m)
         i = 0
         for (a, b), s in rl:
-            if Y[a] == Y[b]:
+            if Y[a] != Y[b]:
                 i += 1
                 incorrectly_ranked[(a, b)] += 1
                 if i > top_n:
                     break
-    top_errors = Counter(dict(incorrectly_ranked)).most_common(top_n // 2)
-    print(top_errors)
+
+    top_errors = Counter(dict(incorrectly_ranked)).most_common(keep)
     for (a, b), errors in top_errors:
         X_a_b = [X[a], X[b]]
-        features, mfw = most_frequent_word(X_a_b, 500, lidstone_lambda=0)
+        features, mfw = most_frequent_word(X_a_b, 10, lidstone_lambda=0)
+        print(f"{errors}/{len(experiments)}")
+        print(f"Word & {Y[a]} ({a+1}) & {Y[b]} ({b+1}) \\\\")
+        for a, b, w in zip(list(features[0,:]), list(features[1,:]), mfw.keys()):
+            print(f"{w} & {a:.3f} & {b:.3f} \\\\")
+        print()
 
 
 def first_last_letters_ngrams():
@@ -299,6 +305,8 @@ def fusion():
     s_curve = s_curves.sigmoid_reciprocal()
     s_curve_lin = s_curves.linear()
 
+    fusion_size = 3
+
     M_single = []
 
     _, rank_lists = compute_multiple_links(experiments, None)
@@ -312,7 +320,7 @@ def fusion():
     M_fusion = []
     M_fusion_lin = []
 
-    for experiments_ in itertools.combinations(range(len(experiments)), 3):
+    for experiments_ in itertools.combinations(range(len(experiments)), fusion_size):
         rank_lists_ = [rank_lists[i] for i in experiments_]
         M_single_max_in_exp.append(np.max(M_single[experiments_, :], axis=0))
 
@@ -326,8 +334,11 @@ def fusion():
     M_fusion_lin = np.array(M_fusion_lin)
     M_single_max_in_exp = np.array(M_single_max_in_exp)
 
+    print("S-curve vs Linear")
     sign_test(M_fusion, M_fusion_lin)
+    print("S-curve vs Single max")
     sign_test(M_fusion, M_single_max_in_exp)
+    print("Linear vs Single max")
     sign_test(M_fusion_lin, M_single_max_in_exp)
 
     # for i in range(4):
@@ -337,9 +348,9 @@ def fusion():
     #     print(wilcoxon(M_fusion_lin[:,i], M_single_max_in_exp[:,i], alternative="two-sided"))
 
     plt.figure(figsize=(6, 4), dpi=200)
-    x, y, c = M_fusion[:, 0], M_fusion[:, 1], M_fusion[:, 3]
-    plt.scatter(x, y, c=c, marker=".", label="Fusions", alpha=0.75)
-    x, y, c = M_single[:, 0], M_single[:, 1], M_single[:, 3]
+    x, y, c = M_fusion[:, 0], M_fusion[:, 1], M_fusion[:, 2]
+    plt.scatter(x, y, c=c, marker=".", label=f"Fusions ({fusion_size} lists)", alpha=0.75)
+    x, y, c = M_single[:, 0], M_single[:, 1], M_single[:, 2]
     plt.scatter(x, y, c=c, marker="^", label="Single rank list", alpha=1)
     cbar = plt.colorbar()
     plt.xlabel("RPrec")

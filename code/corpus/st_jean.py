@@ -6,9 +6,17 @@ cwd = os.path.dirname(os.path.abspath(__file__))
 folder = os.path.join(cwd, "st_jean")
 y_file = "Author.txt"
 
+def parse_A():
+    return parse_(0, 100)
+
+def parse_B():
+    return parse_(100, 100)
 
 def parse():
-    x_files = glob.glob(os.path.join(folder, "CNSaintJean*"))
+    return parse_(0, 200)
+
+def parse_(offset, size):
+    x_files = glob.glob(os.path.join(folder, "CNSaintJean*"))[offset:offset+size]
     x_lemma = []
     x_token = []
     x_pos = []
@@ -67,10 +75,10 @@ def parse():
         x_token.append(token)
         x_pos.append(pos)
 
-    id = [re.search(r"CNSaintJean(...).*", f)[1] for f in x_files]
+    id = [re.search(r"CNSaintJean(...).*", f)[1] for f in x_files][offset:offset+size]
 
     y = open(os.path.join(folder, y_file)).read().split("\n")
-    y = [yi for yi in y if yi != ""]
+    y = [yi for yi in y if yi != ""][offset:offset+size]
 
     return id, x_pos, x_lemma, x_token, y
 

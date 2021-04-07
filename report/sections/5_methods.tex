@@ -46,7 +46,7 @@ In the St-Jean corpus 26 POS are used to describe every words in the corpus.
 Which correspond to $26^2 = 676$ possible unique POS 2-grams, to $26^3 = 17'576$ POS 3-grams and $26^4 = 456'976$.
 
 Like the other methods, an overfit to less important words is possible if the MFW ceiling is too high, reducing the average precision.
-In Figure~\ref{fig:pos_ngrams} the POS 2-grams clearly have drop in average precision after \~250 MFW.
+In Figure~\ref{fig:pos_ngrams} the POS 2-grams clearly have drop in average precision after \~250-MFW.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{img/pos_ngrams.png}
@@ -74,9 +74,83 @@ Figure~\ref{fig:first_last_letters_ngrams} shows the average precision using the
 
 \subsubsection{Frequent errors}
 
-In this section, the goal is to extrat the frequent errors produced by our system, in this case the links (document pairs) highly ranked on different rank list, to possibly improve the system.
+This section, try to understand the errors in our system, in this case the false links (document pairs with different authors) highly ranked on different rank list.
+The system is highly based on the feature vector created using the N-MFW
 
+Using the St-Jean dataset, to find reccurant errors in our system we use 5 different distance metrics on the relative frequency of the 500-MFW.
+This generate 5 rank lists.
+The average precision for these rank list is always greater than 0.7.
 
+With this 5 rank lists only the top 15 incorrect pairs are kept to be analyzed, this correspond to the most inaccurate pairs.
+The Tables~\ref{tab:errors1}~/~\ref{tab:errors2}/~\ref{tab:errors3} show the 10-MFW relative frequency in the top 15 of the rank lists.
+These pairs are found using 500-MFW but for visibility purpose we only show the 10-MFW.
+These tables clearly show similarities in style for these texts pairs.
+Using a distance function on these two vectors will produce a low score and thus rank them high in the rank list.
+
+Since the style is close using MFW on the token as a metric, we can't clearly determinate that these texts are from different author using only this type of representation.
+
+\begin{table}
+  \caption{Relative term frequencies of the top 10 words in Zola (49) / Flaubert (63), in the 15 incorrect of 4 out of 5 rank lists}
+  \label{tab:errors1}
+  \begin{tabular}{|l|c|c|}
+      \hline
+      Word & Zola (49) & Flaubert (63) \\
+      \hline
+      , & 0.328 & 0.312 \\
+      . & 0.136 & 0.129 \\
+      de & 0.117 & 0.103 \\
+      la & 0.083 & 0.078 \\
+      il & 0.082 & 0.067 \\
+      le & 0.060 & 0.059 \\
+      et & 0.048 & 0.070 \\
+      elle & 0.042 & 0.070 \\
+      à & 0.049 & 0.061 \\
+      les & 0.055 & 0.051 \\
+      \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}
+  \caption{Relative term frequencies of the top 10 words in Maupassant (43) / Flaubert (52), in the 15 incorrect of 4 out of 5 rank lists}
+  \label{tab:errors2}
+  \begin{tabular}{|l|c|c|}
+      \hline
+      Word & Maupassant (43) & Flaubert (52) \\
+      \hline
+      , & 0.305 & 0.316 \\
+      . & 0.126 & 0.134 \\
+      de & 0.133 & 0.100 \\
+      et & 0.081 & 0.078 \\
+      la & 0.070 & 0.080 \\
+      il & 0.061 & 0.066 \\
+      à & 0.061 & 0.061 \\
+      le & 0.056 & 0.062 \\
+      elle & 0.059 & 0.055 \\
+      l' & 0.048 & 0.047 \\
+      \hline
+  \end{tabular}
+\end{table}
+
+\begin{table}
+  \caption{Relative term frequencies of the top 10 words in Maupassant (10) / Flaubert (52), in the 15 incorrect of 4 out of 5 rank lists}
+  \label{tab:errors3}
+  \begin{tabular}{|l|c|c|}
+      \hline
+      Word & Maupassant (10) & Flaubert (52) \\
+      \hline
+      , & 0.299 & 0.317 \\
+      . & 0.136 & 0.135 \\
+      de & 0.110 & 0.101 \\
+      et & 0.090 & 0.078 \\
+      il & 0.089 & 0.066 \\
+      la & 0.069 & 0.080 \\
+      le & 0.061 & 0.062 \\
+      à & 0.057 & 0.061 \\
+      - & 0.045 & 0.052 \\
+      l' & 0.044 & 0.047 \\
+      \hline
+  \end{tabular}
+\end{table}
 
 
 \subsubsection{Rank list fusion}

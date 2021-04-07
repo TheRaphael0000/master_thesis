@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import precision_recall_fscore_support
 
 import distances
 import s_curves
@@ -73,7 +74,7 @@ def experiments(Xi):
         # [Xi, 6, 500, False, 1e-1, distances.tanimoto],
         # [Xi, 6, 500, False, 1e-1, distances.clark],
         # [Xi, 6, 500, False, 1e-1, distances.matusita],
-        # [Xi, 6, 500, False, 1e-1, distances.cosine_distance],
+        [Xi, 6, 500, True, 1e-1, distances.cosine_distance],
     ]
 
 
@@ -93,31 +94,29 @@ def linking_evaluation(rl, rls, Y):
     print(*evaluate_linking(rl, Y))
 
 
-def clustering_case():
-    _, _, _, X, Y = st_jean.parse()
-
-    n = len(X) // 2
-    X_train = X[:n]
-    Y_train = Y[:n]
-    X_test = X[n:]
-    Y_test = Y[n:]
-
+def main():
     print("\n -- Training on st-jean -- ")
-    rl, rls = linking(X_train)
-    linking_evaluation(rl, rls, Y_train)
-
-    X_rl = rank_list_feature_extraction(rl)
-    Y_rl = [1 if Y_train[a] == Y_train[b] else 0 for (a, b), score in rl]
-    clf = LogisticRegression(random_state=0).fit(X_rl, Y_rl)
-
-    ac = clustering(rl, clf)
-    clustering_eval(Y_train, ac.labels_)
-
-    print("\n -- Testing on st-jean-- ")
-    rl, rls = linking(X_test)
+    _, _, _, X, Y = st_jean.parse_A()
+    rl, rls = linking(X)
     linking_evaluation(rl, rls, Y)
+
+    print(" -- Learning cut --")
+    X_rl = rank_list_feature_extraction(rl)
+    Y_rl = [1 if Y[a] == Y[b] else 0 for (a, b), score in rl]
+    clf = LogisticRegression(random_state=0).fit(X_rl, Y_rl)
+    print(clf.coef_)
+    Y_pred = clf.predict(X_rl)
+    print(precision_recall_fscore_support(Y_pred, Y_rl))
+
     ac = clustering(rl, clf)
-    clustering_eval(Y_test, ac.labels_)
+    clustering_eval(Y, ac.labels_)
+
+    print("\n -- Testing on st-jean B -- ")
+    _, _, _, X_B, Y_B = st_jean.parse_B()
+    rl, rls = linking(X_B)
+    linking_evaluation(rl, rls, Y_B)
+    ac = clustering(rl, clf)
+    clustering_eval(Y_B, ac.labels_)
 
     print("\n -- Testing on brunet -- ")
     _, _, X, Y = brunet.parse()
@@ -135,4 +134,4 @@ def clustering_case():
 
 
 if __name__ == '__main__':
-    clustering_case()
+    main()

@@ -2,7 +2,7 @@
 
 In this section, the different corpus used will be introduced.
 Two types of corpus were analyzed in this study.
-The ones used in the PAN @ CLEF 2016 campaign~\cite{pan16}, which contain reviews and articles written in English, Dutch and Greek and 3 other literary corpus contain excerpts of English (1) and French (2) novels.
+The ones used in the PAN @ CLEF 2016 campaign~\cite{pan16}, which contain reviews and articles written in English, Dutch and Greek and 3 other literary corpus contain excerpts of English (1 corpus) and French (2 corpus) novels.
 
 \subsection{Literature corpus}
 \label{sec:lit_corpus}
@@ -55,15 +55,16 @@ The problems are in 3 languages (English, Dutch, Greek) and two genres (articles
 
 Detailled statistics on this dataset can be found in annex in Table~\ref{tab:pan_datasets}.
 The r ratio is closer to 1 than 0 for most of the datasets, which indicate a rather larger number of single cluster.
-Making the baseline singleton cluster (each documents are considerd in a different cluster) a challanging problem to overcome for this dataset.
-Additionally the true links ratio is rather low for all problem which mean without strong comparaison metrics, finding the correct true links is even harder.
-The mean size of these dataset is in the range $[171-1533]$ tokens, which can be considered as rather small datasets compared to the literary datasets presented in~\ref{sec:lit_corpus}.
+Making the baseline \textit{Singleton Cluster} (each documents are considerd in a different cluster) a challanging problem to overcome for this dataset.
+The mean size of these dataset is in the range $[171-1533]$ tokens, which can be considered as rather small datasets compared to the literary datasets presented in Section~\ref{sec:lit_corpus}.
+Additionally the true links ratio is rather low for all problem which mean without strong comparaison metrics, finding the correct true links is even harder, thus Singleton Cluster better results in most of the cases.
 
 \subsubsection{Text size importance in stylometry}
 
-Figure~\ref{degradation} shows the importance of having texts large enough for a correct stylistic detection.
+Figure~\ref{img:degradation} shows the importance of having texts large enough for a correct stylistic detection using distance between MFW vectors.
 
-PAN16 dataset is a difficult dataset due to its small size when using.
+PAN16 dataset is a difficult dataset due to its small size, thus extracting reliable feature for each text to estimate each style is also a difficult task.
+After multiple tests, the PAN @ CLEF 2016 dataset was not used in this study due to its difficulty in finding reliable stylographic clues.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{img/degradation.png}
