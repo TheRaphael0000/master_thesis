@@ -18,8 +18,8 @@ The Brunet french corpus contain exactly 4 excerpts of novels for each of the 11
 Authors present in this dataset : Balzac, Chateaubriand, Flaubert, Marivaux, Maupassant, Proust, Rousseau, Sand, Vernes, Voltaire, Zola.
 Brunet is already tokenized in two different ways : One using the actual tokens in the text, and another one using only the lemma.
 
-St-Jean dataset was also used \cite{unine_corpus}.
-It contains 200 excepts of french novels from 30 different authors.
+The Saint-Jean dataset was also used \cite{unine_corpus}.
+It contains 200 excepts of 68 french novels written during the XIX century from 31 different authors \cite{st_jean}.
 Since this dataset is larger than the other one and was created such that it can be splited in two parts, the statistics of the two parts and the whole corpus is displayed in~\ref{tab:lit_datasets}.
 One contain the first 100 texts and the other one the 100 following, which are called St Jean Serie A and St-Jean Serie B.
 Both parts are approximatively containing the same number of authors and the same number of true links.
@@ -27,8 +27,8 @@ Both parts are approximatively containing the same number of authors and the sam
 \begin{table*}[t]
   \caption{General information and statistics on the literary datasets}
   \label{tab:lit_datasets}
-  \begin{tabular}{|l|l|l|l|l|l|l|l|l|}
-    \hline
+  \begin{tabular}{ l c c c c c c c c }
+    \toprule
     \textbf{Name} &
     \textbf{Language} &
     \textbf{Authors} &
@@ -37,12 +37,14 @@ Both parts are approximatively containing the same number of authors and the sam
     \textbf{True links} &
     \textbf{Links} &
     \textbf{True links ratio} &
-    \textbf{avg length} \\ \hline
-    Oxquarry & EN & 9 & 52 & 0.173 & 160 & 1326 & 0.121 & 11650 \\ \hline
-    Brunet & FR & 11 & 44 & 0.25 & 66 & 946 & 0.07 & 9778 \\ \hline
-    St-Jean & FR & 30 & 200 & 0.15 & 670 & 19900 & 0.034 & 11533 \\ \hline
-    St-Jean A 001-100 & FR & 17 & 100 & 0.17 & 330 & 4950 & 0.067 & 11552 \\ \hline
-    St-Jean B 101-200 & FR & 19 & 100 & 0.19 & 258 & 4950 & 0.052 & 11513 \\ \hline
+    \textbf{avg length} \\
+    \midrule
+    Oxquarry & EN & 9 & 52 & 0.173 & 160 & 1326 & 0.121 & 11650 \\
+    Brunet & FR & 11 & 44 & 0.25 & 66 & 946 & 0.07 & 9778 \\
+    St-Jean & FR & 30 & 200 & 0.15 & 670 & 19900 & 0.034 & 11533 \\
+    St-Jean A 001-100 & FR & 17 & 100 & 0.17 & 330 & 4950 & 0.067 & 11552 \\
+    St-Jean B 101-200 & FR & 19 & 100 & 0.19 & 258 & 4950 & 0.052 & 11513 \\
+    \bottomrule
   \end{tabular}
 \end{table*}
 

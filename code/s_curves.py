@@ -19,13 +19,11 @@ def sigmoid_reciprocal(c=4, r=0.25):
     """Return a sigmoid reciprocal function with n points,
     the zoom factor is based on the sigmoid function"""
     def generator(n):
-        alpha = c
         n1 = int(n * r)
-        n2 = int(n - n1)
-        x1 = np.linspace(sigmoid(-alpha), sigmoid(0), n1, endpoint=False)
-        x2 = np.linspace(sigmoid(0), 1 - sigmoid(-alpha), n2)
-        x = np.array(list(x1) + list(x2))
-        y = np.array([sigmoid_r(xi) for xi in x])
+        n2 = n - n1
+        x1 = np.linspace(sigmoid(-c), sigmoid(0), n1, endpoint=False)
+        x2 = np.linspace(sigmoid(0), 1 - sigmoid(-c), n2)
+        y = np.array([sigmoid_r(xi) for xi in list(x1) + list(x2)])
         x = np.array(range(n))
         # normalize
         x, y = normalize(x), normalize(y)

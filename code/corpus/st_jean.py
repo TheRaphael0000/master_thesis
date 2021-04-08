@@ -4,7 +4,8 @@ import re
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 folder = os.path.join(cwd, "st_jean")
-y_file = "Author.txt"
+y_file = os.path.join(folder, "Author.txt")
+info_file = os.path.join(folder, "infos.csv")
 
 def parse_A():
     return parse_(0, 100)
@@ -75,12 +76,13 @@ def parse_(offset, size):
         x_token.append(token)
         x_pos.append(pos)
 
-    id = [re.search(r"CNSaintJean(...).*", f)[1] for f in x_files][offset:offset+size]
+    # id = [re.search(r"CNSaintJean(...).*", f)[1] for f in x_files][offset:offset+size]
+    infos = [l.split(",") for l in open(info_file).read().split("\n")[1:-1]][offset:offset+size]
 
-    y = open(os.path.join(folder, y_file)).read().split("\n")
+    y = open(y_file).read().split("\n")
     y = [yi for yi in y if yi != ""][offset:offset+size]
 
-    return id, x_pos, x_lemma, x_token, y
+    return infos, x_pos, x_lemma, x_token, y
 
 
 if __name__ == '__main__':

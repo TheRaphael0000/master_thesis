@@ -91,11 +91,12 @@ Since the style is close using MFW on the token as a metric, we can't clearly de
 
 \begin{table}
   \caption{Relative term frequencies of the top 10 words in Zola (49) / Flaubert (63), in the 15 incorrect of 4 out of 5 rank lists}
+  \centering
   \label{tab:errors1}
-  \begin{tabular}{|l|c|c|}
-      \hline
+  \begin{tabular}{l c c}
+      \toprule
       Word & Zola (49) & Flaubert (63) \\
-      \hline
+      \midrule
       , & 0.328 & 0.312 \\
       . & 0.136 & 0.129 \\
       de & 0.117 & 0.103 \\
@@ -106,17 +107,18 @@ Since the style is close using MFW on the token as a metric, we can't clearly de
       elle & 0.042 & 0.070 \\
       à & 0.049 & 0.061 \\
       les & 0.055 & 0.051 \\
-      \hline
+      \bottomrule
   \end{tabular}
 \end{table}
 
 \begin{table}
   \caption{Relative term frequencies of the top 10 words in Maupassant (43) / Flaubert (52), in the 15 incorrect of 4 out of 5 rank lists}
+  \centering
   \label{tab:errors2}
-  \begin{tabular}{|l|c|c|}
-      \hline
+  \begin{tabular}{l c c}
+      \toprule
       Word & Maupassant (43) & Flaubert (52) \\
-      \hline
+      \midrule
       , & 0.305 & 0.316 \\
       . & 0.126 & 0.134 \\
       de & 0.133 & 0.100 \\
@@ -127,17 +129,18 @@ Since the style is close using MFW on the token as a metric, we can't clearly de
       le & 0.056 & 0.062 \\
       elle & 0.059 & 0.055 \\
       l' & 0.048 & 0.047 \\
-      \hline
+      \bottomrule
   \end{tabular}
 \end{table}
 
 \begin{table}
   \caption{Relative term frequencies of the top 10 words in Maupassant (10) / Flaubert (52), in the 15 incorrect of 4 out of 5 rank lists}
+  \centering
   \label{tab:errors3}
-  \begin{tabular}{|l|c|c|}
-      \hline
+  \begin{tabular}{l c c}
+      \toprule
       Word & Maupassant (10) & Flaubert (52) \\
-      \hline
+      \midrule
       , & 0.299 & 0.317 \\
       . & 0.136 & 0.135 \\
       de & 0.110 & 0.101 \\
@@ -148,20 +151,19 @@ Since the style is close using MFW on the token as a metric, we can't clearly de
       à & 0.057 & 0.061 \\
       - & 0.045 & 0.052 \\
       l' & 0.044 & 0.047 \\
-      \hline
+      \bottomrule
   \end{tabular}
 \end{table}
 
 
 \subsubsection{Rank list fusion}
 
-Each rank list is ordered using a different distance measure.
-The order of magnitude of each rank list is different.
-To avoid this problem, the solution opted is to only use the rank of each link.
+Each rank list is ordered by a score, this score depend on distance measure used, thus the order of magnitude of each rank list is different.
+To avoid having to problems in merging rank list with different magnitude, the solution opted is to only use the rank of each link.
 
 An additional constraint desired is to favor top ranked link and penalize bottom ranked links when fusing rank lists.
 This constraint can be easily explained by observing the distance over the rank graph of the rank list.
-Figure~\ref{fig:distance_over_rank} clearly show us the top ranked links and bottom ranked links are fewer than the middle section.
+Figure~\ref{fig:distance_over_rank} clearly show us the top ranked links and bottom ranked links have a more sharper decision than in than the middle section.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{img/distance_over_rank.png}
@@ -169,11 +171,13 @@ Figure~\ref{fig:distance_over_rank} clearly show us the top ranked links and bot
   \label{fig:distance_over_rank}
 \end{figure}
 
-Which correspond to correctly correlated documents (top links) and negatively correlated documents (bottom links).
+Top ranked links correspond to similar documents and bottom links correspond to negatively correlated documents.
 Assuming that the top rank are true links after the rank list fusion these link should also be top rank.
-The same reasoning can be apply for the bottom links.
-
-Using the reciprocal of the sigmoid function we can modelize such curve. Sigmoid functions presented in Equation~\ref{eq:sigmoid} and Figure~\ref{fig:sigmoid}. It's reciprocal in Equation~\ref{eq:sigmoid_r} and Figure~\ref{fig:sigmoid_reciprocal}
+The same reasoning can be apply for the bottom links by assuming them as false links.
+A weighting curve must be design accordingly.
+Using the reciprocal of the sigmoid function we can modelize such curve.
+Sigmoid functions presented in Equation~\ref{eq:sigmoid} and Figure~\ref{fig:sigmoid}.
+It's reciprocal in Equation~\ref{eq:sigmoid_r} and Figure~\ref{fig:sigmoid_r}.
 
 \begin{equation}
   \label{eq:sigmoid}
@@ -186,14 +190,93 @@ Using the reciprocal of the sigmoid function we can modelize such curve. Sigmoid
 
 \begin{figure}
   \includegraphics[width=\linewidth]{img/sigmoid.png}
-  \caption{Sigmoid function between -8 and 8}
+  \caption{Sigmoid function between -4 and 4}
   \label{fig:sigmoid}
 \end{figure}
 \begin{figure}
-  \includegraphics[width=\linewidth]{img/sigmoid_reciprocal.png}
-  \caption{Reciprocal of the sigmoid function between sigmoid(-8) and sigmoid(8)}
-  \label{fig:sigmoid_reciprocal}
+  \includegraphics[width=\linewidth]{img/sigmoid_r.png}
+  \caption{Reciprocal of the sigmoid function between sigmoid(-4) and sigmoid(4)}
+  \label{fig:sigmoid_r}
 \end{figure}
+
+The steepness of the curve can be ajusted by changing the start and the end of the interval and then normalizing the values between 0 and 1. Figure~\ref{fig:s_curve_c} shows the $S^-1(x)$ function for the intervals between $\left[\lim\limits_{x \rightarrow 0}S(x), \lim\limits_{x \rightarrow 0}S(x)\right]$ and $\left[S(-20), S(+20)\right]$. The interval $\left[S(-4), S(+4)\right]$ correspond to Figure~\ref{fig:sigmoid_r}.
+A greater interval size increase the steepness which correspond to an increase of the rank conservation of the top and bottom ranked links and decreasing the rank conservation of the middle ranked links.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{img/s_curve_c.png}
+  \caption{$S^-1(x)$, sampled in $\left[S(-c), S(+c)\right]$ and normalized between 0 and 1}
+  \label{fig:s_curve_c}
+\end{figure}
+
+To break the symmetry for the curve, to be able increase the conservation of the top rank while decreasing the conservation of the bottom ranked. The solution proposed is to take $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$. Figure~\ref{fig:s_curve_r} shows $\left[S(-4), S(4)\right]$ with $r \in \{0.25, 0.5, 0.75\}$.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/s_curve_r.png}
+  \caption{Sampling $S^-1(x)$ with $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$}
+  \label{fig:s_curve_r}
+\end{figure}
+
+\subsubsection{Evaluation}
+
+\begin{table}[h]
+  \caption{\textbf{S-curve}/Equal/Linear,  * : Binomial test p-value < 5\%}
+  \centering
+  \label{}
+  \begin{tabular}{l c c c}
+    \toprule
+    Metric & St-Jean & Brunet & Oxquarry \\ \midrule
+    AP     & \textbf{*84/0/0} & \textbf{*67/0/17} & \textbf{*77/0/7} \\
+    RPrec  & \textbf{*74/6/4} & \textbf{*31/38/15} & \textbf{*58/13/13} \\
+    HPrec  & \textbf{*66/3/15} & \textbf{*20/54/10} & \textbf{40/17/27} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[h]
+  \caption{\textbf{S-curve}/Equal/Single max,  * : Binomial test p-value < 5\%}
+  \centering
+  \label{}
+  \begin{tabular}{l c c c}
+    \toprule
+    Metric & St-Jean  & Brunet & Oxquarry \\ \midrule
+    AP     & \textbf{*55/0/29} & 37/0/47 & 9/0/75* \\
+    RPrec  & \textbf{*61/2/21} & \textbf{*52/15/17} & 1/2/81* \\
+    HPrec  & \textbf{47/1/36} & 0/0/84* & 14/1/69* \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[h]
+  \caption{\textbf{Linear}/Equal/Single max,  * : Binomial test p-value < 5\%}
+  \centering
+  \label{}
+  \begin{tabular}{l c c c}
+    \toprule
+    Metric& St-Jean  & Brunet & Oxquarry \\ \midrule
+    AP    & \textbf{50/0/34} & 26/0/58* & 4/0/80* \\
+    RPrec & \textbf{*52/2/30} & \textbf{*50/14/20} & 3/1/80* \\
+    HPrec & \textbf{44/0/40} & 0/0/84* & 14/0/70* \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/fusion_st_jean.png}
+  \caption{}
+  \label{fig:fusion_st_jean}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/fusion_brunet.png}
+  \caption{}
+  \label{fig:fusion_brunet}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/fusion_oxquarry.png}
+  \caption{}
+  \label{fig:fusion_oxquarry}
+\end{figure}
+
 
 \subsection{Authors Clustering}
 

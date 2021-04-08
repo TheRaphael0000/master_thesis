@@ -33,16 +33,24 @@ from misc import sigmoid_r
 
 def main():
     # distance_over_rank()
-    # zoom_influance()
+    # s_curve_r()
+    # s_curve_c()
+    sigmoids()
     # mfw()
     # fusion()
     # degradation()
     # pos_ngrams()
     # first_last_letters_ngrams()
     # letter_ngrams()
-    recurrent_errors()
+    # recurrent_errors()
+    # temp()
     pass
 
+def temp():
+    infos, _, _, X, Y = st_jean.parse()
+    d = [int(i[-1]) for i in infos]
+    from statistics import mean
+    print(mean(d), min(d), max(d))
 
 def recurrent_errors():
     print("loading")
@@ -227,7 +235,7 @@ def degradation():
     plt.savefig("img/degradation.png")
 
 
-def zoom_influance():
+def s_curve_c():
     scale = 500
     plt.figure(figsize=(4, 3), dpi=200)
 
@@ -239,14 +247,28 @@ def zoom_influance():
         "color", plt.cm.hsv(np.linspace(0, 1, len(zoom_factors))))
 
     for i in zoom_factors:
-        x, y = s_curves.sigmoid_reciprocal(i)(scale)
+        x, y = s_curves.sigmoid_reciprocal(c=i, r=0.5)(scale)
         plt.plot(x, y, linewidth=0.2)
 
-    plt.colorbar(plt.cm.ScalarMappable(
+    cbar = plt.colorbar(plt.cm.ScalarMappable(
         norm=colors.Normalize(min_, max_), cmap="hsv"))
+    cbar.set_label("c")
     # plt.legend()
     plt.tight_layout()
-    plt.savefig("img/zoom_influance.png")
+    plt.savefig("img/s_curve_c.png")
+
+
+def s_curve_r():
+    scale = 500
+    plt.figure(figsize=(4, 3), dpi=200)
+
+    for ri in [0.25, 0.5, 0.75]:
+        x, y = s_curves.sigmoid_reciprocal(r=ri)(scale)
+        plt.plot(x, y, label=f"r = {ri}")
+
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig("img/s_curve_r.png")
 
 
 def distance_over_rank():
@@ -335,11 +357,11 @@ def fusion():
     M_single_max_in_exp = np.array(M_single_max_in_exp)
 
     print("S-curve vs Linear")
-    sign_test(M_fusion, M_fusion_lin)
+    print(*sign_test(M_fusion, M_fusion_lin))
     print("S-curve vs Single max")
-    sign_test(M_fusion, M_single_max_in_exp)
+    print(*sign_test(M_fusion, M_single_max_in_exp))
     print("Linear vs Single max")
-    sign_test(M_fusion_lin, M_single_max_in_exp)
+    print(*sign_test(M_fusion_lin, M_single_max_in_exp))
 
     # for i in range(4):
     #     print(M_fusion.shape)
@@ -362,7 +384,7 @@ def fusion():
 
 
 def sigmoids():
-    x = np.linspace(-8, 8, 100)
+    x = np.linspace(-4, 4, 100)
     y = sigmoid(x)
     plt.figure(figsize=(4, 3), dpi=200)
     plt.plot(x, y)
@@ -371,14 +393,14 @@ def sigmoids():
     plt.tight_layout()
     plt.savefig("img/sigmoid.png")
 
-    x = np.linspace(sigmoid(-8), sigmoid(8), 100)
-    y = sigmoid_reciprocal(x)
+    x = np.linspace(sigmoid(-4), sigmoid(4), 100)
+    y = sigmoid_r(x)
     plt.figure(figsize=(4, 3), dpi=200)
     plt.plot(x, y)
     plt.xlabel("x")
     plt.ylabel("$S^{-1}(x)$")
     plt.tight_layout()
-    plt.savefig("img/sigmoid_reciprocal.png")
+    plt.savefig("img/sigmoid_r.png")
 
 
 if __name__ == '__main__':

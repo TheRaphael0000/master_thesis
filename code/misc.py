@@ -91,13 +91,10 @@ def sign_test(A, B):
     eq = np.sum(A == B, axis=0)
     neg = np.sum(A < B, axis=0)
 
-    print(pos)
-    print(eq)
-    print(neg)
-
     binom_tests = [binom_test([pos[i], neg[i]]) for i in range(pos.shape[0])]
     binom_tests = np.array(binom_tests)
-    print(binom_tests)
+
+    return np.array([pos, eq, neg]).T.tolist(), list(binom_tests)
 
 def print_side_by_side_clusters(Y_true, Y_pred):
     for a in sorted(zip(Y_true, Y_pred), key=lambda x:x[-1]):
