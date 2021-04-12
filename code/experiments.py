@@ -29,13 +29,14 @@ from misc import first_letters_cut
 from misc import last_letters_cut
 from misc import sigmoid
 from misc import sigmoid_r
+from misc import compute_r
 
 
 def main():
     # distance_over_rank()
     # s_curve_r()
     # s_curve_c()
-    sigmoids()
+    # sigmoids()
     # mfw()
     # fusion()
     # degradation()
@@ -43,14 +44,84 @@ def main():
     # first_last_letters_ngrams()
     # letter_ngrams()
     # recurrent_errors()
-    # temp()
+    dates_differences_errors()
     pass
 
-def temp():
-    infos, _, _, X, Y = st_jean.parse()
-    d = [int(i[-1]) for i in infos]
-    from statistics import mean
-    print(mean(d), min(d), max(d))
+
+def dates_differences_errors():
+    print("loading")
+    info, _, _, X, Y = st_jean.parse()
+
+    s = 5
+
+    dates = [int(i[-1]) for i in info]
+    plt.figure(figsize=(4, 3), dpi=200)
+    plt.title("Dates distribution")
+    plt.hist(dates, bins=np.arange(
+        np.min(dates), np.max(dates), s), density=True, alpha=0.7)
+    plt.xlabel("Date")
+    plt.ylabel("Density")
+    plt.tight_layout()
+    plt.savefig("img/dates_distibution.png")
+
+    experiments = [
+        [X, 0, 500, True, 1e-1, distances.manhattan],
+        [X, 0, 500, False, 1e-1, distances.tanimoto],
+        [X, 0, 500, False, 1e-1, distances.clark],
+        [X, 0, 500, False, 1e-1, distances.matusita],
+        [X, 0, 500, True, 1e-1, distances.cosine_distance],
+
+        # [X, 6, 500, True, 1e-1, distances.manhattan],
+        # [X, 6, 500, False, 1e-1, distances.tanimoto],
+        # no clark since too bad results
+        # [X, 6, 500, False, 1e-1, distances.matusita],
+        # [X, 6, 500, True, 1e-1, distances.cosine_distance],
+    ]
+
+    s_curve = s_curves.sigmoid_reciprocal()
+    rl, rls = compute_multiple_links(experiments, s_curve)
+    print(*evaluate_linking(rl, Y))
+
+    date_diffs = np.array([np.abs(dates[a] - dates[b]) for (a, b), s in rl])
+
+    correct = np.array([Y[a] == Y[b] for (a, b), s in rl])
+
+    r = compute_r(Y)
+    all_links = date_diffs
+    true_links = date_diffs[correct]
+    top_r_true_links = true_links[0:r]
+    false_links = date_diffs[~correct]
+    top_r_false_links = false_links[0:r]
+
+
+    def plot(data, title, color, filename):
+        plt.figure(figsize=(4, 3), dpi=200)
+        plt.title(title)
+        n, bins, patches = plt.hist(data, bins=np.arange(0, np.max(data), s), color=color, alpha=0.7, density=True, label="Distibution")
+        mean = data.mean()
+        std = data.std()
+        plt.axvline(mean, c=color, linestyle="dashed",
+                    label=f"Mean = {mean:.2f}")
+        plt.hlines(y=n.max() / 2 - n.min() / 2, xmin=mean - std // 2, xmax=mean +
+                   std // 2, color=color, linestyle="solid", label=f"Std = {std:.2f}")
+        h, l = plt.gca().get_legend_handles_labels()
+        order = [1, 0, 2]
+        plt.legend([h[i] for i in order], [l[i] for i in order])
+        plt.xlabel("Date difference")
+        plt.ylabel("Density")
+        plt.tight_layout()
+        xticks = np.arange(date_diffs.min(), date_diffs.max(), 10)
+        plt.xticks(xticks)
+        plt.savefig(filename)
+
+
+    plot(all_links, "All links", "C0", "img/dates_differences_all.png")
+    plot(false_links, "false links", "C1", "img/dates_differences_false.png")
+    plot(top_r_true_links, "top-r true links, true links", "C2",
+         "img/dates_differences_r_true.png")
+    plot(top_r_false_links, "top-r false links", "C3",
+         "img/dates_differences_r_false.png")
+
 
 def recurrent_errors():
     print("loading")
@@ -70,13 +141,16 @@ def recurrent_errors():
         # [X, 6, 500, True, 1e-1, distances.cosine_distance],
     ]
 
-    top_n = 15
+    top_n = 10
     keep = 3
 
     incorrectly_ranked = defaultdict(lambda: 0)
 
+    rls = []
+
     for exp in experiments:
         rl = compute_links(*exp)
+        rls.append(rl)
         m = evaluate_linking(rl, Y)
         print(m)
         i = 0
@@ -87,15 +161,42 @@ def recurrent_errors():
                 if i > top_n:
                     break
 
+    rl = rank_list_fusion(rls, s_curves.sigmoid_reciprocal())
+    m = evaluate_linking(rl, Y)
+    print(m, "(overall)")
     top_errors = Counter(dict(incorrectly_ranked)).most_common(keep)
-    for (a, b), errors in top_errors:
-        X_a_b = [X[a], X[b]]
-        features, mfw = most_frequent_word(X_a_b, 10, lidstone_lambda=0)
-        print(f"{errors}/{len(experiments)}")
-        print(f"Word & {Y[a]} ({a+1}) & {Y[b]} ({b+1}) \\\\")
-        for a, b, w in zip(list(features[0,:]), list(features[1,:]), mfw.keys()):
-            print(f"{w} & {a:.3f} & {b:.3f} \\\\")
-        print()
+    print(top_errors)
+
+    features, mfw = most_frequent_word(X, 500, lidstone_lambda=1e-1)
+
+    def plot(a, b, filename):
+        A, B = features[a, :], features[b, :]
+        mean = np.mean(np.array([A, B]), axis=0)
+        order_indices = np.argsort(mean)[::-1]
+        A = A[order_indices]
+        B = B[order_indices]
+        plt.figure(figsize=(4, 3), dpi=200)
+        plt.yscale("log")
+        plt.bar(range(len(A)), A, width=1, label=f"{Y[a]} ({a+1})")
+        plt.bar(range(len(A)), B, width=1, label=f"{Y[b]} ({b+1})")
+        plt.legend()
+        plt.xticks([], [])
+        plt.xlabel("MFW Vector")
+        plt.ylabel("Relative word frequency")
+        plt.tight_layout()
+        plt.savefig(filename)
+
+    (a, b), score = rl[0]
+    plot(a, b, f"img/mfw_vector_first_rl.png")
+
+    (a, b), score = rl[m[-1] - 1]
+    plot(a, b, f"img/mfw_vector_first_last_rl.png")
+
+    for i, ((a, b), errors) in enumerate(top_errors):
+        plot(a, b, f"img/mfw_vector_error_{i}.png")
+
+    (a, b), score = rl[-1]
+    plot(a, b, f"img/mfw_vector_last_rl.png")
 
 
 def first_last_letters_ngrams():
@@ -371,7 +472,8 @@ def fusion():
 
     plt.figure(figsize=(6, 4), dpi=200)
     x, y, c = M_fusion[:, 0], M_fusion[:, 1], M_fusion[:, 2]
-    plt.scatter(x, y, c=c, marker=".", label=f"Fusions ({fusion_size} lists)", alpha=0.75)
+    plt.scatter(x, y, c=c, marker=".",
+                label=f"Fusions ({fusion_size} lists)", alpha=0.75)
     x, y, c = M_single[:, 0], M_single[:, 1], M_single[:, 2]
     plt.scatter(x, y, c=c, marker="^", label="Single rank list", alpha=1)
     cbar = plt.colorbar()
@@ -394,7 +496,7 @@ def sigmoids():
     plt.savefig("img/sigmoid.png")
 
     x = np.linspace(sigmoid(-4), sigmoid(4), 100)
-    y = sigmoid_r(x)
+    y = sigmoid_reciprocal(x)
     plt.figure(figsize=(4, 3), dpi=200)
     plt.plot(x, y)
     plt.xlabel("x")

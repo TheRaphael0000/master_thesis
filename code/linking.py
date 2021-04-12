@@ -3,11 +3,13 @@
 import unicodedata
 from collections import Counter
 from functools import reduce
+import itertools
 
 import numpy as np
 from scipy.spatial.distance import pdist, squareform
 from corpus import brunet, oxquarry, st_jean, pan16
 import distances
+import compression
 from misc import rank_list_from_distances_matrix
 from evaluate import evaluate_linking
 
@@ -82,11 +84,26 @@ def compute_links(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func):
     return rank_list
 
 
+def compute_links_compress(X, compression_method, distance_func):
+    X = ["_".join(Xi).encode("utf8") for Xi in X]
+    X_sizes = [compression_method(Xi) for Xi in X]
+
+    pairs_indices = list(itertools.combinations(range(len(X)), 2))
+
+    X_sizes_pairs = {(a,b): compression_method(X[a] + X[b]) for a,b in pairs_indices}
+
+    rank_list = [((a,b), distance_func(X_sizes[a], X_sizes[b], X_sizes_pairs[(a, b)])) for a, b in pairs_indices]
+    rank_list.sort(key=lambda x: x[-1])
+    return rank_list
+
+
 if __name__ == '__main__':
     # Simple test script for the module
-    _, _, X, Y = brunet.parse()
+    # _, _, X, Y = brunet.parse()
+    _, _, _, X, Y = st_jean.parse_B()
 
     print("AP RPrec P@10 HPrec")
     rank_list = compute_links(X, 0, 500, False, 0.1, distances.manhattan)
-    mesures = evaluate_linking(rank_list, Y)
-    print(*mesures)
+    print(*evaluate_linking(rank_list, Y))
+    rank_list = compute_links_compress(X, compression.lzma, distances.ncd)
+    print(*evaluate_linking(rank_list, Y))
