@@ -9,7 +9,7 @@ import numpy as np
 from scipy.spatial.distance import pdist, squareform
 from corpus import brunet, oxquarry, st_jean, pan16
 import distances
-import compression
+import compressions
 from misc import rank_list_from_distances_matrix
 from evaluate import evaluate_linking
 
@@ -105,5 +105,5 @@ if __name__ == '__main__':
     print("AP RPrec P@10 HPrec")
     rank_list = compute_links(X, 0, 500, False, 0.1, distances.manhattan)
     print(*evaluate_linking(rank_list, Y))
-    rank_list = compute_links_compress(X, compression.lzma, distances.ncd)
+    rank_list = compute_links_compress(X, compressions.lzma, distances.ncd)
     print(*evaluate_linking(rank_list, Y))

@@ -6,8 +6,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import colors
 from scipy.stats import wilcoxon
+from adjustText import adjust_text
 
 import distances
+import compressions
 import s_curves
 
 from corpus import brunet
@@ -21,6 +23,7 @@ from rank_list_fusion import rank_list_fusion
 from evaluate import evaluate_linking
 
 from linking import compute_links
+from linking import compute_links_compress
 from linking import most_frequent_word
 
 from misc import sign_test
@@ -44,12 +47,57 @@ def main():
     # first_last_letters_ngrams()
     # letter_ngrams()
     # recurrent_errors()
-    dates_differences_errors()
+    # dates_differences_errors()
+    compression_evaluation()
     pass
 
 
+def compression_evaluation():
+    # _, _, _, X, Y = st_jean.parse()
+    # _, _, X, Y = brunet.parse()
+    _, X, Y = oxquarry.parse()
+
+    compression_methods = [
+        compressions.gzip,
+        compressions.zlib,
+        compressions.bz2,
+        compressions.lzma
+    ]
+    distance_funcs = [
+        distances.ncd,
+        distances.cbc
+    ]
+    distances_compressions = list(itertools.product(
+        compression_methods, distance_funcs))
+
+    M = []
+    for compression_method, distance_func in distances_compressions:
+        rl = compute_links_compress(X, compression_method, distance_func)
+        m = evaluate_linking(rl, Y)
+        M.append(m)
+        print(m)
+
+    M = np.array(M)
+
+    plt.figure(figsize=(6, 4), dpi=200)
+    plt.title("Compression evaluation")
+    x, y, c = M[:, 0], M[:, 1], M[:, 2]
+    plt.scatter(x, y, c=c, marker=".")
+    texts = []
+    for i, (compression_method, distance_func) in enumerate(distances_compressions):
+        text = f"({compression_method.__name__}, {distance_func.__name__})"
+        xy = (x[i], y[i])
+        texts.append(plt.annotate(text, xy))
+    adjust_text(texts, arrowprops=dict(arrowstyle="-", color="C0"))
+    cbar = plt.colorbar()
+    plt.xlabel("RPrec")
+    plt.ylabel("Average precision (AP)")
+    cbar.set_label("HPrec")
+    plt.tight_layout()
+    plt.savefig("img/compression_evaluation.png")
+
+
 def dates_differences_errors():
-    print("loading")
     info, _, _, X, Y = st_jean.parse()
 
     s = 5
@@ -93,11 +141,11 @@ def dates_differences_errors():
     false_links = date_diffs[~correct]
     top_r_false_links = false_links[0:r]
 
-
     def plot(data, title, color, filename):
         plt.figure(figsize=(4, 3), dpi=200)
         plt.title(title)
-        n, bins, patches = plt.hist(data, bins=np.arange(0, np.max(data), s), color=color, alpha=0.7, density=True, label="Distibution")
+        n, bins, patches = plt.hist(data, bins=np.arange(
+            0, np.max(data), s), color=color, alpha=0.7, density=True, label="Distibution")
         mean = data.mean()
         std = data.std()
         plt.axvline(mean, c=color, linestyle="dashed",
@@ -113,7 +161,6 @@ def dates_differences_errors():
         xticks = np.arange(date_diffs.min(), date_diffs.max(), 10)
         plt.xticks(xticks)
         plt.savefig(filename)
-
 
     plot(all_links, "All links", "C0", "img/dates_differences_all.png")
     plot(false_links, "false links", "C1", "img/dates_differences_false.png")
@@ -505,5 +552,5 @@ def sigmoids():
     plt.savefig("img/sigmoid_r.png")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
