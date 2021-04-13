@@ -16,7 +16,7 @@ The next sections will present, different stylistic text representations to crea
 \subsubsection{Word Tokens}
 
 The first method is rather simple but yet effective where we consider each token as a word.
-In the datasets used the tokenization is already done such that each word is corretly tokenized.
+In the datasets used, the tokenization is already done such that each word is correctly tokenized.
 
 \subsubsection{Letters n-grams}
 
@@ -75,86 +75,96 @@ Figure~\ref{fig:first_last_letters_ngrams} shows the average precision using the
 \subsubsection{Frequent errors}
 
 This section, try to understand the errors in our system, in this case the false links (document pairs with different authors) highly ranked on different rank list.
-The system is highly based on the feature vector created using the N-MFW
+The rank list quality is highly based on the feature vector created using the N-MFW, having a good understanding of this vector give good indications of the strength of the system.
 
-Using the St-Jean dataset, to find reccurant errors in our system we use 5 different distance metrics on the relative frequency of the 500-MFW.
+To find reccurant errors in our system we use 5 different distance metrics on the relative frequency of the 500-MFW using the St-Jean dataset.
 This generate 5 rank lists.
 The average precision for these rank list is always greater than 0.7.
+With this 5 rank lists only the top 10 false links are kept to be analyzed.
+Frequent errors are link that appear often in this top 10.
+Figures~\ref{fig:mfw_vector_error_0}~/~\ref{fig:mfw_vector_error_1} show two pairs (Zola 49 / Flaubert 63 and Maupassant 10 / Flaubert 52) that appear 4 time out of the 5 rank lists in the top 10 false links, thus frequent error.
 
-With this 5 rank lists only the top 15 incorrect pairs are kept to be analyzed, this correspond to the most inaccurate pairs.
-The Tables~\ref{tab:errors1}~/~\ref{tab:errors2}/~\ref{tab:errors3} show the 10-MFW relative frequency in the top 15 of the rank lists.
-These pairs are found using 500-MFW but for visibility purpose we only show the 10-MFW.
-These tables clearly show similarities in style for these texts pairs.
-Using a distance function on these two vectors will produce a low score and thus rank them high in the rank list.
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/mfw_vector_error_0.png}
+  \caption{First example of 500-MFW relative frequency vector for the two documents in a reccurant (4 rank lists out of 5) false link in the top 10 false links}
+  \label{fig:mfw_vector_error_0}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/mfw_vector_error_1.png}
+  \caption{Second example of 500-MFW relative frequency vector for the two documents in a reccurant (4 rank lists out of 5) false link in the top 10 false links}
+  \label{fig:mfw_vector_error_1}
+\end{figure}
 
-Since the style is close using MFW on the token as a metric, we can't clearly determinate that these texts are from different author using only this type of representation.
+To be able to understand more easily this vector, the values have been sorted by relative frequencies.
+When a large propostion of the vectors overlap it indicates a high similarities between the vectors.
+In this case most of the surface overlap so the distance function will give a low value, and rank this vector high in the list.
+Both document style are close when their feature vector are closely related.
+We can't clearly determinate that these texts are from different author using only this type of representation.
+These two vectors pair can be vizually compared to the most similar link (ranked 1 using manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (Stael 157 / Steal 183) or the HPrec-th (last continous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (Maupassant 10 / Maupassant 67), both of these links show a large propotion of overlapping surface.
+A counter example would be the least similar link (ranked last using manhattan distance) which represent a negatively correlated document pair, Figure~\ref{fig:mfw_vector_last_rl} showcase this link.
+As expected, most of this figure surface is non-overlapping.
 
-\begin{table}
-  \caption{Relative term frequencies of the top 10 words in Zola (49) / Flaubert (63), in the 15 incorrect of 4 out of 5 rank lists}
-  \centering
-  \label{tab:errors1}
-  \begin{tabular}{l c c}
-      \toprule
-      Word & Zola (49) & Flaubert (63) \\
-      \midrule
-      , & 0.328 & 0.312 \\
-      . & 0.136 & 0.129 \\
-      de & 0.117 & 0.103 \\
-      la & 0.083 & 0.078 \\
-      il & 0.082 & 0.067 \\
-      le & 0.060 & 0.059 \\
-      et & 0.048 & 0.070 \\
-      elle & 0.042 & 0.070 \\
-      à & 0.049 & 0.061 \\
-      les & 0.055 & 0.051 \\
-      \bottomrule
-  \end{tabular}
-\end{table}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/mfw_vector_first_rl.png}
+  \caption{500-MFW relative frequency for the two documents ranked first in the rank list}
+  \label{fig:mfw_vector_first_rl}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/mfw_vector_first_last_rl.png}
+  \caption{500-MFW relative frequency for the two documents ranked HPrec-th in the rank list}
+  \label{fig:mfw_vector_first_last_rl}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/mfw_vector_last_rl.png}
+  \caption{500-MFW relative frequency for the two documents ranked last in the ranked list}
+  \label{fig:mfw_vector_last_rl}
+\end{figure}
 
-\begin{table}
-  \caption{Relative term frequencies of the top 10 words in Maupassant (43) / Flaubert (52), in the 15 incorrect of 4 out of 5 rank lists}
-  \centering
-  \label{tab:errors2}
-  \begin{tabular}{l c c}
-      \toprule
-      Word & Maupassant (43) & Flaubert (52) \\
-      \midrule
-      , & 0.305 & 0.316 \\
-      . & 0.126 & 0.134 \\
-      de & 0.133 & 0.100 \\
-      et & 0.081 & 0.078 \\
-      la & 0.070 & 0.080 \\
-      il & 0.061 & 0.066 \\
-      à & 0.061 & 0.061 \\
-      le & 0.056 & 0.062 \\
-      elle & 0.059 & 0.055 \\
-      l' & 0.048 & 0.047 \\
-      \bottomrule
-  \end{tabular}
-\end{table}
+\subsubsection{Publication date differences analyis}
 
-\begin{table}
-  \caption{Relative term frequencies of the top 10 words in Maupassant (10) / Flaubert (52), in the 15 incorrect of 4 out of 5 rank lists}
-  \centering
-  \label{tab:errors3}
-  \begin{tabular}{l c c}
-      \toprule
-      Word & Maupassant (10) & Flaubert (52) \\
-      \midrule
-      , & 0.299 & 0.317 \\
-      . & 0.136 & 0.135 \\
-      de & 0.110 & 0.101 \\
-      et & 0.090 & 0.078 \\
-      il & 0.089 & 0.066 \\
-      la & 0.069 & 0.080 \\
-      le & 0.061 & 0.062 \\
-      à & 0.057 & 0.061 \\
-      - & 0.045 & 0.052 \\
-      l' & 0.044 & 0.047 \\
-      \bottomrule
-  \end{tabular}
-\end{table}
+When dealing with false links ranked high in the rank list, as the previous experiment showed, some excerpt use similar words.
+These shared words might be related to era the book was written.
+The following experiment try to investigate on this.
 
+First we must understand the publication date distribution of dataset. Figure~\ref{fig:dates_distribution} show this distribution.
+Figure~\ref{fig:dates_differences_all} show the date difference distribution for each pairs of document, we can see that the average date difference in the dataset is 28.24 years with a standard deviation of 20.73 years.
+Since this dataset contain multiple excerpt from the same book, we might consider only the links of differents authors (false links) Figure~\ref{fig:dates_differences_false} show such distribution.
+As expected the mean increased to 29.04 years since there are less links with small date difference.
+Same authors links (true links) are displayed in Figure~\ref{fig:dates_differences_r_true}, they confirm the previous statement that most of the same authors links have a low date difference with a mean at 5.11 years.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/dates_distribution.png}
+  \caption{Date distribution in the St-Jean dataset.}
+  \label{fig:dates_distribution}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/dates_differences_all.png}
+  \caption{Pairwise date difference denstiy in St-Jean for all the excerpt.}
+  \label{fig:dates_differences_all}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/dates_differences_false.png}
+  \caption{Pairwise date difference denstiy in St-Jean for all the excerpt with different authors (false links).}
+  \label{fig:dates_differences_false}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/dates_differences_r_true.png}
+  \caption{Pairwise date difference denstiy in St-Jean for all the excerpt with similar authors (true links) also correspond to the top-r true links.}
+  \label{fig:dates_differences_r_true}
+\end{figure}
+
+Figure~\ref{fig:dates_differences_r_false} show the date difference density on the top-r false links (670 in case of St-Jean) on a rank list with 80\% average precision.
+Two interesting informations can be extracted here.
+First the mean is lower by 8.22 years (29.04 - 20.82) comparing to the false links distribution which clearly indicate a importance of publication date in the ranking of the documents.
+Secondly we can obseve a drop at 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ are harder to discriminate than links outside this interval.
+This 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France \cite{generations}.
+Each new generation use its own vocabulary and can be harder to discriminate author of text beloning to the same generation, in the other hand having differant vocabulary can indicate a differant time periode and is often use to detect document forgery \cite{savoy_stylo}.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/dates_differences_r_false.png}
+  \caption{Pairwise date difference denstiy in St-Jean for top-r false links using a rank list with 80\% average precision.}
+  \label{fig:dates_differences_r_false}
+\end{figure}
 
 \subsubsection{Rank list fusion}
 
@@ -280,4 +290,28 @@ To break the symmetry for the curve, to be able increase the conservation of the
 
 \subsection{Authors Clustering}
 
-To find clusters of authors, a possible way is to use aglomeratives clustering on a rank list.
+To find clusters of authors, a possible way is to use a hierarchical clustering algorithm on a rank list.
+In a rank list, each link indicate that both documents should belong to the same cluster in order of certainty.
+The hardest task in this clustering scheme is to find the right cut in the rank list.
+This cut should maximize the number of true links above the cut and the number of false links under the cut.
+To find this cut, two apporaches were explored : one using a unsupervised clustering evaluation technique which is totaly unsupervised and another one using a linear model to learn to make this cut but it requires a training dataset.
+
+\subsubsection{Agglomerative clustering}
+
+The scikit-learn package~\cite{sklearn} provide an implementation bottom-up implementation of the hierarchical clustering, which is usually called agglomerative clustering.
+Using this approach, at the start of the algorithm, each document belong to a different cluster.
+Clusters are merge based on the scores in the rank list, each step the algorithm merge clusters using the minimal score based on the linkage criteria.
+Multiple linkage criteria are available : \textit{ward} (metric that aim to minimize the variance of the cluster merged), \textit{average-linkage} (use the average score of each links of the cluster merged), \textit{complete-linkage} (use the maximal score of the cluster merged), \textit{single-linkage} (use the minimal score of the cluster merged).
+Ward linkage was discarded since the implementation only allow euclidean distance for its computation.
+
+\subsubsection{Learning the cut in a unsupervised way}
+
+The silhouette score is a unsupervised clustering metric which evaluate a clustering result by mesureing the cohesion and separation of the clusters.
+A large value indicate a good cohesion and good separation of the clusters.
+Running the agglomerative clustering at each cut in the rank list then evaluating the clustering result using the silhouette score, the maximal shilhouette score position give a good indication where the best cut is.
+
+\subsubsection{Learning the cut in a supervised way}
+
+
+
+\subsection{Complexity}

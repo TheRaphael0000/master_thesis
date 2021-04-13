@@ -47,8 +47,8 @@ def main():
     # first_last_letters_ngrams()
     # letter_ngrams()
     # recurrent_errors()
-    # dates_differences_errors()
-    compression_evaluation()
+    dates_differences()
+    # compression_evaluation()
     pass
 
 
@@ -80,7 +80,6 @@ def compression_evaluation():
     M = np.array(M)
 
     plt.figure(figsize=(6, 4), dpi=200)
-    plt.title("Compression evaluation")
     x, y, c = M[:, 0], M[:, 1], M[:, 2]
     plt.scatter(x, y, c=c, marker=".")
     texts = []
@@ -97,20 +96,19 @@ def compression_evaluation():
     plt.savefig("img/compression_evaluation.png")
 
 
-def dates_differences_errors():
+def dates_differences():
     info, _, _, X, Y = st_jean.parse()
 
     s = 5
 
     dates = [int(i[-1]) for i in info]
     plt.figure(figsize=(4, 3), dpi=200)
-    plt.title("Dates distribution")
     plt.hist(dates, bins=np.arange(
         np.min(dates), np.max(dates), s), density=True, alpha=0.7)
     plt.xlabel("Date")
     plt.ylabel("Density")
     plt.tight_layout()
-    plt.savefig("img/dates_distibution.png")
+    plt.savefig("img/dates_distribution.png")
 
     experiments = [
         [X, 0, 500, True, 1e-1, distances.manhattan],
@@ -143,7 +141,6 @@ def dates_differences_errors():
 
     def plot(data, title, color, filename):
         plt.figure(figsize=(4, 3), dpi=200)
-        plt.title(title)
         n, bins, patches = plt.hist(data, bins=np.arange(
             0, np.max(data), s), color=color, alpha=0.7, density=True, label="Distibution")
         mean = data.mean()
@@ -189,7 +186,7 @@ def recurrent_errors():
     ]
 
     top_n = 10
-    keep = 3
+    keep = 2
 
     incorrectly_ranked = defaultdict(lambda: 0)
 
@@ -224,8 +221,8 @@ def recurrent_errors():
         B = B[order_indices]
         plt.figure(figsize=(4, 3), dpi=200)
         plt.yscale("log")
-        plt.bar(range(len(A)), A, width=1, label=f"{Y[a]} ({a+1})")
-        plt.bar(range(len(A)), B, width=1, label=f"{Y[b]} ({b+1})")
+        plt.bar(range(len(A)), A, width=1, label=f"{Y[a]} ({a+1})", alpha=0.5)
+        plt.bar(range(len(A)), B, width=1, label=f"{Y[b]} ({b+1})", alpha=0.5)
         plt.legend()
         plt.xticks([], [])
         plt.xlabel("MFW Vector")
