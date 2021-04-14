@@ -9,11 +9,11 @@ In this study to archive a good clustering, the main objective is to have a reli
 To try to increase the quality of the rank list, the proposed method is to use a combination of multiple rank list using different strategies to form a hopefully better rank list.
 By using the most diverse strategies, we belive it is possible to increase the quality using the principle of combinaison of evidences.
 
-\subsection{Feature vector}
+\subsection{Feature vectors}
 
 
 
-\subsection{Document distances}
+\subsection{Vectors distances}
 
 \begin{definition}[Manhanttan distance ($L^1$ based)]
   To compute the Manhanttan distance the following equation is used.
@@ -66,6 +66,46 @@ By using the most diverse strategies, we belive it is possible to increase the q
   \end{equation}
 \end{definition}
 
+\subsection{Vector normalization}
+
+\begin{definition}[Z-score normalization \cite{savoy_stylo}]
+  \begin{equation}
+    Z-score(A) = \frac{A - \mu}{\sigma}
+  \end{equation}
+  When using the z-score normalization on MFW vectors, $\mu$ and $\sigma$ usually are vectors containing the mean and the standard deviation of each terms in the corpus.
+  The Manhattan distance applied on a Z-score normalized MFW vector is also called Burrows's Delta~\cite{savoy_stylo}.
+\end{definition}
+
+\subsection{Compression-based distances}
+
+This section covers the compression based strategy to compute a distance between two documents.
+The main idea is to compress two documents A, B, compress the string concatenation AB of A, B and compare their sizes after compression using one of the distance mesure demonstrated below, and a lossless compression algorithm such as the Lempel-Ziv family (GZIP), block sorting family (BZip2), statistical family (PPM)~\cite{comparing_compression}.
+This technique is based on the fact that compressing algorithm tries to lower the Shannon entropy of a document, thus when compressing a document with a large Shannon entropy the compressed document should have a larger size after compression than to a document with a small Shannon entropy.
+Thus when concatenating two documents with a lot in common, the entropy of the concatenated document should be lower than if the two documents are very different.
+
+\begin{definition}[Normalized compression distance \cite{savoy_stylo} \cite{comparing_compression}]
+  The normalized compression distance of two documents A and B using the size after compression C is computed as follow:
+  \begin{equation}
+    NCD(A, B) = \frac{C(AB) - \min(C(A), C(B))}{\max(C(A), C(B))}
+  \end{equation}
+  Give a value in $\left[0-1+\epsilon\right]$, with $\epsilon$ being a small positive value created by the imperfection of compression algorithms).
+\end{definition}
+
+\begin{definition}[Conditional complexity of compression]
+  The conditional complexity of compression of two documents A and B using the size after compression C is computed as follow:
+  \begin{equation}
+    CCC(A, B) = C(AB) - C(A)
+  \end{equation}
+
+\end{definition}
+
+\begin{definition}[Compression-based cosine]
+  The compression-based cosine of two documents A and B using the size after compression C is computed as follow:
+  \begin{equation}
+    CBC(A, B) = 1 - \frac{C(A) + C(B) - C(AB)}{\sqrt{C(A) \cdot C(B)}}
+  \end{equation}
+\end{definition}
+
 \subsection{Authorship linking}
 
 The next sections will present, different stylistic text representations to create the authorship linking rank list. They are mostly based on the text representation proposed in \cite{kocher_verification}.
@@ -82,11 +122,10 @@ To consider overlapping word, the whole document is synthetized to a long string
 
 \begin{definition}[$N$-Grams]
   \label{def:n-grams}
-  A $N$-gram is a special type of tokenization which is constructed by creating a token for the substrings from $0$ to \textit{text\_size} - $N$ of size $N$.
+  A $N$-gram is a special type of tokenization which is constructed by creating a token of size $N$ for each substrings starting from the position $0$ to \textit{text\_size} - $N$.
   Example: Using 3-grams The string: "brown fox" is converted to: \\
   $("\text{bro}", "\text{row}", "\text{own}", "\text{wn\_}", "\text{n\_f}", "\text{\_fo}", "\text{fox}")$
 \end{definition}
-
 
 \subsubsection{POS n-grams}
 

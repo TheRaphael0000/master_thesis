@@ -84,7 +84,7 @@ def compute_links(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func):
     return rank_list
 
 
-def compute_links_compress(X, compression_method, distance_func):
+def compute_links_compress(X, z_score, compression_method, distance_func):
     X = ["_".join(Xi).encode("utf8") for Xi in X]
     X_sizes = [compression_method(Xi) for Xi in X]
 

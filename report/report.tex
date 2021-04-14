@@ -1,4 +1,4 @@
-\documentclass[twocolumn]{article}
+\documentclass{article}
 
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage{amsfonts}
@@ -15,6 +15,7 @@
 \usepackage{url}
 \usepackage{xcolor}
 
+\renewcommand{\familydefault}{\sfdefault}
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]
@@ -29,19 +30,33 @@
 {\large Master Thesis}
 \\[0.5cm]
 {\LARGE \textbf{Authorship clustering}}
+\\[2.5cm]
+{\large Raphaël Margueron (16-858-839)}
 \\[0.5cm]
-{\large Raphaël Margueron (16-858-839), University of Bern / Neuchâtel / Fribourg}
+{\large University of Bern / Neuchâtel / Fribourg}
 \\[0.5cm]
 {\large Mars-August, 2021}
 \\[0.5cm]
 \end{center}
 
-\tableofcontents
-
+\vfill
 \subfile{sections/0_abstract}
-
+\vfill
 \end{titlepage}
 
+\onecolumn
+\pagenumbering{roman}
+\tableofcontents
+\clearpage
+
+\listoftables
+\clearpage
+
+\listoffigures
+\clearpage
+
+\twocolumn
+\pagenumbering{arabic}
 \subfile{sections/1_introduction}
 \subfile{sections/2_state_of_the_art}
 \subfile{sections/3_theoretical_concepts}
@@ -49,10 +64,19 @@
 \subfile{sections/5_methods}
 \subfile{sections/6_evaluations}
 \subfile{sections/7_conclusion}
-
 \clearpage
+
+\onecolumn
+\pagenumbering{Roman}
+\renewcommand{\thesubsection}{\Alph{subsection}}
+\renewcommand{\thetable}{\alph{table}}
+\renewcommand{\thefigure}{\alph{figure}}
+\setcounter{subsection}{0}
+\setcounter{table}{0}
+\setcounter{figure}{0}
+
 \subfile{sections/references}
 \clearpage
-\subfile{sections/8_annex}
+\subfile{sections/annex}
 
 \end{document}
