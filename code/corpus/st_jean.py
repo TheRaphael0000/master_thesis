@@ -77,7 +77,7 @@ def parse_(offset, size):
         x_pos.append(pos)
 
     # id = [re.search(r"CNSaintJean(...).*", f)[1] for f in x_files][offset:offset+size]
-    infos = [l.split(",") for l in open(info_file).read().split("\n")[1:-1]][offset:offset+size]
+    infos = [l.split(",") for l in open(info_file, "rb").read().decode("utf8").split("\r\n")[1:-1]][offset:offset+size]
 
     y = open(y_file).read().split("\n")
     y = [yi for yi in y if yi != ""][offset:offset+size]
@@ -85,15 +85,27 @@ def parse_(offset, size):
     return infos, x_pos, x_lemma, x_token, y
 
 
+def print_texts(data):
+    infos, x_pos, x_lemma, x_token, y = data
+    for line in infos:
+        def f(x):
+            author_text = x[2].split(" - ")
+            return f"{x[0]} & {author_text[0]} & {author_text[-1]} & {x[-1]}"
+        print(f"{f(line)} \\\\")
+        # print(infos)
+
+
 if __name__ == '__main__':
-    id, x_pos, x_lemma, x_token, y = parse()
-    lid = len(id)
+    data = parse()
+    print_texts(data)
+    infos, x_pos, x_lemma, x_token, y = data
+    linfos = len(infos)
     lx_lemma = len(x_lemma)
     lx_token = len(x_token)
     lx_pos = len(x_pos)
     ly = len(y)
-    assert lid == lx_lemma
-    assert lid == lx_token
-    assert lid == lx_pos
-    assert lid == ly
-    print(f"{lid} texts loaded")
+    assert linfos == lx_lemma
+    assert linfos == lx_token
+    assert linfos == lx_pos
+    assert linfos == ly
+    print(f"{linfos} texts loaded")

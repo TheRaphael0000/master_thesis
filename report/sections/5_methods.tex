@@ -9,6 +9,63 @@ In this study to archive a good clustering, the main objective is to have a reli
 To try to increase the quality of the rank list, the proposed method is to use a combination of multiple rank list using different strategies to form a hopefully better rank list.
 By using the most diverse strategies, we belive it is possible to increase the quality using the principle of combinaison of evidences.
 
+\subsection{Feature vector}
+
+
+
+\subsection{Document distances}
+
+\begin{definition}[Manhanttan distance ($L^1$ based)]
+  To compute the Manhanttan distance the following equation is used.
+  \begin{equation}
+    dist_{Manhanttan}(A, B) = \sum_{i=1}^{m} |A_i - B_i|
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Tanimoto distance ($L^1$ based, normalized)]
+  To compute the Tanimoto distance the following equation is used. It's a components-wised normalized version of the manhattan distance.
+  \begin{equation}
+    dist_{Tanimoto}(A, B) = \frac{dist_{Manhattan}(A, B)}{\sum_{i=1}^{m} max(A_i, B_i)}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Euclidean distance ($L^2$ based)]
+  To compute the Euclidean distance the following equation is used.
+  \begin{equation}
+    dist_{Euclidian}(A, B) = \sqrt{\sum_{i=0}^{m}(A_i - B_i)^2}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Matusita distance ($L^2$ based, square rooted values)]
+  To compute the Matusita distance the following equation is used.
+  \begin{equation}
+    \begin{split}
+      dist_{Matusita}(A, B) &= dist_{Euclidian}(A', B') \\
+      \text{with }A' &= \sqrt{A}\text{ and }B' = \sqrt{B}
+    \end{split}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Clark distance ($L^2$ based)]
+  To compute the Clark distance the following equation is used.
+  \begin{equation}
+    dist_{Clark}(A, B) = \sqrt{\sum_{i=0}^{m}\left(\frac{|A_i - B_i|}{A_i + B_i}\right)^2}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Cosine distance (Inner product based)]
+  To compute the Cosine distance to first the Cosine similarity to compote the cosine distance.
+  \begin{equation}
+    sim_{Cosine}(A, B) = \frac{A \cdot B}{\sqrt{A \cdot A}\sqrt{B \cdot B}}
+  \end{equation}
+  \begin{equation}
+    dist_{Cosine}(A, B) = 1 - sim_{Cosine}(A, B)
+  \end{equation}
+  \begin{equation}
+    angular_dist_{Cosine}(A, B) = \frac{cos^{-1}sim_{Cosine}(A, B)}{\pi}
+  \end{equation}
+\end{definition}
+
 \subsection{Authorship linking}
 
 The next sections will present, different stylistic text representations to create the authorship linking rank list. They are mostly based on the text representation proposed in \cite{kocher_verification}.

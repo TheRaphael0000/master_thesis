@@ -1,7 +1,6 @@
 \section{Theoretical concepts}
 
-This section contain basic notions commonly used in the authorship attribution, authorship verificatio and authorship clustering.
-Some of the definitions in this sections are an adapted version of the ones in~\cite{savoy_stylo},~\cite{kocher_linking},~\cite{bcubed}.
+This section contain basic notions commonly used in the authorship attribution, authorship verification and authorship clustering.
 
 \begin{definition}[Document]
   A document $X_i$ is a ordered list of token. A token is a non empty string. Example:
@@ -18,9 +17,9 @@ Some of the definitions in this sections are an adapted version of the ones in~\
 \end{definition}
 
 \begin{definition}[Corpus]
-  The corpus is a list of document X of size s and a list of authors Y of size k.
+  The corpus is a list of document X of size N and a list of authors Y of size k.
   \begin{equation}
-    X = (X_1, X_2, X_3, X_{...}, X_s)
+    X = (X_1, X_2, X_3, X_{...}, X_N)
   \end{equation}
   \begin{equation}
     N = |X|
@@ -38,7 +37,7 @@ Some of the definitions in this sections are an adapted version of the ones in~\
   \begin{equation}
     Y = f(X)
   \end{equation}
-  The set of $Y_a$ is the set of document written by $a$.
+  The set of $\hat{Y}_a$ is the set of document written by $a$.
   \begin{equation}
     \hat{Y}_a = \{X_i | f(X_i) = a\}
   \end{equation}
@@ -48,14 +47,14 @@ Some of the definitions in this sections are an adapted version of the ones in~\
 \end{definition}
 
 \begin{definition}[Relevant set]
-  The relevant set contain every possible pairs (also called links) of document with the same authors. Links in this set are called "true links" in this study.
+  The relevant set contain every possible pairs (also called links) of document with the same authors. Links in this set are called \textit{true links} in this study. Every other links are called \textit{false links}, since they don't have the same authors.
   \begin{equation}
     R = \{(X_a, X_b) | f(X_a) = f(X_b) \land X_a \neq X_b) \forall (X_a, X_b)\}
   \end{equation}
 \end{definition}
 
 \begin{definition}[Ranked list]
-  A ranked list is a ordered list of pair of document.
+  A ranked list is a ordered list of pair of document containing every links.
   \begin{equation}
     L = ((X_a, X_b) | X_a \neq X_b \forall (X_a, X_b))
   \end{equation}
@@ -66,8 +65,6 @@ Some of the definitions in this sections are an adapted version of the ones in~\
 
 \begin{definition}[r ratio~\cite{pan16}]
   The ratio between the number of clusters k and the number of documents N in a given corpus.
-  If r is close to 0, most documents are in multi-documents clusters and there is a great density of relevant links.
-  In this other hand if r is close to 1, most of the document belong to single document clusters and there are few relevant links.
   \begin{equation}
     r = \frac{k}{N}
   \end{equation}
@@ -75,139 +72,13 @@ Some of the definitions in this sections are an adapted version of the ones in~\
   \begin{equation}
     \frac{1}{r} = \frac{N}{k} = \frac{1}{k} \cdot \sum_{i} |\hat{Y}_i|
   \end{equation}
+  If r is close to 0, most documents are in multi-documents clusters and there is a great density of true links.
+  In this other hand, if r is close to 1, most of the document belong to single document clusters and there are few true links.
 \end{definition}
 
-\subsection{Document distances}
-
-\begin{definition}[Manhanttan Distance ($L^1$ based)]
-  To compute the Manhanttan distance the following equation is used.
+\begin{definition}[true links' ratio]
+  The ratio between the number of true links |R| and the number of links |L| in a given corpus.
   \begin{equation}
-    dist_{Manhanttan}(A, B) = \sum_{i=1}^{m} |A_i - B_i|
-  \end{equation}
-\end{definition}
-
-\begin{definition}[Tanimoto Distance ($L^1$ based, normalized)]
-  To compute the Tanimoto Distance the following equation is used. It's a components-wised normalized version of the manhattan distance.
-  \begin{equation}
-    dist_{Tanimoto}(A, B) = \frac{dist_{Manhattan}(A, B)}{\sum_{i=1}^{m} max(A_i, B_i)}
-  \end{equation}
-\end{definition}
-
-\begin{definition}[Euclidean Distance ($L^2$ based)]
-  To compute the Euclidean Distance the following equation is used.
-  \begin{equation}
-    dist_{Euclidian}(A, B) = \sqrt{\sum_{i=0}^{m}(A_i - B_i)^2}
-  \end{equation}
-\end{definition}
-
-\begin{definition}[Matusita Distance ($L^2$ based, square rooted values)]
-  To compute the Matusita Distance the following equation is used.
-  \begin{equation}
-    \begin{split}
-      dist_{Matusita}(A, B) &= dist_{Euclidian}(A', B') \\
-      \text{with }A' &= \sqrt{A}\text{ and }B' = \sqrt{B}
-    \end{split}
-  \end{equation}
-\end{definition}
-
-\begin{definition}[Clark Distance ($L^2$ based)]
-  To compute the Clark Distance the following equation is used.
-  \begin{equation}
-    dist_{Clark}(A, B) = \sqrt{\sum_{i=0}^{m}\left(\frac{|A_i - B_i|}{A_i + B_i}\right)^2}
-  \end{equation}
-\end{definition}
-
-\begin{definition}[Cosine Distance (Inner product based)]
-  To compute the Cosine Distance to first the Cosine similarity to compote the cosine distance.
-  \begin{equation}
-    sim_{Cosine}(A, B) = \frac{A \cdot B}{\sqrt{A \cdot A}\sqrt{B \cdot B}}
-  \end{equation}
-  \begin{equation}
-    dist_{Cosine}(A, B) = 1 - sim_{Cosine}(A, B)
-  \end{equation}
-  \begin{equation}
-    angular_dist_{Cosine}(A, B) = \frac{cos^{-1}sim_{Cosine}(A, B)}{\pi}
-  \end{equation}
-\end{definition}
-
-\subsection{Rank list evaluation}
-
-\begin{definition}[Relevant link~\cite{kocher_linking}]
-  A relevant link is a link in the relevant set.
-  \begin{equation}
-    relevant(l_i) =
-    \begin{cases}
-      1, & if\ l_i \in R \\
-      0, & otherwise
-    \end{cases}
-  \end{equation}
-\end{definition}
-
-\begin{definition}[Precision@k~\cite{kocher_linking}]
-  The precision@k is a function which take a integer k, with k < |L|
-  \begin{equation}
-    precision(k) = \frac{1}{k} \sum_{j=1}^{k} relevant(j)
-  \end{equation}
-\end{definition}
-
-\begin{definition}[Average Precision (AP)]
-  The mean over the precision@k each time a relevant link is retrieved.
-  \begin{equation}
-    AveragePrecision = \frac{1}{|R|} \sum_{j=1}^{|L|} precision(j) \cdot relevant(j)
-  \end{equation}
-\end{definition}
-
-\begin{definition}[RPrec~\cite{kocher_linking}]
-  The RPrec is the precision in the rank list at rank |R|.
-  With R being the relevant set. (Not to be confused with the r ratio)
-  \begin{equation}
-    RPrec = precision(|R|)
-  \end{equation}
-\end{definition}
-
-\begin{definition}[HPrec~\cite{kocher_linking}]
-  The HPrec represent a maximal rank j in the rank list where the precision is still 100\%.
-  This value is in the range [0 - |R|].
-  0 means the first pair in the rank list is incorrect.
-  |R| means every true links are ranked in the top part of the rank list.
-  \begin{equation}
-    HPrec = \max\{i \in \mathbf{N} | precision(i) = 1\}
-  \end{equation}
-\end{definition}
-
-\subsection{Clustering evaluation}
-
-\begin{definition}[Correctness~\cite{bcubed}]
-  Let L(e) and C(e) be the category and the cluster of an element e.
-  The correctness has a value of one if the two elements are in the both in the same cluster and has the same category OR both in a different cluster and a different category. ($A \Longleftrightarrow B \equiv (A \land B) \lor (\neg A \land \neg B)$)
-  \begin{gather*}
-    Correctness(e, e') = \\
-    \begin{cases}
-      1, & if (L(e) = L(e')) \Longleftrightarrow (C(e) = C(e'))\\
-      0, & otherwise
-    \end{cases}
-  \end{gather*}
-\end{definition}
-
-\begin{definition}[Precision $BCubed$~\cite{bcubed}]
-  The average of correctness for all elements on the average of all element such that their cluster is the same.
-  \begin{equation}
-    BCubed_{precision} = \text{Avg}_{e}[\text{Avg}_{e' C(e)=C(e')}[Correctness(e, e')]]
-  \end{equation}
-\end{definition}
-
-\begin{definition}[Recall $BCubed$~\cite{bcubed}]
-  The average of correctness for all elements on the average of all element such that their category is the same.
-  \begin{equation}
-    BCubed_{recall} = \text{Avg}_{e}[\text{Avg}_{e' L(e)=L(e')}[Correctness(e, e')]]
-  \end{equation}
-\end{definition}
-
-\begin{definition}[$BCubed F_1$ Score~\cite{bcubed}]
-  The harmonic mean between the $BCubed_{precision}$ and $BCubed_{recall}$
-  \begin{equation}
-    BCubed_{F_1} =
-    2 \cdot \frac{BCubed_{precision} \cdot BCubed_{recall}}
-    {BCubed_{precision} + BCubed_{recall}}
+    tl_r = \frac{|R|}{|L|}
   \end{equation}
 \end{definition}
