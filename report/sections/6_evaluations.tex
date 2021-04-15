@@ -61,6 +61,41 @@ Some of the definitions in this sections are an adapted version of the ones in~\
   \end{equation}
 \end{definition}
 
+
+\subsection{POS n-grams}
+
+Figure~\ref{fig:pos_ngrams} show the average precision on the rank list produced by using POS n-grams over the number of MFW (most frequent word, in this case POS n-grams are considered as words).
+The two following informations can be intuitively observed on this plot:
+
+A more complex POS n-gram requirement more MFW to archive its maximal effectiveness.
+In the St-Jean corpus 26 POS are used to describe every words in the corpus.
+Which correspond to $26^2 = 676$ possible unique POS 2-grams, to $26^3 = 17'576$ POS 3-grams and $26^4 = 456'976$.
+
+Like the other methods, an overfit to less important words is possible if the MFW ceiling is too high, reducing the average precision.
+In Figure~\ref{fig:pos_ngrams} the POS 2-grams clearly have drop in average precision after \~250-MFW.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/pos_ngrams.png}
+  \caption{Average precision over the MFW in the rank list generated using the z-score normalized cosine distance.}
+  \label{fig:pos_ngrams}
+\end{figure}
+
+\subsection{First letters, last letters of tokens}
+
+With this methods, the goal is to extract the N first letter of each word tokens which correspond generaly to the meaning of a word.
+This approach is closely related to the lemma approach.
+Extract also the N last letter of each word tokens which in this case correspond to the role of the word in a sentence.
+This second approach is closely related to the POS approach.
+These two methods can be considered as a simplified n-grams approach.
+
+Figure~\ref{fig:first_last_letters_ngrams} shows the average precision using the z-normalized cosine distance on the experiment for N = 4.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/first_last_letters_ngrams.png}
+  \caption{Average precision over the MFW in the rank list generated using the z-score normalized cosine distance.}
+  \label{fig:first_last_letters_ngrams}
+\end{figure}
+
 \subsection{Clustering evaluation}
 
 \begin{definition}[Correctness~\cite{bcubed}]

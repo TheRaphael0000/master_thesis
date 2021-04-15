@@ -7,6 +7,7 @@ This section contain basic notions commonly used in the authorship attribution, 
   \begin{equation}
     X_i = ("\text{the}", "\text{quick}", "\text{brown}", "\text{fox}", "\text{.}")
   \end{equation}
+  To obtain tokens from a long string contraining a non-tokenized document, a tokenizer i needed.
 \end{definition}
 
 \begin{definition}[Author]
@@ -44,22 +45,13 @@ This section contain basic notions commonly used in the authorship attribution, 
   \begin{equation}
     N = \sum_{i} |\hat{Y}_i|
   \end{equation}
+
 \end{definition}
 
 \begin{definition}[Relevant set]
-  The relevant set contain every possible pairs (also called links) of document with the same authors. Links in this set are called \textit{true links} in this study. Every other links are called \textit{false links}, since they don't have the same authors.
+  The relevant set contain every possible pairs (also called links) of document with the same authors. Links in this set are called \textit{true links} in this study. Every other pairs are called \textit{false links}, since they don't have the same authors.
   \begin{equation}
     R = \{(X_a, X_b) | f(X_a) = f(X_b) \land X_a \neq X_b) \forall (X_a, X_b)\}
-  \end{equation}
-\end{definition}
-
-\begin{definition}[Ranked list]
-  A ranked list is a ordered list of pair of document containing every links.
-  \begin{equation}
-    L = ((X_a, X_b) | X_a \neq X_b \forall (X_a, X_b))
-  \end{equation}
-  \begin{equation}
-    |L| = \frac{N \cdot (N - 1)}{2}
   \end{equation}
 \end{definition}
 
