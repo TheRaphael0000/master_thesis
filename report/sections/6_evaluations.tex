@@ -97,3 +97,159 @@ Some of the definitions in this sections are an adapted version of the ones in~\
     {BCubed_{precision} + BCubed_{recall}}
   \end{equation}
 \end{definition}
+
+
+\subsubsection{Frequent errors}
+
+This section, try to understand the errors in our system, in this case the false links (document pairs with different authors) highly ranked on different rank list.
+The rank list quality is highly based on the feature vector created using the N-MFW, having a good understanding of this vector give good indications of the strength of the system.
+
+To find reccurant errors in our system we use 5 different distance metrics on the relative frequency of the 500-MFW using the St-Jean dataset.
+This generate 5 rank lists.
+The average precision for these rank list is always greater than 0.7.
+With this 5 rank lists only the top 10 false links are kept to be analyzed.
+Frequent errors are link that appear often in this top 10.
+Figures~\ref{fig:mfw_vector_error_0}~/~\ref{fig:mfw_vector_error_1} show two pairs (Zola 49 / Flaubert 63 and Maupassant 10 / Flaubert 52) that appear 4 time out of the 5 rank lists in the top 10 false links, thus frequent error.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/mfw_vector_error_0.png}
+  \caption{First example of 500-MFW relative frequency vector for the two documents in a reccurant (4 rank lists out of 5) false link in the top 10 false links}
+  \label{fig:mfw_vector_error_0}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/mfw_vector_error_1.png}
+  \caption{Second example of 500-MFW relative frequency vector for the two documents in a reccurant (4 rank lists out of 5) false link in the top 10 false links}
+  \label{fig:mfw_vector_error_1}
+\end{figure}
+
+To be able to understand more easily this vector, the values have been sorted by relative frequencies.
+When a large propostion of the vectors overlap it indicates a high similarities between the vectors.
+In this case most of the surface overlap so the distance function will give a low value, and rank this vector high in the list.
+Both document style are close when their feature vector are closely related.
+We can't clearly determinate that these texts are from different author using only this type of representation.
+These two vectors pair can be vizually compared to the most similar link (ranked 1 using manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (Stael 157 / Steal 183) or the HPrec-th (last continous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (Maupassant 10 / Maupassant 67), both of these links show a large propotion of overlapping surface.
+A counter example would be the least similar link (ranked last using manhattan distance) which represent a negatively correlated document pair, Figure~\ref{fig:mfw_vector_last_rl} showcase this link.
+As expected, most of this figure surface is non-overlapping.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/mfw_vector_first_rl.png}
+  \caption{500-MFW relative frequency for the two documents ranked first in the rank list}
+  \label{fig:mfw_vector_first_rl}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/mfw_vector_first_last_rl.png}
+  \caption{500-MFW relative frequency for the two documents ranked HPrec-th in the rank list}
+  \label{fig:mfw_vector_first_last_rl}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/mfw_vector_last_rl.png}
+  \caption{500-MFW relative frequency for the two documents ranked last in the ranked list}
+  \label{fig:mfw_vector_last_rl}
+\end{figure}
+
+\subsubsection{Publication date differences analyis}
+
+When dealing with false links ranked high in the rank list, as the previous experiment showed, some excerpt use similar words.
+These shared words might be related to era the book was written.
+The following experiment try to investigate on this.
+
+First we must understand the publication date distribution of dataset. Figure~\ref{fig:dates_distribution} show this distribution.
+Figure~\ref{fig:dates_differences_all} show the date difference distribution for each pairs of document, we can see that the average date difference in the dataset is 28.24 years with a standard deviation of 20.73 years.
+Since this dataset contain multiple excerpt from the same book, we might consider only the links of differents authors (false links) Figure~\ref{fig:dates_differences_false} show such distribution.
+As expected the mean increased to 29.04 years since there are less links with small date difference.
+Same authors links (true links) are displayed in Figure~\ref{fig:dates_differences_r_true}, they confirm the previous statement that most of the same authors links have a low date difference with a mean at 5.11 years.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/dates_distribution.png}
+  \caption{Date distribution in the St-Jean dataset.}
+  \label{fig:dates_distribution}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/dates_differences_all.png}
+  \caption{Pairwise date difference denstiy in St-Jean for all the excerpt.}
+  \label{fig:dates_differences_all}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/dates_differences_false.png}
+  \caption{Pairwise date difference denstiy in St-Jean for all the excerpt with different authors (false links).}
+  \label{fig:dates_differences_false}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/dates_differences_r_true.png}
+  \caption{Pairwise date difference denstiy in St-Jean for all the excerpt with similar authors (true links) also correspond to the top-r true links.}
+  \label{fig:dates_differences_r_true}
+\end{figure}
+
+Figure~\ref{fig:dates_differences_r_false} show the date difference density on the top-r false links (670 in case of St-Jean) on a rank list with 80\% average precision.
+Two interesting informations can be extracted here.
+First the mean is lower by 8.22 years (29.04 - 20.82) comparing to the false links distribution which clearly indicate a importance of publication date in the ranking of the documents.
+Secondly we can obseve a drop at 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ are harder to discriminate than links outside this interval.
+This 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France \cite{generations}.
+Each new generation use its own vocabulary and can be harder to discriminate author of text beloning to the same generation, in the other hand having differant vocabulary can indicate a differant time periode and is often use to detect document forgery \cite{savoy_stylo}.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/dates_differences_r_false.png}
+  \caption{Pairwise date difference denstiy in St-Jean for top-r false links using a rank list with 80\% average precision.}
+  \label{fig:dates_differences_r_false}
+\end{figure}
+
+
+\subsubsection{Rank lists fusion evaluation}
+
+\begin{table}[h]
+  \caption{\textbf{S-curve}/Equal/Linear,  * : Binomial test p-value < 5\%}
+  \centering
+  \label{}
+  \begin{tabular}{l c c c}
+    \toprule
+    Metric & St-Jean & Brunet & Oxquarry \\ \midrule
+    AP     & \textbf{*84/0/0} & \textbf{*67/0/17} & \textbf{*77/0/7} \\
+    RPrec  & \textbf{*74/6/4} & \textbf{*31/38/15} & \textbf{*58/13/13} \\
+    HPrec  & \textbf{*66/3/15} & \textbf{*20/54/10} & \textbf{40/17/27} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[h]
+  \caption{\textbf{S-curve}/Equal/Single max,  * : Binomial test p-value < 5\%}
+  \centering
+  \label{}
+  \begin{tabular}{l c c c}
+    \toprule
+    Metric & St-Jean  & Brunet & Oxquarry \\ \midrule
+    AP     & \textbf{*55/0/29} & 37/0/47 & 9/0/75* \\
+    RPrec  & \textbf{*61/2/21} & \textbf{*52/15/17} & 1/2/81* \\
+    HPrec  & \textbf{47/1/36} & 0/0/84* & 14/1/69* \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[h]
+  \caption{\textbf{Linear}/Equal/Single max,  * : Binomial test p-value < 5\%}
+  \centering
+  \label{}
+  \begin{tabular}{l c c c}
+    \toprule
+    Metric& St-Jean  & Brunet & Oxquarry \\ \midrule
+    AP    & \textbf{50/0/34} & 26/0/58* & 4/0/80* \\
+    RPrec & \textbf{*52/2/30} & \textbf{*50/14/20} & 3/1/80* \\
+    HPrec & \textbf{44/0/40} & 0/0/84* & 14/0/70* \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/fusion_st_jean.png}
+  \caption{}
+  \label{fig:fusion_st_jean}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/fusion_brunet.png}
+  \caption{}
+  \label{fig:fusion_brunet}
+\end{figure}
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/fusion_oxquarry.png}
+  \caption{}
+  \label{fig:fusion_oxquarry}
+\end{figure}

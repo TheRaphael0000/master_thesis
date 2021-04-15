@@ -1,19 +1,56 @@
 \section{Methods}
 
-To archive clustering, the method adopted was to compare document using the authorship linkings strategies presented in \cite{kocher_verification}.
-In \cite{kocher_verification} the authors compared multiple text representation based on author style : words frequencies, lemma frequencies, Part-Of-Speach (POS) tags frequencies, short sequences of POS tags, as well as n-grams frequencies.
+To archive clustering, the method adopted was to compare document using the authorship linkings strategies presented in \textit{Evaluation of text representation schemes and distance measures for authorship linking} \cite{kocher_verification}.
+In this paper the authors compare multiple text representation based on author style which correspond to : words frequencies, lemma frequencies, Part-Of-Speach (POS) tags frequencies, short sequences of POS tags, as well as n-grams frequencies.
 The distance mesures used are : $L^1$ norms (Manhattan, Tanimoto), $L^2$ norm (Matusita, Clark), inner products (Cosine distance) and the Jeffery divergence.
 Depending on the dataset, the text representation and the metric used, no clear text representation and different distance mesures were giving better or worse results.
 
 In this study to archive a good clustering, the main objective is to have a reliable authorship linking rank list.
-To try to increase the quality of the rank list, the proposed method is to use a combination of multiple rank list using different strategies to form a hopefully better rank list.
+To try to increase the quality of the rank list, the proposed method is to use a combination of multiple rank list using different strategies to form a optimistically better rank list.
 By using the most diverse strategies, we belive it is possible to increase the quality using the principle of combinaison of evidences.
 
 \subsection{Feature vectors}
 
+To be able to express a document as a feature vector of size N the common stragegy in Stylometry is to find the N most frequant words (N-MFW) in a corpus, and for each document compute the relative frequancy of each of these words for the document \cite{savoy_stylo}.
+For example if the word : "\textit{the}" is in the N-MFW and occure 50 times in a document with 300 words, its relative frequancy is $50/300 = 1/6$, which will be one of the composante of the feature vector.
+No clear value of N for the N-MFW is to choose over others, but a value between 50-500 tends to produce good results \cite{savoy_text_representation}.
 
+Instead of using directly the words to create the feature vector, another possibility is to use the lemma corresponding to each words, for example the stentence \textit{I saw two men with a saw} its lematized version is : \textit{I see two man with a saw} this require advanced text pre-processing but it can remove ambiguity.
 
-\subsection{Vectors distances}
+Another popular method is instead of considering every token as a word, this method aim to create a "word" from short a sequences of letters called n-grams using Definition~\ref{def:n-grams}.
+To consider overlapping word, the whole document is synthetized into a long string by joining every token by a \textit{underscore} : $\_$.
+This technique can be further exploited by combining for example two or more sizes of n-grams together.
+N-grams can be really effective even though no clear meaning from each n-grams can be exploited at first sight, but by using n-grams of size 3 to 5 in most germanic languages this can correspond to for example the tense of the verbs (i.e. : \textit{ing\_}, \textit{ed\_}), some small common words (\textit{\_the\_}, \textit{\_and\_}, \textit{\_that}), or for example to adverbs in French (\textit{\_ment}), etc.
+
+\begin{definition}[$n$-grams]
+  \label{def:n-grams}
+  A $N$-gram is a special type of tokenization which is constructed by creating a token of size $N$ for each substrings starting from the position $0$ to \textit{text\_size} - $N$.
+  Example: Using 3-grams The string: "brown fox" is converted to: \\
+  $("\text{bro}", "\text{row}", "\text{own}", "\text{wn\_}", "\text{n\_f}", "\text{\_fo}", "\text{fox}")$
+\end{definition}
+
+Another possible stylistic aspect that can be detected from a text is to consider the sentence constructions.
+This can be solved by creating short sequences (n-grams) of POS tags.
+In this case, we consider each POS as a character in the n-grams definition, this is also known as w-shingling.
+For example, the sentence : \textit{"The cat eat a fish"} has the following POS tag \textit{"Article Noun Verb Article Noun"} which correspond to the following 3-grams of POS : \textit{"Article Noun Verb"} / \textit{"Noun Verb Article"} / \textit{"Verb Article Noun"}.
+In practice the POS is more detailed, for example instead of just considering the verb, the verb and its tense can be used, the same goes for the other type of POS.
+
+\subsection{Smoothing}
+
+When considering relative term frequcencies they can be used as a probability of occurance by using the maximum likelihood principle.
+The main problem with this approach is that we tends to overhistimate the probability of occurance of frequant terms and underhestimate the probability of ocucrance of low frequcency terms, for example if a word is not found in a document this doesn't mean the probability of the author using this word is 0.
+The solution proposed is to use smoothing, such as the Lidstone smoothing presented in Definition~\ref{def:lidstone_smoothing}.
+Smoothing techniques can help distance functions based on probabilities, such as the Kullback-Leibler Divergence.
+
+\begin{definition}[Lidstone smoothing \cite{savoy_stylo}]
+  \label{def:lidstone_smoothing}
+  \begin{equation}
+    p(t_i, D_j) = \frac{tf_{i,j} + \lambda}{n + \lambda \cdot |V|}
+  \end{equation}
+  With $t_i$ the i-th term, $D_j$ the j-th document, $tf_{i,j}$ the number of occurance of the i-th term in $D_j$, $|V|$ the size of the vocabulary, $\lambda$ a small value ($\lambda = 1$ special, case called Lalpace smoothing, but generally a smaller value such as 0.1 give good results), n the total number of words in the document $D_j$
+\end{definition}
+
+\subsection{Vectors distances and normalization}
 
 \begin{definition}[Manhanttan distance ($L^1$ based)]
   To compute the Manhanttan distance the following equation is used.
@@ -66,8 +103,6 @@ By using the most diverse strategies, we belive it is possible to increase the q
   \end{equation}
 \end{definition}
 
-\subsection{Vector normalization}
-
 \begin{definition}[Z-score normalization \cite{savoy_stylo}]
   \begin{equation}
     Z-score(A) = \frac{A - \mu}{\sigma}
@@ -76,63 +111,8 @@ By using the most diverse strategies, we belive it is possible to increase the q
   The Manhattan distance applied on a Z-score normalized MFW vector is also called Burrows's Delta~\cite{savoy_stylo}.
 \end{definition}
 
-\subsection{Compression-based distances}
-
-This section covers the compression based strategy to compute a distance between two documents.
-The main idea is to compress two documents A, B, compress the string concatenation AB of A, B and compare their sizes after compression using one of the distance mesure demonstrated below, and a lossless compression algorithm such as the Lempel-Ziv family (GZIP), block sorting family (BZip2), statistical family (PPM)~\cite{comparing_compression}.
-This technique is based on the fact that compressing algorithm tries to lower the Shannon entropy of a document, thus when compressing a document with a large Shannon entropy the compressed document should have a larger size after compression than to a document with a small Shannon entropy.
-Thus when concatenating two documents with a lot in common, the entropy of the concatenated document should be lower than if the two documents are very different.
-
-\begin{definition}[Normalized compression distance \cite{savoy_stylo} \cite{comparing_compression}]
-  The normalized compression distance of two documents A and B using the size after compression C is computed as follow:
-  \begin{equation}
-    NCD(A, B) = \frac{C(AB) - \min(C(A), C(B))}{\max(C(A), C(B))}
-  \end{equation}
-  Give a value in $\left[0-1+\epsilon\right]$, with $\epsilon$ being a small positive value created by the imperfection of compression algorithms).
-\end{definition}
-
-\begin{definition}[Conditional complexity of compression]
-  The conditional complexity of compression of two documents A and B using the size after compression C is computed as follow:
-  \begin{equation}
-    CCC(A, B) = C(AB) - C(A)
-  \end{equation}
-
-\end{definition}
-
-\begin{definition}[Compression-based cosine]
-  The compression-based cosine of two documents A and B using the size after compression C is computed as follow:
-  \begin{equation}
-    CBC(A, B) = 1 - \frac{C(A) + C(B) - C(AB)}{\sqrt{C(A) \cdot C(B)}}
-  \end{equation}
-\end{definition}
-
-\subsection{Authorship linking}
-
-The next sections will present, different stylistic text representations to create the authorship linking rank list. They are mostly based on the text representation proposed in \cite{kocher_verification}.
-
-\subsubsection{Word Tokens}
-
-The first method is rather simple but yet effective where we consider each token as a word.
-In the datasets used, the tokenization is already done such that each word is correctly tokenized.
-
-\subsubsection{Letters n-grams}
-
-For this method, instead of considering every token as a word, we create word from short sequences of letters called n-grams using Definition~\ref{def:n-grams}.
-To consider overlapping word, the whole document is synthetized to a long string by joining every token by a \textit{underscore} : $\_$.
-
-\begin{definition}[$N$-Grams]
-  \label{def:n-grams}
-  A $N$-gram is a special type of tokenization which is constructed by creating a token of size $N$ for each substrings starting from the position $0$ to \textit{text\_size} - $N$.
-  Example: Using 3-grams The string: "brown fox" is converted to: \\
-  $("\text{bro}", "\text{row}", "\text{own}", "\text{wn\_}", "\text{n\_f}", "\text{\_fo}", "\text{fox}")$
-\end{definition}
 
 \subsubsection{POS n-grams}
-
-To detect another stylistic aspect of a text, this method aim to consider the sentence constructions of the authors using short sequences (n-grams) of POS tags.
-
-For example, the sentence : \textit{"The cat eat a fish"} has the following POS tag \textit{"Article Noun Verb Article Noun"} which correspond to the following 3-gram of POS : \textit{"Article Noun Verb"} / \textit{"Noun Verb Article"} / \textit{"Verb Article Noun"}.
-In practice the POS is more detailed, for example instead of just considering the verb, the verb and it's tense can be used, same for the other type of POS.
 
 Figure~\ref{fig:pos_ngrams} show the average precision on the rank list produced by using POS n-grams over the number of MFW (most frequent word, in this case POS n-grams are considered as words).
 The two following informations can be intuitively observed on this plot:
@@ -167,100 +147,35 @@ Figure~\ref{fig:first_last_letters_ngrams} shows the average precision using the
   \label{fig:first_last_letters_ngrams}
 \end{figure}
 
+\subsection{Compression-based distances}
 
-\subsubsection{Frequent errors}
+This section covers the compression based strategy to compute a distance between two documents.
+The main idea is to compress two documents A, B, compress the string concatenation AB of A, B and compare their sizes after compression using one of the distance mesure demonstrated below, and a lossless compression algorithm such as the Lempel-Ziv family (GZIP), block sorting family (BZip2), statistical family (PPM)~\cite{comparing_compression}.
+This technique is based on the fact that compressing algorithm tries to lower the Shannon entropy of a document, thus when compressing a document with a large Shannon entropy the compressed document should have a larger size after compression than to a document with a small Shannon entropy.
+Thus when concatenating two documents with a lot in common, the entropy of the concatenated document should be lower than if the two documents are very different.
 
-This section, try to understand the errors in our system, in this case the false links (document pairs with different authors) highly ranked on different rank list.
-The rank list quality is highly based on the feature vector created using the N-MFW, having a good understanding of this vector give good indications of the strength of the system.
+\begin{definition}[Normalized compression distance \cite{savoy_stylo} \cite{comparing_compression}]
+  The normalized compression distance of two documents A and B using the size after compression C is computed as follow:
+  \begin{equation}
+    NCD(A, B) = \frac{C(AB) - \min(C(A), C(B))}{\max(C(A), C(B))}
+  \end{equation}
+  Give a value in $\left[0-1+\epsilon\right]$, with $\epsilon$ being a small positive value created by the imperfection of compression algorithms).
+\end{definition}
 
-To find reccurant errors in our system we use 5 different distance metrics on the relative frequency of the 500-MFW using the St-Jean dataset.
-This generate 5 rank lists.
-The average precision for these rank list is always greater than 0.7.
-With this 5 rank lists only the top 10 false links are kept to be analyzed.
-Frequent errors are link that appear often in this top 10.
-Figures~\ref{fig:mfw_vector_error_0}~/~\ref{fig:mfw_vector_error_1} show two pairs (Zola 49 / Flaubert 63 and Maupassant 10 / Flaubert 52) that appear 4 time out of the 5 rank lists in the top 10 false links, thus frequent error.
+\begin{definition}[Conditional complexity of compression]
+  The conditional complexity of compression of two documents A and B using the size after compression C is computed as follow:
+  \begin{equation}
+    CCC(A, B) = C(AB) - C(A)
+  \end{equation}
 
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/mfw_vector_error_0.png}
-  \caption{First example of 500-MFW relative frequency vector for the two documents in a reccurant (4 rank lists out of 5) false link in the top 10 false links}
-  \label{fig:mfw_vector_error_0}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/mfw_vector_error_1.png}
-  \caption{Second example of 500-MFW relative frequency vector for the two documents in a reccurant (4 rank lists out of 5) false link in the top 10 false links}
-  \label{fig:mfw_vector_error_1}
-\end{figure}
+\end{definition}
 
-To be able to understand more easily this vector, the values have been sorted by relative frequencies.
-When a large propostion of the vectors overlap it indicates a high similarities between the vectors.
-In this case most of the surface overlap so the distance function will give a low value, and rank this vector high in the list.
-Both document style are close when their feature vector are closely related.
-We can't clearly determinate that these texts are from different author using only this type of representation.
-These two vectors pair can be vizually compared to the most similar link (ranked 1 using manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (Stael 157 / Steal 183) or the HPrec-th (last continous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (Maupassant 10 / Maupassant 67), both of these links show a large propotion of overlapping surface.
-A counter example would be the least similar link (ranked last using manhattan distance) which represent a negatively correlated document pair, Figure~\ref{fig:mfw_vector_last_rl} showcase this link.
-As expected, most of this figure surface is non-overlapping.
-
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/mfw_vector_first_rl.png}
-  \caption{500-MFW relative frequency for the two documents ranked first in the rank list}
-  \label{fig:mfw_vector_first_rl}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/mfw_vector_first_last_rl.png}
-  \caption{500-MFW relative frequency for the two documents ranked HPrec-th in the rank list}
-  \label{fig:mfw_vector_first_last_rl}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/mfw_vector_last_rl.png}
-  \caption{500-MFW relative frequency for the two documents ranked last in the ranked list}
-  \label{fig:mfw_vector_last_rl}
-\end{figure}
-
-\subsubsection{Publication date differences analyis}
-
-When dealing with false links ranked high in the rank list, as the previous experiment showed, some excerpt use similar words.
-These shared words might be related to era the book was written.
-The following experiment try to investigate on this.
-
-First we must understand the publication date distribution of dataset. Figure~\ref{fig:dates_distribution} show this distribution.
-Figure~\ref{fig:dates_differences_all} show the date difference distribution for each pairs of document, we can see that the average date difference in the dataset is 28.24 years with a standard deviation of 20.73 years.
-Since this dataset contain multiple excerpt from the same book, we might consider only the links of differents authors (false links) Figure~\ref{fig:dates_differences_false} show such distribution.
-As expected the mean increased to 29.04 years since there are less links with small date difference.
-Same authors links (true links) are displayed in Figure~\ref{fig:dates_differences_r_true}, they confirm the previous statement that most of the same authors links have a low date difference with a mean at 5.11 years.
-
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/dates_distribution.png}
-  \caption{Date distribution in the St-Jean dataset.}
-  \label{fig:dates_distribution}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/dates_differences_all.png}
-  \caption{Pairwise date difference denstiy in St-Jean for all the excerpt.}
-  \label{fig:dates_differences_all}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/dates_differences_false.png}
-  \caption{Pairwise date difference denstiy in St-Jean for all the excerpt with different authors (false links).}
-  \label{fig:dates_differences_false}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/dates_differences_r_true.png}
-  \caption{Pairwise date difference denstiy in St-Jean for all the excerpt with similar authors (true links) also correspond to the top-r true links.}
-  \label{fig:dates_differences_r_true}
-\end{figure}
-
-Figure~\ref{fig:dates_differences_r_false} show the date difference density on the top-r false links (670 in case of St-Jean) on a rank list with 80\% average precision.
-Two interesting informations can be extracted here.
-First the mean is lower by 8.22 years (29.04 - 20.82) comparing to the false links distribution which clearly indicate a importance of publication date in the ranking of the documents.
-Secondly we can obseve a drop at 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ are harder to discriminate than links outside this interval.
-This 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France \cite{generations}.
-Each new generation use its own vocabulary and can be harder to discriminate author of text beloning to the same generation, in the other hand having differant vocabulary can indicate a differant time periode and is often use to detect document forgery \cite{savoy_stylo}.
-
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/dates_differences_r_false.png}
-  \caption{Pairwise date difference denstiy in St-Jean for top-r false links using a rank list with 80\% average precision.}
-  \label{fig:dates_differences_r_false}
-\end{figure}
+\begin{definition}[Compression-based cosine]
+  The compression-based cosine of two documents A and B using the size after compression C is computed as follow:
+  \begin{equation}
+    CBC(A, B) = 1 - \frac{C(A) + C(B) - C(AB)}{\sqrt{C(A) \cdot C(B)}}
+  \end{equation}
+\end{definition}
 
 \subsubsection{Rank list fusion}
 
@@ -321,66 +236,6 @@ To break the symmetry for the curve, to be able increase the conservation of the
   \includegraphics[width=\linewidth]{img/s_curve_r.png}
   \caption{Sampling $S^-1(x)$ with $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$}
   \label{fig:s_curve_r}
-\end{figure}
-
-\subsubsection{Evaluation}
-
-\begin{table}[h]
-  \caption{\textbf{S-curve}/Equal/Linear,  * : Binomial test p-value < 5\%}
-  \centering
-  \label{}
-  \begin{tabular}{l c c c}
-    \toprule
-    Metric & St-Jean & Brunet & Oxquarry \\ \midrule
-    AP     & \textbf{*84/0/0} & \textbf{*67/0/17} & \textbf{*77/0/7} \\
-    RPrec  & \textbf{*74/6/4} & \textbf{*31/38/15} & \textbf{*58/13/13} \\
-    HPrec  & \textbf{*66/3/15} & \textbf{*20/54/10} & \textbf{40/17/27} \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{table}[h]
-  \caption{\textbf{S-curve}/Equal/Single max,  * : Binomial test p-value < 5\%}
-  \centering
-  \label{}
-  \begin{tabular}{l c c c}
-    \toprule
-    Metric & St-Jean  & Brunet & Oxquarry \\ \midrule
-    AP     & \textbf{*55/0/29} & 37/0/47 & 9/0/75* \\
-    RPrec  & \textbf{*61/2/21} & \textbf{*52/15/17} & 1/2/81* \\
-    HPrec  & \textbf{47/1/36} & 0/0/84* & 14/1/69* \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{table}[h]
-  \caption{\textbf{Linear}/Equal/Single max,  * : Binomial test p-value < 5\%}
-  \centering
-  \label{}
-  \begin{tabular}{l c c c}
-    \toprule
-    Metric& St-Jean  & Brunet & Oxquarry \\ \midrule
-    AP    & \textbf{50/0/34} & 26/0/58* & 4/0/80* \\
-    RPrec & \textbf{*52/2/30} & \textbf{*50/14/20} & 3/1/80* \\
-    HPrec & \textbf{44/0/40} & 0/0/84* & 14/0/70* \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/fusion_st_jean.png}
-  \caption{}
-  \label{fig:fusion_st_jean}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/fusion_brunet.png}
-  \caption{}
-  \label{fig:fusion_brunet}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/fusion_oxquarry.png}
-  \caption{}
-  \label{fig:fusion_oxquarry}
 \end{figure}
 
 

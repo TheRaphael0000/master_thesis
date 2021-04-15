@@ -77,6 +77,7 @@ def compute_links(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func):
         X = [create_n_grams(xi, n_grams) for xi in X]
     # Create features
     features, mfw = most_frequent_word(X, n_mfw, z_score, lidstone_lambda)
+    print(mfw)
     # Compute link distances into a 2D matrix
     distances_matrix = squareform(pdist(features, metric=distance_func))
     # Computing the rank list of for this distance matrix
@@ -84,7 +85,7 @@ def compute_links(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func):
     return rank_list
 
 
-def compute_links_compress(X, z_score, compression_method, distance_func):
+def compute_links_compress(X, compression_method, distance_func):
     X = ["_".join(Xi).encode("utf8") for Xi in X]
     X_sizes = [compression_method(Xi) for Xi in X]
 
@@ -100,10 +101,11 @@ def compute_links_compress(X, z_score, compression_method, distance_func):
 if __name__ == '__main__':
     # Simple test script for the module
     # _, _, X, Y = brunet.parse()
-    _, _, _, X, Y = st_jean.parse_B()
+    _, X, Y = oxquarry.parse()
+    # _, _, _, X, Y = st_jean.parse_B()
 
     print("AP RPrec P@10 HPrec")
-    rank_list = compute_links(X, 0, 500, False, 0.1, distances.manhattan)
+    rank_list = compute_links(X, 3, 500, False, 0.1, distances.manhattan)
     print(*evaluate_linking(rank_list, Y))
     rank_list = compute_links_compress(X, compressions.lzma, distances.ncd)
     print(*evaluate_linking(rank_list, Y))
