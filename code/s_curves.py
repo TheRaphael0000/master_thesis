@@ -6,15 +6,6 @@ import numpy as np
 from misc import normalize, sigmoid, sigmoid_r
 
 
-def linear():
-    """Return a linear function with n points"""
-    def generator(n):
-        x = np.linspace(0, 1.0, n)
-        y = x
-        return x, y
-    return generator
-
-
 def sigmoid_reciprocal(c=4, r=0.25):
     """Return a sigmoid reciprocal function with n points,
     the zoom factor is based on the sigmoid function"""

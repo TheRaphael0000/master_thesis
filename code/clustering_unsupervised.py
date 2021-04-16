@@ -12,7 +12,8 @@ from corpus import oxquarry
 from corpus import brunet
 from corpus import st_jean
 from corpus import pan16
-from rank_list_fusion import compute_multiple_links
+from rank_list_fusion import fusion_s_curve_score
+from linking import compute_links
 from misc import dataset_infos
 from misc import distances_matrix_from_rank_list
 from misc import rank_list_to_txt
@@ -70,8 +71,8 @@ def clustering_case(X, Y, plot=False):
     ]
     s_curve = s_curves.sigmoid_reciprocal()
 
-    rank_list_overall, rank_lists = compute_multiple_links(
-        experiments, s_curve)
+    rank_lists = [compute_links(*e) for e in experiments]
+    rank_list_overall = fusion_s_curve_score(rank_lists, s_curve)
 
     print(" -- Linking evaluation -- ")
     print("AP RPrec HPrec (Used for overall)")

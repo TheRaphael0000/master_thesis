@@ -77,7 +77,6 @@ def compute_links(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func):
         X = [create_n_grams(xi, n_grams) for xi in X]
     # Create features
     features, mfw = most_frequent_word(X, n_mfw, z_score, lidstone_lambda)
-    print(mfw)
     # Compute link distances into a 2D matrix
     distances_matrix = squareform(pdist(features, metric=distance_func))
     # Computing the rank list of for this distance matrix

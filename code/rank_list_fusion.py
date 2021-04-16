@@ -6,33 +6,47 @@ from corpus import brunet, oxquarry, st_jean
 from linking import compute_links
 from collections import defaultdict
 import numpy as np
+import scipy as sp
 from evaluate import evaluate_linking
 
 
-def rank_list_fusion(rank_lists, s_curve):
+def rank_list_fusion(links, scores):
+    n_lists = links.shape[0]
+    n_links = links.shape[1]
+
     # grouping same links
-    grouped_by_link = defaultdict(list)
-    for rank_list in rank_lists:
-        x, y = s_curve(len(rank_list))
-        for i, (link, dist) in enumerate(rank_list):
-            grouped_by_link[link].append(y[i])
-    # average
-    for k in grouped_by_link:
-        grouped_by_link[k] = np.mean(grouped_by_link[k])
-    overall_ranklist = list(dict(grouped_by_link).items())
-    overall_ranklist.sort(key=lambda x: x[-1])
-    return overall_ranklist
+    grp_by_link = defaultdict(list)
+    for list_indice in range(n_lists):
+        for link_indice in range(n_links):
+            link = links[list_indice, link_indice]
+            score = scores[list_indice, link_indice]
+            grp_by_link[tuple(link)].append(score)
+    # averaging
+    for k in grp_by_link:
+        grp_by_link[k] = np.mean(grp_by_link[k])
+    rl = list(dict(grp_by_link).items())
+    rl.sort(key=lambda x: x[-1])
+    return rl
 
 
-def compute_multiple_links(experiments, s_curve):
-    rank_lists = []
-    for exp in experiments:
-        rank_list = compute_links(*exp)
-        rank_lists.append(rank_list)
-    if s_curve is None:
-        return None, rank_lists
-    rank_list_overall = rank_list_fusion(rank_lists, s_curve)
-    return rank_list_overall, rank_lists
+def fusion_raw_score(rank_lists):
+    links = np.array([[link for link, score in rl] for rl in rank_lists])
+    scores = np.array([[score for link, score in rl] for rl in rank_lists])
+    return rank_list_fusion(links, scores)
+
+
+def fusion_z_score(rank_lists):
+    links = np.array([[link for link, score in rl] for rl in rank_lists])
+    scores = np.array([[score for link, score in rl] for rl in rank_lists])
+    zscores = sp.stats.zscore(scores, axis=1)
+    return rank_list_fusion(links, zscores)
+
+
+def fusion_s_curve_score(rank_lists, s_curve):
+    links = np.array([[link for link, score in rl] for rl in rank_lists])
+    x, y = s_curve(len(rank_lists[0]))
+    s_curve_scores = np.array([np.array(y) for rl in rank_lists])
+    return rank_list_fusion(links, s_curve_scores)
 
 
 if __name__ == '__main__':
@@ -41,16 +55,23 @@ if __name__ == '__main__':
     experiments = [
         [X, 5, 500, True, 0.1, distances.manhattan],
         [X, 0, 500, True, 0.1, distances.manhattan],
-        [X2, 5, 500, True, 0.1, distances.manhattan],
-        [X2, 0, 500, True, 0.1, distances.manhattan],
+        [X2, 5, 500, True, 0.1, distances.cosine_distance],
+        [X2, 0, 500, True, 0.1, distances.cosine_distance],
     ]
     s_curve = s_curves.sigmoid_reciprocal()
 
-    rank_list_overall, rank_lists = compute_multiple_links(experiments, s_curve)
-    print("AP RPrec HPrec (Used for overall)")
-    for rank_list in rank_lists:
-        mesures = evaluate_linking(rank_list, Y)
-        print(*mesures)
-    print("AP RPrec HPrec (Overall)")
-    mesures = evaluate_linking(rank_list_overall, Y)
-    print(*mesures)
+    rls = [compute_links(*e) for e in experiments]
+    print("Rank lists")
+    for rl in rls:
+        print(*evaluate_linking(rl, Y))
+
+    print("Raw score")
+    rl_overall = fusion_raw_score(rls)
+    print(*evaluate_linking(rl_overall, Y))
+    print("Z-score")
+    rl_overall = fusion_z_score(rls)
+    print(*evaluate_linking(rl_overall, Y))
+    print("S-curve")
+    rl_overall = fusion_s_curve_score(rls, s_curve)
+    print(*evaluate_linking(rl_overall, Y))
+    exit()

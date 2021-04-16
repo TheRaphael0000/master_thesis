@@ -173,12 +173,12 @@ In the case of authorship verification, the top pairs are the most similar and t
 
 \subsection{Rank list fusion}
 
-The idea of rank list fusion is to combine multiple rank lists in such way that the resulting rank list is more accurate modelization of a correct rank list.
-A correct rank list in the case of authorship clustering is one such that show every true links (same authors document pairs) at the top and every false links (different author document pairs) at the bottom.
+The idea of rank list fusion is to combine multiple rank lists in such way that the resulting rank list is more accurate modelization of a best rank list.
+The hypotetical best possible rank list in the case of authorship clustering is one such that show every true links (same authors document pairs) at the top and every false links (different author document pairs) at the bottom, therefore maximizing every metrics in Section~\ref{sec:rl_eval}.
 
-\subsubsection{Normalized raw-score merging}
+\subsubsection{Z-Score fusion}
 
-todo
+To merge scored rank list with differents order of magnitude, a simple and rather effective approach is to normalize every rank lists using for example the z-score and takes the mean value for each link of its score in every normalized rank lists.
 
 \subsubsection{S-Curve fusion}
 

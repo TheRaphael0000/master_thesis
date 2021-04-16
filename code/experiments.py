@@ -17,8 +17,8 @@ from corpus import oxquarry
 from corpus import st_jean
 from corpus import pan16
 
-from rank_list_fusion import compute_multiple_links
-from rank_list_fusion import rank_list_fusion
+from rank_list_fusion import fusion_s_curve_score
+from rank_list_fusion import fusion_z_score
 
 from evaluate import evaluate_linking
 
@@ -46,8 +46,8 @@ def main():
     # pos_ngrams()
     # first_last_letters_ngrams()
     # letter_ngrams()
-    # recurrent_errors()
-    dates_differences()
+    recurrent_errors()
+    # dates_differences()
     # compression_evaluation()
     pass
 
@@ -125,7 +125,8 @@ def dates_differences():
     ]
 
     s_curve = s_curves.sigmoid_reciprocal()
-    rl, rls = compute_multiple_links(experiments, s_curve)
+    rls = [compute_links(*e) for e in experiments]
+    rl = fusion_s_curve_score(rls, s_curve)
     print(*evaluate_linking(rl, Y))
 
     date_diffs = np.array([np.abs(dates[a] - dates[b]) for (a, b), s in rl])
@@ -177,12 +178,6 @@ def recurrent_errors():
         [X, 0, 500, False, 1e-1, distances.clark],
         [X, 0, 500, False, 1e-1, distances.matusita],
         [X, 0, 500, True, 1e-1, distances.cosine_distance],
-
-        # [X, 6, 500, True, 1e-1, distances.manhattan],
-        # [X, 6, 500, False, 1e-1, distances.tanimoto],
-        # # no clark since too bad results
-        # [X, 6, 500, False, 1e-1, distances.matusita],
-        # [X, 6, 500, True, 1e-1, distances.cosine_distance],
     ]
 
     top_n = 10
@@ -205,7 +200,7 @@ def recurrent_errors():
                 if i > top_n:
                     break
 
-    rl = rank_list_fusion(rls, s_curves.sigmoid_reciprocal())
+    rl = fusion_z_score(rls)
     m = evaluate_linking(rl, Y)
     print(m, "(overall)")
     top_errors = Counter(dict(incorrectly_ranked)).most_common(keep)
@@ -452,8 +447,8 @@ def mfw():
 
 
 def fusion():
-    _, _, _, X, Y = st_jean.parse()
-    # _, _, X, Y = brunet.parse()
+    # _, _, _, X, Y = st_jean.parse()
+    _, _, X, Y = brunet.parse()
     # _, X, Y = oxquarry.parse()
 
     experiments = [
@@ -462,64 +457,92 @@ def fusion():
         [X, 0, 500, False, 1e-1, distances.clark],
         [X, 0, 500, False, 1e-1, distances.matusita],
         [X, 0, 500, True, 1e-1, distances.cosine_distance],
+        [X, 0, 500, False, 1e-1, distances.kld],
 
-        [X, 6, 500, True, 1e-1, distances.manhattan],
-        [X, 6, 500, False, 1e-1, distances.tanimoto],
-        # no clark since too bad results
-        [X, 6, 500, False, 1e-1, distances.matusita],
-        [X, 6, 500, True, 1e-1, distances.cosine_distance],
+        [X, 3, 750, True, 1e-1, distances.manhattan],
+        [X, 3, 750, False, 1e-1, distances.tanimoto],
+        [X, 3, 750, False, 1e-1, distances.clark],
+        [X, 3, 750, False, 1e-1, distances.matusita],
+        [X, 3, 750, True, 1e-1, distances.cosine_distance],
+        [X, 3, 750, False, 1e-1, distances.kld],
+
+        # (X, compressions.lzma, distances.ncd),
+        # (X, compressions.lzma, distances.cbc),
+        # (X, compressions.bz2, distances.ncd),
+        # (X, compressions.bz2, distances.cbc),
     ]
     s_curve = s_curves.sigmoid_reciprocal()
-    s_curve_lin = s_curves.linear()
 
-    fusion_size = 3
+    fusion_size = 4
 
     M_single = []
 
-    _, rank_lists = compute_multiple_links(experiments, None)
-    for rank_list in rank_lists:
-        mesures = evaluate_linking(rank_list, Y)
-        print(mesures)
+    rank_lists = []
+    for i, e in enumerate(experiments):
+        if type(e) == tuple:
+            rl = compute_links_compress(*e)
+        else:
+            rl = compute_links(*e)
+        rank_lists.append(rl)
+        mesures = evaluate_linking(rl, Y)
+        print(i, mesures)
         M_single.append(mesures)
+
     M_single = np.array(M_single)
 
     M_single_max_in_exp = []
-    M_fusion = []
-    M_fusion_lin = []
+    M_fusion_s_curve = []
+    M_fusion_z_score = []
 
-    for experiments_ in itertools.combinations(range(len(experiments)), fusion_size):
-        rank_lists_ = [rank_lists[i] for i in experiments_]
-        M_single_max_in_exp.append(np.max(M_single[experiments_, :], axis=0))
+    experiments_ids = np.array(list(itertools.combinations(range(len(experiments)), fusion_size)))
 
-        overall_ranklist = rank_list_fusion(rank_lists_, s_curve)
-        M_fusion.append(evaluate_linking(overall_ranklist, Y))
+    for experiments_id in experiments_ids:
+        rls = [rank_lists[i] for i in experiments_id]
+        M_single_max_in_exp.append(np.max(M_single[experiments_id, :], axis=0))
 
-        overall_ranklist_lin = rank_list_fusion(rank_lists_, s_curve_lin)
-        M_fusion_lin.append(evaluate_linking(overall_ranklist_lin, Y))
+        rl_s_curve = fusion_s_curve_score(rls, s_curve)
+        M_fusion_s_curve.append(evaluate_linking(rl_s_curve, Y))
 
-    M_fusion = np.array(M_fusion)
-    M_fusion_lin = np.array(M_fusion_lin)
+        rl_z_score = fusion_z_score(rls)
+        M_fusion_z_score.append(evaluate_linking(rl_z_score, Y))
+
+    M_fusion_s_curve = np.array(M_fusion_s_curve)
+    M_fusion_z_score = np.array(M_fusion_z_score)
     M_single_max_in_exp = np.array(M_single_max_in_exp)
 
-    print("S-curve vs Linear")
-    print(*sign_test(M_fusion, M_fusion_lin))
-    print("S-curve vs Single max")
-    print(*sign_test(M_fusion, M_single_max_in_exp))
-    print("Linear vs Single max")
-    print(*sign_test(M_fusion_lin, M_single_max_in_exp))
+    print("S-curve")
+    print(M_fusion_s_curve.min(axis=0))
+    print(M_fusion_s_curve.max(axis=0))
+    print(M_fusion_s_curve.mean(axis=0))
+    print(M_fusion_s_curve.std(axis=0))
+    print(experiments_ids[np.argmax(M_fusion_s_curve, axis=0)])
+    print("Z-score")
+    print(M_fusion_z_score.min(axis=0))
+    print(M_fusion_z_score.max(axis=0))
+    print(M_fusion_z_score.mean(axis=0))
+    print(M_fusion_z_score.std(axis=0))
+    print(experiments_ids[np.argmax(M_fusion_z_score, axis=0)])
+    print("Max in exp")
+    print(M_single_max_in_exp.min(axis=0))
+    print(M_single_max_in_exp.max(axis=0))
+    print(M_single_max_in_exp.mean(axis=0))
+    print(M_single_max_in_exp.std(axis=0))
+    print(experiments_ids[np.argmax(M_single_max_in_exp, axis=0)])
 
-    # for i in range(4):
-    #     print(M_fusion.shape)
-    #     print(wilcoxon(M_fusion[:,i], M_fusion_lin[:,i], alternative="two-sided"))
-    #     print(wilcoxon(M_fusion[:,i], M_single_max_in_exp[:,i], alternative="two-sided"))
-    #     print(wilcoxon(M_fusion_lin[:,i], M_single_max_in_exp[:,i], alternative="two-sided"))
+    print("S-curve vs Single max")
+    print(*sign_test(M_fusion_s_curve, M_single_max_in_exp))
+    print("Z-score vs Single max")
+    print(*sign_test(M_fusion_z_score, M_single_max_in_exp))
+    print("S-curve vs Z-score")
+    print(*sign_test(M_fusion_s_curve, M_fusion_z_score))
 
     plt.figure(figsize=(6, 4), dpi=200)
-    x, y, c = M_fusion[:, 0], M_fusion[:, 1], M_fusion[:, 2]
-    plt.scatter(x, y, c=c, marker=".",
-                label=f"Fusions ({fusion_size} lists)", alpha=0.75)
+    x, y, c = M_fusion_s_curve[:, 0], M_fusion_s_curve[:, 1], M_fusion_s_curve[:, 2]
+    plt.scatter(x, y, c=c, marker="x", label=f"S-curve fusions ({fusion_size} lists)", alpha=0.6)
+    x, y, c = M_fusion_z_score[:, 0], M_fusion_z_score[:, 1], M_fusion_z_score[:, 2]
+    plt.scatter(x, y, c=c, marker="+", label=f"Z-score fusions ({fusion_size} lists)", alpha=0.6)
     x, y, c = M_single[:, 0], M_single[:, 1], M_single[:, 2]
-    plt.scatter(x, y, c=c, marker="^", label="Single rank list", alpha=1)
+    plt.scatter(x, y, c=c, marker="o", label="Single rank list", alpha=1)
     cbar = plt.colorbar()
     plt.xlabel("RPrec")
     plt.ylabel("Average precision (AP)")

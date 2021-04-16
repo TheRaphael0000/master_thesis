@@ -1,22 +1,10 @@
 \section{Evaluation}
 
-\subsection{Text size importance in stylometry}
+\subsection{Rank list evaluation metrics}
+\label{sec:rl_eval}
 
-Figure~\ref{img:degradation} shows the importance of having texts large enough for a correct stylistic detection using distance between MFW vectors.
-
-PAN16 dataset is a difficult dataset due to its small size, thus extracting reliable feature for each text to estimate each style is also a difficult task.
-After multiple tests, the PAN @ CLEF 2016 dataset was not used further in this study due to its difficulty in finding reliable stylographic clues.
-
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/degradation.png}
-  \caption{St-Jean ranks list evaluation on AP, RPrec and HPrec over the text size. Rank list computed using 500 MFW and the zscored-normalized cosine distance}
-  \label{img:degradation}
-\end{figure}
-
-
-\subsection{Rank list evaluation}
-
-Some of the definitions in this sections are an adapted version of the ones in~\cite{kocher_linking},~\cite{bcubed}.
+In order to know if a rank list is better or worse than another one, the following metrics were used.
+Definitions in this sections are an adapted version of the ones in~\cite{kocher_linking}.
 
 \begin{definition}[Relevant link~\cite{kocher_linking}]
   A relevant link is a link in the relevant set.
@@ -61,6 +49,24 @@ Some of the definitions in this sections are an adapted version of the ones in~\
   \end{equation}
 \end{definition}
 
+\subsection{Importance of the text size in stylometry}
+
+Previous studies have shown the importance of having documents of good quality and with at least 5000 tokens to have reliable results.
+Skilled authors can easily change their style to imitate others for small texts, but it becomes more difficult for larger texts~\cite{savoy_stylo}.
+
+For this study, an experiment on the St-Jean dataset was achieved, in the order to show the importance of having large documents.
+Figure~\ref{img:degradation} shows the three metrics used (Average precision, RPrec, HPrec) over the number of tokens.
+The number of token was artificially modified by considering only the $n$ first tokens for each text, with $n$ being between 9000 and 250 with steps of 250 tokens.
+All metrics decrease over the text size, which means it becomes harder to determinate documents pairs with the same author as the text size decrease.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/degradation.png}
+  \caption{St-Jean ranks list evaluation on AP, RPrec and HPrec over the text size. Rank list computed using 500 MFW and the zscored-normalized cosine distance}
+  \label{img:degradation}
+\end{figure}
+
+PAN16 dataset is a difficult dataset due to its small size, thus extracting reliable features for each text to estimate each style is also a difficult task.
+After multiple tests, the PAN @ CLEF 2016 dataset was not used further in this study due to its difficulty in finding reliable Stylometric clues.
 
 \subsection{POS n-grams}
 
@@ -95,43 +101,6 @@ Figure~\ref{fig:first_last_letters_ngrams} shows the average precision using the
   \caption{Average precision over the MFW in the rank list generated using the z-score normalized cosine distance.}
   \label{fig:first_last_letters_ngrams}
 \end{figure}
-
-\subsection{Clustering evaluation}
-
-\begin{definition}[Correctness~\cite{bcubed}]
-  Let L(e) and C(e) be the category and the cluster of an element e.
-  The correctness has a value of one if the two elements are in the both in the same cluster and has the same category OR both in a different cluster and a different category. ($A \Longleftrightarrow B \equiv (A \land B) \lor (\neg A \land \neg B)$)
-  \begin{gather*}
-    Correctness(e, e') = \\
-    \begin{cases}
-      1, & if (L(e) = L(e')) \Longleftrightarrow (C(e) = C(e'))\\
-      0, & otherwise
-    \end{cases}
-  \end{gather*}
-\end{definition}
-
-\begin{definition}[Precision $BCubed$~\cite{bcubed}]
-  The average of correctness for all elements on the average of all element such that their cluster is the same.
-  \begin{equation}
-    BCubed_{precision} = \text{Avg}_{e}[\text{Avg}_{e' C(e)=C(e')}[Correctness(e, e')]]
-  \end{equation}
-\end{definition}
-
-\begin{definition}[Recall $BCubed$~\cite{bcubed}]
-  The average of correctness for all elements on the average of all element such that their category is the same.
-  \begin{equation}
-    BCubed_{recall} = \text{Avg}_{e}[\text{Avg}_{e' L(e)=L(e')}[Correctness(e, e')]]
-  \end{equation}
-\end{definition}
-
-\begin{definition}[$BCubed F_1$ Score~\cite{bcubed}]
-  The harmonic mean between the $BCubed_{precision}$ and $BCubed_{recall}$
-  \begin{equation}
-    BCubed_{F_1} =
-    2 \cdot \frac{BCubed_{precision} \cdot BCubed_{recall}}
-    {BCubed_{precision} + BCubed_{recall}}
-  \end{equation}
-\end{definition}
 
 
 \subsubsection{Frequent errors}
@@ -232,43 +201,43 @@ Each new generation use its own vocabulary and can be harder to discriminate aut
 \subsubsection{Rank lists fusion evaluation}
 
 \begin{table}[h]
-  \caption{\textbf{S-curve}/Equal/Linear,  * : Binomial test p-value < 5\%}
-  \centering
-  \label{}
-  \begin{tabular}{l c c c}
-    \toprule
-    Metric & St-Jean & Brunet & Oxquarry \\ \midrule
-    AP     & \textbf{*84/0/0} & \textbf{*67/0/17} & \textbf{*77/0/7} \\
-    RPrec  & \textbf{*74/6/4} & \textbf{*31/38/15} & \textbf{*58/13/13} \\
-    HPrec  & \textbf{*66/3/15} & \textbf{*20/54/10} & \textbf{40/17/27} \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{table}[h]
-  \caption{\textbf{S-curve}/Equal/Single max,  * : Binomial test p-value < 5\%}
+  \caption{S-Curve/Equal/Single max,  * : Binomial test p-value < 5\%}
   \centering
   \label{}
   \begin{tabular}{l c c c}
     \toprule
     Metric & St-Jean  & Brunet & Oxquarry \\ \midrule
-    AP     & \textbf{*55/0/29} & 37/0/47 & 9/0/75* \\
-    RPrec  & \textbf{*61/2/21} & \textbf{*52/15/17} & 1/2/81* \\
-    HPrec  & \textbf{47/1/36} & 0/0/84* & 14/1/69* \\
+    AP     & 161/0/334* & 208/0/287* & 1/0/494*\\
+    RPrec  & 169/9/317* & *378/75/42 & 0/2/493*\\
+    HPrec  & *287/1/207 & 49/87/359* & 32/11/452*\\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \begin{table}[h]
-  \caption{\textbf{Linear}/Equal/Single max,  * : Binomial test p-value < 5\%}
+  \caption{Z-Score/Equal/Single max,  * : Binomial test p-value < 5\%}
   \centering
   \label{}
   \begin{tabular}{l c c c}
     \toprule
     Metric& St-Jean  & Brunet & Oxquarry \\ \midrule
-    AP    & \textbf{50/0/34} & 26/0/58* & 4/0/80* \\
-    RPrec & \textbf{*52/2/30} & \textbf{*50/14/20} & 3/1/80* \\
-    HPrec & \textbf{44/0/40} & 0/0/84* & 14/0/70* \\
+    AP    & *284/0/211  & *285/0/210 & 1/0/494*\\
+    RPrec & *312/10/173 & *361/94/40 & 0/0/495*\\
+    HPrec & *289/0/206  & 35/63/397* & 79/13/403*\\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[h]
+  \caption{S-Curve/Equal/Z-Score,  * : Binomial test p-value < 5\%}
+  \centering
+  \label{}
+  \begin{tabular}{l c c c}
+    \toprule
+    Metric & St-Jean & Brunet & Oxquarry \\ \midrule
+    AP     & 7/0/488*   & 42/0/453*    & *270/0/225\\
+    RPrec  & 4/3/488*   & 124/241/130  & 51/96/348*\\
+    HPrec  & 57/18/420* & *188/202/105 & 70/34/391*\\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -288,3 +257,40 @@ Each new generation use its own vocabulary and can be harder to discriminate aut
   \caption{}
   \label{fig:fusion_oxquarry}
 \end{figure}
+
+\subsection{Clustering evaluation metrics}
+
+\begin{definition}[Correctness~\cite{bcubed}]
+  Let L(e) and C(e) be the category and the cluster of an element e.
+  The correctness has a value of one if the two elements are in the both in the same cluster and has the same category OR both in a different cluster and a different category. ($A \Longleftrightarrow B \equiv (A \land B) \lor (\neg A \land \neg B)$)
+  \begin{gather*}
+    Correctness(e, e') = \\
+    \begin{cases}
+      1, & if (L(e) = L(e')) \Longleftrightarrow (C(e) = C(e'))\\
+      0, & otherwise
+    \end{cases}
+  \end{gather*}
+\end{definition}
+
+\begin{definition}[Precision $BCubed$~\cite{bcubed}]
+  The average of correctness for all elements on the average of all element such that their cluster is the same.
+  \begin{equation}
+    BCubed_{precision} = \text{Avg}_{e}[\text{Avg}_{e' C(e)=C(e')}[Correctness(e, e')]]
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Recall $BCubed$~\cite{bcubed}]
+  The average of correctness for all elements on the average of all element such that their category is the same.
+  \begin{equation}
+    BCubed_{recall} = \text{Avg}_{e}[\text{Avg}_{e' L(e)=L(e')}[Correctness(e, e')]]
+  \end{equation}
+\end{definition}
+
+\begin{definition}[$BCubed F_1$ Score~\cite{bcubed}]
+  The harmonic mean between the $BCubed_{precision}$ and $BCubed_{recall}$
+  \begin{equation}
+    BCubed_{F_1} =
+    2 \cdot \frac{BCubed_{precision} \cdot BCubed_{recall}}
+    {BCubed_{precision} + BCubed_{recall}}
+  \end{equation}
+\end{definition}

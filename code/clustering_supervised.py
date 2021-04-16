@@ -13,7 +13,8 @@ from corpus import oxquarry
 from corpus import brunet
 from corpus import st_jean
 from corpus import pan16
-from rank_list_fusion import compute_multiple_links
+from linking import compute_links
+from rank_list_fusion import fusion_s_curve_score
 from misc import dataset_infos
 from misc import distances_matrix_from_rank_list
 from misc import rank_list_to_txt
@@ -82,7 +83,8 @@ def linking(X):
     print(" -- Linking -- ")
     experiments_ = experiments(X)
     s_curve = s_curves.sigmoid_reciprocal()
-    rl, rls = compute_multiple_links(experiments_, s_curve)
+    rls = [compute_links(*e) for e in experiments_]
+    rl = fusion_s_curve_score(rls, s_curve)
     return rl, rls
 
 
