@@ -1,6 +1,7 @@
 import itertools
 from collections import Counter
 
+import unicodedata
 import numpy as np
 from scipy.stats import binom_test
 import matplotlib.pyplot as plt
@@ -96,8 +97,9 @@ def sign_test(A, B):
 
     return np.array([pos, eq, neg]).T.tolist(), list(binom_tests)
 
+
 def print_side_by_side_clusters(Y_true, Y_pred):
-    for a in sorted(zip(Y_true, Y_pred), key=lambda x:x[-1]):
+    for a in sorted(zip(Y_true, Y_pred), key=lambda x: x[-1]):
         print(a)
 
 
@@ -116,9 +118,33 @@ def simple_plot(X, Y, X_label, Y_label, filename):
     plt.savefig(f"{filename}.png")
 
 
+def normalize(s):
+    # Removing accents
+    s = unicodedata.normalize("NFKD", s)
+    s = s.encode("ASCII", "ignore").decode("ASCII")
+    # To lowercase
+    s = s.lower()
+    return s
+
+
 def first_letters_cut(X, n):
     return [[x[:n] for x in Xi] for Xi in X]
 
 
 def last_letters_cut(X, n):
     return [[x[-n:] for x in Xi] for Xi in X]
+
+
+def create_word_n_gram(word, n):
+    return [word[i:i + n] for i in range(len(word) - n + 1)]
+
+
+def word_n_grams(X, n):
+    texts = []
+    for Xi in X:
+        words = []
+        for x in Xi:
+            n_grams = create_word_n_gram(x, n)
+            words.extend(n_grams)
+        texts.append(words)
+    return texts

@@ -5,6 +5,7 @@ from collections import Counter
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import colors
+from matplotlib.lines import Line2D
 from scipy.stats import wilcoxon
 from adjustText import adjust_text
 
@@ -29,10 +30,12 @@ from linking import most_frequent_word
 from misc import sign_test
 from misc import simple_plot
 from misc import first_letters_cut
+from misc import word_n_grams
 from misc import last_letters_cut
 from misc import sigmoid
 from misc import sigmoid_r
 from misc import compute_r
+from misc import normalize
 
 
 def main():
@@ -46,9 +49,10 @@ def main():
     # pos_ngrams()
     # first_last_letters_ngrams()
     # letter_ngrams()
-    recurrent_errors()
+    # recurrent_errors()
     # dates_differences()
     # compression_evaluation()
+    count_ngrams()
     pass
 
 
@@ -240,39 +244,51 @@ def recurrent_errors():
 
 def first_last_letters_ngrams():
     print("loading")
-    _, _, _, X, Y = st_jean.parse()
+    # _, _, _, X, Y = st_jean.parse()
+    _, _, X, Y = brunet.parse()
+    # _, X, Y = oxquarry.parse()
 
-    n = 4
-
-    begin_X = first_letters_cut(X, n)
-    end_X = last_letters_cut(X, n)
-
-    M_begin = []
-    M_end = []
-    M_ngrams = []
-
-    mfws = np.arange(100, 2000 + 1, 100)
-
-    ngrams_types = [2, 3, 4, (2, 3)]
-    for mfw in mfws:
-        print(mfw)
-        rl = compute_links(begin_X, 0, mfw, True, 1e-1,
-                           distances.cosine_distance)
-        m = evaluate_linking(rl, Y)
-        M_begin.append(m[0])
-        rl = compute_links(end_X, 0, mfw, True, 1e-1,
-                           distances.cosine_distance)
-        m = evaluate_linking(rl, Y)
-        M_end.append(m[0])
-        rl = compute_links(X, 4, mfw, True, 1e-1, distances.cosine_distance)
-        m = evaluate_linking(rl, Y)
-        M_ngrams.append(m[0])
 
     plt.figure(figsize=(6, 4), dpi=200)
-    plt.plot(mfws, M_begin, label="first 4 letters")
-    plt.plot(mfws, M_end, label="last 4 letters")
-    plt.plot(mfws, M_ngrams, label="4 letters n-grams")
-    plt.legend()
+
+    for n, c in zip([3, 4, 5], ["C0", "C1", "C2"]):
+        print(n)
+        word_begin_X = first_letters_cut(X, n)
+        word_ngrams_X = word_n_grams(X, n)
+        word_end_X = last_letters_cut(X, n)
+
+        M_ngrams = []
+        M_first = []
+        M_last = []
+
+        mfws = np.arange(200, 4000 + 1, 100)
+
+        for mfw in mfws:
+            print(mfw)
+            rl = compute_links(word_ngrams_X, 0, mfw, True, 1e-1, distances.cosine_distance)
+            m = evaluate_linking(rl, Y)
+            M_ngrams.append(m[0])
+            rl = compute_links(word_begin_X, 0, mfw, True, 1e-1, distances.cosine_distance)
+            m = evaluate_linking(rl, Y)
+            M_first.append(m[0])
+            rl = compute_links(word_end_X, 0, mfw, True, 1e-1, distances.cosine_distance)
+            m = evaluate_linking(rl, Y)
+            M_last.append(m[0])
+
+        plt.plot(mfws, M_ngrams, c=c, ls="solid")
+        plt.plot(mfws, M_first, c=c, ls="dotted")
+        plt.plot(mfws, M_last, c=c, ls="dashed")
+
+    custom_lines = [
+        Line2D([0], [0], color="C0", lw=2),
+        Line2D([0], [0], color="C1", lw=2),
+        Line2D([0], [0], color="C2", lw=2),
+        Line2D([0], [0], color="k", lw=2, ls="solid"),
+        Line2D([0], [0], color="k", lw=2, ls="dotted"),
+        Line2D([0], [0], color="k", lw=2, ls="dashed"),
+    ]
+
+    plt.legend(custom_lines, ["n = 3", "n = 4", "n = 5", "word n-grams", "n first letters", "n last letters"], loc="lower right")
     plt.xlabel("MFW")
     plt.ylabel("Average Precision (AP)")
     plt.tight_layout()
@@ -571,6 +587,15 @@ def sigmoids():
     plt.tight_layout()
     plt.savefig("img/sigmoid_r.png")
 
+def count_ngrams():
+    words = open("corpus/english_dictionary.txt").read().split("\n")
+    words = [normalize(w) for w in words]
+
+    print(len(Counter(word_n_grams([words], 1)[0])))
+    print(len(Counter(word_n_grams([words], 2)[0])))
+    print(len(Counter(word_n_grams([words], 3)[0])))
+    print(len(Counter(word_n_grams([words], 4)[0])))
+    print(len(Counter(word_n_grams([words], 5)[0])))
 
 if __name__ == "__main__":
     main()

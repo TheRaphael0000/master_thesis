@@ -1,4 +1,5 @@
-\section{Theoretical concepts}
+\section{Theoretical concepts \label{sec:theoretical_concepts}}
+
 
 This section contain basic notions commonly used in the authorship attribution, authorship verification and authorship clustering.
 
@@ -51,6 +52,7 @@ This section contain basic notions commonly used in the authorship attribution, 
 \begin{definition}[Relevant set]
   The relevant set contain every possible pairs (also called links) of document with the same authors. Links in this set are called \textit{true links} in this study. Every other pairs are called \textit{false links}, since they don't have the same authors.
   \begin{equation}
+    \label{def:relevant_set}
     R = \{(X_a, X_b) | f(X_a) = f(X_b) \land X_a \neq X_b) \forall (X_a, X_b)\}
   \end{equation}
 \end{definition}

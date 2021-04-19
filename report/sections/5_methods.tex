@@ -1,4 +1,4 @@
-\section{Methods}
+\section{Methods \label{sec:methods}}
 
 To archive clustering, the method adopted was to compare document using the authorship linkings strategies presented in \textit{Evaluation of text representation schemes and distance measures for authorship linking} \cite{kocher_verification}.
 In this paper the authors compare multiple text representation based on author style which correspond to : words frequencies, lemma frequencies, Part-Of-Speach (POS) tags frequencies, short sequences of POS tags, as well as n-grams frequencies.
@@ -99,6 +99,7 @@ The following definitions are one of the few most common $L^1$/$L^2$/$cosine$ ba
 \end{definition}
 
 \begin{definition}[Cosine distance (Inner product based)]
+  \label{def:cosine_dist}
   To compute the Cosine distance, first the cosine similarity must be computed.
   \begin{equation}
     sim_{Cosine}(A, B) = \frac{A \cdot B}{\sqrt{A \cdot A}\sqrt{B \cdot B}}
@@ -118,7 +119,7 @@ Thus using a normliazation can make the task easier.
 
 \begin{definition}[Z-score normalization \cite{savoy_stylo}]
   \begin{equation}
-    Z-score(A) = \frac{A - \mu}{\sigma}
+    Zscore(A) = \frac{A - \mu}{\sigma}
   \end{equation}
   When using the z-score normalization on MFW vectors, $\mu$ and $\sigma$ usually are vectors containing the mean and the standard deviation of each terms in the corpus.
   The Manhattan distance applied on a Z-score normalized MFW vector is also called Burrows's Delta~\cite{savoy_stylo}.
@@ -130,14 +131,14 @@ This section covers the compression based strategy to compute a distance between
 The main idea is to compress two documents A, B, compress the string concatenation AB of A, B and compare their sizes after compression using one of the distance mesure demonstrated below.
 Commonly a lossless compression algorithm is used, such as the Lempel-Ziv family (GZIP), block sorting family (BZip2), statistical family (PPM)~\cite{comparing_compression}.
 This technique is based on the fact that compressing algorithm tries to lower the Shannon entropy of a document, thus when compressing a document with a large Shannon entropy the compressed document should have a larger size after compression than to a document with a small Shannon entropy.
-Thus when concatenating two documents with a lot in common, the entropy of the concatenated document should be lower than if the two documents are very different.
+When concatenating two documents with a lot in common, the entropy of the concatenated document should be lower than if the two documents are very different.
 
 \begin{definition}[Normalized compression distance \cite{savoy_stylo} \cite{comparing_compression}]
   The normalized compression distance of two documents A and B using the size after compression C is computed as follow:
   \begin{equation}
     NCD(A, B) = \frac{C(AB) - \min(C(A), C(B))}{\max(C(A), C(B))}
   \end{equation}
-  Give a value in $\left[0-1+\epsilon\right]$, with $\epsilon$ being a small positive value created by the imperfection of compression algorithms).
+  Give a value in $\left[0, 1+\epsilon\right]$, with $\epsilon$ being a small positive value created by the imperfection of compression algorithms).
 \end{definition}
 
 \begin{definition}[Conditional complexity of compression]
@@ -145,6 +146,7 @@ Thus when concatenating two documents with a lot in common, the entropy of the c
   \begin{equation}
     CCC(A, B) = C(AB) - C(A)
   \end{equation}
+  This metrics is not easy to use since the order of magnitude is not bounded and can depend a lot on the text sizes.
 \end{definition}
 
 \begin{definition}[Compression-based cosine]
@@ -152,6 +154,7 @@ Thus when concatenating two documents with a lot in common, the entropy of the c
   \begin{equation}
     CBC(A, B) = 1 - \frac{C(A) + C(B) - C(AB)}{\sqrt{C(A) \cdot C(B)}}
   \end{equation}
+  Like for the cosine distance Definition~\ref{def:cosine_dist}, this metric is the interval $\left[-1, 1 \right]$
 \end{definition}
 
 \subsection{Rank lists}
@@ -204,7 +207,7 @@ Sigmoid functions presented in Equation~\ref{eq:sigmoid} and Figure~\ref{fig:sig
 
 \begin{equation}
   \label{eq:sigmoid}
-  S(x) = \frac{1}{1+e^-x}
+  S(x) = \frac{1}{1+e^{-x}}
 \end{equation}
 \begin{equation}
   \label{eq:sigmoid_r}
@@ -222,7 +225,9 @@ Sigmoid functions presented in Equation~\ref{eq:sigmoid} and Figure~\ref{fig:sig
   \label{fig:sigmoid_r}
 \end{figure}
 
-The steepness of the curve can be ajusted by changing the start and the end of the interval and then normalizing the values between 0 and 1. Figure~\ref{fig:s_curve_c} shows the $S^-1(x)$ function for the intervals between $\left[\lim\limits_{x \rightarrow 0}S(x), \lim\limits_{x \rightarrow 0}S(x)\right]$ and $\left[S(-20), S(+20)\right]$. The interval $\left[S(-4), S(+4)\right]$ correspond to Figure~\ref{fig:sigmoid_r}.
+The steepness of the curve can be ajusted by changing the start and the end of the interval and then normalizing the values between 0 and 1.
+Figure~\ref{fig:s_curve_c} shows the $S^-1(x)$ function normalized between 0 and 1 for the intervals between $\lim\limits_{c \rightarrow 0} \left[S(c), S(c)\right]$ and $\left[S(-20), S(+20)\right]$.
+The interval $\left[S(-4), S(+4)\right]$ correspond to Figure~\ref{fig:sigmoid_r}.
 A greater interval size increase the steepness which correspond to an increase of the rank conservation of the top and bottom ranked links and decreasing the rank conservation of the middle ranked links.
 
 \begin{figure}
@@ -256,15 +261,50 @@ Using this approach, at the start of the algorithm, each document belong to a di
 Clusters are merge based on the scores in the rank list, each step the algorithm merge clusters using the minimal score based on the linkage criteria.
 Multiple linkage criteria are available : \textit{ward} (metric that aim to minimize the variance of the cluster merged), \textit{average-linkage} (use the average score of each links of the cluster merged), \textit{complete-linkage} (use the maximal score of the cluster merged), \textit{single-linkage} (use the minimal score of the cluster merged).
 Ward linkage was discarded since the implementation only allow euclidean distance for its computation.
+Since the number of clusters is unknown, the merging procedure is stopped based on a maximal threshold.
+In this study the optimal threshold is found using two approach, one in an unsupervised way and another one in a supervised way.
 
-\subsubsection{Learning the cut in a unsupervised way}
+\subsubsection{Learning the threshold in a unsupervised way}
 
-The silhouette score is a unsupervised clustering metric which evaluate a clustering result by mesureing the cohesion and separation of the clusters.
-A large value indicate a good cohesion and good separation of the clusters.
-Running the agglomerative clustering at each cut in the rank list then evaluating the clustering result using the silhouette score, the maximal shilhouette score position give a good indication where the best cut is.
+The idea is to run the agglomerative clustering multiple.
+The threshold used for each clustering is the score of the link at each rank in the list.
+This produce $|L|$ possible clusterings, each of those can be evaluated using the silhouette score.
+See definition~\ref{def:silhouette}.
 
-\subsubsection{Learning the cut in a supervised way}
+\begin{definition}[Silhouette score \cite{sklearn}]
+  \label{def:silhouette}
+  The silhouette score is a unsupervised clustering metric which evaluate a clustering result by mesureing the cohesion and separation of the clusters.
+  \begin{equation}
+    \frac{b - a}{max(a, b)}
+  \end{equation}
+  \begin{equation*}
+    \begin{split}
+      a&: \text{mean intra-cluster distance}\\
+      b&: \text{mean nearest-cluster distance}
+    \end{split}
+  \end{equation*}
+  The value is ranged between -1 and 1, a large value indicate a good cohesion and good separation of the clusters.
+\end{definition}
 
+When iterating over the ranks by clustering then silhouette score evaluation, at each iteration the clustering that produced the maximal shilhouette score is the one kept.
+To simplify the computatation, since the true links' ratio in our dataset and most of the time is below $0.33$, only the first $33\%$ rank scores are used to create clustering, thus reducing the number of clustering to $\frac{|L|}{3}$.
 
+\subsubsection{Learning the threshold in a supervised way}
+
+To learn at which position in the rank list the cut should be, this second idea is to fit a linear model on samples created with the rank list.
+To train the model, a sample is created for each link in the rank list produced with a training dataset.
+In this study the model used is the logistic regression.
+The links labels are either \textit{true} when both document in the link are from the same author and \textit{false} otherwise.
+The features used are : the log of the relative rank ($log(\frac{rank}{|L|})$ and the score of the link.
+
+To find the cut on the test datasets, the fitted model is used on every links in the rank list, the number of \textit{true} labels give the rank at which the last link should be merged.
+This model can be used on any other rank lists produced with the same distance metrics.
+Using agglomerative clustering the maximal distance threshold can be the score of the last link to merged.
 
 \subsection{Complexity}
+
+The authorship linking task have a time and space complexity to store and compute the scores of the rank list of $O(n^2)$ with $n$ being the number of documents.
+The authorship clustering task using agglomerative have a time complexity of $O(n^2)$.
+Finding the threshold using the unsupervised technique is $O(n^2)$ is time complexity and have a linear $O(n)$ space complexity, since only the best clustering is kept at each iteration.
+On the other hand the supervised threshold seeking technique have a space  complexity of $O(n^2)$ which correspond to samples to fit to.
+The evaluation/testing part is also in time complexity of $O(n^2)$.

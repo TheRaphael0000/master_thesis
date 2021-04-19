@@ -1,13 +1,17 @@
-\section{Evaluation}
+\section{Evaluation \label{sec:evaluation}}
+
+This chapter explain the divers evaluation metrics used and experiments realized on the datasets to evaluate the proposed methods (ref. Section~\ref{sec:methods}).
 
 \subsection{Rank list evaluation metrics}
 \label{sec:rl_eval}
 
-In order to know if a rank list is better or worse than another one, the following metrics were used.
+In order to know the quality of a rank list, the following metrics were used.
 Definitions in this sections are an adapted version of the ones in~\cite{kocher_linking}.
+The presented metrics are well know in the authorship verification and the information retrieval field.
 
 \begin{definition}[Relevant link~\cite{kocher_linking}]
   A relevant link is a link in the relevant set.
+  The relevant set is explain in Definition~\ref{def:relevant_set}.
   \begin{equation}
     relevant(l_i) =
     \begin{cases}
@@ -18,7 +22,7 @@ Definitions in this sections are an adapted version of the ones in~\cite{kocher_
 \end{definition}
 
 \begin{definition}[Precision@k~\cite{kocher_linking}]
-  The precision@k is a function which take a integer k, with k < |L|
+  The precision@k is a function which take a positive integer k, with k < |L|
   \begin{equation}
     precision(k) = \frac{1}{k} \sum_{j=1}^{k} relevant(j)
   \end{equation}
@@ -29,24 +33,28 @@ Definitions in this sections are an adapted version of the ones in~\cite{kocher_
   \begin{equation}
     AveragePrecision = \frac{1}{|R|} \sum_{j=1}^{|L|} precision(j) \cdot relevant(j)
   \end{equation}
+  The average precision can be considered as an approximation of the area under the precision-recall curve.
 \end{definition}
 
-\begin{definition}[RPrec~\cite{kocher_linking}]
-  The RPrec is the precision in the rank list at rank |R|.
-  With R being the relevant set. (Not to be confused with the r ratio)
+\begin{definition}[R-Precision~\cite{kocher_linking}]
+  The R-Precision (RPrec) is the precision in the rank list at rank |R| (Precision@r).
+  With R being the relevant set (Definition~\ref{def:relevant_set}).
   \begin{equation}
     RPrec = precision(|R|)
   \end{equation}
+  The RPrec value is in the range $\left[0, 1\right]$.
+  With 0 mean every links in the first $|R|$-ranks are not in the relevant set.
+  And 1, every links in the first $|R|$-ranks are in the relevant set.
 \end{definition}
 
-\begin{definition}[HPrec~\cite{kocher_linking}]
-  The HPrec represent a maximal rank j in the rank list where the precision is still 100\%.
-  This value is in the range [0 - |R|].
-  0 means the first pair in the rank list is incorrect.
-  |R| means every true links are ranked in the top part of the rank list.
+\begin{definition}[High precision~\cite{kocher_linking}]
+  The high precision (HPrec) represent the maximal rank j in the rank list such that the precision is still 100\%.
   \begin{equation}
     HPrec = \max\{i \in \mathbf{N} | precision(i) = 1\}
   \end{equation}
+  This value is in the range $\left[0, |R|\right]$.
+  $0$ means the first pair in the rank list is incorrect.
+  $|R|$ means every true links are ranked in the top part of the rank list.
 \end{definition}
 
 \subsection{Importance of the text size in stylometry}
@@ -54,10 +62,10 @@ Definitions in this sections are an adapted version of the ones in~\cite{kocher_
 Previous studies have shown the importance of having documents of good quality and with at least 5000 tokens to have reliable results.
 Skilled authors can easily change their style to imitate others for small texts, but it becomes more difficult for larger texts~\cite{savoy_stylo}.
 
-For this study, an experiment on the St-Jean dataset was achieved, in the order to show the importance of having large documents.
+For this study, an experiment on the St-Jean dataset was accomplished, in the order to show the importance of having large documents.
 Figure~\ref{img:degradation} shows the three metrics used (Average precision, RPrec, HPrec) over the number of tokens.
-The number of token was artificially modified by considering only the $n$ first tokens for each text, with $n$ being between 9000 and 250 with steps of 250 tokens.
-All metrics decrease over the text size, which means it becomes harder to determinate documents pairs with the same author as the text size decrease.
+The number of token was artificially modified by considering only the $n$ first tokens for each text, with $n$ ranging between 9000 and 250 with steps of 250 tokens.
+Every metrics decrease over the text size, which means it becomes harder to determinate documents pairs with the same author as the text size decrease.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{img/degradation.png}
@@ -70,15 +78,25 @@ After multiple tests, the PAN @ CLEF 2016 dataset was not used further in this s
 
 \subsection{POS n-grams}
 
-Figure~\ref{fig:pos_ngrams} show the average precision on the rank list produced by using POS n-grams over the number of MFW (most frequent word, in this case POS n-grams are considered as words).
+For this experiment short combination of POS are used to detect the style of the author.
+The St-Jean dataset have for every word a POS tag, by using these POS tags and combining them using Definition~\ref{def:n-grams} to create n-grams/w-shingling, a new text representation is obtained.
+Using this representation the N-MFW are computed and the rank list containing every document pairs can be computed.
+
+In this experiment, only 2-grams, 3-grams, 4-grams and the combination of the 2-grams and 3-grams denoted: (2, 3)-grams is used.
+For this representation no clear MFW (most frequent word, in this case POS n-grams are considered as words) vector size is advised, the size used is between 200 and 2000 with a step of 100.
+Figure~\ref{fig:pos_ngrams} show the average precision on the rank list produced by using POS n-grams over the number of MFW.
+
 The two following informations can be intuitively observed on this plot:
 
-A more complex POS n-gram requirement more MFW to archive its maximal effectiveness.
-In the St-Jean corpus 26 POS are used to describe every words in the corpus.
-Which correspond to $26^2 = 676$ possible unique POS 2-grams, to $26^3 = 17'576$ POS 3-grams and $26^4 = 456'976$.
-
-Like the other methods, an overfit to less important words is possible if the MFW ceiling is too high, reducing the average precision.
-In Figure~\ref{fig:pos_ngrams} the POS 2-grams clearly have drop in average precision after \~250-MFW.
+\begin{itemize}
+  \item
+  A more complex POS n-gram require more MFW to archive its maximal effectiveness.
+  In the St-Jean corpus 26 POS are used to describe every words in the corpus.
+  Which correspond to $26^2 = 676$ possible unique POS 2-grams, to $26^3 = 17'576$ POS 3-grams and $26^4 = 456'976$.
+  \item
+  Like other methods, if the MFW ceiling is too high, an overfitting to less important words is possible, thus reducing the average precision.
+  In Figure~\ref{fig:pos_ngrams} the POS 2-grams clearly have a drop in average precision after \~250-MFW.
+\end{itemize}
 
 \begin{figure}
   \includegraphics[width=\linewidth]{img/pos_ngrams.png}
@@ -86,22 +104,36 @@ In Figure~\ref{fig:pos_ngrams} the POS 2-grams clearly have drop in average prec
   \label{fig:pos_ngrams}
 \end{figure}
 
-\subsection{First letters, last letters of tokens}
+\subsection{First letters, last letters, word n-gram of tokens}
 
-With this methods, the goal is to extract the N first letter of each word tokens which correspond generaly to the meaning of a word.
-This approach is closely related to the lemma approach.
-Extract also the N last letter of each word tokens which in this case correspond to the role of the word in a sentence.
-This second approach is closely related to the POS approach.
-These two methods can be considered as a simplified n-grams approach.
+In this experiment, the goal is to extract 3 types of word substrings and compare them.
 
-Figure~\ref{fig:first_last_letters_ngrams} shows the average precision using the z-normalized cosine distance on the experiment for N = 4.
+\begin{enumerate}
+  \item
+  The N first letter of each word tokens which correspond generaly to the meaning of a word.
+  This approach is closely related to the lemma approach.
+  \item
+  Extract also the N last letter of each word tokens which in this case correspond to the role of the word in a sentence.
+  This second approach is closely related to the POS approach.
+  \item
+  And the \texit{word n-grams}, this special type of n-gram only consider N-grams within a word.
+  For example
+\end{enumerate}
+The two first methods can be considered as a subsample of the n-grams approach, thus a simplified one.
+
+Figure~\ref{fig:first_last_letters_ngrams_brunet} shows the results for the Brunet dataset and Figure~\ref{fig:first_last_letters_ngrams_oxquarry} for the oxquarry dataset.
+The distance mesure used is the z-normalized cosine distance and the evaluation metric is the average precision.
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{img/first_last_letters_ngrams.png}
-  \caption{Average precision over the MFW in the rank list generated using the z-score normalized cosine distance.}
-  \label{fig:first_last_letters_ngrams}
+  \includegraphics[width=\linewidth]{img/first_last_letters_ngrams_brunet.png}
+  \caption{Average precision over the MFW in the rank list generated using the z-score normalized cosine distance on the Brunet dataset.}
+  \label{fig:first_last_letters_ngrams_brunet}
 \end{figure}
-
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/first_last_letters_ngrams_oxquarry.png}
+  \caption{Average precision over the MFW in the rank list generated using the z-score normalized cosine distance on the Oxquarry dataset.}
+  \label{fig:first_last_letters_ngrams_oxquarry}
+\end{figure}
 
 \subsubsection{Frequent errors}
 
@@ -154,10 +186,12 @@ As expected, most of this figure surface is non-overlapping.
 \subsubsection{Publication date differences analyis}
 
 When dealing with false links ranked high in the rank list, as the previous experiment showed, some excerpt use similar words.
-These shared words might be related to era the book was written.
+These shared words might be related to the era the book was written in.
 The following experiment try to investigate on this.
 
-First we must understand the publication date distribution of dataset. Figure~\ref{fig:dates_distribution} show this distribution.
+In the St-Jean dataset publication paper, the publication dates of each excepts are available~\cite{st_jean}.
+First the publication date distribution of dataset must be understood.
+Figure~\ref{fig:dates_distribution} show the distribution of the publication date in the St-Jean dataset.
 Figure~\ref{fig:dates_differences_all} show the date difference distribution for each pairs of document, we can see that the average date difference in the dataset is 28.24 years with a standard deviation of 20.73 years.
 Since this dataset contain multiple excerpt from the same book, we might consider only the links of differents authors (false links) Figure~\ref{fig:dates_differences_false} show such distribution.
 As expected the mean increased to 29.04 years since there are less links with small date difference.

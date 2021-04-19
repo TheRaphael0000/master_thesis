@@ -1,6 +1,5 @@
 """Linking module"""
 
-import unicodedata
 from collections import Counter
 from functools import reduce
 import itertools
@@ -11,16 +10,9 @@ from corpus import brunet, oxquarry, st_jean, pan16
 import distances
 import compressions
 from misc import rank_list_from_distances_matrix
+from misc import normalize
 from evaluate import evaluate_linking
 
-
-def normalize(s):
-    # Removing accents
-    s = unicodedata.normalize("NFKD", s)
-    s = s.encode("ASCII", "ignore").decode("ASCII")
-    # To lowercase
-    s = s.lower()
-    return s
 
 
 def create_n_grams(words, ns):

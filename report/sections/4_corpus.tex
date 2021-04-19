@@ -1,4 +1,4 @@
-\section{Corpus}
+\section{Corpus \label{sec:corpus}}
 
 In this section, the different corpus used will be introduced.
 Two types of corpus were selected for this study.
@@ -10,23 +10,25 @@ Aswell as the ones used for PAN @ CLEF 2016 campaign~\cite{pan16}, which contain
 
 Table~\ref{tab:lit_datasets} show corpus information and statistics on the datasets.
 These datasets contain large texts with 10'000 tokens in averages.
-The number of text per authors relatively large, these datasets have a low $r$ value.
+Theses texts are of high quality (very low number of spelling errors) since they come from published books.
+The number of text per authors is relatively large, these datasets have a low $r$ value.
 
 The corpus Oxquarry contain 52 excerpts from English novels from 9 different authors (Butler, Chesterton, Conrad, Forster, Hardy, Morris, Orczy, Tressel, Stevenson).
 The complete list of novel and authors can be found in annexe in Table~\ref{tbl:oxquarry_corpus}.
 The dataset Oxquarry is already tokenized, which means every each words or punctuation are on a separated line.
 
 The Brunet french corpus contain exactly 4 excerpts of novels for each of the 11 authors for a total of 44 excerpts.
-Tables~\ref{tbl:brunet_corpus} in annexes.
+The complete list of novel and authors can be found in annexe in Tables~\ref{tbl:brunet_corpus}.
 Authors present in this dataset : Balzac, Chateaubriand, Flaubert, Marivaux, Maupassant, Proust, Rousseau, Sand, Vernes, Voltaire, Zola.
 Brunet is already tokenized in two different ways : One using the actual tokens in the text, and another one using only the lemma.
 
 The Saint-Jean dataset was also used \cite{unine_corpus}.
 It contains 200 excepts of 68 French novels written during the XIX century from 31 different authors \cite{st_jean}.
-Tables~\ref{tbl:st_jean_corpus_1}/\ref{tbl:st_jean_corpus_2}/\ref{tbl:st_jean_corpus_3}/\ref{tbl:st_jean_corpus_4} in annexes.
+The complete list of novel and authors can be found in annexe in Tables~\ref{tbl:st_jean_corpus_1}/\ref{tbl:st_jean_corpus_2}/\ref{tbl:st_jean_corpus_3}/\ref{tbl:st_jean_corpus_4}.
 Since this dataset is larger than the other one and was created such that it can be spliced in two parts, the statistics of the two parts and the whole corpus is displayed in~\ref{tab:lit_datasets}.
 One part contain the first 100 texts and the other one the 100 following, which are called St Jean Serie A and St-Jean Serie B.
 Both parts are approximatively containing the same number of authors and the same number of true links.
+The dates of publications of each excerpts are avaialble for this dataset.
 
 \begin{table*}[]
   \centering
@@ -41,7 +43,7 @@ Both parts are approximatively containing the same number of authors and the sam
     \textbf{r} &
     \textbf{True links} &
     \textbf{Links} &
-    \textbf{tl\_r} &
+    \textbf{$tl_r$} &
     \textbf{avg \#tokens} \\
     \midrule
     Oxquarry & EN & 9 & 52 & 0.173 & 160 & 1326 & 0.121 & 11650 \\
