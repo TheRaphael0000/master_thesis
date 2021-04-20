@@ -1,6 +1,7 @@
 import itertools
 from collections import defaultdict
 from collections import Counter
+import time
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -43,48 +44,64 @@ def main():
     # s_curve_r()
     # s_curve_c()
     # sigmoids()
-    # mfw()
-    # fusion()
+
     # degradation()
-    # pos_ngrams()
-    # first_last_letters_ngrams()
+    # mfw()
     # letter_ngrams()
-    # recurrent_errors()
+    # first_last_letters_ngrams()
+    # pos_ngrams()
+
+    compression_evaluation()
+
+    # frequent_errors()
     # dates_differences()
-    # compression_evaluation()
-    count_ngrams()
+    # fusion()
+
+    # count_ngrams()
     pass
 
 
 def compression_evaluation():
-    # _, _, _, X, Y = st_jean.parse()
+    _, _, _, X, Y = st_jean.parse()
     # _, _, X, Y = brunet.parse()
-    _, X, Y = oxquarry.parse()
+    # _, X, Y = oxquarry.parse()
 
     compression_methods = [
-        compressions.gzip,
-        compressions.zlib,
+        compressions.lzma,
         compressions.bz2,
-        compressions.lzma
+        compressions.gzip,
     ]
     distance_funcs = [
         distances.ncd,
-        distances.cbc
+        distances.cbc,
     ]
     distances_compressions = list(itertools.product(
         compression_methods, distance_funcs))
 
     M = []
-    for compression_method, distance_func in distances_compressions:
-        rl = compute_links_compress(X, compression_method, distance_func)
-        m = evaluate_linking(rl, Y)
-        M.append(m)
-        print(m)
+    T = []
 
-    M = np.array(M)
+    for i in range(3):
+        for compression_method, distance_func in distances_compressions:
+            print(compression_method.__name__, distance_func.__name__)
+            t0 = time.time()
+            rl = compute_links_compress(X, compression_method, distance_func)
+            t = time.time() - t0
+            m = evaluate_linking(rl, Y)
+            M.append(m)
+            T.append(t)
+            print(m, t)
+
+    M = np.array(M).reshape(-1, len(distances_compressions), 3)
+    T = np.array(T).reshape(-1, len(distances_compressions))
+    M = M.mean(axis=0)
+    T = T.mean(axis=0)
+
+    print(M)
+    print(T)
 
     plt.figure(figsize=(6, 4), dpi=200)
-    x, y, c = M[:, 0], M[:, 1], M[:, 2]
+    x, y, c = M[:, 1], M[:, 0], M[:, 2]
     plt.scatter(x, y, c=c, marker=".")
     texts = []
     for i, (compression_method, distance_func) in enumerate(distances_compressions):
@@ -172,7 +189,7 @@ def dates_differences():
          "img/dates_differences_r_false.png")
 
 
-def recurrent_errors():
+def frequent_errors():
     print("loading")
     _, _, _, X, Y = st_jean.parse()
 
@@ -553,11 +570,11 @@ def fusion():
     print(*sign_test(M_fusion_s_curve, M_fusion_z_score))
 
     plt.figure(figsize=(6, 4), dpi=200)
-    x, y, c = M_fusion_s_curve[:, 0], M_fusion_s_curve[:, 1], M_fusion_s_curve[:, 2]
+    x, y, c = M_fusion_s_curve[:, 1], M_fusion_s_curve[:, 0], M_fusion_s_curve[:, 2]
     plt.scatter(x, y, c=c, marker="x", label=f"S-curve fusions ({fusion_size} lists)", alpha=0.6)
-    x, y, c = M_fusion_z_score[:, 0], M_fusion_z_score[:, 1], M_fusion_z_score[:, 2]
+    x, y, c = M_fusion_z_score[:, 1], M_fusion_z_score[:, 0], M_fusion_z_score[:, 2]
     plt.scatter(x, y, c=c, marker="+", label=f"Z-score fusions ({fusion_size} lists)", alpha=0.6)
-    x, y, c = M_single[:, 0], M_single[:, 1], M_single[:, 2]
+    x, y, c = M_single[:, 1], M_single[:, 0], M_single[:, 2]
     plt.scatter(x, y, c=c, marker="o", label="Single rank list", alpha=1)
     cbar = plt.colorbar()
     plt.xlabel("RPrec")

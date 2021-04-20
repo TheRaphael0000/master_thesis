@@ -37,22 +37,7 @@ In this case, we consider each POS as a character in the n-grams definition, thi
 For example, the sentence : \textit{"The cat eat a fish"} has the following POS tag \textit{"Article Noun Verb Article Noun"} which correspond to the following 3-grams of POS : \textit{"Article Noun Verb"} / \textit{"Noun Verb Article"} / \textit{"Verb Article Noun"}.
 In practice the POS is more detailed, for example instead of just considering the verb, the verb and its tense can be used, the same goes for the other type of POS.
 
-\subsubsection{Smoothing}
-
-When considering relative term frequencies they can be used as a probability of occurrence by using the maximum likelihood principle.
-The main problem with this approach is that we tend to overestimate the probability of occurrence of frequent terms and underestimate the probability of occurrence of low frequency terms, for example if a word is not found in a document this doesn't mean the probability of the author using this word is 0.
-The solution proposed is to use smoothing, such as the Lidstone smoothing presented in Definition~\ref{def:lidstone_smoothing}.
-Smoothing techniques can help distance functions based on probabilities, such as the Kullback-Leibler Divergence.
-
-\begin{definition}[Lidstone smoothing \cite{savoy_stylo}]
-  \label{def:lidstone_smoothing}
-  \begin{equation}
-    p(t_i, D_j) = \frac{tf_{i,j} + \lambda}{n + \lambda \cdot |V|}
-  \end{equation}
-  With $t_i$ the i-th term, $D_j$ the j-th document, $tf_{i,j}$ the number of occurrence of the i-th term in $D_j$, $|V|$ the size of the vocabulary, $\lambda$ a small value ($\lambda = 1$ special, case called Lalpace smoothing, but generally a smaller value such as 0.1 give good results), n the total number of words in the document $D_j$
-\end{definition}
-
-\subsubsection{Vectors distances and normalization}
+\subsubsection{Vectors distances}
 \label{sec:fv_distances}
 
 To be able to compare vector, different metrics can be used depending on the usage.
@@ -114,6 +99,8 @@ The following definitions are one of the few most common $L^1$/$L^2$/$cosine$ ba
   \end{equation}
 \end{definition}
 
+\subsubsection{Normalization}
+
 Sometimes vectors can not be easily compared with some of the previously cited distance metrics, because they deal with different order of magnitude.
 Thus using a normliazation can make the task easier.
 
@@ -125,15 +112,36 @@ Thus using a normliazation can make the task easier.
   The Manhattan distance applied on a Z-score normalized MFW vector is also called Burrows's Delta~\cite{savoy_stylo}.
 \end{definition}
 
-\subsection{Compression-based distances}
+\subsubsection{Smoothing}
+
+When considering relative term frequencies they can be used as a probability of occurrence by using the maximum likelihood principle.
+The main problem with this approach is that we tend to overestimate the probability of occurrence of frequent terms and underestimate the probability of occurrence of low frequency terms, for example if a word is not found in a document this doesn't mean the probability of the author using this word is 0.
+The solution proposed is to use smoothing, such as the Lidstone smoothing presented in Definition~\ref{def:lidstone_smoothing}.
+Smoothing techniques can help distance functions based on probabilities, such as the Kullback-Leibler Divergence.
+
+\begin{definition}[Lidstone smoothing \cite{savoy_stylo}]
+  \label{def:lidstone_smoothing}
+  \begin{equation}
+    p(t_i, D_j) = \frac{tf_{i,j} + \lambda}{n + \lambda \cdot |V|}
+  \end{equation}
+  With $t_i$ the i-th term, $D_j$ the j-th document, $tf_{i,j}$ the number of occurrence of the i-th term in $D_j$, $|V|$ the size of the vocabulary, $\lambda$ a small value ($\lambda = 1$ special, case called Laplace smoothing, but generally a smaller value such as 0.1 give good results), n the total number of words in the document $D_j$.
+\end{definition}
+
+In this study, when a smoothing technique is used, except stated otherwise, the Lidstone smoothing is used with $\lambda = 0.1$.
+
+\subsection{Compression-based distances \label{sec:compression_based_distances}}
 
 This section covers the compression based strategy to compute a distance between two documents.
 The main idea is to compress two documents A, B, compress the string concatenation AB of A, B and compare their sizes after compression using one of the distance mesure demonstrated below.
 Commonly a lossless compression algorithm is used, such as the Lempel-Ziv family (GZIP), block sorting family (BZip2), statistical family (PPM)~\cite{comparing_compression}.
 This technique is based on the fact that compressing algorithm tries to lower the Shannon entropy of a document, thus when compressing a document with a large Shannon entropy the compressed document should have a larger size after compression than to a document with a small Shannon entropy.
 When concatenating two documents with a lot in common, the entropy of the concatenated document should be lower than if the two documents are very different.
+This approach is to produce rank lists is nearly parameterless, only a distance metric and compression algorithm is needed.
 
-\begin{definition}[Normalized compression distance \cite{savoy_stylo} \cite{comparing_compression}]
+In this study the lossless compression algorithm used are the ones present in the python standard library : GZip, BZip2, LZMA \cite{python_compression}.
+Each compression algorithm can be tweaked with different parameters, the default settings are used except for the compression level (trade-off compression time and compression size) setted to the highest parameter to have smallest possible files.
+
+\begin{definition}[Normalized compression distance~\cite{savoy_stylo}~\cite{comparing_compression}]
   The normalized compression distance of two documents A and B using the size after compression C is computed as follow:
   \begin{equation}
     NCD(A, B) = \frac{C(AB) - \min(C(A), C(B))}{\max(C(A), C(B))}
@@ -141,7 +149,7 @@ When concatenating two documents with a lot in common, the entropy of the concat
   Give a value in $\left[0, 1+\epsilon\right]$, with $\epsilon$ being a small positive value created by the imperfection of compression algorithms).
 \end{definition}
 
-\begin{definition}[Conditional complexity of compression]
+\begin{definition}[Conditional complexity of compression~\cite{savoy_stylo}~\cite{comparing_compression}]
   The conditional complexity of compression of two documents A and B using the size after compression C is computed as follow:
   \begin{equation}
     CCC(A, B) = C(AB) - C(A)
@@ -149,7 +157,7 @@ When concatenating two documents with a lot in common, the entropy of the concat
   This metrics is not easy to use since the order of magnitude is not bounded and can depend a lot on the text sizes.
 \end{definition}
 
-\begin{definition}[Compression-based cosine]
+\begin{definition}[Compression-based cosine~\cite{savoy_stylo}~\cite{comparing_compression}]
   The compression-based cosine of two documents A and B using the size after compression C is computed as follow:
   \begin{equation}
     CBC(A, B) = 1 - \frac{C(A) + C(B) - C(AB)}{\sqrt{C(A) \cdot C(B)}}

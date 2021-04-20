@@ -7,6 +7,8 @@ from scipy.spatial.distance import euclidean as sp_euclidean
 from scipy.spatial.distance import cityblock as sp_manhanttan
 
 # Distance for vectors
+
+
 def manhattan(A, B):
     return sp_manhanttan(A, B)
 
@@ -69,6 +71,10 @@ def j_divergence(A, B):
 # Distances for compression strategies
 def ncd(A, B, AB):
     return (AB - min(A, B)) / max(A, B)
+
+
+def ccc(A, B, AB):
+    return AB - A
 
 
 def cbc(A, B, AB):

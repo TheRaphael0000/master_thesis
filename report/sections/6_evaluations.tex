@@ -76,53 +76,40 @@ Every metrics decrease over the text size, which means it becomes harder to dete
 PAN16 dataset is a difficult dataset due to its small size, thus extracting reliable features for each text to estimate each style is also a difficult task.
 After multiple tests, the PAN @ CLEF 2016 dataset was not used further in this study due to its difficulty in finding reliable Stylometric clues.
 
-\subsection{POS n-grams}
+\subsection{MFW Token and Lemma}
 
-For this experiment short combination of POS are used to detect the style of the author.
-The St-Jean dataset have for every word a POS tag, by using these POS tags and combining them using Definition~\ref{def:n-grams} to create n-grams/w-shingling, a new text representation is obtained.
-Using this representation the N-MFW are computed and the rank list containing every document pairs can be computed.
+TODO
 
-In this experiment, only 2-grams, 3-grams, 4-grams and the combination of the 2-grams and 3-grams denoted: (2, 3)-grams is used.
-For this representation no clear MFW (most frequent word, in this case POS n-grams are considered as words) vector size is advised, the size used is between 200 and 2000 with a step of 100.
-Figure~\ref{fig:pos_ngrams} show the average precision on the rank list produced by using POS n-grams over the number of MFW.
+\subsection{MFW Letter n-grams}
 
-The two following informations can be intuitively observed on this plot:
+TODO
 
-\begin{itemize}
-  \item
-  A more complex POS n-gram require more MFW to archive its maximal effectiveness.
-  In the St-Jean corpus 26 POS are used to describe every words in the corpus.
-  Which correspond to $26^2 = 676$ possible unique POS 2-grams, to $26^3 = 17'576$ POS 3-grams and $26^4 = 456'976$.
-  \item
-  Like other methods, if the MFW ceiling is too high, an overfitting to less important words is possible, thus reducing the average precision.
-  In Figure~\ref{fig:pos_ngrams} the POS 2-grams clearly have a drop in average precision after \~250-MFW.
-\end{itemize}
+\subsection{MFW First letters, last letters, word n-gram of tokens}
 
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/pos_ngrams.png}
-  \caption{Average precision over the MFW in the rank list generated using the z-score normalized cosine distance.}
-  \label{fig:pos_ngrams}
-\end{figure}
-
-\subsection{First letters, last letters, word n-gram of tokens}
-
-In this experiment, the goal is to extract 3 types of word substrings and compare them.
+In this experiment, the goal is to create 3 types of text representations of word substrings and compare them.
 
 \begin{enumerate}
   \item
-  The N first letter of each word tokens which correspond generaly to the meaning of a word.
+  The first representation is the N-first letter of each word tokens which correspond generaly to the meaning of a word.
   This approach is closely related to the lemma approach.
   \item
-  Extract also the N last letter of each word tokens which in this case correspond to the role of the word in a sentence.
+  Extract also the N-last letter of each word tokens which in this case correspond to the role of the word in a sentence.
   This second approach is closely related to the POS approach.
   \item
-  And the \texit{word n-grams}, this special type of n-gram only consider N-grams within a word.
-  For example
+  The \textit{word n-grams}, this special type of n-gram only consider N-grams within a word.
+  This exclude every overlapping word n-grams.
+  This decision is made for this experiment such that interwords style information can't be learned and have a fair comparaison of these 3 texts representations.
 \end{enumerate}
-The two first methods can be considered as a subsample of the n-grams approach, thus a simplified one.
+The two first methods can be considered as a subsample of the n-grams approach, thus a simplified one (have smaller text representation).
+The distance mesure used is the z-normalized cosine distance and the evaluation metric is the average precision.
+The number of MFW variate for this experiment between 200 and 4000 with a step of 100.
 
 Figure~\ref{fig:first_last_letters_ngrams_brunet} shows the results for the Brunet dataset and Figure~\ref{fig:first_last_letters_ngrams_oxquarry} for the oxquarry dataset.
-The distance mesure used is the z-normalized cosine distance and the evaluation metric is the average precision.
+
+In both dataset, the 3-last letters and 3-first letters gives a lower average precision and quickly converge to a equilibrium value at around 1500 MFW.
+5-letters representations tend to produce better results than 3-letters and 4-letters representation as the MFW increase.
+In the Oxquarry corpus, word 4-grams and word 5-grams give the better results with an average precision of ~95.0\%
+For the brunet dataset, the 5-first letters can a good results compared to other text representations with small MFW vector size.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{img/first_last_letters_ngrams_brunet.png}
@@ -135,16 +122,119 @@ The distance mesure used is the z-normalized cosine distance and the evaluation 
   \label{fig:first_last_letters_ngrams_oxquarry}
 \end{figure}
 
-\subsubsection{Frequent errors}
+\subsection{MFW POS n-grams}
 
-This section, try to understand the errors in our system, in this case the false links (document pairs with different authors) highly ranked on different rank list.
+For this experiment short combination of POS are used to detect the style of the author.
+The St-Jean dataset have for every word a POS tag, by using these POS tags and combining them using Definition~\ref{def:n-grams} to create n-grams/w-shingling, a new text representation is obtained.
+Using this representation the N-MFW are computed and the rank list containing every document pairs can be computed.
+
+In this experiment, only 2-grams, 3-grams, 4-grams and the combination of the 2-grams and 3-grams denoted: (2, 3)-grams is used.
+The distance metric used is the smoothed z-score normalized cosine distance.
+For this representation no clear MFW (most frequent word, in this case POS n-grams are considered as words) vector size is advised, the size used is between 200 and 2000 with a step of 100.
+Figure~\ref{fig:pos_ngrams} show the average precision on the rank list produced by using POS n-grams over the number of MFW.
+
+The two following informations can be intuitively observed on this plot:
+\begin{itemize}
+  \item
+  A more complex POS n-gram require more MFW to archive its maximal effectiveness.
+  In the St-Jean corpus 26 POS are used to describe every words in the corpus.
+  Which correspond to $26^2 = 676$ possible unique POS 2-grams, to $26^3 = 17'576$ POS 3-grams and $26^4 = 456'976$ POS 4-grams.
+  \item
+  Like other methods, if the MFW ceiling is too high, an overfitting to less important words is possible, thus reducing the average precision.
+  In Figure~\ref{fig:pos_ngrams} the POS 2-grams clearly have a drop in average precision after \~250-MFW.
+\end{itemize}
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/pos_ngrams.png}
+  \caption{Average precision over the MFW in the rank list generated using the z-score normalized cosine distance.}
+  \label{fig:pos_ngrams}
+\end{figure}
+
+\subsection{Compression based distances}
+
+This experiment try to compare the three proposed compression algorithm (GZip, BZip2, LZMA) for the compression based distance ranking.
+For each algorithm for each document the size after compression is computed, as well as the concatenation of every document pairs.
+Using these sizes and the NCD and CBC distance metrics (ref. Section~\ref{sec:compression_based_distances}, the rank list is evaluated.
+This experiment was run on the three datasets three times to have a better approximation of the run time.
+The results in terms of efficiency of the resulting rank list are shown in Figures~\ref{fig:compression_evaluation_oxquarry}~/~\ref{fig:compression_evaluation_brunet}~\ref{fig:compression_evaluation_st_jean}.
+The average time of the 3 runs are in Tables~\ref{tab:compression_evaluation_oxquarry}~/~\ref{tab:compression_evaluation_brunet}~/~\ref{tab:compression_evaluation_st_jean}.
+
+GZip seem to be giving the worse results on every dataset with an average AP of \~-0.20 in compared to LZMA and BZip2.
+LZMA give the best results on every dataset tested, but BZip2 have close results.
+The cosine-based compression distance (CBC) tend to give better results over the normalized compression distance (NCD).
+In terms of time complexity BZip2 is the fastest algorithm of the 3 proposed, LZMA is ~5-6 times slower than BZip2, and GZip slower than BZip2 by around ~5-20\%.
+No significant time differences was recorded between the NCD and CBC distance measures, since the greater complexity is in the compression algorithm.
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/compression_evaluation_oxquarry.png}
+  \caption{Evaluation of the different compression algorithm and distance metrics on Oxquarry}
+  \label{fig:compression_evaluation_oxquarry}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/compression_evaluation_brunet.png}
+  \caption{Evaluation of the different compression algorithm and distance metrics on Brunet}
+  \label{fig:compression_evaluation_brunet}
+\end{figure}
+
+\begin{figure}
+  \includegraphics[width=\linewidth]{img/compression_evaluation_st_jean.png}
+  \caption{Evaluation of the different compression algorithm and distance metrics on St-Jean}
+  \label{fig:compression_evaluation_st_jean}
+\end{figure}
+
+\begin{table}
+  \centering
+  \caption{Run time for the rank list computation with the different compression algorithm and distance metrics on Oxquarry}
+  \label{tab:compression_evaluation_oxquarry}
+  \begin{tabular}{l c c c}
+    \toprule
+         & Bzip2 & GZip  & LZMA \\
+    \midrule
+    NCD  & 12.7s & 15.0s & 69.0s \\
+    CBC  & 12.7s & 14.9s & 68.8s \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}
+  \centering
+  \caption{Run time for the rank list computation with the different compression algorithm and distance metrics on Brunet}
+  \label{tab:compression_evaluation_brunet}
+  \begin{tabular}{l c c c}
+    \toprule
+         & Bzip2 & GZip & LZMA \\
+    \midrule
+    NCD  & 8.4s  & 8.8s & 46.6s \\
+    CBC  & 8.4s  & 8.9s & 46.8s \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}
+  \centering
+  \caption{Run time for the rank list computation with the different compression algorithm and distance metrics on St-Jean}
+  \label{tab:compression_evaluation_st_jean}
+  \begin{tabular}{l c c c}
+    \toprule
+         & Bzip2  & GZip   & LZMA \\
+    \midrule
+    NCD  & 198.9s & 211.3s & 1046.3s \\
+    CBC  & 198.4s & 214.5s & 1052.0s \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{Frequent errors}
+
+This section try to understand the errors in our system, in this case the false links (document pairs with different authors) highly ranked on different rank list.
 The rank list quality is highly based on the feature vector created using the N-MFW, having a good understanding of this vector give good indications of the strength of the system.
 
-To find reccurant errors in our system we use 5 different distance metrics on the relative frequency of the 500-MFW using the St-Jean dataset.
-This generate 5 rank lists.
+To find recurrent errors in our system we use 5 different distance metrics on the relative frequency of the 500-MFW using the St-Jean dataset.
+This generates 5 rank lists.
 The average precision for these rank list is always greater than 0.7.
 With this 5 rank lists only the top 10 false links are kept to be analyzed.
-Frequent errors are link that appear often in this top 10.
+Frequent errors are links that often appear in this top 10.
 Figures~\ref{fig:mfw_vector_error_0}~/~\ref{fig:mfw_vector_error_1} show two pairs (Zola 49 / Flaubert 63 and Maupassant 10 / Flaubert 52) that appear 4 time out of the 5 rank lists in the top 10 false links, thus frequent error.
 
 \begin{figure}
@@ -159,12 +249,12 @@ Figures~\ref{fig:mfw_vector_error_0}~/~\ref{fig:mfw_vector_error_1} show two pai
 \end{figure}
 
 To be able to understand more easily this vector, the values have been sorted by relative frequencies.
-When a large propostion of the vectors overlap it indicates a high similarities between the vectors.
-In this case most of the surface overlap so the distance function will give a low value, and rank this vector high in the list.
+When a large proportion of the vectors overlap it indicates a high similarity between the vectors.
+In this case most of the surface overlap, so the distance function will give a low value, and rank this vector high in the list.
 Both document style are close when their feature vector are closely related.
-We can't clearly determinate that these texts are from different author using only this type of representation.
-These two vectors pair can be vizually compared to the most similar link (ranked 1 using manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (Stael 157 / Steal 183) or the HPrec-th (last continous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (Maupassant 10 / Maupassant 67), both of these links show a large propotion of overlapping surface.
-A counter example would be the least similar link (ranked last using manhattan distance) which represent a negatively correlated document pair, Figure~\ref{fig:mfw_vector_last_rl} showcase this link.
+We can not clearly determinate that these texts are from a different author using only this type of representation.
+These two vectors pair can be visually compared to the most similar link (ranked 1 using Manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (Stael 157 / Steal 183) or the HPrec-th (last continous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (Maupassant 10 / Maupassant 67), both of these links show a large proportion of overlapping surface.
+A counter example would be the least similar link (ranked last using Manhattan distance) which represent a negatively correlated document pair, Figure~\ref{fig:mfw_vector_last_rl} showcase this link.
 As expected, most of this figure surface is non-overlapping.
 
 \begin{figure}
@@ -183,19 +273,19 @@ As expected, most of this figure surface is non-overlapping.
   \label{fig:mfw_vector_last_rl}
 \end{figure}
 
-\subsubsection{Publication date differences analyis}
+\subsection{Publication date differences analyis}
 
 When dealing with false links ranked high in the rank list, as the previous experiment showed, some excerpt use similar words.
 These shared words might be related to the era the book was written in.
 The following experiment try to investigate on this.
 
 In the St-Jean dataset publication paper, the publication dates of each excepts are available~\cite{st_jean}.
-First the publication date distribution of dataset must be understood.
+First the publication date distribution of the dataset must be understood.
 Figure~\ref{fig:dates_distribution} show the distribution of the publication date in the St-Jean dataset.
-Figure~\ref{fig:dates_differences_all} show the date difference distribution for each pairs of document, we can see that the average date difference in the dataset is 28.24 years with a standard deviation of 20.73 years.
-Since this dataset contain multiple excerpt from the same book, we might consider only the links of differents authors (false links) Figure~\ref{fig:dates_differences_false} show such distribution.
-As expected the mean increased to 29.04 years since there are less links with small date difference.
-Same authors links (true links) are displayed in Figure~\ref{fig:dates_differences_r_true}, they confirm the previous statement that most of the same authors links have a low date difference with a mean at 5.11 years.
+Figure~\ref{fig:dates_differences_all} show the date difference distribution for each pair of documents, we can see that the average date difference in the dataset is 28.24 years with a standard deviation of 20.73 years.
+Since this dataset contain multiple excerpt from the same book, we might consider only the links of different authors (false links) Figure~\ref{fig:dates_differences_false} shows such distribution.
+As expected the mean increased to 29.04 years since there are fewer links with small date difference.
+Same authors links (true links) are displayed in Figure~\ref{fig:dates_differences_r_true}, they confirm the previous statement that most of the same authors links have a low date difference with a mean of 5.11 years.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{img/dates_distribution.png}
@@ -219,11 +309,11 @@ Same authors links (true links) are displayed in Figure~\ref{fig:dates_differenc
 \end{figure}
 
 Figure~\ref{fig:dates_differences_r_false} show the date difference density on the top-r false links (670 in case of St-Jean) on a rank list with 80\% average precision.
-Two interesting informations can be extracted here.
-First the mean is lower by 8.22 years (29.04 - 20.82) comparing to the false links distribution which clearly indicate a importance of publication date in the ranking of the documents.
-Secondly we can obseve a drop at 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ are harder to discriminate than links outside this interval.
+Two interesting information can be extracted here.
+First the mean is lower by 8.22 years (29.04 - 20.82) comparing to the false links distribution which clearly indicate the importance of publication date in the ranking of the documents.
+Secondly we can observe a drop at 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ are harder to discriminate than links outside this interval.
 This 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France \cite{generations}.
-Each new generation use its own vocabulary and can be harder to discriminate author of text beloning to the same generation, in the other hand having differant vocabulary can indicate a differant time periode and is often use to detect document forgery \cite{savoy_stylo}.
+Each new generation use its own vocabulary and can be harder to discriminate author of text belonging to the same generation, in the other hand having different vocabulary can indicate a different time period and is often used to detect document forgery \cite{savoy_stylo}.
 
 \begin{figure}
   \includegraphics[width=\linewidth]{img/dates_differences_r_false.png}
@@ -231,8 +321,7 @@ Each new generation use its own vocabulary and can be harder to discriminate aut
   \label{fig:dates_differences_r_false}
 \end{figure}
 
-
-\subsubsection{Rank lists fusion evaluation}
+\subsection{Rank lists fusion evaluation}
 
 \begin{table}[h]
   \caption{S-Curve/Equal/Single max,  * : Binomial test p-value < 5\%}
