@@ -2,7 +2,9 @@
 
 This chapter explain the divers evaluation metrics used and experiments realized on the datasets to evaluate the proposed methods (ref. Section~\ref{sec:methods}).
 
-\subsection{Rank list evaluation metrics}
+\subsection{Rank lists}
+
+\subsubsection{Rank list evaluation metrics}
 \label{sec:rl_eval}
 
 In order to know the quality of a rank list, the following metrics were used.
@@ -57,7 +59,7 @@ The presented metrics are well know in the authorship verification and the infor
   $|R|$ means every true links are ranked in the top part of the rank list.
 \end{definition}
 
-\subsection{Importance of the text size in stylometry}
+\subsubsection{Importance of the text size in stylometry}
 
 Previous studies have shown the importance of having documents of good quality and with at least 5000 tokens to have reliable results.
 Skilled authors can easily change their style to imitate others for small texts, but it becomes more difficult for larger texts~\cite{savoy_stylo}.
@@ -76,15 +78,15 @@ Every metrics decrease over the text size, which means it becomes harder to dete
 PAN16 dataset is a difficult dataset due to its small size, thus extracting reliable features for each text to estimate each style is also a difficult task.
 After multiple tests, the PAN @ CLEF 2016 dataset was not used further in this study due to its difficulty in finding reliable Stylometric clues.
 
-\subsection{MFW Token and Lemma}
+\subsubsection{MFW Token and Lemma}
 
 TODO
 
-\subsection{MFW Letter n-grams}
+\subsubsection{MFW Letter n-grams}
 
 TODO
 
-\subsection{MFW First letters, last letters, word n-gram of tokens}
+\subsubsection{MFW First letters, last letters, word n-gram of tokens}
 
 In this experiment, the goal is to create 3 types of text representations of word substrings and compare them.
 
@@ -122,7 +124,7 @@ For the brunet dataset, the 5-first letters can a good results compared to other
   \label{fig:first_last_letters_ngrams_oxquarry}
 \end{figure}
 
-\subsection{MFW POS n-grams}
+\subsubsection{MFW POS n-grams}
 
 For this experiment short combination of POS are used to detect the style of the author.
 The St-Jean dataset have for every word a POS tag, by using these POS tags and combining them using Definition~\ref{def:n-grams} to create n-grams/w-shingling, a new text representation is obtained.
@@ -150,7 +152,7 @@ The two following informations can be intuitively observed on this plot:
   \label{fig:pos_ngrams}
 \end{figure}
 
-\subsection{Compression based distances}
+\subsubsection{Compression based distances}
 
 This experiment try to compare the three proposed compression algorithm (GZip, BZip2, LZMA) for the compression based distance ranking.
 For each algorithm for each document the size after compression is computed, as well as the concatenation of every document pairs.
@@ -256,33 +258,34 @@ No significant time differences was recorded between the NCD and CBC distance me
 \end{table}
 
 
-
-
-\subsection{Frequent errors}
+\subsubsection{Frequent errors}
+\label{sec:frequent_errors}
 
 This section try to understand the errors in our system, in this case the false links (document pairs with different authors) highly ranked on different rank list.
 The rank list quality is highly based on the feature vector created using the N-MFW, having a good understanding of this vector give good indications of the strength of the system.
 
-To find recurrent errors in our system we use 5 different distance metrics on the relative frequency of the 500-MFW using the St-Jean dataset.
+To find recurrent errors in our system we use 5 different distance metrics (Manhattan, Tanimoto, Clark, Matusita, Cosine distance) on the relative frequency of the 500-MFW using the St-Jean dataset.
 This generates 5 rank lists.
 The average precision for these rank list is always greater than 0.7.
 With this 5 rank lists only the top 10 false links are kept to be analyzed.
 Frequent errors are links that often appear in this top 10.
-Figures~\ref{fig:mfw_vector_error_0}~/~\ref{fig:mfw_vector_error_1} show two pairs (Zola 49 / Flaubert 63 and Maupassant 10 / Flaubert 52) that appear 4 time out of the 5 rank lists in the top 10 false links, thus frequent error.
+Figures~\ref{fig:mfw_vector_error} show two pairs (Zola 49 / Flaubert 63 and Maupassant 10 / Flaubert 52) that appear 4 time out of the 5 rank lists in the top 10 false links, thus frequent error.
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{img/mfw_vector_error_0.png}
-  \caption{First example of 500-MFW relative frequency vector for the two documents in a reccurant (4 rank lists out of 5) false link in the top 10 false links}
+  \caption{Example of 500-MFW relative frequency vectors for the two documents in a reccurant (4 rank lists out of 5) false link in the top 10 false links}
+  \label{fig:mfw_vector_error}
+
+  \subcaption{First example}
   \label{fig:mfw_vector_error_0}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/mfw_vector_error_1.png}
-  \caption{Second example of 500-MFW relative frequency vector for the two documents in a reccurant (4 rank lists out of 5) false link in the top 10 false links}
+  \includegraphics[width=\linewidth]{img/mfw_vector_error_0.png}
+
+  \subcaption{Second example}
   \label{fig:mfw_vector_error_1}
+  \includegraphics[width=\linewidth]{img/mfw_vector_error_1.png}
 \end{figure}
 
-To be able to understand more easily this vector, the values have been sorted by relative frequencies.
-When a large proportion of the vectors overlap it indicates a high similarity between the vectors.
+To be able to understand more easily this vector, the values have been sorted by relative frequencies and using the logarithmic scale.
+When a large proportion of the vectors overlap it indicates a high similarity between the MFW vectors.
 In this case most of the surface overlap, so the distance function will give a low value, and rank this vector high in the list.
 Both document style are close when their feature vector are closely related.
 We can not clearly determinate that these texts are from a different author using only this type of representation.
@@ -291,22 +294,22 @@ A counter example would be the least similar link (ranked last using Manhattan d
 As expected, most of this figure surface is non-overlapping.
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{img/mfw_vector_first_rl.png}
-  \caption{500-MFW relative frequency for the two documents ranked first in the rank list}
+  \caption{500-MFW relative frequency for the two documents ranked $X$ in the rank list}
+
+  \subcaption{$X$ = First}
   \label{fig:mfw_vector_first_rl}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/mfw_vector_first_last_rl.png}
-  \caption{500-MFW relative frequency for the two documents ranked HPrec-th in the rank list}
+  \includegraphics[width=\linewidth]{img/mfw_vector_first_rl.png}
+
+  \subcaption{$X$ = HPrec-th}
   \label{fig:mfw_vector_first_last_rl}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/mfw_vector_last_rl.png}
-  \caption{500-MFW relative frequency for the two documents ranked last in the ranked list}
+  \includegraphics[width=\linewidth]{img/mfw_vector_first_last_rl.png}
+
+  \subcaption{$X$ = Last}
   \label{fig:mfw_vector_last_rl}
+  \includegraphics[width=\linewidth]{img/mfw_vector_last_rl.png}
 \end{figure}
 
-\subsection{Publication date differences analyis}
+\subsubsection{Publication date differences analyis}
 
 When dealing with false links ranked high in the rank list, as the previous experiment showed, some excerpt use similar words.
 These shared words might be related to the era the book was written in.
@@ -315,51 +318,59 @@ The following experiment try to investigate on this.
 In the St-Jean dataset publication paper, the publication dates of each excepts are available~\cite{st_jean}.
 First the publication date distribution of the dataset must be understood.
 Figure~\ref{fig:dates_distribution} show the distribution of the publication date in the St-Jean dataset.
-Figure~\ref{fig:dates_differences_all} show the date difference distribution for each pair of documents, we can see that the average date difference in the dataset is 28.24 years with a standard deviation of 20.73 years.
-Since this dataset contain multiple excerpt from the same book, we might consider only the links of different authors (false links) Figure~\ref{fig:dates_differences_false} shows such distribution.
+The date difference distribution for each pair of documents can be computed, Figure~\ref{fig:dates_differences_all} show case this.
+We can see that the average date difference in the dataset is 28.24 years with a standard deviation of 20.73 years.
+Since this dataset contain multiple excerpt from the same book, we might consider only the links of different authors (false links).
+Figure~\ref{fig:dates_differences_false} shows the date differrence distribution of the false links.
 As expected the mean increased to 29.04 years since there are fewer links with small date difference.
 Same authors links (true links) are displayed in Figure~\ref{fig:dates_differences_r_true}, they confirm the previous statement that most of the same authors links have a low date difference with a mean of 5.11 years.
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{img/dates_distribution.png}
-  \caption{Date distribution in the St-Jean dataset.}
+  \caption{Dates and Date differences denstiy distributions on St-Jean for every excerpt}
+
+  \subcaption{Date distribution}
   \label{fig:dates_distribution}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/dates_differences_all.png}
-  \caption{Pairwise date difference denstiy in St-Jean for all the excerpt.}
+  \includegraphics[width=\linewidth]{img/dates_distribution.png}
+
+  \subcaption{Date difference denstiy distributions}
   \label{fig:dates_differences_all}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/dates_differences_false.png}
-  \caption{Pairwise date difference denstiy in St-Jean for all the excerpt with different authors (false links).}
-  \label{fig:dates_differences_false}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/dates_differences_r_true.png}
-  \caption{Pairwise date difference denstiy in St-Jean for all the excerpt with similar authors (true links) also correspond to the top-r true links.}
-  \label{fig:dates_differences_r_true}
+  \includegraphics[width=\linewidth]{img/dates_differences_all.png}
 \end{figure}
 
-Figure~\ref{fig:dates_differences_r_false} show the date difference density on the top-r false links (670 in case of St-Jean) on a rank list with 80\% average precision.
+\begin{figure}
+  \caption{Date difference denstiy distributions in St-Jean}
+
+  \subcaption{False links}
+  \label{fig:dates_differences_false}
+  \includegraphics[width=\linewidth]{img/dates_differences_false.png}
+
+  \subcaption{True links}
+  \label{fig:dates_differences_r_true}
+  \includegraphics[width=\linewidth]{img/dates_differences_r_true.png}
+
+  \subcaption{Top-r false links using a rank list with 80\% average precision.}
+  \label{fig:dates_differences_r_false}
+  \includegraphics[width=\linewidth]{img/dates_differences_r_false.png}
+\end{figure}
+
+Figure~\ref{fig:dates_differences_r_false} show the date difference density on the top-r false links (670 in case of St-Jean) on a rank list with 80\% average precision (obtained by fusing the 5 ranks list presented used in frequent error, ref. Section~\ref{sec:rank_list_fusion}~and~\ref{sec:frequent_errors}).
 Two interesting information can be extracted here.
 First the mean is lower by 8.22 years (29.04 - 20.82) comparing to the false links distribution which clearly indicate the importance of publication date in the ranking of the documents.
-Secondly we can observe a drop at 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ are harder to discriminate than links outside this interval.
-This 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France \cite{generations}.
-Each new generation use its own vocabulary and can be harder to discriminate author of text belonging to the same generation, in the other hand having different vocabulary can indicate a different time period and is often used to detect document forgery \cite{savoy_stylo}.
+Secondly we can observe a drop after 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ are harder to discriminate than links outside this interval.
+This 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France~\cite{generations}, the birth country of the authors in this dataset.
+Each new generation tend to use its own vocabulary, and thus it can be harder to discriminate author of text belonging to the same generation, in the other hand having different vocabulary can indicate a different time period and is often used to detect document forgery~\cite{savoy_stylo}.
 
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/dates_differences_r_false.png}
-  \caption{Pairwise date difference denstiy in St-Jean for top-r false links using a rank list with 80\% average precision.}
-  \label{fig:dates_differences_r_false}
-\end{figure}
+\subsubsection{Rank lists fusion evaluation}
 
-\subsection{Rank lists fusion evaluation}
+
 
 \begin{table}[h]
-  \caption{S-Curve/Equal/Single max,  * : Binomial test p-value < 5\%}
   \centering
-  \label{}
+  \caption{Rank list sign test, * : Binomial test p-value < 5\%}
+  \label{tab:fusion_sign_test_comparaisons}
+
+  \subcaption{S-Curve/Equal/Single max}
+  \label{tab:s_curve_single_max}
   \begin{tabular}{l c c c}
     \toprule
     Metric & St-Jean  & Brunet & Oxquarry \\ \midrule
@@ -368,12 +379,9 @@ Each new generation use its own vocabulary and can be harder to discriminate aut
     HPrec  & *287/1/207 & 49/87/359* & 32/11/452*\\
     \bottomrule
   \end{tabular}
-\end{table}
 
-\begin{table}[h]
-  \caption{Z-Score/Equal/Single max,  * : Binomial test p-value < 5\%}
-  \centering
-  \label{}
+  \subcaption{Z-Score/Equal/Single max}
+  \label{tab:z_score_single_max}
   \begin{tabular}{l c c c}
     \toprule
     Metric& St-Jean  & Brunet & Oxquarry \\ \midrule
@@ -382,12 +390,9 @@ Each new generation use its own vocabulary and can be harder to discriminate aut
     HPrec & *289/0/206  & 35/63/397* & 79/13/403*\\
     \bottomrule
   \end{tabular}
-\end{table}
 
-\begin{table}[h]
-  \caption{S-Curve/Equal/Z-Score,  * : Binomial test p-value < 5\%}
-  \centering
-  \label{}
+  \subcaption{S-Curve/Equal/Z-Score}
+  \label{tab:s_curve_z_score}
   \begin{tabular}{l c c c}
     \toprule
     Metric & St-Jean & Brunet & Oxquarry \\ \midrule
@@ -399,26 +404,32 @@ Each new generation use its own vocabulary and can be harder to discriminate aut
 \end{table}
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{img/fusion_st_jean.png}
-  \caption{}
-  \label{fig:fusion_st_jean}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/fusion_brunet.png}
-  \caption{}
-  \label{fig:fusion_brunet}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/fusion_oxquarry.png}
-  \caption{}
+  \caption{Evaluation of every combination of 4 rank list fusions using Z-Score and S-Curve}
+
+  \subcaption{Oxquarry}
   \label{fig:fusion_oxquarry}
+  \includegraphics[width=\linewidth]{img/fusion_oxquarry.png}
+
+  \subcaption{Brunet}
+  \label{fig:fusion_brunet}
+  \includegraphics[width=\linewidth]{img/fusion_brunet.png}
+
+  \subcaption{St-Jean}
+  \label{fig:fusion_st_jean}
+  \includegraphics[width=\linewidth]{img/fusion_st_jean.png}
 \end{figure}
 
-\subsection{Clustering evaluation metrics}
+\subsection{Clustering}
+
+\subsubsection{Clustering evaluation metrics}
+
+To evaluate clustering, the metrics used are the BCubed~\cite{bcubed} family.
+BCubed has shown to satisfy 4 importants constraints when evaluating clusterings : \textit{Cluster Homogeneity} (different categories should be in the different clusters), \textit{Cluster Completness} (same categories should belong to the same cluster) and the \textit{Rag Bag constraint} (noisy/miscellaneous categories should be in the same cluster and not in 'healthy' clusters) and the \textit{Cluster size vs quantity constraints} (favorise large cluster)~\cite{bcubed}.
+These metrics are used in the clustering task at PAN@CLEF~\cite{pan16}.
 
 \begin{definition}[Correctness~\cite{bcubed}]
   Let L(e) and C(e) be the category and the cluster of an element e.
-  The correctness has a value of one if the two elements are in the both in the same cluster and has the same category OR both in a different cluster and a different category. ($A \Longleftrightarrow B \equiv (A \land B) \lor (\neg A \land \neg B)$)
+  The correctness is following the biconditional condition on the category and cluster equality (biconditional: $A \Longleftrightarrow B \equiv (A \land B) \lor (\neg A \land \neg B)$).
   \begin{gather*}
     Correctness(e, e') = \\
     \begin{cases}
@@ -426,27 +437,31 @@ Each new generation use its own vocabulary and can be harder to discriminate aut
       0, & otherwise
     \end{cases}
   \end{gather*}
+  In other terms, the correctness has a value of one if the two elements are in the both in the same cluster and has the same category OR both in a different cluster and a different category.
 \end{definition}
 
-\begin{definition}[Precision $BCubed$~\cite{bcubed}]
-  The average of correctness for all elements on the average of all element such that their cluster is the same.
+\begin{definition}[$BCubed$ Precision~\cite{bcubed}]
+  The $BCubed$ Precision correspond to the average of correctness for all elements on the average of all element such that \textbf{their cluster are the same}.
   \begin{equation}
     BCubed_{precision} = \text{Avg}_{e}[\text{Avg}_{e' C(e)=C(e')}[Correctness(e, e')]]
   \end{equation}
 \end{definition}
 
-\begin{definition}[Recall $BCubed$~\cite{bcubed}]
-  The average of correctness for all elements on the average of all element such that their category is the same.
+\begin{definition}[$BCubed$ Recall~\cite{bcubed}]
+  The $BCubed$ Recall correspond to the average of correctness for all elements on the average of all element such that \textbf{their category are the same}.
   \begin{equation}
     BCubed_{recall} = \text{Avg}_{e}[\text{Avg}_{e' L(e)=L(e')}[Correctness(e, e')]]
   \end{equation}
 \end{definition}
 
 \begin{definition}[$BCubed F_1$ Score~\cite{bcubed}]
-  The harmonic mean between the $BCubed_{precision}$ and $BCubed_{recall}$
+  $BCubed F_1$ Score uses the harmonic mean between the $BCubed_{precision}$ and $BCubed_{recall}$.
   \begin{equation}
     BCubed_{F_1} =
     2 \cdot \frac{BCubed_{precision} \cdot BCubed_{recall}}
     {BCubed_{precision} + BCubed_{recall}}
   \end{equation}
+  The $F_\beta$ measures provide a parametric way to represent with a single value the two counterbalancing measures in this case, the $BCubed F_1$ use the Precision and Recall $BCubed$, with the $F$ measures with $\beta = 1$.
 \end{definition}
+
+\subsubsection{Clustering unsupervised cut evaluation}

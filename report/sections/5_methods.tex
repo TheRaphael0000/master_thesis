@@ -44,10 +44,10 @@ To be able to compare vector, different metrics can be used depending on the usa
 Usually two types of metrics for vector comparaison can be used: Vector similarities and Vector distances, the first yield a large value when the two vectors are closly related and the second a small value when they are similar.
 The following definitions are one of the few most common $L^1$/$L^2$/$cosine$ based distance.
 
-\begin{definition}[Manhanttan distance ($L^1$ based)]
-  To compute the Manhanttan distance the following formula is used.
+\begin{definition}[Manhattan distance ($L^1$ based)]
+  To compute the Manhattan distance the following formula is used.
   \begin{equation}
-    dist_{Manhanttan}(A, B) = \sum_{i=1}^{m} |A_i - B_i|
+    dist_{Manhattan}(A, B) = \sum_{i=1}^{m} |A_i - B_i|
   \end{equation}
 \end{definition}
 
@@ -183,6 +183,7 @@ In the case of authorship verification, the top pairs are the most similar and t
 \end{definition}
 
 \subsection{Rank list fusion}
+\label{sec:rank_list_fusion}
 
 The idea of rank list fusion is to combine multiple rank lists in such way that the resulting rank list is more accurate modelization of a best rank list.
 The hypotetical best possible rank list in the case of authorship clustering is one such that show every true links (same authors document pairs) at the top and every false links (different author document pairs) at the bottom, therefore maximizing every metrics in Section~\ref{sec:rl_eval}.

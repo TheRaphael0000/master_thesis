@@ -3,7 +3,6 @@
 from misc import compute_r
 
 import bcubed
-from sklearn.metrics.cluster import adjusted_mutual_info_score
 
 
 def evaluate_linking(rank_list, Y):
@@ -25,9 +24,7 @@ def evaluate_clustering(Y, pred):
     bcubed_precision = bcubed.precision(cdict, ldict)
     bcubed_recall = bcubed.recall(cdict, ldict)
     bcubed_fscore = bcubed.fscore(bcubed_precision, bcubed_recall)
-    # computing mutual info score
-    mutual_info_score = adjusted_mutual_info_score(Y, pred)
-    return bcubed_precision, bcubed_recall, bcubed_fscore, mutual_info_score
+    return bcubed_precision, bcubed_recall, bcubed_fscore
 
 
 def precision_at_k(rank_list, Y, k):

@@ -70,7 +70,7 @@ def log(A):
     return np.log(A, where=A > 0, out=np.full(A.shape, np.inf))
 
 
-def normalize(x):
+def normalize_between_0_1(x):
     """Normalize between 0-1 an array like"""
     num = x - np.min(x)
     div = np.max(x) - np.min(x)

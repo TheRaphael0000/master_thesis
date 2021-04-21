@@ -51,11 +51,11 @@ def main():
     # first_last_letters_ngrams()
     # pos_ngrams()
 
-    compression_evaluation()
+    # compression_evaluation()
 
     # frequent_errors()
     # dates_differences()
-    # fusion()
+    fusion()
 
     # count_ngrams()
     pass
@@ -480,8 +480,8 @@ def mfw():
 
 
 def fusion():
-    # _, _, _, X, Y = st_jean.parse()
-    _, _, X, Y = brunet.parse()
+    _, _, _, X, Y = st_jean.parse()
+    # _, _, X, Y = brunet.parse()
     # _, X, Y = oxquarry.parse()
 
     experiments = [
