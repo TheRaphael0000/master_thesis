@@ -70,6 +70,7 @@ The number of token was artificially modified by considering only the $n$ first 
 Every metrics decrease over the text size, which means it becomes harder to determinate documents pairs with the same author as the text size decrease.
 
 \begin{figure}
+  \centering
   \includegraphics[width=\linewidth]{img/degradation.png}
   \caption{St-Jean ranks list evaluation on AP, RPrec and HPrec over the text size. Rank list computed using 500 MFW and the zscored-normalized cosine distance}
   \label{img:degradation}
@@ -114,14 +115,16 @@ In the Oxquarry corpus, word 4-grams and word 5-grams give the better results wi
 For the brunet dataset, the 5-first letters can a good results compared to other text representations with small MFW vector size.
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{img/first_last_letters_ngrams_brunet.png}
-  \caption{Average precision over the MFW in the rank list generated using the z-score normalized cosine distance on the Brunet dataset.}
-  \label{fig:first_last_letters_ngrams_brunet}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/first_last_letters_ngrams_oxquarry.png}
-  \caption{Average precision over the MFW in the rank list generated using the z-score normalized cosine distance on the Oxquarry dataset.}
+  \centering
+  \caption{Average precision over the MFW in the rank list generated using the z-score normalized cosine distance}
+
+  \subcaption{Oxquarry}
   \label{fig:first_last_letters_ngrams_oxquarry}
+  \includegraphics[width=\linewidth]{img/first_last_letters_ngrams_oxquarry.png}
+
+  \subcaption{Brunet}
+  \label{fig:first_last_letters_ngrams_brunet}
+  \includegraphics[width=\linewidth]{img/first_last_letters_ngrams_brunet.png}
 \end{figure}
 
 \subsubsection{MFW POS n-grams}
@@ -147,9 +150,10 @@ The two following informations can be intuitively observed on this plot:
 \end{itemize}
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{img/pos_ngrams.png}
+  \centering
   \caption{Average precision over the MFW in the rank list generated using the z-score normalized cosine distance.}
   \label{fig:pos_ngrams}
+  \includegraphics[width=\linewidth]{img/pos_ngrams.png}
 \end{figure}
 
 \subsubsection{Compression based distances}
@@ -272,6 +276,7 @@ Frequent errors are links that often appear in this top 10.
 Figures~\ref{fig:mfw_vector_error} show two pairs (Zola 49 / Flaubert 63 and Maupassant 10 / Flaubert 52) that appear 4 time out of the 5 rank lists in the top 10 false links, thus frequent error.
 
 \begin{figure}
+  \centering
   \caption{Example of 500-MFW relative frequency vectors for the two documents in a reccurant (4 rank lists out of 5) false link in the top 10 false links}
   \label{fig:mfw_vector_error}
 
@@ -294,6 +299,7 @@ A counter example would be the least similar link (ranked last using Manhattan d
 As expected, most of this figure surface is non-overlapping.
 
 \begin{figure}
+  \centering
   \caption{500-MFW relative frequency for the two documents ranked $X$ in the rank list}
 
   \subcaption{$X$ = First}
@@ -326,6 +332,7 @@ As expected the mean increased to 29.04 years since there are fewer links with s
 Same authors links (true links) are displayed in Figure~\ref{fig:dates_differences_r_true}, they confirm the previous statement that most of the same authors links have a low date difference with a mean of 5.11 years.
 
 \begin{figure}
+  \centering
   \caption{Dates and Date differences denstiy distributions on St-Jean for every excerpt}
 
   \subcaption{Date distribution}
@@ -338,6 +345,7 @@ Same authors links (true links) are displayed in Figure~\ref{fig:dates_differenc
 \end{figure}
 
 \begin{figure}
+  \centering
   \caption{Date difference denstiy distributions in St-Jean}
 
   \subcaption{False links}
@@ -404,6 +412,7 @@ Each new generation tend to use its own vocabulary, and thus it can be harder to
 \end{table}
 
 \begin{figure}
+  \centering
   \caption{Evaluation of every combination of 4 rank list fusions using Z-Score and S-Curve}
 
   \subcaption{Oxquarry}

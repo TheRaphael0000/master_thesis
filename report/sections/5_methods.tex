@@ -202,9 +202,10 @@ This constraint can be easily explained by observing the distance over the rank 
 Figure~\ref{fig:distance_over_rank} clearly show us the top ranked links and bottom ranked links have a more sharper decision than in than the middle section.
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{img/distance_over_rank.png}
+  \centering
   \caption{Distance over rank in the links of the Brunet dataset using Manhattan distances using the 500 most frequent tokens.}
   \label{fig:distance_over_rank}
+  \includegraphics[width=\linewidth]{img/distance_over_rank.png}
 \end{figure}
 
 Top ranked links correspond to similar documents and bottom links correspond to negatively correlated documents.
@@ -224,14 +225,17 @@ Sigmoid functions presented in Equation~\ref{eq:sigmoid} and Figure~\ref{fig:sig
 \end{equation}
 
 \begin{figure}
-  \includegraphics[width=\linewidth]{img/sigmoid.png}
-  \caption{Sigmoid function between -4 and 4}
+  \centering
+  \caption{Sigmoids}
+  \label{fig:sigmoids}
+
+  \subcaption{Sigmoid function between -4 and 4}
   \label{fig:sigmoid}
-\end{figure}
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/sigmoid_r.png}
-  \caption{Reciprocal of the sigmoid function between sigmoid(-4) and sigmoid(4)}
+  \includegraphics[width=\linewidth]{img/sigmoid.png}
+
+  \subcaption{Reciprocal of the sigmoid function between sigmoid(-4) and sigmoid(4)}
   \label{fig:sigmoid_r}
+  \includegraphics[width=\linewidth]{img/sigmoid_r.png}
 \end{figure}
 
 The steepness of the curve can be ajusted by changing the start and the end of the interval and then normalizing the values between 0 and 1.
@@ -239,19 +243,22 @@ Figure~\ref{fig:s_curve_c} shows the $S^-1(x)$ function normalized between 0 and
 The interval $\left[S(-4), S(+4)\right]$ correspond to Figure~\ref{fig:sigmoid_r}.
 A greater interval size increase the steepness which correspond to an increase of the rank conservation of the top and bottom ranked links and decreasing the rank conservation of the middle ranked links.
 
+To break the symmetry for the curve, to be able to increase the conservation of the top rank while decreasing the conservation of the bottom ranked.
+The solution proposed is to take $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$.
+Figure~\ref{fig:s_curve_r} shows the infloance of the r parameter of the sigmoid with $c = 4$ and $r \in \left[0.1, 0.9\right]$.
+
 \begin{figure}
   \centering
-  \includegraphics[width=\linewidth]{img/s_curve_c.png}
-  \caption{$S^-1(x)$, sampled in $\left[S(-c), S(+c)\right]$ and normalized between 0 and 1}
+  \caption{S-Curves parameters}
+  \label{fig:s_curve_params}
+
+  \subcaption{$S^-1(x)$, sampled in $\left[S(-c), S(+c)\right]$ and normalized between 0 and 1}
   \label{fig:s_curve_c}
-\end{figure}
+  \includegraphics[width=\linewidth]{img/s_curve_c.png}
 
-To break the symmetry for the curve, to be able increase the conservation of the top rank while decreasing the conservation of the bottom ranked. The solution proposed is to take $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$. Figure~\ref{fig:s_curve_r} shows $\left[S(-4), S(4)\right]$ with $r \in \{0.25, 0.5, 0.75\}$.
-
-\begin{figure}
-  \includegraphics[width=\linewidth]{img/s_curve_r.png}
-  \caption{Sampling $S^-1(x)$ with $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$}
+  \subcaption{Sampling $S^-1(x)$ with $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$}
   \label{fig:s_curve_r}
+  \includegraphics[width=\linewidth]{img/s_curve_r.png}
 \end{figure}
 
 
@@ -275,9 +282,8 @@ In this study the optimal threshold is found using two approach, one in an unsup
 
 \subsubsection{Learning the threshold in a unsupervised way}
 
-The idea is to run the agglomerative clustering multiple.
-The threshold used for each clustering is the score of the link at each rank in the list.
-This produce $|L|$ possible clusterings, each of those can be evaluated using the silhouette score.
+The idea is to run the agglomerative clustering on multiple time and stop at each number of clusters.
+This produce $N$ possible clusterings, each of those can be evaluated using the silhouette score.
 See definition~\ref{def:silhouette}.
 
 \begin{definition}[Silhouette score \cite{sklearn}]
@@ -288,15 +294,17 @@ See definition~\ref{def:silhouette}.
   \end{equation}
   \begin{equation*}
     \begin{split}
-      a&: \text{mean intra-cluster distance}\\
-      b&: \text{mean nearest-cluster distance}
+      a&: \text{intra-cluster distance}\\
+      b&: \text{nearest-cluster distance}
     \end{split}
   \end{equation*}
-  The value is ranged between -1 and 1, a large value indicate a good cohesion and good separation of the clusters.
+  The value is ranged between -1 and 1, a large value indicate a good cohesion and good separation of the clusters (low intra-cluster distance, high nearest-cluster distance).
 \end{definition}
 
-When iterating over the ranks by clustering then silhouette score evaluation, at each iteration the clustering that produced the maximal shilhouette score is the one kept.
-To simplify the computatation, since the true links' ratio in our dataset and most of the time is below $0.33$, only the first $33\%$ rank scores are used to create clustering, thus reducing the number of clustering to $\frac{|L|}{3}$.
+When iterating over the number of clusters each times the median silhouette score for each cluster is computed.
+When this score reach below 0, the last positive score clusters is kept.
+If the procedure does not reach a score below 0, the maximal is kept.
+This procedure is called Iterative Positive Silhouette (IPS) and was proposed in~\cite{automated_unsupervised}.
 
 \subsubsection{Learning the threshold in a supervised way}
 
@@ -317,3 +325,16 @@ The authorship clustering task using agglomerative have a time complexity of $O(
 Finding the threshold using the unsupervised technique is $O(n^2)$ is time complexity and have a linear $O(n)$ space complexity, since only the best clustering is kept at each iteration.
 On the other hand the supervised threshold seeking technique have a space  complexity of $O(n^2)$ which correspond to samples to fit to.
 The evaluation/testing part is also in time complexity of $O(n^2)$.
+
+\subsection{Pipeline}
+
+Most of the methods presented in this section can be combined in the process. This process is synthesized in Figure~\ref{fig:pipeline}
+
+\onecolumn
+\begin{figure}[p]
+  \centering
+  \caption{Pipeline}
+  \label{fig:pipeline}
+  \includegraphics[width=\textwidth,height=\textheight,keepaspectratio]{img/pipeline.png}
+\end{figure}
+\twocolumn

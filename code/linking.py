@@ -21,7 +21,6 @@ from misc import normalize
 from evaluate import evaluate_linking
 
 
-
 def create_n_grams(words, ns):
     if type(ns) is int:
         ns = [ns]
@@ -89,9 +88,11 @@ def compute_links_compress(X, compression_method, distance_func):
 
     pairs_indices = list(itertools.combinations(range(len(X)), 2))
 
-    X_sizes_pairs = {(a,b): compression_method(X[a] + X[b]) for a,b in pairs_indices}
+    X_sizes_pairs = {(a, b): compression_method(
+        X[a] + X[b]) for a, b in pairs_indices}
 
-    rank_list = [((a,b), distance_func(X_sizes[a], X_sizes[b], X_sizes_pairs[(a, b)])) for a, b in pairs_indices]
+    rank_list = [((a, b), distance_func(X_sizes[a], X_sizes[b],
+                                        X_sizes_pairs[(a, b)])) for a, b in pairs_indices]
     rank_list.sort(key=lambda x: x[-1])
     return rank_list
 
