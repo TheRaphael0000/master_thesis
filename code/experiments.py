@@ -23,10 +23,16 @@ from rank_list_fusion import fusion_s_curve_score
 from rank_list_fusion import fusion_z_score
 
 from evaluate import evaluate_linking
+from evaluate import evaluate_clustering
 
 from linking import compute_links
 from linking import compute_links_compress
 from linking import most_frequent_word
+
+from clustering import supervised_clustering_training
+from clustering import supervised_clustering_predict
+from clustering import unsupervised_clustering
+from clustering import clustering_at_every_n_clusters
 
 from misc import sign_test
 from misc import simple_plot
@@ -55,10 +61,12 @@ def main():
 
     # frequent_errors()
     # dates_differences()
-    fusion()
+    # fusion()
 
     # count_ngrams()
-    pass
+
+    unsupervised_clustering_evaluation()
+    supervised_clustering_evaluation()
 
 
 def compression_evaluation():
@@ -613,6 +621,127 @@ def count_ngrams():
     print(len(Counter(word_n_grams([words], 3)[0])))
     print(len(Counter(word_n_grams([words], 4)[0])))
     print(len(Counter(word_n_grams([words], 5)[0])))
+
+
+def supervised_clustering_evaluation():
+    def linking(X):
+        experiments_ = [
+            [X, 0, 500, True, 1e-1, distances.manhattan],
+            [X, 0, 500, False, 1e-1, distances.tanimoto],
+            [X, 0, 500, False, 1e-1, distances.clark],
+            [X, 0, 500, False, 1e-1, distances.matusita],
+            [X, 0, 500, True, 1e-1, distances.cosine_distance],
+
+            [X, 6, 500, True, 1e-1, distances.manhattan],
+            [X, 6, 500, True, 1e-1, distances.cosine_distance],
+        ]
+        rls = [compute_links(*e) for e in experiments_]
+        rl = fusion_z_score(rls)
+        return rl, rls
+
+
+    def linking_evaluation(rl, rls, Y):
+        print("AP RPrec HPrec (Used for overall)")
+        for rl_ in rls:
+            print(*evaluate_linking(rl_, Y))
+        print("AP RPrec HPrec (Overall)")
+        print(*evaluate_linking(rl, Y))
+
+
+    def plot(rl, Y, n, filename):
+        ns, labels_list = clustering_at_every_n_clusters(rl)
+        evaluations = np.array([evaluate_clustering(Y, labels) for labels in labels_list])
+
+        plt.figure(figsize=(6, 4), dpi=200)
+        plt.plot(ns, evaluations[:, 2], label="BCubed $F_1$ Score")
+        plt.plot(ns, evaluations[:, 0], label="BCubed Precision")
+        plt.plot(ns, evaluations[:, 1], label="BCubed Recall")
+        plt.axvline(n, 0, 1, ls="dashed", c="r", label="Number of clusters selected")
+        plt.grid()
+        plt.legend(loc="upper right")
+        plt.xlabel("#Clusters")
+        plt.ylabel("Metric")
+        plt.tight_layout()
+        plt.savefig(f"img/{filename}.png")
+
+    print("Loading")
+    # _, X_training, Y_training = oxquarry.parse()
+    #_, _, X_training, Y_training = brunet.parse()
+    _, _, _, X_training, Y_training = st_jean.parse_A()
+    # _, _, _, X_training, Y_training = st_jean.parse_B()
+    # _, _, _, X_training, Y_training = st_jean.parse()
+
+    # _, X_testing, Y_testing = oxquarry.parse()
+    #_, _, X_testing, Y_testing = brunet.parse()
+    _, _, _, X_testing, Y_testing = st_jean.parse_B()
+    # _, _, _, X_testing, Y_testing = st_jean.parse_B()
+    # _, _, _, X_testing, Y_testing = st_jean.parse()
+
+    print("Training")
+    rl, rls = linking(X_training)
+    linking_evaluation(rl, rls, Y_training)
+
+    print("Learning cut")
+    model, eval = supervised_clustering_training(rl, Y_training, return_eval=True)
+    print(eval)
+
+    labels = supervised_clustering_predict(model, rl)
+    plot(rl, Y_training, np.max(labels)+1, "supervised_clustering_training")
+    print(evaluate_clustering(Y_training, labels))
+
+    print("Testing")
+    rl, rls = linking(X_testing)
+    linking_evaluation(rl, rls, Y_testing)
+    labels = supervised_clustering_predict(model, rl)
+    plot(rl, Y_testing, np.max(labels)+1, "supervised_clustering_testing")
+    print(evaluate_clustering(Y_testing, labels))
+
+
+def unsupervised_clustering_evaluation():
+    # _, X, Y = oxquarry.parse()
+    _, _, X, Y = brunet.parse()
+    # _, _, _, X, Y = st_jean.parse()
+
+    experiments = [
+        [X, 0, 500, True, 1e-1, distances.manhattan],
+        [X, 0, 500, False, 1e-1, distances.tanimoto],
+        [X, 0, 500, False, 1e-1, distances.clark],
+        [X, 0, 500, False, 1e-1, distances.matusita],
+        [X, 0, 500, True, 1e-1, distances.cosine_distance],
+        [X, 6, 500, True, 1e-1, distances.manhattan],
+        [X, 6, 500, True, 1e-1, distances.cosine_distance],
+    ]
+
+    print("AP RPrec HPrec")
+    rank_lists = [compute_links(*e) for e in experiments]
+    for rank_list in rank_lists:
+        print(evaluate_linking(rank_list, Y))
+
+    print("Overall")
+    rank_list_overall = fusion_z_score(rank_lists)
+    print(evaluate_linking(rank_list_overall, Y))
+
+    labels, silhouette_scores = unsupervised_clustering(rank_list_overall, return_scores=True)
+
+    print("bcubed.precision", "bcubed.recall", "bcubed.fscore")
+    print(evaluate_clustering(Y, labels))
+
+    ns, labels_list = clustering_at_every_n_clusters(rank_list_overall)
+    evaluations = np.array([evaluate_clustering(Y, labels) for labels in labels_list])
+
+    plt.figure(figsize=(6, 4), dpi=200)
+    plt.plot(ns, evaluations[:, 2], label="BCubed $F_1$ Score")
+    plt.plot(ns, evaluations[:, 0], label="BCubed Precision")
+    plt.plot(ns, evaluations[:, 1], label="BCubed Recall")
+    plt.plot(*silhouette_scores, label="Silhouette Score")
+    plt.axvline(max(silhouette_scores[0]), 0, 1, ls="dashed", c="r", label="IPS Procedure result")
+    plt.grid()
+    plt.legend(loc="upper right")
+    plt.xlabel("#Clusters")
+    plt.ylabel("Metric")
+    plt.tight_layout()
+    plt.savefig("img/unsupervised_clustering.png")
+
 
 if __name__ == "__main__":
     main()

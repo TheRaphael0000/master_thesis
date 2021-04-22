@@ -5,10 +5,17 @@ from functools import reduce
 import itertools
 
 import numpy as np
-from scipy.spatial.distance import pdist, squareform
-from corpus import brunet, oxquarry, st_jean, pan16
+from scipy.spatial.distance import pdist
+from scipy.spatial.distance import squareform
+
+from corpus import oxquarry
+from corpus import brunet
+from corpus import st_jean
+from corpus import pan16
+
 import distances
 import compressions
+
 from misc import rank_list_from_distances_matrix
 from misc import normalize
 from evaluate import evaluate_linking
