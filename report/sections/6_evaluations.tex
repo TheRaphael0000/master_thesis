@@ -81,7 +81,31 @@ After multiple tests, the PAN @ CLEF 2016 dataset was not used further in this s
 
 \subsubsection{MFW Token and Lemma}
 
-TODO
+Here the goal is to compare two similar text representations, which are the token representation, words as they can appears in the novels, and the lemmatize representation, for example \textit{il voit} (he sees) will be lemmatize to \textit{il voir} (he see).
+For this kind of representation, previous studies have shown that using MFW (most frequent words) vector size of around 500 tends to produce better outcomes \cite{savoy_text_representation}.
+
+After creating the rank lists with the proposed distance mesures (ref. \ref{sec:fv_distances}) on the two representations for a MFW vector size ranging between 100 and 2000 with a step of 100, on the two datasets containing the lemmatize representation (Brunet and St-Jean), the two plots in Figure~\ref{fig:token_vs_lemma} show the average precision (AP) for the resulting rank lists.
+
+As the previous study found, this representation seem to have good results with a MFW vector size of 500 for most of the metrics.
+A few metrics, such as the manhattan distance or the clark distance can give better results with slightly bigger vectors.
+In most cases, the token representation provide on both dataset a greater average precision compared to the lemma representation.
+A interesting example to be worth noticing concern the Manhattan distance, when using the token representation it tends to decrease the AP faster as the MFW vector size increase than the lemma representation.
+The euclidean distance seem to be the least appropriate distance mesure for this task.
+The clark distance have a really poor average precision when the MFW vector is too small but after reaching 500 it produces one of the best pay-off of the experiment.
+Over all the cosine distance seem to be on of the most approriate choice when dealing with these datasets and text representations.
+
+\begin{figure}
+  \caption{Token and Lemma representation over number of MFW using different distances metrics}
+  \label{fig:token_vs_lemma}
+
+  \subcaption{Brunet}
+  \label{fig:token_vs_lemma_brunet}
+  \includegraphics[width=0.9\linewidth]{img/token_vs_lemma_brunet.png}
+
+  \subcaption{St-Jean}
+  \label{fig:token_vs_lemma_brunet}
+  \includegraphics[width=0.9\linewidth]{img/token_vs_lemma_st_jean.png}
+\end{figure}
 
 \subsubsection{MFW Letter n-grams}
 
@@ -370,50 +394,18 @@ Each new generation tend to use its own vocabulary, and thus it can be harder to
 
 \subsubsection{Rank lists fusion evaluation}
 
+In this experiment, the goal to understand if fusing rank list can improve performance of the rank list.
+The methodology used, is to create multiple rank lists and fuse them for every 4 rank lists combinations.
 
-
-\begin{table}[h]
-  \centering
-  \caption{Rank list sign test, * : Binomial test p-value < 5\%}
-  \label{tab:fusion_sign_test_comparaisons}
-
-  \subcaption{S-Curve/Equal/Single max}
-  \label{tab:s_curve_single_max}
-  \begin{tabular}{l c c c}
-    \toprule
-    Metric & St-Jean  & Brunet & Oxquarry \\ \midrule
-    AP     & 161/0/334* & 208/0/287* & 1/0/494*\\
-    RPrec  & 169/9/317* & *378/75/42 & 0/2/493*\\
-    HPrec  & *287/1/207 & 49/87/359* & 32/11/452*\\
-    \bottomrule
-  \end{tabular}
-
-  \subcaption{Z-Score/Equal/Single max}
-  \label{tab:z_score_single_max}
-  \begin{tabular}{l c c c}
-    \toprule
-    Metric& St-Jean  & Brunet & Oxquarry \\ \midrule
-    AP    & *284/0/211  & *285/0/210 & 1/0/494*\\
-    RPrec & *312/10/173 & *361/94/40 & 0/0/495*\\
-    HPrec & *289/0/206  & 35/63/397* & 79/13/403*\\
-    \bottomrule
-  \end{tabular}
-
-  \subcaption{S-Curve/Equal/Z-Score}
-  \label{tab:s_curve_z_score}
-  \begin{tabular}{l c c c}
-    \toprule
-    Metric & St-Jean & Brunet & Oxquarry \\ \midrule
-    AP     & 7/0/488*   & 42/0/453*    & *270/0/225\\
-    RPrec  & 4/3/488*   & 124/241/130  & 51/96/348*\\
-    HPrec  & 57/18/420* & *188/202/105 & 70/34/391*\\
-    \bottomrule
-  \end{tabular}
-\end{table}
+The rank used are the ones obtained by using the following distances metrics : Manhattan, Tanimoto, Clark, Matusita, Cosine Distance, Kullback-Leibler divergence on both the top 500 MFW tokens and the top 750 MFW tokens 3-grams, with smoothing for all of them.
+This creates 12 rank lists, every 4 combinations of these 12 rank lists creates 495 possible fusions ($C^{12}_{4} = 495$).
+For this 495 fusions, the 3 metrics: Average Precision (AP), R-Precision (RPrec) and High Precision (HPrec).
+The results are graphicaly presented in Figure~\ref{fig:fusions} for the dataset Oxquarry~(\ref{fig:fusion_oxquarry}), Brunet~(\ref{fig:fusion_brunet}) and St-Jean~(\ref{fig:fusion_st_jean}).
 
 \begin{figure}
   \centering
   \caption{Evaluation of every combination of 4 rank list fusions using Z-Score and S-Curve}
+  \label{fig:fusions}
 
   \subcaption{Oxquarry}
   \label{fig:fusion_oxquarry}
@@ -427,6 +419,71 @@ Each new generation tend to use its own vocabulary, and thus it can be harder to
   \label{fig:fusion_st_jean}
   \includegraphics[width=\linewidth]{img/fusion_st_jean.png}
 \end{figure}
+
+To compare the rank list produced by both the S-Curve and Z-Score fusions to the non-fused rank list, the best metrics of each rank list used for each fusion (denoted \textit{Single-Max}) is compared using a sign test to the rank list produced by S-Curve fusion in Table~\ref{tab:s_curve_single_max}.
+The Single-Max comparaision to the Z-Score fusion in Table~\ref{tab:z_score_single_max} and a comparaison Z-Score / S-Curve fusion in Table~\ref{tab:s_curve_z_score}.
+
+\begin{table*}
+  \centering
+  \caption{Rank list sign test, * : Binomial test p-value < 5\%}
+  \label{tab:fusion_sign_test_comparaisons}
+
+  \subcaption{S-Curve/Equal/Single max}
+  \label{tab:s_curve_single_max}
+  \begin{tabular}{l c c c c}
+    \toprule
+    Metric         & St-Jean     & Brunet      & Oxquarry    & \textbf{Total} \\ \midrule
+    AP             & 161/0/334*  & 208/0/287*  & 1/0/494*    & 370/0/1115*    \\
+    RPrec          & 169/9/317*  & *378/75/42  & 0/2/493*    & 547/86/852*    \\
+    HPrec          & *287/1/207  & 49/87/359*  & 32/11/452*  & 368/99/1018*   \\
+    \textbf{Total} & 617/10/858* & 635/162/688 & 33/13/1439* & 1285/185/2985* \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{Z-Score/Equal/Single max}
+  \label{tab:z_score_single_max}
+  \begin{tabular}{l c c c c}
+    \toprule
+    Metric        & St-Jean     & Brunet      & Oxquarry    & \textbf{Total} \\ \midrule
+    AP            & *284/0/211  & *285/0/210  & 1/0/494*    & 570/0/915*     \\
+    RPrec         & *312/10/173 & *361/94/40  & 0/0/495*    & 673/104/708    \\
+    HPrec         & *289/0/206  & 35/63/397*  & 79/13/403*  & 403/76/1006*   \\
+    \textbf{Total}& *885/10/590 & 681/157/647 & 80/13/1392* & 1646/180/2629* \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{S-Curve/Equal/Z-Score}
+  \label{tab:s_curve_z_score}
+  \begin{tabular}{l c c c c}
+    \toprule
+    Metric        & St-Jean     & Brunet       & Oxquarry     & \textbf{Total} \\ \midrule
+    AP            & 7/0/488*    & 42/0/453*    & *270/0/225   & 319/0/1166*    \\
+    RPrec         & 4/3/488*    & 124/241/130  & 51/96/348*   & 179/340/966*   \\
+    HPrec         & 57/18/420*  & *188/202/105 & 70/34/391*   & 315/254/916*   \\
+    \textbf{Total}& 68/21/1396* & 354/443/688* & 391/130/964* & 813/594/3048*  \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+Using these distance metric on these dataset, the sign test tends to indicate that the fusion reduce the overall quality of the rank list compated to the best rank list in fusion.
+
+But multiple points can be observed:
+\begin{itemize}
+  \item
+  The three evaluations metrics are high correlated (especially Average Precision and R-Precision), the colomns and lines \textit{Total} in the tables are to be lightly considered and not as an absolute proof.
+  \item
+  The Oxquarry dataset seem particualary not fitted for the fusion using the proposed distance metrics.
+  This can be further explain by taking a look at the Figure~\ref{fig:fusion_oxquarry}.
+  Most of the Single rank list in this dataset obtain average to poor results, with the exception of two rank list with excellents results.
+  Which considering the setup of the experiment, fusing a very good rank list with multiple bad rank list will certainly produce a rank list with worse results than the first one.
+  The Oxquarry dataset may be an outlier in this experiment.
+  \item
+  On the St-Jean and Brunet dataset most of the metrics in the experiment Single Max vs Z-Score fusion (Table~\ref{tab:z_score_single_max}) produce significants results in favor to the fusion.
+  \item
+  The Z-score fusion seem to be giving better results on most metrics and datasets over the S-curve fusion.
+  \item
+  The HPrec is most of the time deterioted with the fusion.
+\end{itemize}
 
 \subsection{Clustering}
 
@@ -473,4 +530,63 @@ These metrics are used in the clustering task at PAN@CLEF~\cite{pan16}.
   The $F_\beta$ measures provide a parametric way to represent with a single value the two counterbalancing measures in this case, the $BCubed F_1$ use the Precision and Recall $BCubed$, with the $F$ measures with $\beta = 1$.
 \end{definition}
 
-\subsubsection{Clustering unsupervised cut evaluation}
+\subsubsection{Clustering unsupervised cut method}
+
+
+
+\begin{figure}
+  \caption{Unsupervised clustering on Oxquarry and Brunet}
+  \label{fig:unsupervised_clustering_ob}
+
+  \subcaption{Oxquarry}
+  \label{fig:unsupervised_clustering_oxquarry}
+  \includegraphics[width=\linewidth]{img/unsupervised_clustering_oxquarry.png}
+
+  \subcaption{Brunet}
+  \label{fig:unsupervised_clustering_brunet}
+  \includegraphics[width=\linewidth]{img/unsupervised_clustering_brunet.png}
+\end{figure}
+
+\begin{figure}
+  \caption{Unsupervised clustering on St-Jean}
+  \label{fig:unsupervised_clustering_sj}
+
+  \subcaption{St-Jean A}
+  \label{fig:unsupervised_clustering_st_jean_A}
+  \includegraphics[width=\linewidth]{img/unsupervised_clustering_st_jean_A.png}
+
+  \subcaption{St-Jean B}
+  \label{fig:unsupervised_clustering_st_jean_B}
+  \includegraphics[width=\linewidth]{img/unsupervised_clustering_st_jean_B.png}
+
+  \subcaption{St-Jean}
+  \label{fig:unsupervised_clustering_st_jean}
+  \includegraphics[width=\linewidth]{img/unsupervised_clustering_st_jean.png}
+\end{figure}
+
+\subsubsection{Clustering with the supervised cut method}
+
+\begin{table}
+
+  \begin{tabular}{l c c c c c}
+    \multicolumn{2}{c}{\multirow{2}{*}{BCubed F1-Score}} & \multicolumn{4}{c}{Testing}\\
+    \multicolumn{2}{c}{}                  & Oxquarry & Brunet & St-Jean A & St-Jean B \\
+    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}  & Oxquarry  &          &        &           &           \\
+                              & Brunet    &          &        &           &           \\
+                              & St-Jean A &          &        &           &           \\
+                              & St-Jean B &          &        &           &           \\
+  \end{tabular}
+\end{table}
+
+\begin{figure}
+  \caption{Clustering with the supervised cut method on St-Jean}
+  \label{fig:unsupervised_clustering_sj}
+
+  \subcaption{Training on St-Jean A}
+  \label{fig:supervised_clustering_training_st_jean_A}
+  \includegraphics[width=\linewidth]{img/supervised_clustering_training_st_jean_A.png}
+
+  \subcaption{Testing on St-Jean B using the training on St-Jean A}
+  \label{fig:supervised_clustering_testing_st_jean_B_with_st_jean_A}
+  \includegraphics[width=\linewidth]{img/supervised_clustering_testing_st_jean_B_with_st_jean_A.png}
+\end{figure}

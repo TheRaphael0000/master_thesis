@@ -48,11 +48,11 @@ from misc import normalize
 def main():
     # distance_over_rank()
     # s_curve_c()
-    s_curve_r()
+    # s_curve_r()
     # sigmoids()
 
     # degradation()
-    # mfw()
+    token_vs_lemma()
     # letter_ngrams()
     # first_last_letters_ngrams()
     # pos_ngrams()
@@ -67,6 +67,57 @@ def main():
 
     # unsupervised_clustering_evaluation()
     # supervised_clustering_evaluation()
+
+
+def token_vs_lemma():
+    _, _, X_lemma, X_token, Y = st_jean.parse()
+    # _, X_lemma, X_token, Y = brunet.parse()
+
+    M_token = []
+    M_lemma = []
+
+    mfws = np.arange(100, 2000+1, 100)
+    distances_ = [
+        (True, distances.manhattan),
+        (False, distances.tanimoto),
+        (True, distances.euclidean),
+        (False, distances.matusita),
+        (False, distances.clark),
+        (True, distances.cosine_distance),
+        (False, distances.kld),
+        (False, distances.j_divergence),
+    ]
+
+    for mfw in mfws:
+        for zscore, distance in distances_:
+            print(mfw)
+            rl_token = compute_links(X_token, 0, mfw, zscore, 1e-1, distance)
+            Mi = evaluate_linking(rl_token, Y)
+            M_token.append(Mi)
+
+            rl_lemma = compute_links(X_lemma, 0, mfw, zscore, 1e-1, distance)
+            Mi = evaluate_linking(rl_lemma, Y)
+            M_lemma.append(Mi)
+
+    M_token = np.array(M_token).reshape(-1, len(distances_), 3)
+    M_lemma = np.array(M_lemma).reshape(-1, len(distances_), 3)
+
+    custom_lines = [
+        Line2D([0], [0], color="k", lw=2, ls="dotted"),
+        Line2D([0], [0], color="k", lw=2, ls="dashed"),
+    ] + [Line2D([0], [0], color=f"C{i}", lw=2) for i in range(len(distances_))]
+    labels = ["Token", "Lemma"] + [d.__name__ for z, d in distances_]
+
+    plt.figure(figsize=(6, 8), dpi=200)
+    for i in range(len(distances_)):
+        plt.plot(mfws, M_token[:,i,0], ls="dashed", c=f"C{i}")
+        plt.plot(mfws, M_lemma[:,i,0], ls="dotted", c=f"C{i}")
+    plt.xlabel("#MFW")
+    plt.ylabel("Average Precision (AP)")
+    plt.legend(custom_lines, labels, loc="lower center", ncol=2)
+    plt.tight_layout()
+    plt.grid()
+    plt.savefig("img/token_vs_lemma.png")
 
 
 def compression_evaluation():
@@ -475,29 +526,6 @@ def distance_over_rank():
     plt.savefig("img/distance_over_rank.png")
 
 
-def mfw():
-    _, _, X, Y = brunet.parse()
-    # _, _, _, X, Y = st_jean.parse()
-    # _, X, Y = oxquarry.parse()
-
-    M = []
-
-    print("AP RPrec P@10 HPrec")
-    for mfw in np.arange(100, 2500, 200):
-        rank_list = compute_links(X, 0, mfw, False, 0.1, distances.clark)
-        mesures = evaluate_linking(rank_list, Y)
-        M.append((mfw, *mesures))
-        print(mfw, *mesures)
-
-    M = np.array(M)
-    fig, axs = plt.subplots(3, 1, figsize=(8, 8), dpi=200)
-    axs[0].plot(M[:, 0], M[:, 1])
-    axs[1].plot(M[:, 0], M[:, 2])
-    axs[2].plot(M[:, 0], M[:, 4])
-    plt.tight_layout()
-    plt.savefig("img/mfw.png")
-
-
 def fusion():
     _, _, _, X, Y = st_jean.parse()
     # _, _, X, Y = brunet.parse()
@@ -551,7 +579,8 @@ def fusion():
 
     for text_representations_id in text_representations_ids:
         rls = [rank_lists[i] for i in text_representations_id]
-        M_single_max_in_exp.append(np.max(M_single[text_representations_id, :], axis=0))
+        M_single_max_in_exp.append(
+            np.max(M_single[text_representations_id, :], axis=0))
 
         rl_s_curve = fusion_s_curve_score(rls, s_curve)
         M_fusion_s_curve.append(evaluate_linking(rl_s_curve, Y))
@@ -678,8 +707,10 @@ def supervised_clustering_evaluation():
                     ls="dashed", c="C2", label="Actual #Clusters")
         xmin, xmax, ymin, ymax = plt.axis()
         ypos = ymax / 2 - ymin / 2
-        plt.text(n_clusters_found, ypos, f"{n_clusters_found}", c="C3", rotation="vertical")
-        plt.text(n_clusters_actual, ypos, f"{n_clusters_actual}", c="C2", rotation="vertical")
+        plt.text(n_clusters_found, ypos,
+                 f"{n_clusters_found}", c="C3", rotation="vertical")
+        plt.text(n_clusters_actual, ypos,
+                 f"{n_clusters_actual}", c="C2", rotation="vertical")
         plt.grid()
         plt.legend(loc="upper right")
         plt.xlabel("#Clusters")
@@ -712,7 +743,8 @@ def supervised_clustering_evaluation():
     labels = supervised_clustering_predict(model, rl)
     n_clusters_found = len(np.unique(labels))
     n_clusters_actual = len(np.unique(Y_training))
-    plot(rl, Y_training, n_clusters_found, n_clusters_actual, "supervised_clustering_training")
+    plot(rl, Y_training, n_clusters_found,
+         n_clusters_actual, "supervised_clustering_training")
     print(evaluate_clustering(Y_training, labels))
 
     print("Testing")
@@ -721,7 +753,8 @@ def supervised_clustering_evaluation():
     labels = supervised_clustering_predict(model, rl)
     n_clusters_found = len(np.unique(labels))
     n_clusters_actual = len(np.unique(Y_testing))
-    plot(rl, Y_testing, n_clusters_found, n_clusters_actual, "supervised_clustering_testing")
+    plot(rl, Y_testing, n_clusters_found,
+         n_clusters_actual, "supervised_clustering_testing")
     print(evaluate_clustering(Y_testing, labels))
 
 
@@ -773,8 +806,10 @@ def unsupervised_clustering_evaluation():
                 ls="dashed", c="C2", label="Actual #Clusters")
     xmin, xmax, ymin, ymax = plt.axis()
     ypos = ymax / 2 - ymin / 2
-    plt.text(n_clusters_found, ypos, f"{n_clusters_found}", c="C3", rotation="vertical")
-    plt.text(n_clusters_actual, ypos, f"{n_clusters_actual}", c="C2", rotation="vertical")
+    plt.text(n_clusters_found, ypos,
+             f"{n_clusters_found}", c="C3", rotation="vertical")
+    plt.text(n_clusters_actual, ypos,
+             f"{n_clusters_actual}", c="C2", rotation="vertical")
     plt.legend(loc="upper right")
     plt.xlabel("#Clusters")
     plt.ylabel("Metric")
