@@ -1,39 +1,48 @@
 \section{Methods \label{sec:methods}}
 
-To archive clustering, the method adopted was to compare document using the authorship linkings strategies presented in \textit{Evaluation of text representation schemes and distance measures for authorship linking} \cite{kocher_verification}.
-In this paper the authors compare multiple text representation based on author style which correspond to : words frequencies, lemma frequencies, Part-Of-Speach (POS) tags frequencies, short sequences of POS tags, as well as n-grams frequencies.
-The distance mesures used are : $L^1$ norms (Manhattan, Tanimoto), $L^2$ norm (Matusita, Clark), inner products (Cosine distance) and the Jeffery divergence.
-Depending on the dataset, the text representation and the metric used, no clear text representation and different distance mesures were giving better or worse results.
+To archive clustering, the method adopted was to compare document using the authorship linkings strategies presented in \textit{Evaluation of text representation schemes and distance measures for authorship linking}~\cite{kocher_verification}.
+In this paper the authors compare multiple text representation based on author style which correspond to : words frequencies, lemma frequencies, Part-Of-Speach (POS) tags frequencies, short sequences of POS tags, as well as $n$-grams frequencies.
+The distance measures used are : $L^1$ norms (Manhattan, Tanimoto), $L^2$ norm (Matusita, Clark), inner products (Cosine distance) and the Jeffery divergence.
+Depending on the dataset, the text representation and the metric used, no clear text representation and different distance measures were giving better or worse results.
 
 In this study to archive a good clustering, the main objective is to have a reliable authorship linking rank list.
 To try to increase the quality of the rank list, the proposed method is to use a combination of multiple rank list using different strategies to form a optimistically better rank list.
-By using the most diverse strategies, we belive it is possible to increase the quality using the principle of combinaison of evidences.
+By using the most diverse strategies, we believe it is possible to increase the quality using the principle of combination of evidences.
 
 \subsection{Most frequant words, feature vectors}
 
-To be able to express a document as a feature vector of size N, a common strategy in Stylometry is to find the N most frequent words (N-MFW) in a corpus, and for each document compute the relative frequency of each of these words for the document \cite{savoy_stylo}.
+To be able to express a document as a feature vector of size N, a common strategy in Stylometry is to find the N most frequent words (N-MFW) in a corpus, and for each document compute the relative frequency of each of these words for the document~\cite{savoy_stylo}.
 For example if the word : "\textit{the}" is in the N-MFW and occurs 50 times in a document with 300 words, its relative frequency is $50/300 = 1/6$, which will be one of the value of the feature vector.
-No clear value of N for the N-MFW is to choose over others, but a value between 50-500 tends to produce good results \cite{savoy_text_representation}.
+No clear value of N for the N-MFW is to choose over others, but a value between 50-500 tends to produce good results~\cite{savoy_text_representation}.
 
 Instead of using directly the words to create the feature vector, another possibility is to use the lemma corresponding to each word, for example the sentence \textit{I saw two men with a saw} its lemmatized version is : \textit{I see two man with a saw} this requires advanced text preprocessing, but it can remove ambiguity.
 
-Another popular method is instead of considering every token as a word, this method aim to create a "word" from short a sequence of letters called n-grams using Definition~\ref{def:n-grams}.
+Another popular method is instead of considering every token as a word, this method aim to create a "word" from short a sequence of letters called $n$-grams using Definition~\ref{def:letters_n_grams}.
 To consider an overlapping word, the whole document is synthesized into a long string by joining every token by a \textit{underscore} : $\_$.
-This technique can be further exploited by combining for example two or more sizes of n-grams together.
-N-grams can be really effective even though no clear meaning from each n-gram can be exploited at first sight, but by using n-grams of size 3 to 5 in most germanic languages this can correspond to for example the tense of the verbs (i.e. : \textit{ing\_}, \textit{ed\_}), some small common words (\textit{\_the\_}, \textit{\_and\_}, \textit{\_that}), or for example to adverbs in French (\textit{\_ment}), etc.
+This technique can be further exploited by combining for example two or more sizes of $n$-grams together.
+$n$-grams can be really effective even though no clear meaning from each $n$-grams can be exploited at first sight, but by using $n$-grams of size 3 to 5 in most germanic languages this can correspond to for example the tense of the verbs (i.e. : \textit{ing\_}, \textit{ed\_}), some small common words (\textit{\_the\_}, \textit{\_and\_}, \textit{\_that}), or for example to adverbs in French (\textit{\_ment}), etc.
+An alternative version of the $n$-grams algorithm is described in Definition~\ref{def:words_n_grams}, which consider each token as a string to apply the Letters $n$-grams algorithm.
 
 Once each document is represented as a feature vector they can be compared using metric in Section~\ref{sec:fv_distances}.
 
-\begin{definition}[$n$-grams]
-  \label{def:n-grams}
-  A $N$-gram is a special type of tokenization which is constructed by creating a token of size $N$ for each substrings starting from the position $0$ to \textit{text\_size} - $N$.
-  Example: Using 3-grams The string: "brown fox" is converted to: \\
-  $("\text{bro}", "\text{row}", "\text{own}", "\text{wn\_}", "\text{n\_f}", "\text{\_fo}", "\text{fox}")$
+\begin{definition}[Letters $n$-grams]
+  \label{def:letters_n_grams}
+  A letter $n$-grams is a special type of tokenization which is constructed by creating a token of size $n$ for each substrings starting from the position $0$ to \textit{text\_size} - $n$.
+  Example: Using 3-grams The string: "fox\_is\_brown" is converted to: \\
+  $("\text{fox}", "\text{ox\_}", "\text{x\_i}", "\text{\_is}", "\text{is\_}", "\text{s\_b}", "\text{\_br}", "\text{bro}", "\text{row}", "\text{own}")$
+\end{definition}
+
+\begin{definition}[Words $n$-grams]
+  \label{def:words_n_grams}
+  Words $n$-grams are created by applying the Letters $n$-grams algorithm on a each tokens.
+  When a token is smaller than $n$, the whole token is considered.
+  Example: Using words 3-grams on following tokens: ["fox", "is", "brown"] is converted to: \\
+  $("\text{fox}", "\text{is}", "\text{bro}", "\text{row}, "\text{own}")$
 \end{definition}
 
 Another possible stylistic aspect that can be detected from a text is to consider the sentence constructions.
-This can be solved by creating short sequences (n-grams) of POS tags.
-In this case, we consider each POS as a character in the n-grams definition, this type of n-gram is also known as w-shingling.
+This can be solved by creating short sequences ($n$-grams) of POS tags.
+In this case, we consider each POS as a character in the $n$-grams definition, this type of $n$-grams is also known as w-shingling.
 For example, the sentence : \textit{"The cat eat a fish"} has the following POS tag \textit{"Article Noun Verb Article Noun"} which correspond to the following 3-grams of POS : \textit{"Article Noun Verb"} / \textit{"Noun Verb Article"} / \textit{"Verb Article Noun"}.
 In practice the POS is more detailed, for example instead of just considering the verb, the verb and its tense can be used, the same goes for the other type of POS.
 
@@ -41,7 +50,7 @@ In practice the POS is more detailed, for example instead of just considering th
 \label{sec:fv_distances}
 
 To be able to compare vector, different metrics can be used depending on the usage.
-Usually two types of metrics for vector comparaison can be used: Vector similarities and Vector distances, the first yield a large value when the two vectors are closly related and the second a small value when they are similar.
+Usually two types of metrics for vector comparison can be used: Vector similarities and Vector distances, the first yield a large value when the two vectors are closely related and the second a small value when they are similar.
 The following definitions are one of the few most common $L^1$/$L^2$/$cosine$ based distance.
 
 \begin{definition}[Manhattan distance ($L^1$ based)]
@@ -76,7 +85,7 @@ The following definitions are one of the few most common $L^1$/$L^2$/$cosine$ ba
   \end{equation}
 \end{definition}
 
-\begin{definition}[Clark distance ($L^2$ based)]
+\begin{definition}[Clark distance ($L^2$ based)~\cite{kocher_verification}]
   To compute the Clark distance the following formula is used.
   \begin{equation}
     dist_{Clark}(A, B) = \sqrt{\sum_{i=0}^{m}\left(\frac{|A_i - B_i|}{A_i + B_i}\right)^2}
@@ -99,27 +108,28 @@ The following definitions are one of the few most common $L^1$/$L^2$/$cosine$ ba
   \end{equation}
 \end{definition}
 
-\begin{definition}[ (Inner product based)]
-  \label{def:cosine_dist}
-  To compute the Cosine distance, first the cosine similarity must be computed.
+\begin{definition}[Kullback-Leibler divergence (relative entropy)]
+  To compute the Kullback-Leibler divergence the formula below is used.
   \begin{equation}
-    sim_{Cosine}(A, B) = \frac{A \cdot B}{\sqrt{A \cdot A}\sqrt{B \cdot B}}
-  \end{equation}
-  The cosine similarity is ranged between -1 and 1.
-  With 1 beeing exactly the same, -1 the total opposite and 0 orthogonal.
-  \begin{equation}
-    dist_{Cosine}(A, B) = 1 - sim_{Cosine}(A, B)
-  \end{equation}
-  \begin{equation}
+    dist_{kld}(A, B) = \sum_{i=0}^{m} A_i \cdot \log(\frac{A_i}{B_i})
   \end{equation}
 \end{definition}
 
+\begin{definition}[Jeffrey divergence~\cite{kocher_verification}]
+  To compute the Jeffrey divergence the formula below is used.
+  It represents the difference between two probability distribution.
+  \begin{equation}
+    dist_{j\_divergence}(A, B) = \sum_{i=0}^{m} (A_i - B_i) \cdot \log(\frac{A_i}{B_i})
+  \end{equation}
+\end{definition}
+
+
 \subsubsection{Normalization}
 
-Sometimes vectors can not be easily compared with some of the previously cited distance metrics, because they deal with different order of magnitude.
-Thus using a normliazation can make the task easier.
+Sometimes vectors can not be easily compared with some previously cited distance metrics, because they deal with different order of magnitude.
+Thus using a normalization can make the task easier.
 
-\begin{definition}[Z-score normalization \cite{savoy_stylo}]
+\begin{definition}[Z-score normalization~\cite{savoy_stylo}]
   \begin{equation}
     Zscore(A) = \frac{A - \mu}{\sigma}
   \end{equation}
@@ -134,7 +144,7 @@ The main problem with this approach is that we tend to overestimate the probabil
 The solution proposed is to use smoothing, such as the Lidstone smoothing presented in Definition~\ref{def:lidstone_smoothing}.
 Smoothing techniques can help distance functions based on probabilities, such as the Kullback-Leibler Divergence.
 
-\begin{definition}[Lidstone smoothing \cite{savoy_stylo}]
+\begin{definition}[Lidstone smoothing~\cite{savoy_stylo}]
   \label{def:lidstone_smoothing}
   \begin{equation}
     p(t_i, D_j) = \frac{tf_{i,j} + \lambda}{n + \lambda \cdot |V|}
@@ -147,13 +157,13 @@ In this study, when a smoothing technique is used, except stated otherwise, the 
 \subsection{Compression-based distances \label{sec:compression_based_distances}}
 
 This section covers the compression based strategy to compute a distance between two documents.
-The main idea is to compress two documents A, B, compress the string concatenation AB of A, B and compare their sizes after compression using one of the distance mesure demonstrated below.
+The main idea is to compress two documents A, B, compress the string concatenation AB of A, B and compare their sizes after compression using one of the distance measure demonstrated below.
 Commonly a lossless compression algorithm is used, such as the Lempel-Ziv family (GZIP), block sorting family (BZip2), statistical family (PPM)~\cite{comparing_compression}.
 This technique is based on the fact that compressing algorithm tries to lower the Shannon entropy of a document, thus when compressing a document with a large Shannon entropy the compressed document should have a larger size after compression than to a document with a small Shannon entropy.
 When concatenating two documents with a lot in common, the entropy of the concatenated document should be lower than if the two documents are very different.
 This approach is to produce rank lists is nearly parameterless, only a distance metric and compression algorithm is needed.
 
-In this study the lossless compression algorithm used are the ones present in the python standard library : GZip, BZip2, LZMA \cite{python_compression}.
+In this study the lossless compression algorithm used are the ones present in the python standard library : GZip, BZip2, LZMA~\cite{python_compression}.
 Each compression algorithm can be tweaked with different parameters, the default settings are used except for the compression level (trade-off compression time and compression size) setted to the highest parameter to have smallest possible files.
 
 \begin{definition}[Normalized compression distance~\cite{savoy_stylo}~\cite{comparing_compression}]
@@ -301,9 +311,9 @@ The idea is to run the agglomerative clustering on multiple time and stop at eac
 This produce $N$ possible clusterings, each of those can be evaluated using the silhouette score.
 See definition~\ref{def:silhouette}.
 
-\begin{definition}[Silhouette score \cite{sklearn}]
+\begin{definition}[Silhouette score~\cite{sklearn}]
   \label{def:silhouette}
-  The silhouette score is a unsupervised clustering metric which evaluate a clustering result by mesureing the cohesion and separation of the clusters.
+  The silhouette score is a unsupervised clustering metric which evaluate a clustering result by measureing the cohesion and separation of the clusters.
   \begin{equation}
     \frac{b - a}{max(a, b)}
   \end{equation}

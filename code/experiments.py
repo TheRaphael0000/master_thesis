@@ -52,7 +52,7 @@ def main():
     # sigmoids()
 
     # degradation()
-    token_vs_lemma()
+    # token_vs_lemma()
     # letter_ngrams()
     # first_last_letters_ngrams()
     # pos_ngrams()
@@ -63,7 +63,7 @@ def main():
     # dates_differences()
     # fusion()
 
-    # count_ngrams()
+    count_ngrams()
 
     # unsupervised_clustering_evaluation()
     # supervised_clustering_evaluation()
@@ -407,17 +407,20 @@ def pos_ngrams():
 
 def letter_ngrams():
     print("loading")
-    _, _, _, X, Y = st_jean.parse()
+    # _, _, _, X, Y = st_jean.parse()
+    _, _, X, Y = brunet.parse()
+    # _, X, Y = oxquarry.parse()
 
     M = defaultdict(list)
 
-    mfws = np.arange(100, 2000 + 1, 100)
+    mfws = np.arange(500, 15000 + 1, 500)
 
-    ngrams_types = [2, 3, 4, (2, 3)]
+    ngrams_types = [3, 4, 5, (2, 3), (3, 4), (4, 5)]
     for ngrams_type in ngrams_types:
+        print(ngrams_type)
         for mfw in mfws:
-            rl = compute_links(X, ngrams_type, mfw, True,
-                               1e-1, distances.cosine_distance)
+            rep = [X, ngrams_type, mfw, True, 1e-1, distances.cosine_distance]
+            rl = compute_links(*rep)
             m = evaluate_linking(rl, Y)
             M[ngrams_type].append(m)
             print(mfw, m)
@@ -661,6 +664,8 @@ def sigmoids():
 def count_ngrams():
     words = open("corpus/english_dictionary.txt").read().split("\n")
     words = [normalize(w) for w in words]
+
+    print(len(words))
 
     print(len(Counter(word_n_grams([words], 1)[0])))
     print(len(Counter(word_n_grams([words], 2)[0])))

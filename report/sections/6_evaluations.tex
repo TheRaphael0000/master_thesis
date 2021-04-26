@@ -7,8 +7,8 @@ This chapter explain the divers evaluation metrics used and experiments realized
 \subsubsection{Rank list evaluation metrics}
 \label{sec:rl_eval}
 
-In order to know the quality of a rank list, the following metrics were used.
-Definitions in this sections are an adapted version of the ones in~\cite{kocher_linking}.
+In order to know the quality of a rank list, the following metrics are used.
+Definitions in this sections are an adapted version of the ones in Kocher and Savoy's \textit{Evaluation of text representation schemes and distance measures for authorship linking}~\cite{kocher_linking}.
 The presented metrics are well know in the authorship verification and the information retrieval field.
 
 \begin{definition}[Relevant link~\cite{kocher_linking}]
@@ -64,10 +64,11 @@ The presented metrics are well know in the authorship verification and the infor
 Previous studies have shown the importance of having documents of good quality and with at least 5000 tokens to have reliable results.
 Skilled authors can easily change their style to imitate others for small texts, but it becomes more difficult for larger texts~\cite{savoy_stylo}.
 
-For this study, an experiment on the St-Jean dataset was accomplished, in the order to show the importance of having large documents.
+For this study, an experiment on the St-Jean dataset is accomplish, in the order to show the importance of having large documents.
+In order to test this parameter, the number of token is artificially modified by considering only the $n$ first tokens for each text, with $n$ ranging between 9000 and 250 with steps of 250 tokens.
+
 Figure~\ref{img:degradation} shows the three metrics used (Average precision, RPrec, HPrec) over the number of tokens.
-The number of token was artificially modified by considering only the $n$ first tokens for each text, with $n$ ranging between 9000 and 250 with steps of 250 tokens.
-Every metrics decrease over the text size, which means it becomes harder to determinate documents pairs with the same author as the text size decrease.
+Every metrics decrease over the text size, which indicate that it becomes harder to determinate documents pairs with the same author as the text size decrease.
 
 \begin{figure}
   \centering
@@ -77,22 +78,22 @@ Every metrics decrease over the text size, which means it becomes harder to dete
 \end{figure}
 
 PAN16 dataset is a difficult dataset due to its small size, thus extracting reliable features for each text to estimate each style is also a difficult task.
-After multiple tests, the PAN @ CLEF 2016 dataset was not used further in this study due to its difficulty in finding reliable Stylometric clues.
+After multiple tests, the PAN @ CLEF 2016 dataset is not used further in this study due to its difficulty in finding reliable Stylometric clues.
 
 \subsubsection{MFW Token and Lemma}
 
-Here the goal is to compare two similar text representations, which are the token representation, words as they can appears in the novels, and the lemmatize representation, for example \textit{il voit} (he sees) will be lemmatize to \textit{il voir} (he see).
-For this kind of representation, previous studies have shown that using MFW (most frequent words) vector size of around 500 tends to produce better outcomes \cite{savoy_text_representation}.
+Here the goal is to compare two similar text representations, which are the token representation, words as they can appear in the novels, and the lemmatize representation, for example \textit{il voit} (he sees) will be lemmatized to \textit{il voir} (he see).
+For this kind of representation, previous studies have shown that using MFW (most frequent words) vector size of around 500 tends to produce better outcomes~\cite{savoy_text_representation}.
 
-After creating the rank lists with the proposed distance mesures (ref. \ref{sec:fv_distances}) on the two representations for a MFW vector size ranging between 100 and 2000 with a step of 100, on the two datasets containing the lemmatize representation (Brunet and St-Jean), the two plots in Figure~\ref{fig:token_vs_lemma} show the average precision (AP) for the resulting rank lists.
+After creating the rank lists with the proposed distance measures (ref. Section~\ref{sec:fv_distances}) on the two representations for a MFW vector size ranging between 100 and 2000 with a step of 100, on the two datasets containing the lemmatize representation (Brunet and St-Jean), the two plots in Figure~\ref{fig:token_vs_lemma} show the average precision (AP) for the resulting rank lists.
 
-As the previous study found, this representation seem to have good results with a MFW vector size of 500 for most of the metrics.
-A few metrics, such as the manhattan distance or the clark distance can give better results with slightly bigger vectors.
+This representation seem to have good results with a MFW vector size of 500 for most of the metrics, this corroborate previous studies results.
+A few metrics, such as the Manhattan distance or the Clark distance can give better results with slightly bigger vectors.
 In most cases, the token representation provide on both dataset a greater average precision compared to the lemma representation.
-A interesting example to be worth noticing concern the Manhattan distance, when using the token representation it tends to decrease the AP faster as the MFW vector size increase than the lemma representation.
-The euclidean distance seem to be the least appropriate distance mesure for this task.
-The clark distance have a really poor average precision when the MFW vector is too small but after reaching 500 it produces one of the best pay-off of the experiment.
-Over all the cosine distance seem to be on of the most approriate choice when dealing with these datasets and text representations.
+An interesting example to be worth noticing concern the Manhattan distance, when using the token representation it tends to decrease the AP faster than the lemma representation as the MFW vector size increase.
+The euclidean distance seem to be the least appropriate distance measure for this task.
+The Clark distance have a really poor average precision when the MFW vector is too small but after reaching 500 it produces one of the best pay-off of the experiment.
+Over all, the cosine distance seem to be one of the most appropriate choice when dealing with these datasets and text representations.
 
 \begin{figure}
   \caption{Token and Lemma representation over number of MFW using different distances metrics}
@@ -103,15 +104,37 @@ Over all the cosine distance seem to be on of the most approriate choice when de
   \includegraphics[width=0.9\linewidth]{img/token_vs_lemma_brunet.png}
 
   \subcaption{St-Jean}
-  \label{fig:token_vs_lemma_brunet}
+  \label{fig:token_vs_lemma_st_jean}
   \includegraphics[width=0.9\linewidth]{img/token_vs_lemma_st_jean.png}
 \end{figure}
 
-\subsubsection{MFW Letter n-grams}
+\subsubsection{MFW Letter $n$-grams}
 
-TODO
+In this experiment the whole text is considered to create letter $n$-grams for the text representation, see Definition~\ref{def:letters_n_grams}.
+As for the other experiment the MFW approach is used to create the feature vector.
+On these vectors the distance measure used to create the rank list is the z-score normalized cosine distance.
+The goal is to compare the influence of $n$ parameter of the $n$-grams over the size of the feature vector.
+The parameters used are: a varying MFW vector size ranging between 500 and 15000 with a step of 500 and a $n$ for the following values : $3, 4, 5, (2, 3), (3, 4), (4, 5)$.
+When considering letters $n$-grams the text representation increase size by a factor of approximately $t$, with $t$ being the average token length.
+The number of different $n$-grams is not clear, but it is assumed to be larger than the vocabulary of the texts, thus the importance of having larger vector  when dealing with long texts such as the literature datasets.
 
-\subsubsection{MFW First letters, last letters, word n-gram of tokens}
+Figure~\ref{fig:letter_ngrams} show the results of this experiment on the Oxquarry dataset (\ref{fig:letter_ngrams}) and Brunet dataset (\ref{fig:letter_ngrams_brunet}).
+
+\begin{figure}
+  \caption{Letters $n$-grams representation over number of MFW with different n}
+  \label{fig:letter_ngrams}
+
+  \subcaption{Oxquarry}
+  \label{fig:letter_ngrams_oxquarry}
+  \includegraphics[width=\linewidth]{img/letter_ngrams_oxquarry.png}
+
+  \subcaption{Brunet}
+  \label{fig:letter_ngrams_brunet}
+  \includegraphics[width=\linewidth]{img/letter_ngrams_brunet.png}
+\end{figure}
+
+
+\subsubsection{MFW First letters, last letters, word n-grams of tokens}
 
 In this experiment, the goal is to create 3 types of text representations of word substrings and compare them.
 
@@ -123,12 +146,12 @@ In this experiment, the goal is to create 3 types of text representations of wor
   Extract also the N-last letter of each word tokens which in this case correspond to the role of the word in a sentence.
   This second approach is closely related to the POS approach.
   \item
-  The \textit{word n-grams}, this special type of n-gram only consider N-grams within a word.
-  This exclude every overlapping word n-grams.
+  The word $n$-grams (See Definition~\ref{def:words_n_grams}), this special type of n-grams only consider $n$-grams within a word.
+  This exclude every overlapping word $n$-grams.
   This decision is made for this experiment such that interwords style information can't be learned and have a fair comparaison of these 3 texts representations.
 \end{enumerate}
-The two first methods can be considered as a subsample of the n-grams approach, thus a simplified one (have smaller text representation).
-The distance mesure used is the z-normalized cosine distance and the evaluation metric is the average precision.
+The two first methods can be considered as a subsample of the $n$-grams approach, thus a simplified one (have smaller text representation).
+The distance measure used is the z-normalized cosine distance and the evaluation metric is the average precision.
 The number of MFW variate for this experiment between 200 and 4000 with a step of 100.
 
 Figure~\ref{fig:first_last_letters_ngrams_brunet} shows the results for the Brunet dataset and Figure~\ref{fig:first_last_letters_ngrams_oxquarry} for the oxquarry dataset.
@@ -151,21 +174,21 @@ For the brunet dataset, the 5-first letters can a good results compared to other
   \includegraphics[width=\linewidth]{img/first_last_letters_ngrams_brunet.png}
 \end{figure}
 
-\subsubsection{MFW POS n-grams}
+\subsubsection{MFW POS $n$-grams}
 
 For this experiment short combination of POS are used to detect the style of the author.
-The St-Jean dataset have for every word a POS tag, by using these POS tags and combining them using Definition~\ref{def:n-grams} to create n-grams/w-shingling, a new text representation is obtained.
+The St-Jean dataset have for every word a POS tag, by using these POS tags and combining them using Definition~\ref{def:letters_n_grams} to create $n$-grams/w-shingling, a new text representation is obtained.
 Using this representation the N-MFW are computed and the rank list containing every document pairs can be computed.
 
 In this experiment, only 2-grams, 3-grams, 4-grams and the combination of the 2-grams and 3-grams denoted: (2, 3)-grams is used.
 The distance metric used is the smoothed z-score normalized cosine distance.
-For this representation no clear MFW (most frequent word, in this case POS n-grams are considered as words) vector size is advised, the size used is between 200 and 2000 with a step of 100.
-Figure~\ref{fig:pos_ngrams} show the average precision on the rank list produced by using POS n-grams over the number of MFW.
+For this representation no clear MFW (most frequent word, in this case POS $n$-grams are considered as words) vector size is advised, the size used is between 200 and 2000 with a step of 100.
+Figure~\ref{fig:pos_ngrams} show the average precision on the rank list produced by using POS $n$-grams over the number of MFW.
 
 The two following informations can be intuitively observed on this plot:
 \begin{itemize}
   \item
-  A more complex POS n-gram require more MFW to archive its maximal effectiveness.
+  A more complex POS $n$-grams require more MFW to archive its maximal effectiveness.
   In the St-Jean corpus 26 POS are used to describe every words in the corpus.
   Which correspond to $26^2 = 676$ possible unique POS 2-grams, to $26^3 = 17'576$ POS 3-grams and $26^4 = 456'976$ POS 4-grams.
   \item
@@ -185,7 +208,7 @@ The two following informations can be intuitively observed on this plot:
 This experiment try to compare the three proposed compression algorithm (GZip, BZip2, LZMA) for the compression based distance ranking.
 For each algorithm for each document the size after compression is computed, as well as the concatenation of every document pairs.
 Using these sizes and the NCD and CBC distance metrics (ref. Section~\ref{sec:compression_based_distances}, the rank list is evaluated.
-This experiment was run on the three datasets three times to have a better approximation of the run time.
+This experiment is run on the three datasets three times to have a better approximation of the run time.
 The results in terms of efficiency of the resulting rank list are shown in Table~\ref{tab:compression_evaluation}.
 The average time of the 3 runs are in Table~\ref{tab:compression_evaluation_time}.
 
@@ -193,7 +216,7 @@ GZip seem to be giving the worse results on every dataset with an average AP of 
 LZMA give the best results on every dataset tested, but BZip2 have close results.
 The cosine-based compression distance (CBC) tend to give better results over the normalized compression distance (NCD).
 In terms of time complexity BZip2 is the fastest algorithm of the 3 proposed, LZMA is ~5-6 times slower than BZip2, and GZip slower than BZip2 by around ~5-20\%.
-No significant time differences was recorded between the NCD and CBC distance measures, since the greater complexity is in the compression algorithm.
+No significant time differences is recorded between the NCD and CBC distance measures, since the greater complexity is in the compression algorithm.
 
 % \begin{figure}
 %   \includegraphics[width=\linewidth]{img/compression_evaluation_oxquarry.png}
@@ -385,10 +408,10 @@ Same authors links (true links) are displayed in Figure~\ref{fig:dates_differenc
   \includegraphics[width=\linewidth]{img/dates_differences_r_false.png}
 \end{figure}
 
-Figure~\ref{fig:dates_differences_r_false} show the date difference density on the top-r false links (670 in case of St-Jean) on a rank list with 80\% average precision (obtained by fusing the 5 ranks list presented used in frequent error, ref. Section~\ref{sec:rank_list_fusion}~and~\ref{sec:frequent_errors}).
+Figure~\ref{fig:dates_differences_r_false} show the date difference density on the top-r false links (670 in case of St-Jean) on a rank list with 80\% average precision (obtained by fusing the 5 ranks list used and presented in frequent error, ref. Section~\ref{sec:rank_list_fusion}~and~\ref{sec:frequent_errors}).
 Two interesting information can be extracted here.
 First the mean is lower by 8.22 years (29.04 - 20.82) comparing to the false links distribution which clearly indicate the importance of publication date in the ranking of the documents.
-Secondly we can observe a drop after 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ are harder to discriminate than links outside this interval.
+Secondly we can observe a drop after 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ years are harder to discriminate between a true link and a false link than links outside this interval.
 This 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France~\cite{generations}, the birth country of the authors in this dataset.
 Each new generation tend to use its own vocabulary, and thus it can be harder to discriminate author of text belonging to the same generation, in the other hand having different vocabulary can indicate a different time period and is often used to detect document forgery~\cite{savoy_stylo}.
 
@@ -397,10 +420,10 @@ Each new generation tend to use its own vocabulary, and thus it can be harder to
 In this experiment, the goal to understand if fusing rank list can improve performance of the rank list.
 The methodology used, is to create multiple rank lists and fuse them for every 4 rank lists combinations.
 
-The rank used are the ones obtained by using the following distances metrics : Manhattan, Tanimoto, Clark, Matusita, Cosine Distance, Kullback-Leibler divergence on both the top 500 MFW tokens and the top 750 MFW tokens 3-grams, with smoothing for all of them.
+The rank used are the ones obtained by using the following distances' metrics : Manhattan, Tanimoto, Clark, Matusita, Cosine Distance, Kullback-Leibler divergence on both the top 500 MFW tokens and the top 750 MFW tokens 3-grams, with smoothing for all of them.
 This creates 12 rank lists, every 4 combinations of these 12 rank lists creates 495 possible fusions ($C^{12}_{4} = 495$).
 For this 495 fusions, the 3 metrics: Average Precision (AP), R-Precision (RPrec) and High Precision (HPrec).
-The results are graphicaly presented in Figure~\ref{fig:fusions} for the dataset Oxquarry~(\ref{fig:fusion_oxquarry}), Brunet~(\ref{fig:fusion_brunet}) and St-Jean~(\ref{fig:fusion_st_jean}).
+The results are graphically presented in Figure~\ref{fig:fusions} for the dataset Oxquarry~(\ref{fig:fusion_oxquarry}), Brunet~(\ref{fig:fusion_brunet}) and St-Jean~(\ref{fig:fusion_st_jean}).
 
 \begin{figure}
   \centering
@@ -421,7 +444,7 @@ The results are graphicaly presented in Figure~\ref{fig:fusions} for the dataset
 \end{figure}
 
 To compare the rank list produced by both the S-Curve and Z-Score fusions to the non-fused rank list, the best metrics of each rank list used for each fusion (denoted \textit{Single-Max}) is compared using a sign test to the rank list produced by S-Curve fusion in Table~\ref{tab:s_curve_single_max}.
-The Single-Max comparaision to the Z-Score fusion in Table~\ref{tab:z_score_single_max} and a comparaison Z-Score / S-Curve fusion in Table~\ref{tab:s_curve_z_score}.
+The Single-Max comparison to the Z-Score fusion in Table~\ref{tab:z_score_single_max} and a comparison Z-Score / S-Curve fusion in Table~\ref{tab:s_curve_z_score}.
 
 \begin{table*}
   \centering
@@ -465,24 +488,24 @@ The Single-Max comparaision to the Z-Score fusion in Table~\ref{tab:z_score_sing
   \end{tabular}
 \end{table*}
 
-Using these distance metric on these dataset, the sign test tends to indicate that the fusion reduce the overall quality of the rank list compated to the best rank list in fusion.
+Using these distance metric on these datasets, the sign test tends to indicate that the fusion reduce the overall quality of the rank list compared to the best rank list in fusion.
 
 But multiple points can be observed:
 \begin{itemize}
   \item
-  The three evaluations metrics are high correlated (especially Average Precision and R-Precision), the colomns and lines \textit{Total} in the tables are to be lightly considered and not as an absolute proof.
+  The three evaluations metrics are high correlated (especially Average Precision and R-Precision), the columns and lines \textit{Total} in the tables are to be lightly considered and not as an absolute proof.
   \item
-  The Oxquarry dataset seem particualary not fitted for the fusion using the proposed distance metrics.
+  The Oxquarry dataset seem particularly not fitted for the fusion using the proposed distance metrics.
   This can be further explain by taking a look at the Figure~\ref{fig:fusion_oxquarry}.
-  Most of the Single rank list in this dataset obtain average to poor results, with the exception of two rank list with excellents results.
+  Most of the Single rank list in this dataset obtain average to poor results, except for two rank list with excellent results.
   Which considering the setup of the experiment, fusing a very good rank list with multiple bad rank list will certainly produce a rank list with worse results than the first one.
   The Oxquarry dataset may be an outlier in this experiment.
   \item
-  On the St-Jean and Brunet dataset most of the metrics in the experiment Single Max vs Z-Score fusion (Table~\ref{tab:z_score_single_max}) produce significants results in favor to the fusion.
+  On the St-Jean and Brunet dataset most of the metrics in the experiment Single Max vs Z-Score fusion (Table~\ref{tab:z_score_single_max}) produce significant results in favor of the fusion.
   \item
   The Z-score fusion seem to be giving better results on most metrics and datasets over the S-curve fusion.
   \item
-  The HPrec is most of the time deterioted with the fusion.
+  The HPrec is most of the time deteriorated with the fusion.
 \end{itemize}
 
 \subsection{Clustering}
@@ -580,7 +603,7 @@ These metrics are used in the clustering task at PAN@CLEF~\cite{pan16}.
 
 \begin{figure}
   \caption{Clustering with the supervised cut method on St-Jean}
-  \label{fig:unsupervised_clustering_sj}
+  \label{fig:supervised_clustering_sj}
 
   \subcaption{Training on St-Jean A}
   \label{fig:supervised_clustering_training_st_jean_A}
