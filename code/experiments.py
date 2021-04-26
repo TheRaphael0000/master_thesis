@@ -63,10 +63,10 @@ def main():
     # dates_differences()
     # fusion()
 
-    count_ngrams()
+    # count_ngrams()
 
     # unsupervised_clustering_evaluation()
-    # supervised_clustering_evaluation()
+    supervised_clustering_evaluation()
 
 
 def token_vs_lemma():
@@ -407,8 +407,8 @@ def pos_ngrams():
 
 def letter_ngrams():
     print("loading")
-    # _, _, _, X, Y = st_jean.parse()
-    _, _, X, Y = brunet.parse()
+    _, _, _, X, Y = st_jean.parse()
+    # _, _, X, Y = brunet.parse()
     # _, X, Y = oxquarry.parse()
 
     M = defaultdict(list)
@@ -723,44 +723,55 @@ def supervised_clustering_evaluation():
         plt.tight_layout()
         plt.savefig(f"img/{filename}.png")
 
+
+    def do(X_training, Y_training, X_testing, Y_testing):
+        print("Training")
+        rl, rls = linking(X_training)
+        linking_evaluation(rl, rls, Y_training)
+
+        print("Learning cut")
+        model, eval = supervised_clustering_training(
+            rl, Y_training, return_eval=True)
+        print(eval)
+
+        print("Testing")
+        rl, rls = linking(X_testing)
+        linking_evaluation(rl, rls, Y_testing)
+        labels = supervised_clustering_predict(model, rl)
+        n_clusters_found = len(np.unique(labels))
+        n_clusters_actual = len(np.unique(Y_testing))
+        plot(rl, Y_testing, n_clusters_found,
+             n_clusters_actual, "supervised_clustering_testing")
+        M = evaluate_clustering(Y_testing, labels)
+        diff = n_clusters_found - n_clusters_actual
+        return M, diff
+
     print("Loading")
-    # _, X_training, Y_training = oxquarry.parse()
-    #_, _, X_training, Y_training = brunet.parse()
-    _, _, _, X_training, Y_training = st_jean.parse_A()
-    # _, _, _, X_training, Y_training = st_jean.parse_B()
-    # _, _, _, X_training, Y_training = st_jean.parse()
+    datasets = [
+        oxquarry.parse()[-2:],
+        brunet.parse()[-2:],
+        st_jean.parse_A()[-2:],
+        st_jean.parse_B()[-2:]
+    ]
+    dataset_labels = [
+        "oxquarry",
+        "brunet",
+        "st_jean_a",
+        "st_jean_b",
+    ]
+    ids = range(len(datasets))
 
-    # _, X_testing, Y_testing = oxquarry.parse()
-    #_, _, X_testing, Y_testing = brunet.parse()
-    # _, _, _, X_testing, Y_testing = st_jean.parse_A()
-    _, _, _, X_testing, Y_testing = st_jean.parse_B()
-    # _, _, _, X_testing, Y_testing = st_jean.parse()
+    diffs = {}
 
-    print("Training")
-    rl, rls = linking(X_training)
-    linking_evaluation(rl, rls, Y_training)
+    for A, B in itertools.product(ids, ids):
+        X_training, Y_training = datasets[A]
+        X_testing, Y_testing = datasets[B]
+        print(dataset_labels[A], dataset_labels[B])
+        diffs[(A, B)] = do(X_training, Y_training, X_testing, Y_testing)
 
-    print("Learning cut")
-    model, eval = supervised_clustering_training(
-        rl, Y_training, return_eval=True)
-    print(eval)
+    for A, B in itertools.product(ids, ids):
+        print(dataset_labels[A], dataset_labels[B], diffs[(A, B)])
 
-    labels = supervised_clustering_predict(model, rl)
-    n_clusters_found = len(np.unique(labels))
-    n_clusters_actual = len(np.unique(Y_training))
-    plot(rl, Y_training, n_clusters_found,
-         n_clusters_actual, "supervised_clustering_training")
-    print(evaluate_clustering(Y_training, labels))
-
-    print("Testing")
-    rl, rls = linking(X_testing)
-    linking_evaluation(rl, rls, Y_testing)
-    labels = supervised_clustering_predict(model, rl)
-    n_clusters_found = len(np.unique(labels))
-    n_clusters_actual = len(np.unique(Y_testing))
-    plot(rl, Y_testing, n_clusters_found,
-         n_clusters_actual, "supervised_clustering_testing")
-    print(evaluate_clustering(Y_testing, labels))
 
 
 def unsupervised_clustering_evaluation():

@@ -114,14 +114,18 @@ In this experiment the whole text is considered to create letter $n$-grams for t
 As for the other experiment the MFW approach is used to create the feature vector.
 On these vectors the distance measure used to create the rank list is the z-score normalized cosine distance.
 The goal is to compare the influence of $n$ parameter of the $n$-grams over the size of the feature vector.
-The parameters used are: a varying MFW vector size ranging between 500 and 15000 with a step of 500 and a $n$ for the following values : $3, 4, 5, (2, 3), (3, 4), (4, 5)$.
+The parameters used are: a varying MFW vector size ranging between 500 and 15000 with a step of 500 and a $n$ for the following values : $3, 4, 5, (2, 3), (3, 4), (4, 5)$, the tuples $(a, b)$ correspond to both $a$-grams and $b$-grams in the same text representation.
 When considering letters $n$-grams the text representation increase size by a factor of approximately $t$, with $t$ being the average token length.
 The number of different $n$-grams is not clear, but it is assumed to be larger than the vocabulary of the texts, thus the importance of having larger vector  when dealing with long texts such as the literature datasets.
 
 Figure~\ref{fig:letter_ngrams} show the results of this experiment on the Oxquarry dataset (\ref{fig:letter_ngrams}) and Brunet dataset (\ref{fig:letter_ngrams_brunet}).
+The trends seems to indicate that a lower $n$ value converge with lower MFW vector size but reach a maximal value faster.
+With $3$-grams, \~3000-4000 MFW give good results on both datasets with this distance metric.
+On the Brunet dataset, after reaching the maximal average precision at \~4000 MFW, a larger number of frequent words decrease the precision until reaching the maximal number of differant $3$-grams at \~6500 MFW, which is not the case on Oxquarry.
+On St-Jean, the $3$-grams and $(2,3)$-grams don't reach high average precision on low number of MFW like for the Brunet and Oxquarry.
 
 \begin{figure}
-  \caption{Letters $n$-grams representation over number of MFW with different n}
+  \caption{Letters $n$-grams representation over number of MFW with different $n$}
   \label{fig:letter_ngrams}
 
   \subcaption{Oxquarry}
@@ -131,8 +135,11 @@ Figure~\ref{fig:letter_ngrams} show the results of this experiment on the Oxquar
   \subcaption{Brunet}
   \label{fig:letter_ngrams_brunet}
   \includegraphics[width=\linewidth]{img/letter_ngrams_brunet.png}
-\end{figure}
 
+  \subcaption{St-Jean}
+  \label{fig:letter_ngrams_st_jean}
+  \includegraphics[width=\linewidth]{img/letter_ngrams_st_jean.png}
+\end{figure}
 
 \subsubsection{MFW First letters, last letters, word n-grams of tokens}
 
@@ -180,7 +187,7 @@ For this experiment short combination of POS are used to detect the style of the
 The St-Jean dataset have for every word a POS tag, by using these POS tags and combining them using Definition~\ref{def:letters_n_grams} to create $n$-grams/w-shingling, a new text representation is obtained.
 Using this representation the N-MFW are computed and the rank list containing every document pairs can be computed.
 
-In this experiment, only 2-grams, 3-grams, 4-grams and the combination of the 2-grams and 3-grams denoted: (2, 3)-grams is used.
+In this experiment, only $2$-grams, $3$-grams, $4$-grams and the combination of the $2$-grams and $3$-grams denoted: $(2, 3)$-grams is used.
 The distance metric used is the smoothed z-score normalized cosine distance.
 For this representation no clear MFW (most frequent word, in this case POS $n$-grams are considered as words) vector size is advised, the size used is between 200 and 2000 with a step of 100.
 Figure~\ref{fig:pos_ngrams} show the average precision on the rank list produced by using POS $n$-grams over the number of MFW.
@@ -217,12 +224,6 @@ LZMA give the best results on every dataset tested, but BZip2 have close results
 The cosine-based compression distance (CBC) tend to give better results over the normalized compression distance (NCD).
 In terms of time complexity BZip2 is the fastest algorithm of the 3 proposed, LZMA is ~5-6 times slower than BZip2, and GZip slower than BZip2 by around ~5-20\%.
 No significant time differences is recorded between the NCD and CBC distance measures, since the greater complexity is in the compression algorithm.
-
-% \begin{figure}
-%   \includegraphics[width=\linewidth]{img/compression_evaluation_oxquarry.png}
-%   \caption{Evaluation of the different compression algorithm and distance metrics on Oxquarry}
-%   \label{fig:compression_evaluation_oxquarry}
-% \end{figure}
 
 \begin{table}
   \centering
@@ -512,6 +513,20 @@ But multiple points can be observed:
 
 \subsubsection{Clustering evaluation metrics}
 
+\begin{definition}[Cluster difference]
+  This metric aim to evaluate if the clustering found the right number of cluster
+  The cluster difference is the number cluster found p minus the actual number of cluster k.
+  \begin{equation}
+    Cluster_{diff} = p - k
+  \end{equation}
+  A positive value indicate an overestimation of the real number of cluster, a negative value indicate the underestimation.
+  This value can be normalized by the number of documents N, which correspond to the difference of the r ratios.
+  As stated during the PAN16 evaluation campaign paper, estimating correctly r ratio tends to indicate a good clustering~\cite{pan16}.
+  \begin{equation}
+    r_{diff} = \frac{p}{N} - \frac{k}{N} = \frac{p - k}{N}
+  \end{equation}
+\end{definition}
+
 To evaluate clustering, the metrics used are the BCubed~\cite{bcubed} family.
 BCubed has shown to satisfy 4 importants constraints when evaluating clusterings : \textit{Cluster Homogeneity} (different categories should be in the different clusters), \textit{Cluster Completness} (same categories should belong to the same cluster) and the \textit{Rag Bag constraint} (noisy/miscellaneous categories should be in the same cluster and not in 'healthy' clusters) and the \textit{Cluster size vs quantity constraints} (favorise large cluster)~\cite{bcubed}.
 These metrics are used in the clustering task at PAN@CLEF~\cite{pan16}.
@@ -555,7 +570,17 @@ These metrics are used in the clustering task at PAN@CLEF~\cite{pan16}.
 
 \subsubsection{Clustering unsupervised cut method}
 
+For this experiment, the goal is to test the unsupervised cut method based on the IPS (Iterative positive silhouette) Procedure on the literature dataset.
+When applying the procedure, the number of clusters start at 2, each iteration the silhouette score is computed if it reaches a negative value the procedure stop otherwise the number of cluster is increased and the process is repeated.
 
+A rank list is created{\color{red} TODO}
+
+When running the IPS procedure on the dataset, on Figure~\ref{fig:unsupervised_clustering_ob}~and~\ref{fig:unsupervised_clustering_sj} the silhouette score is indicated as each step and compared to the three BCubed metrics.
+For the sake of the experiment, the agglomerative clustering is also run up to a number of cluster equal to the number of documents (singleton clusters).
+Since the rank list used for the clustering is not perfect (every true links at the top), there is no number of cluster with a BCubed $F_1$ score of 1.0.
+The estimated number of cluster is on every dataset overestimated, which means that the median neareast-cluster distance is greater than the median intra-cluster distance even when dealing with the right number of clusters.
+This can be due to the fact that the rank list is not perfect.
+To mitigate this problem, an easy solution would be to the stop the procedure at for example : $0.1$ instead of $0$.
 
 \begin{figure}
   \caption{Unsupervised clustering on Oxquarry and Brunet}
@@ -588,6 +613,25 @@ These metrics are used in the clustering task at PAN@CLEF~\cite{pan16}.
 \end{figure}
 
 \subsubsection{Clustering with the supervised cut method}
+
+
+% oxquarry oxquarry ((1.0, 0.6987179487179487, 0.8226415094339622), 4)
+% oxquarry brunet ((0.9393939393939394, 0.7272727272727273, 0.8198347107438017), 5)
+% oxquarry st_jean_a ((0.929846153846154, 0.7943123543123544, 0.8567521885196939), 4)
+% oxquarry st_jean_b ((1.0, 0.9114285714285714, 0.9536621823617338), 3)
+% brunet oxquarry ((1.0, 0.6298076923076923, 0.7728613569321534), 8)
+% brunet brunet ((0.9545454545454546, 0.5681818181818182, 0.7123473541383989), 10)
+% brunet st_jean_a ((0.976, 0.6814405594405593, 0.8025458074206586), 10)
+% brunet st_jean_b ((1.0, 0.8714285714285714, 0.9312977099236641), 4)
+% st_jean_a oxquarry ((1.0, 0.6426282051282052, 0.7824390243902439), 7)
+% st_jean_a brunet ((0.9393939393939394, 0.7272727272727273, 0.8198347107438017), 5)
+% st_jean_a st_jean_a ((0.976, 0.7343123543123543, 0.8380794958322204), 7)
+% st_jean_a st_jean_b ((1.0, 0.9114285714285714, 0.9536621823617338), 3)
+% st_jean_b oxquarry ((1.0, 0.6426282051282052, 0.7824390243902439), 7)
+% st_jean_b brunet ((0.9545454545454546, 0.6136363636363636, 0.7470355731225297), 9)
+% st_jean_b st_jean_a ((0.976, 0.6994405594405593, 0.8148949029166735), 9)
+% st_jean_b st_jean_b ((1.0, 0.8714285714285714, 0.9312977099236641), 4)
+
 
 \begin{table}
 
