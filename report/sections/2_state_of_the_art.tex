@@ -1,16 +1,20 @@
 \section{State of the art \label{sec:state_of_the_art}}
 
-
 Authorship clustering is a domain in which a set of documents written by different authors is given and the goal is to group documents into clusters which only contain document written by the same author.
 
 Authorship clustering is closely related to two other authorship topics : authorship attribution and authorship verification.
-Authorship attribution try to determinate who wrote a document, given a collection of documents and authorship verfication aim to identify if two documents are written by the same author.
-A clustering problem can be splited into a serie of authorship verification by considering every pair of document as a verification task, the clusters are created grouping every positive verified pairs, these are also called links~\cite{pan16_clustering_site}.
+Authorship attribution try to determinate who wrote a document, given a collection of documents and authorship verification aim to identify if two documents are written by the same author.
+A clustering problem can be split into a series of authorship verification by considering every pair of documents as a verification task, the clusters are created grouping every positive verified pairs, these are also called links~\cite{pan16_clustering_site}.
 
 During the PAN @ CLEF 2016, one of the shared task was given a collection of up to 50 documents, to identify authorship links and group documents by the same author.
-The document are in 3 differents languages, single authored~\cite{pan16}.
-The solutions proposed by Bagnall for this problem was to use reurrent neural networks to create a language model for given documents and than use this model to compte similarities between documents~\cite{bagnall_pan16}.
-In the other hand Kocher used a feature vector based on most frequent terms in the texts and a distance threshold between these vector indicate a potential authorship link~\cite{kocher_pan16}.
+The documents are in 3 different languages, single authored~\cite{pan16}.
+The solutions proposed by Bagnall for this problem was to use recurrent neural networks to create a language model for given documents and then use this model to compute similarities between documents~\cite{bagnall_pan16}.
+In the other hand Kocher used a feature vector based on most frequent terms in the texts and a distance threshold between these vector to indicate a potential authorship link~\cite{kocher_pan16}.
+
+In Mirco Kocher and Jacques Savoy (2018)'s paper they aim to evaluate different text representation scheme for the authorship linking task~\cite{kocher_verification}.
+In this paper they compared the authors style, using feature vectors constructed on the most frequent occurrences of the following text representations : words frequencies, lemma frequencies, Part-Of-Speach (POS) tags frequencies, short sequences of POS tags, as well as $n$-grams frequencies.
+The distance measures used to compare the vectors are : $L^1$ norms (Manhattan, Tanimoto), $L^2$ norm (Matusita, Clark), inner products (Cosine distance) and the Jeffery divergence.
+Depending on the dataset, the text representation and the evaluation metric used, no clear text representation and distance measures were the giving the best result for all the problems.
 
 Another domain often used in the authorship attribution task is the stylometry.
-Stylometry main focus is to identify the writting methods of an author, for example: the choice of words, the combinaitions of words, sentence structure, pontuation~\cite{savoy_stylo}.
+Stylometry main focus is to identify the writing methods of an author, for example: the choice of words, the combinations of words, sentence structure, punctuation~\cite{savoy_stylo}.

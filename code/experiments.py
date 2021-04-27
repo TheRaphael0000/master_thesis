@@ -763,6 +763,10 @@ def supervised_clustering_evaluation():
 
     diffs = {}
 
+    # for X, Y in datasets:
+    #     rl, rls = linking(X)
+    #     linking_evaluation(rl, rls, Y)
+
     for A, B in itertools.product(ids, ids):
         X_training, Y_training = datasets[A]
         X_testing, Y_testing = datasets[B]

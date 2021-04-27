@@ -21,7 +21,8 @@ def dataset_infos(x, y):
     links = (texts * (texts - 1)) // 2
     true_links_ratio = round(true_links / links, 3)
     mean_length = round(np.mean([len(xi) for xi in x]))
-    return authors, texts, r, true_links, links, true_links_ratio, mean_length
+    mean_token_length = round(np.mean(list(itertools.chain.from_iterable([[len(w) for w in xi] for xi in x]))), 3)
+    return authors, texts, r, true_links, links, true_links_ratio, mean_length, mean_token_length
 
 
 def zipf_law(total, n=21):
