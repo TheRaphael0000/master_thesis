@@ -6,6 +6,14 @@ import numpy as np
 from misc import normalize_between_0_1, sigmoid, sigmoid_r
 
 
+def soft_veto(rank_list, s_curve):
+    x, y = s_curve(len(rank_list))
+    updated_rank_list = []
+    for i, (link, score) in enumerate(rank_list):
+        updated_rank_list.append((link, score * y[i]))
+    return updated_rank_list
+
+
 def sigmoid_reciprocal(c=4, r=0.25):
     """Return a sigmoid reciprocal function with n points,
     the zoom factor is based on the sigmoid function"""

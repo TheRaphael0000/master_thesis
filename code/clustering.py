@@ -10,21 +10,14 @@ from sklearn.metrics import precision_recall_fscore_support
 from sklearn.metrics import silhouette_samples
 from sklearn.metrics import davies_bouldin_score
 
-from rank_list_fusion import fusion_s_curve_score
-from rank_list_fusion import fusion_z_score
-
 from misc import distances_matrix_from_rank_list
-
-
-def supervised_clustering_feature_extraction(rank_list):
-    X = [[np.log((i + 1) / len(rank_list)), score]
-         for i, (link, score) in enumerate(rank_list)]
-    return X
+from misc import features_from_rank_list
+from misc import labels_from_rank_list
 
 
 def supervised_clustering_training(rank_list, Y, return_eval=False, random_state=0):
-    X_rl = supervised_clustering_feature_extraction(rank_list)
-    Y_rl = [1 if Y[a] == Y[b] else 0 for (a, b), score in rank_list]
+    X_rl = features_from_rank_list(rank_list)
+    Y_rl = labels_from_rank_list(rank_list, Y)
     model = LogisticRegression(random_state=random_state).fit(X_rl, Y_rl)
     outputs = [model]
     if return_eval:
@@ -36,7 +29,7 @@ def supervised_clustering_training(rank_list, Y, return_eval=False, random_state
 
 def supervised_clustering_predict(model, rank_list):
     # compute distance threshold
-    X = supervised_clustering_feature_extraction(rank_list)
+    X = features_from_rank_list(rank_list)
     Y_pred = model.predict(X)
 
     # the sum give the position n of the "flip" in the rank list since

@@ -10,6 +10,7 @@
 \usepackage{caption}
 \usepackage[margin=0.7in]{geometry}
 \usepackage{graphicx}
+\usepackage{hyperref}
 \usepackage{multirow}
 \usepackage[parfill]{parskip}
 \usepackage{subcaption}
@@ -21,6 +22,13 @@
 
 \renewcommand{\familydefault}{\sfdefault}
 \renewcommand{\listtheoremname}{List of definitions}
+
+\hypersetup{
+    % colorlinks=true,
+    linkcolor=blue,
+    urlcolor=cyan,
+    breaklinks=true,
+}
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}[section]

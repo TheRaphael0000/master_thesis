@@ -19,8 +19,9 @@ from corpus import oxquarry
 from corpus import st_jean
 from corpus import pan16
 
-from rank_list_fusion import fusion_s_curve_score
 from rank_list_fusion import fusion_z_score
+from rank_list_fusion import fusion_regression_training
+from rank_list_fusion import fusion_regression
 
 from evaluate import evaluate_linking
 from evaluate import evaluate_clustering
@@ -61,12 +62,12 @@ def main():
 
     # frequent_errors()
     # dates_differences()
-    # fusion()
+    fusion()
 
     # count_ngrams()
 
     # unsupervised_clustering_evaluation()
-    supervised_clustering_evaluation()
+    # supervised_clustering_evaluation()
 
 
 def token_vs_lemma():
@@ -76,7 +77,7 @@ def token_vs_lemma():
     M_token = []
     M_lemma = []
 
-    mfws = np.arange(100, 2000+1, 100)
+    mfws = np.arange(100, 2000 + 1, 100)
     distances_ = [
         (True, distances.manhattan),
         (False, distances.tanimoto),
@@ -110,8 +111,8 @@ def token_vs_lemma():
 
     plt.figure(figsize=(6, 8), dpi=200)
     for i in range(len(distances_)):
-        plt.plot(mfws, M_token[:,i,0], ls="dashed", c=f"C{i}")
-        plt.plot(mfws, M_lemma[:,i,0], ls="dotted", c=f"C{i}")
+        plt.plot(mfws, M_token[:, i, 0], ls="dashed", c=f"C{i}")
+        plt.plot(mfws, M_lemma[:, i, 0], ls="dotted", c=f"C{i}")
     plt.xlabel("#MFW")
     plt.ylabel("Average Precision (AP)")
     plt.legend(custom_lines, labels, loc="lower center", ncol=2)
@@ -530,102 +531,111 @@ def distance_over_rank():
 
 
 def fusion():
-    _, _, _, X, Y = st_jean.parse()
-    # _, _, X, Y = brunet.parse()
-    # _, X, Y = oxquarry.parse()
+    _, X1, Y1 = oxquarry.parse()
+    _, _, X2, Y2 = brunet.parse()
+    _, _, _, X3, Y3 = st_jean.parse_A()
+    _, _, _, X4, Y4 = st_jean.parse_B()
 
-    text_representations = [
-        [X, 0, 500, True, 1e-1, distances.manhattan],
-        [X, 0, 500, False, 1e-1, distances.tanimoto],
-        [X, 0, 500, False, 1e-1, distances.clark],
-        [X, 0, 500, False, 1e-1, distances.matusita],
-        [X, 0, 500, True, 1e-1, distances.cosine_distance],
-        [X, 0, 500, False, 1e-1, distances.kld],
+    X_training, Y_training = X1, Y1
+    X_testing, Y_testing = X2, Y2
 
-        [X, 3, 750, True, 1e-1, distances.manhattan],
-        [X, 3, 750, False, 1e-1, distances.tanimoto],
-        [X, 3, 750, False, 1e-1, distances.clark],
-        [X, 3, 750, False, 1e-1, distances.matusita],
-        [X, 3, 750, True, 1e-1, distances.cosine_distance],
-        [X, 3, 750, False, 1e-1, distances.kld],
-
-        # (X, compressions.lzma, distances.ncd),
-        # (X, compressions.lzma, distances.cbc),
-        # (X, compressions.bz2, distances.ncd),
-        # (X, compressions.bz2, distances.cbc),
-    ]
-    s_curve = s_curves.sigmoid_reciprocal()
+    def tr(X):
+        return [
+            [X, 0, 500, True, 1e-1, distances.manhattan],
+            [X, 0, 500, False, 1e-1, distances.tanimoto],
+            [X, 0, 500, False, 1e-1, distances.clark],
+            [X, 0, 500, False, 1e-1, distances.matusita],
+            [X, 0, 500, True, 1e-1, distances.cosine_distance],
+            [X, 0, 500, False, 1e-1, distances.kld],
+            #
+            [X, 3, 3000, True, 1e-1, distances.manhattan],
+            [X, 3, 3000, False, 1e-1, distances.tanimoto],
+            [X, 3, 3000, False, 1e-1, distances.clark],
+            [X, 3, 3000, False, 1e-1, distances.matusita],
+            [X, 3, 3000, True, 1e-1, distances.cosine_distance],
+            [X, 3, 3000, False, 1e-1, distances.kld],
+        ]
 
     fusion_size = 4
 
-    M_single = []
+    models = []
+    for i, t in enumerate(tr(X_training)):
+        rl = compute_links(*t)
+        model, rmse = fusion_regression_training(rl, Y_training)
+        models.append(model)
+        mesures = evaluate_linking(rl, Y_training)
+        print(i, *mesures, rmse)
 
+    M_single = []
     rank_lists = []
-    for i, t in enumerate(text_representations):
-        if type(t) == tuple:
-            rl = compute_links_compress(*t)
-        else:
-            rl = compute_links(*t)
+    for i, t in enumerate(tr(X_testing)):
+        rl = compute_links(*t)
         rank_lists.append(rl)
-        mesures = evaluate_linking(rl, Y)
-        print(i, mesures)
+        mesures = evaluate_linking(rl, Y_testing)
         M_single.append(mesures)
+        print(i, *mesures)
 
     M_single = np.array(M_single)
 
-    M_single_max_in_exp = []
-    M_fusion_s_curve = []
+    M_single_max = []
     M_fusion_z_score = []
+    M_fusion_regression = []
 
-    text_representations_ids = np.array(
-        list(itertools.combinations(range(len(text_representations)), fusion_size)))
+    tr_ids = np.array(
+        list(itertools.combinations(range(len(tr(X_training))), fusion_size)))
 
-    for text_representations_id in text_representations_ids:
-        rls = [rank_lists[i] for i in text_representations_id]
-        M_single_max_in_exp.append(
-            np.max(M_single[text_representations_id, :], axis=0))
+    for tr_id in tr_ids:
+        rls = [rank_lists[i] for i in tr_id]
 
-        rl_s_curve = fusion_s_curve_score(rls, s_curve)
-        M_fusion_s_curve.append(evaluate_linking(rl_s_curve, Y))
+        m_single_max = np.max(M_single[tr_id, :], axis=0)
+        M_single_max.append(m_single_max)
 
         rl_z_score = fusion_z_score(rls)
-        M_fusion_z_score.append(evaluate_linking(rl_z_score, Y))
+        m_z_score = evaluate_linking(rl_z_score, Y_testing)
+        M_fusion_z_score.append(m_z_score)
 
-    M_fusion_s_curve = np.array(M_fusion_s_curve)
+        rl_regression = fusion_regression(models, rls)
+        m_regression = evaluate_linking(rl_regression, Y_testing)
+        M_fusion_regression.append(m_regression)
+
+    M_single_max = np.array(M_single_max)
     M_fusion_z_score = np.array(M_fusion_z_score)
-    M_single_max_in_exp = np.array(M_single_max_in_exp)
+    M_fusion_regression = np.array(M_fusion_regression)
 
-    print("S-curve")
-    print(M_fusion_s_curve.min(axis=0))
-    print(M_fusion_s_curve.max(axis=0))
-    print(M_fusion_s_curve.mean(axis=0))
-    print(M_fusion_s_curve.std(axis=0))
-    print(text_representations_ids[np.argmax(M_fusion_s_curve, axis=0)])
+    print("Single max")
+    print(M_single_max.min(axis=0))
+    print(M_single_max.max(axis=0))
+    print(M_single_max.mean(axis=0))
+    print(M_single_max.std(axis=0))
+    print(tr_ids[np.argmin(M_single_max, axis=0)])
+    print(tr_ids[np.argmax(M_single_max, axis=0)])
     print("Z-score")
     print(M_fusion_z_score.min(axis=0))
     print(M_fusion_z_score.max(axis=0))
     print(M_fusion_z_score.mean(axis=0))
     print(M_fusion_z_score.std(axis=0))
-    print(text_representations_ids[np.argmax(M_fusion_z_score, axis=0)])
-    print("Max in exp")
-    print(M_single_max_in_exp.min(axis=0))
-    print(M_single_max_in_exp.max(axis=0))
-    print(M_single_max_in_exp.mean(axis=0))
-    print(M_single_max_in_exp.std(axis=0))
-    print(text_representations_ids[np.argmax(M_single_max_in_exp, axis=0)])
+    print(tr_ids[np.argmin(M_fusion_z_score, axis=0)])
+    print(tr_ids[np.argmax(M_fusion_z_score, axis=0)])
+    print("Regression")
+    print(M_fusion_regression.min(axis=0))
+    print(M_fusion_regression.max(axis=0))
+    print(M_fusion_regression.mean(axis=0))
+    print(M_fusion_regression.std(axis=0))
+    print(tr_ids[np.argmin(M_fusion_regression, axis=0)])
+    print(tr_ids[np.argmax(M_fusion_regression, axis=0)])
 
-    print("S-curve vs Single max")
-    print(*sign_test(M_fusion_s_curve, M_single_max_in_exp))
     print("Z-score vs Single max")
-    print(*sign_test(M_fusion_z_score, M_single_max_in_exp))
-    print("S-curve vs Z-score")
-    print(*sign_test(M_fusion_s_curve, M_fusion_z_score))
+    print(*sign_test(M_fusion_z_score, M_single_max))
+    print("Regression vs Single max")
+    print(*sign_test(M_fusion_regression, M_single_max))
+    print("Regression vs Z-score")
+    print(*sign_test(M_fusion_regression, M_fusion_z_score))
 
     plt.figure(figsize=(6, 4), dpi=200)
-    x, y, c = M_fusion_s_curve[:,
-                               1], M_fusion_s_curve[:, 0], M_fusion_s_curve[:, 2]
+    x, y, c = M_fusion_regression[:,
+                                  1], M_fusion_regression[:, 0], M_fusion_regression[:, 2]
     plt.scatter(x, y, c=c, marker="x",
-                label=f"S-curve fusions ({fusion_size} lists)", alpha=0.6)
+                label=f"Regression fusions ({fusion_size} lists)", alpha=0.6)
     x, y, c = M_fusion_z_score[:,
                                1], M_fusion_z_score[:, 0], M_fusion_z_score[:, 2]
     plt.scatter(x, y, c=c, marker="+",
@@ -723,7 +733,6 @@ def supervised_clustering_evaluation():
         plt.tight_layout()
         plt.savefig(f"img/{filename}.png")
 
-
     def do(X_training, Y_training, X_testing, Y_testing):
         print("Training")
         rl, rls = linking(X_training)
@@ -775,7 +784,6 @@ def supervised_clustering_evaluation():
 
     for A, B in itertools.product(ids, ids):
         print(dataset_labels[A], dataset_labels[B], diffs[(A, B)])
-
 
 
 def unsupervised_clustering_evaluation():

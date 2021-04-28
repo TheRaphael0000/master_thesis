@@ -148,12 +148,14 @@ In this experiment, the goal is to create 3 types of text representations of wor
 \begin{enumerate}
   \item
   The first representation is the N-first letter of each word tokens which correspond generaly to the meaning of a word.
-  This approach is closely related to the lemma approach.
+  If the word token is smaller than N, the whole word is used.
+  This approach can be related to the lemma approach.
   \item
   Extract also the N-last letter of each word tokens which in this case correspond to the role of the word in a sentence.
-  This second approach is closely related to the POS approach.
+  As for the previous representation, if the word is smaller than N, the whole is used instead.
+  This second approach can be related to the POS approach.
   \item
-  The in-word $n$-grams (See Definition~\ref{def:words_n_grams}), this special type of n-grams only consider $n$-grams within a word.
+  The in-word $n$-grams (See Definition~\ref{def:words_n_grams}), this special type of n-grams consider only $n$-grams within a word.
   This exclude every overlapping word when considering the Letters $n$-grams algorithm.
   This decision is made for this experiment such that interwords style information can't be learned and have a fair comparaison of these 3 texts representations.
 \end{enumerate}
@@ -168,8 +170,8 @@ Figure~\ref{fig:first_last_letters_ngrams_brunet} shows the results for the Brun
 
 In both dataset, the 3-last letters and 3-first letters gives a lower average precision and quickly converge to a equilibrium value at around 1500 MFW.
 5-letters representations tend to produce better results than 3-letters and 4-letters representation as the MFW increase.
-In the Oxquarry corpus, word 4-grams and word 5-grams give the better results with an average precision of ~95.0\%
-For the brunet dataset, the 5-first letters can a good results compared to other text representations with small MFW vector size.
+In the Oxquarry corpus, word 4-grams and word 5-grams give the better results with an average precision of ~95.0\%.
+For the Brunet dataset, the 5-first letters can a good results compared to other text representations with small MFW vector size.
 
 \begin{figure}
   \centering
@@ -199,8 +201,8 @@ The two following informations can be intuitively observed on this plot:
 \begin{itemize}
   \item
   A more complex POS $n$-grams require more MFW to archive its maximal effectiveness.
-  In the St-Jean corpus 26 POS are used to describe every words in the corpus.
-  Which correspond to $26^2 = 676$ possible unique POS 2-grams, to $26^3 = 17'576$ POS 3-grams and $26^4 = 456'976$ POS 4-grams.
+  In the St-Jean corpus, 26 POS are used to describe every words in the corpus.
+  Which correspond to $26^2 = 676$ possible unique POS $2$-grams, to $26^3 = 17'576$ POS $3$-grams and $26^4 = 456'976$ POS $4$-grams, thus the the convergence of $2$-grams and not $3$-grams / $4$-grams.
   \item
   Like other methods, if the MFW ceiling is too high, an overfitting to less important words is possible, thus reducing the average precision.
   In Figure~\ref{fig:pos_ngrams} the POS 2-grams clearly have a drop in average precision after \~250-MFW.
@@ -216,7 +218,7 @@ The two following informations can be intuitively observed on this plot:
 \subsubsection{Compression based distances}
 
 This experiment try to compare the three proposed compression algorithm (GZip, BZip2, LZMA) for the compression based distance ranking.
-For each algorithm for each document the size after compression is computed, as well as the concatenation of every document pairs.
+For each algorithm and for each document, the size after compression is computed, as well as the concatenation of every document pairs.
 Using these sizes and the NCD and CBC distance metrics (ref. Section~\ref{sec:compression_based_distances}, the rank list is evaluated.
 This experiment is run on the three datasets three times to have a better approximation of the run time.
 The results in terms of efficiency of the resulting rank list are shown in Table~\ref{tab:compression_evaluation}.
@@ -316,15 +318,18 @@ No significant time differences is recorded between the NCD and CBC distance mea
 \subsubsection{Frequent errors}
 \label{sec:frequent_errors}
 
-This section try to understand the errors in our system, in this case the false links (document pairs with different authors) highly ranked on different rank list.
+This section try to understand the errors in our system, in this case the false links (document pairs with different authors) highly ranked on different rank lists.
 The rank list quality is highly based on the feature vector created using the N-MFW, having a good understanding of this vector give good indications of the strength of the system.
 
 To find recurrent errors in our system we use 5 different distance metrics (Manhattan, Tanimoto, Clark, Matusita, Cosine distance) on the relative frequency of the 500-MFW using the St-Jean dataset.
 This generates 5 rank lists.
-The average precision for these rank list is always greater than 0.7.
+The average precision for these rank lists is always greater than 0.7.
 With this 5 rank lists only the top 10 false links are kept to be analyzed.
 Frequent errors are links that often appear in this top 10.
-Figures~\ref{fig:mfw_vector_error} show two pairs (Zola 49 / Flaubert 63 and Maupassant 10 / Flaubert 52) that appear 4 time out of the 5 rank lists in the top 10 false links, thus frequent error.
+The goal is now to compare the two feature vectors of the links that are frequent errors.
+Figures~\ref{fig:mfw_vector_error} show two pairs (Zola 49 / Flaubert 63 and Maupassant 10 / Flaubert 52) that appear 4 time out of the 5 rank lists in the top 10 false links.
+To be able to understand more easily this vector, the values have been sorted by relative frequencies and using the logarithmic scale.
+When a large proportion of the vectors overlap it indicates a high similarity between the MFW vectors.
 
 \begin{figure}
   \centering
@@ -340,18 +345,17 @@ Figures~\ref{fig:mfw_vector_error} show two pairs (Zola 49 / Flaubert 63 and Mau
   \includegraphics[width=\linewidth]{img/mfw_vector_error_1.png}
 \end{figure}
 
-To be able to understand more easily this vector, the values have been sorted by relative frequencies and using the logarithmic scale.
-When a large proportion of the vectors overlap it indicates a high similarity between the MFW vectors.
 In this case most of the surface overlap, so the distance function will give a low value, and rank this vector high in the list.
 Both document style are close when their feature vector are closely related.
-We can not clearly determinate that these texts are from a different author using only this type of representation.
-These two vectors pair can be visually compared to the most similar link (ranked 1 using Manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (Stael 157 / Steal 183) or the HPrec-th (last continous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (Maupassant 10 / Maupassant 67), both of these links show a large proportion of overlapping surface.
+Determinating that these texts are from a different author can not clearly be established using only this type of representation, no matter the distance metric applied.
+These two vectors pair can be visually compared to true links, which are usually closely realated feature vectors.
+For example the most similar link (ranked 1 using Manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (Stael 157 / Steal 183) or the HPrec-th (last continous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (Maupassant 10 / Maupassant 67), both of these links show a large proportion of overlapping surface, like for the frequent errors vectors.
 A counter example would be the least similar link (ranked last using Manhattan distance) which represent a negatively correlated document pair, Figure~\ref{fig:mfw_vector_last_rl} showcase this link.
 As expected, most of this figure surface is non-overlapping.
 
 \begin{figure}
   \centering
-  \caption{500-MFW relative frequency for the two documents ranked $X$ in the rank list}
+  \caption{500-MFW relative frequency for the two documents ranked $X$ in the rank list using Manhattan distance}
 
   \subcaption{$X$ = First}
   \label{fig:mfw_vector_first_rl}
@@ -376,10 +380,10 @@ In the St-Jean dataset publication paper, the publication dates of each excepts 
 First the publication date distribution of the dataset must be understood.
 Figure~\ref{fig:dates_distribution} show the distribution of the publication date in the St-Jean dataset.
 The date difference distribution for each pair of documents can be computed, Figure~\ref{fig:dates_differences_all} show case this.
-We can see that the average date difference in the dataset is 28.24 years with a standard deviation of 20.73 years.
-Since this dataset contain multiple excerpt from the same book, we might consider only the links of different authors (false links).
+The average date difference in the dataset is 28.24 years with a standard deviation of 20.73 years.
+Since this dataset contain multiple excerpt from the same book, considering only the links of different authors (false links) is preferable.
 Figure~\ref{fig:dates_differences_false} shows the date differrence distribution of the false links.
-As expected the mean increased to 29.04 years since there are fewer links with small date difference.
+As expected the mean increased from 28.24 years to 29.04 years since there are fewer links with small date difference.
 Same authors links (true links) are displayed in Figure~\ref{fig:dates_differences_r_true}, they confirm the previous statement that most of the same authors links have a low date difference with a mean of 5.11 years.
 
 \begin{figure}
@@ -412,12 +416,13 @@ Same authors links (true links) are displayed in Figure~\ref{fig:dates_differenc
   \includegraphics[width=\linewidth]{img/dates_differences_r_false.png}
 \end{figure}
 
-Figure~\ref{fig:dates_differences_r_false} show the date difference density on the top-r false links (670 in case of St-Jean) on a rank list with 80\% average precision (obtained by fusing the 5 ranks list used and presented in frequent error, ref. Section~\ref{sec:rank_list_fusion}~and~\ref{sec:frequent_errors}).
+The previous statistics can be compared to Figure~\ref{fig:dates_differences_r_false} which show the date difference density on the top-r false links (670 in case of St-Jean) on a rank list with 80\% average precision (obtained by fusing the 5 ranks list used, ref. Section~\ref{sec:rank_list_fusion}~and~\ref{sec:frequent_errors}).
 Two interesting information can be extracted here.
-First the mean is lower by 8.22 years (29.04 - 20.82) comparing to the false links distribution which clearly indicate the importance of publication date in the ranking of the documents.
+First the mean is lower by 8.22 years (29.04 - 20.82) compared to the false links distribution which clearly indicate the importance of publication date in the ranking of the documents.
 Secondly we can observe a drop after 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ years are harder to discriminate between a true link and a false link than links outside this interval.
 This 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France~\cite{generations}, the birth country of the authors in this dataset.
-Each new generation tend to use its own vocabulary, and thus it can be harder to discriminate author of text belonging to the same generation, in the other hand having different vocabulary can indicate a different time period and is often used to detect document forgery~\cite{savoy_stylo}.
+Each new generation tend to use its own vocabulary, and thus it can be harder to discriminate author of text belonging to the same generation, if we assume that the authors write their books at around the same age.
+In the other hand having different vocabulary can indicate a different time period and is often used to detect document forgery~\cite{savoy_stylo}.
 
 \subsubsection{Rank lists fusion evaluation}
 
@@ -426,7 +431,7 @@ The methodology used, is to create multiple rank lists and fuse them for every 4
 
 The rank used are the ones obtained by using the following distances' metrics : Manhattan, Tanimoto, Clark, Matusita, Cosine Distance, Kullback-Leibler divergence on both the top 500 MFW tokens and the top 750 MFW tokens 3-grams, with smoothing for all of them.
 This creates 12 rank lists, every 4 combinations of these 12 rank lists creates 495 possible fusions ($C^{12}_{4} = 495$).
-For this 495 fusions, the 3 metrics: Average Precision (AP), R-Precision (RPrec) and High Precision (HPrec).
+For this 495 fusions, the 3 metrics: Average Precision (AP), R-Precision (RPrec) and High Precision (HPrec) are computed.
 The results are graphically presented in Figure~\ref{fig:fusions} for the dataset Oxquarry~(\ref{fig:fusion_oxquarry}), Brunet~(\ref{fig:fusion_brunet}) and St-Jean~(\ref{fig:fusion_st_jean}).
 
 \begin{figure}
@@ -447,15 +452,15 @@ The results are graphically presented in Figure~\ref{fig:fusions} for the datase
   \includegraphics[width=\linewidth]{img/fusion_st_jean.png}
 \end{figure}
 
-To compare the rank list produced by both the S-Curve and Z-Score fusions to the non-fused rank list, the best metrics of each rank list used for each fusion (denoted \textit{Single-Max}) is compared using a sign test to the rank list produced by S-Curve fusion in Table~\ref{tab:s_curve_single_max}.
-The Single-Max comparison to the Z-Score fusion in Table~\ref{tab:z_score_single_max} and a comparison Z-Score / S-Curve fusion in Table~\ref{tab:s_curve_z_score}.
+To compare the rank list produced by both the S-Curve and Z-Score fusions to the non-fused rank lists, the best metrics of each rank list used for each fusion (denoted here \textit{Single-Max}) is compared using a sign test to the rank list produced by S-Curve fusion in Table~\ref{tab:s_curve_single_max} and in Table~\ref{tab:z_score_single_max} for Z-Score fusion.
+A comparison between the Z-Score fusion and S-Curve fusion is presented in Table~\ref{tab:s_curve_z_score}.
 
 \begin{table*}
   \centering
-  \caption{Rank list sign test, * : Binomial test p-value < 5\%}
+  \caption{Rank list sign test. \textit{The star (*) indicate a Binomial test p-value smaller than 5\%}}
   \label{tab:fusion_sign_test_comparaisons}
 
-  \subcaption{S-Curve/Equal/Single max}
+  \subcaption{S-Curve/Equal/Single-max}
   \label{tab:s_curve_single_max}
   \begin{tabular}{l c c c c}
     \toprule
@@ -467,7 +472,7 @@ The Single-Max comparison to the Z-Score fusion in Table~\ref{tab:z_score_single
     \bottomrule
   \end{tabular}
 
-  \subcaption{Z-Score/Equal/Single max}
+  \subcaption{Z-Score/Equal/Single-max}
   \label{tab:z_score_single_max}
   \begin{tabular}{l c c c c}
     \toprule
@@ -492,20 +497,20 @@ The Single-Max comparison to the Z-Score fusion in Table~\ref{tab:z_score_single
   \end{tabular}
 \end{table*}
 
-Using these distance metric on these datasets, the sign test tends to indicate that the fusion reduce the overall quality of the rank list compared to the best rank list in fusion.
+Using these distance metrics on these datasets, the sign test tends to indicate that the fusion reduce the overall quality of the rank list compared to the best rank list in fusion.
 
-But multiple points can be observed:
+But multiple points can be concluded:
 \begin{itemize}
   \item
-  The three evaluations metrics are high correlated (especially Average Precision and R-Precision), the columns and lines \textit{Total} in the tables are to be lightly considered and not as an absolute proof.
+  The three evaluations metrics are high correlated (especially Average Precision and R-Precision), so the columns and lines \textit{Total} in the tables are to be considered lightly and not as an absolute proof.
   \item
   The Oxquarry dataset seem particularly not fitted for the fusion using the proposed distance metrics.
   This can be further explain by taking a look at the Figure~\ref{fig:fusion_oxquarry}.
-  Most of the Single rank list in this dataset obtain average to poor results, except for two rank list with excellent results.
-  Which considering the setup of the experiment, fusing a very good rank list with multiple bad rank list will certainly produce a rank list with worse results than the first one.
-  The Oxquarry dataset may be an outlier in this experiment.
+  Most of the Single rank lists in this dataset obtain average to poor results, except for two rank list with excellent results.
+  Which considering the setup of the experiment, fusing a very good rank list with multiple bad rank list will certainly produce a rank list with worse results than the best one.
+  The Oxquarry dataset may be an outlier in the Single-max experiment.
   \item
-  On the St-Jean and Brunet dataset most of the metrics in the experiment Single Max vs Z-Score fusion (Table~\ref{tab:z_score_single_max}) produce significant results in favor of the fusion.
+  On the St-Jean and Brunet dataset most of the metrics in the experiment Single-max vs Z-Score fusion (Table~\ref{tab:z_score_single_max}) produce significant results in favor of the fusion.
   \item
   The Z-score fusion seem to be giving better results on most metrics and datasets over the S-curve fusion.
   \item
@@ -517,27 +522,28 @@ But multiple points can be observed:
 \subsubsection{Clustering evaluation metrics}
 
 \begin{definition}[Cluster difference]
-  This metric aim to evaluate if the clustering found the right number of cluster
-  The cluster difference is the number cluster found p minus the actual number of cluster k.
+  This metric aim to evaluate if the clustering found the right number of cluster.
+  The cluster difference is the number cluster found $p$ minus the actual number of cluster $k$.
   \begin{equation}
     Cluster_{diff} = p - k
   \end{equation}
   A positive value indicate an overestimation of the real number of cluster, a negative value indicate the underestimation.
   Zero indicate that the right number of cluster was found.
   This value can be normalized by the number of documents N, which correspond to the difference of the r ratios.
-  As stated during the PAN16 evaluation campaign paper, estimating correctly the r ratio tends to indicate a good clustering~\cite{pan16}.
+  As stated in the PAN16 evaluation campaign paper, estimating correctly the r ratio tends to indicate a good clustering~\cite{pan16}.
   \begin{equation}
     r_{diff} = \frac{p}{N} - \frac{k}{N} = \frac{p - k}{N}
   \end{equation}
 \end{definition}
 
 To evaluate clustering, the metrics used are the BCubed~\cite{bcubed} family.
-BCubed has shown to satisfy 4 importants constraints when evaluating clusterings : \textit{Cluster Homogeneity} (different categories should be in the different clusters), \textit{Cluster Completness} (same categories should belong to the same cluster) and the \textit{Rag Bag constraint} (noisy/miscellaneous categories should be in the same cluster and not in 'healthy' clusters) and the \textit{Cluster size vs quantity constraints} (favorise large cluster)~\cite{bcubed}.
+BCubed has shown to satisfy 4 following importants constraints when evaluating clusterings : \textit{Cluster Homogeneity} (different categories should be in the different clusters), \textit{Cluster Completness} (same categories should belong to the same cluster) and the \textit{Rag Bag constraint} (noisy/miscellaneous categories should be in the same cluster and not in 'healthy' clusters) and the \textit{Cluster size vs quantity constraints} (favorise large cluster)~\cite{bcubed}.
 These metrics are used in the clustering task at PAN@CLEF~\cite{pan16}.
 
 \begin{definition}[Correctness~\cite{bcubed}]
+  The $BCubed$ metric family is based on the the following \textit{Correctness} principle.
   Let L(e) and C(e) be the category and the cluster of an element e.
-  The correctness is following the biconditional condition on the category and cluster equality (biconditional: $A \Longleftrightarrow B \equiv (A \land B) \lor (\neg A \land \neg B)$).
+  The Correctness is following the biconditional condition on the category and cluster equality (biconditional: $A \Longleftrightarrow B \equiv (A \land B) \lor (\neg A \land \neg B)$).
   \begin{gather*}
     Correctness(e, e') = \\
     \begin{cases}
@@ -545,18 +551,18 @@ These metrics are used in the clustering task at PAN@CLEF~\cite{pan16}.
       0, & otherwise
     \end{cases}
   \end{gather*}
-  In other terms, the correctness has a value of one if the two elements are in the both in the same cluster and has the same category OR both in a different cluster and a different category.
+  In other terms, the correctness has a value of one (100\% correct) if the two elements are in the both in the same cluster and has the same category OR both in a different cluster and a different category.
 \end{definition}
 
 \begin{definition}[$BCubed$ Precision~\cite{bcubed}]
-  The $BCubed$ Precision correspond to the average of correctness for all elements on the average of all element such that \textbf{their cluster are the same}.
+  The $BCubed$ Precision correspond to the average of correctness for all elements on the average of all element such that \textbf{their clusters are the same}.
   \begin{equation}
     BCubed_{precision} = \text{Avg}_{e}[\text{Avg}_{e' C(e)=C(e')}[Correctness(e, e')]]
   \end{equation}
 \end{definition}
 
 \begin{definition}[$BCubed$ Recall~\cite{bcubed}]
-  The $BCubed$ Recall correspond to the average of correctness for all elements on the average of all element such that \textbf{their category are the same}.
+  The $BCubed$ Recall correspond to the average of correctness for all elements on the average of all element such that \textbf{their categories are the same}.
   \begin{equation}
     BCubed_{recall} = \text{Avg}_{e}[\text{Avg}_{e' L(e)=L(e')}[Correctness(e, e')]]
   \end{equation}
@@ -569,7 +575,7 @@ These metrics are used in the clustering task at PAN@CLEF~\cite{pan16}.
     2 \cdot \frac{BCubed_{precision} \cdot BCubed_{recall}}
     {BCubed_{precision} + BCubed_{recall}}
   \end{equation}
-  The $F_\beta$ measures provide a parametric way to represent with a single value the two counterbalancing measures in this case, the $BCubed F_1$ use the Precision and Recall $BCubed$, with the $F$ measures with $\beta = 1$.
+  The $F_\beta$ measures, not shown here, provide a parametric way to represent with a single value the two counterbalancing measures in this case, the $BCubed F_1$ is computed using the $F$ measures with $\beta = 1$ and the $BCubed$ Precision and Recall scores.
 \end{definition}
 
 \subsubsection{Clustering unsupervised cut method}
@@ -577,7 +583,7 @@ These metrics are used in the clustering task at PAN@CLEF~\cite{pan16}.
 For this experiment, the goal is to test the unsupervised cut method based on the IPS (Iterative positive silhouette) Procedure on the literature dataset.
 When applying the procedure, the number of clusters start at 2, each iteration the silhouette score is computed if it reaches a negative value the procedure stop otherwise the number of cluster is increased and the process is repeated.
 
-A rank list is created{\color{red} TODO}
+The rank list used for this experiment is created by using the z-score fusion of the following distances metrics / text representations : Using word token : smoothed z-scored Manhattan, smoothed Tanimoto, smoothed Clark, smooth Matusita, smoothed z-scored Cosine distance and using 6-grams : smoothed z-scored manhattan and smoothed z-scored Cosine distance. For every rank lists the 500-MFW approach is used.
 
 When running the IPS procedure on the dataset, on Figure~\ref{fig:unsupervised_clustering_ob}~and~\ref{fig:unsupervised_clustering_sj} the silhouette score is indicated as each step and compared to the three BCubed metrics.
 For the sake of the experiment, the agglomerative clustering is also run up to a number of cluster equal to the number of documents (singleton clusters).

@@ -21,7 +21,8 @@ def dataset_infos(x, y):
     links = (texts * (texts - 1)) // 2
     true_links_ratio = round(true_links / links, 3)
     mean_length = round(np.mean([len(xi) for xi in x]))
-    mean_token_length = round(np.mean(list(itertools.chain.from_iterable([[len(w) for w in xi] for xi in x]))), 3)
+    mean_token_length = round(np.mean(
+        list(itertools.chain.from_iterable([[len(w) for w in xi] for xi in x]))), 3)
     return authors, texts, r, true_links, links, true_links_ratio, mean_length, mean_token_length
 
 
@@ -59,6 +60,15 @@ def distances_matrix_from_rank_list(rank_list):
         distances_matrix[a, b] = dist
         distances_matrix[b, a] = dist
     return distances_matrix
+
+
+def features_from_rank_list(rank_list):
+    return [[np.log((i + 1) / len(rank_list)), score]
+            for i, (link, score) in enumerate(rank_list)]
+
+
+def labels_from_rank_list(rank_list, Y):
+    return [1 if Y[a] == Y[b] else 0 for (a, b), score in rank_list]
 
 
 def division(A, B):
