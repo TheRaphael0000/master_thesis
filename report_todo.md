@@ -1,4 +1,5 @@
 - introduction
+  - introduire que on peut faire avec autre chose que des texts
 - state of the art
 	- pan clef
 	- verification

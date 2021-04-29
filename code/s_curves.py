@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-from misc import normalize_between_0_1, sigmoid, sigmoid_r
+from misc import normalize, sigmoid, sigmoid_r
 
 
 def soft_veto(rank_list, s_curve):
@@ -25,7 +25,7 @@ def sigmoid_reciprocal(c=4, r=0.25):
         y = np.array([sigmoid_r(xi) for xi in list(x1) + list(x2)])
         x = np.array(range(n))
         # normalize
-        x, y = normalize_between_0_1(x), normalize_between_0_1(y)
+        x, y = normalize(x, 0, 1), normalize(y, -1, 1)
         return x, y
     return generator
 

@@ -1,6 +1,8 @@
 \section{Evaluation \label{sec:evaluation}}
 
-This chapter explain the divers evaluation metrics used and experiments realized on the datasets to evaluate the proposed methods (ref. Section~\ref{sec:methods}).
+This section explain the divers evaluation metrics used and experiments realized on the datasets to evaluate the proposed methods (ref. Section~\ref{sec:methods}).
+Each experiment of this section is described by its purpose in the study, the methodology used to conduct it, the results in the form of: graph, table or statistics, an analysis of the results and sometimes a few additional conclusion to the experiment.
+The section is seperated into two parts, one concerning the rank lists and another one dedicated to the clustering task.
 
 \subsection{Rank lists}
 
@@ -8,7 +10,7 @@ This chapter explain the divers evaluation metrics used and experiments realized
 \label{sec:rl_eval}
 
 In order to know the quality of a rank list, the following metrics are used.
-Definitions in this sections are an adapted version of the ones in Kocher and Savoy's \textit{Evaluation of text representation schemes and distance measures for authorship linking}~\cite{kocher_linking}.
+Definitions in this sections are adapted versions of the ones in Kocher and Savoy's \textit{Evaluation of text representation schemes and distance measures for authorship linking}~\cite{kocher_linking}.
 The presented metrics are well know in the authorship verification and the information retrieval field.
 
 \begin{definition}[Relevant link~\cite{kocher_linking}]
@@ -66,7 +68,6 @@ Skilled authors can easily change their style to imitate others for small texts,
 
 For this study, an experiment on the St-Jean dataset is accomplish, in the order to show the importance of having large documents.
 In order to test this parameter, the number of token is artificially modified by considering only the $n$ first tokens for each text, with $n$ ranging between 9000 and 250 with steps of 250 tokens.
-
 Figure~\ref{img:degradation} shows the three metrics used (Average precision, RPrec, HPrec) over the number of tokens.
 Every metrics decrease over the text size, which indicate that it becomes harder to determinate documents pairs with the same author as the text size decrease.
 
@@ -81,6 +82,7 @@ PAN16 dataset is a difficult dataset due to its small size, thus extracting reli
 After multiple tests, the PAN @ CLEF 2016 dataset is not used further in this study due to its difficulty in finding reliable Stylometric clues.
 
 \subsubsection{MFW Token and Lemma}
+\label{sec:mfw_token_lemma}
 
 Here the goal is to compare two similar text representations, which are the token representation, words as they can appear in the novels, and the lemmatize representation, for example \textit{il voit} (he sees) will be lemmatized to \textit{il voir} (he see).
 For this kind of representation, previous studies have shown that using MFW (most frequent words) vector size of around 500 tends to produce better outcomes~\cite{savoy_text_representation}.
@@ -88,14 +90,16 @@ For this kind of representation, previous studies have shown that using MFW (mos
 After creating the rank lists with the proposed distance measures (ref. Section~\ref{sec:fv_distances}) on the two representations for a MFW vector size ranging between 100 and 2000 with a step of 100, on the two datasets containing the lemmatize representation (Brunet and St-Jean), the two plots in Figure~\ref{fig:token_vs_lemma} show the average precision (AP) for the resulting rank lists.
 
 This representation seem to have good results with a MFW vector size of 500 for most of the metrics, this corroborate previous studies results.
-A few metrics, such as the Manhattan distance or the Clark distance can give better results with slightly bigger vectors.
+A few metrics, such as Manhattan distance or Clark distance can give better results with slightly bigger vectors.
 In most cases, the token representation provide on both dataset a greater average precision compared to the lemma representation.
 An interesting example to be worth noticing concern the Manhattan distance, when using the token representation it tends to decrease the AP faster than the lemma representation as the MFW vector size increase.
 The euclidean distance seem to be the least appropriate distance measure for this task.
 The Clark distance have a really poor average precision when the MFW vector is too small but after reaching 500 it produces one of the best pay-off of the experiment.
 Over all, the cosine distance seem to be one of the most appropriate choice when dealing with these datasets and text representations.
+For the next experiments dealing with this text representation, four distance mesures are retained : Cosine distance, Clark, Manhattan and Tanimoto, with a MFW vector size of 750.
 
 \begin{figure}
+  \centering
   \caption{Token and Lemma representation over number of MFW using different distances metrics}
   \label{fig:token_vs_lemma}
 
@@ -110,19 +114,25 @@ Over all, the cosine distance seem to be one of the most appropriate choice when
 
 \subsubsection{MFW Letter $n$-grams}
 
-In this experiment the whole text is considered to create letter $n$-grams for the text representation, see Definition~\ref{def:letters_n_grams}.
+In this experiment the whole text is considered to create letters $n$-grams for the text representation, see Definition~\ref{def:letters_n_grams}.
 As for the other experiment the MFW approach is used to create the feature vector.
 On these vectors the distance measure used to create the rank list is the z-score normalized cosine distance.
 The goal is to compare the influence of $n$ parameter of the $n$-grams over the size of the feature vector.
 The parameters used are: a varying MFW vector size ranging between 500 and 15000 with a step of 500 and a $n$ for the following values : $3, 4, 5, (2, 3), (3, 4), (4, 5)$, the tuples $(a, b)$ correspond to both $a$-grams and $b$-grams in the same text representation.
+The number of different $n$-grams is not clear, but it is assumed to be larger than the vocabulary of the texts, thus the importance of having larger vector when dealing with long texts such as the literature datasets.
 When considering letters $n$-grams the text representation increase size by a factor of approximately $t$, with $t$ being the average token length.
-The number of different $n$-grams is not clear, but it is assumed to be larger than the vocabulary of the texts, thus the importance of having larger vector  when dealing with long texts such as the literature datasets.
+The average token size for the literature dataset is displayed Table~\ref{tab:lit_datasets}, and is in average \~4.
+To avoid having too large text representation a possible idea is to remove the hapax legomena (tokens appearing only once in the corpus) before applying the $n$-grams algorithm.
+This pruning approach was explored in~\cite{kocher_linking}.
 
-Figure~\ref{fig:letter_ngrams} show the results of this experiment on the Oxquarry dataset (\ref{fig:letter_ngrams}) and Brunet dataset (\ref{fig:letter_ngrams_brunet}).
+Figure~\ref{fig:letter_ngrams} show the results of this experiment on the Oxquarry dataset (\ref{fig:letter_ngrams_oxquarry}) , Brunet (\ref{fig:letter_ngrams_brunet}) and St-Jean (\ref{fig:letter_ngrams_st_jean}).
 The trends seems to indicate that a lower $n$ value converge with lower MFW vector size but reach a maximal value faster.
 With $3$-grams, \~3000-4000 MFW give good results on both datasets with this distance metric.
 On the Brunet dataset, after reaching the maximal average precision at \~4000 MFW, a larger number of frequent words decrease the precision until reaching the maximal number of differant $3$-grams at \~6500 MFW, which is not the case on Oxquarry.
 On St-Jean, the $3$-grams and $(2,3)$-grams don't reach high average precision on low number of MFW like for the Brunet and Oxquarry.
+$4$-grams also can be efficient but require a larger MFW vector, around \~4000 good result for both Brunet and St-Jean but on Oxquarry it requires around \~8000 to have similar results as the 3000 $3$-grams.
+Even though other distance metrics can give different results,
+For the letters $n$-grams text representation, the retained configurations for next experiments are : $3$-grams with 3000 MFWs and $4$-grams with 8000 MFWs.
 
 \begin{figure}
   \caption{Letters $n$-grams representation over number of MFW with different $n$}
@@ -159,7 +169,7 @@ In this experiment, the goal is to create 3 types of text representations of wor
   This exclude every overlapping word when considering the Letters $n$-grams algorithm.
   This decision is made for this experiment such that interwords style information can't be learned and have a fair comparaison of these 3 texts representations.
 \end{enumerate}
-The third method can be considered as a hybride version between the Letters $n$-grams and the word token text representations.
+The third method can be considered as a hybride version between the letters $n$-grams and the word token text representations.
 This representation is also smaller then the Letters $n$-grams text representation.
 The two first representation are subsets of the thrid method.
 
@@ -208,9 +218,11 @@ The two following informations can be intuitively observed on this plot:
   In Figure~\ref{fig:pos_ngrams} the POS 2-grams clearly have a drop in average precision after \~250-MFW.
 \end{itemize}
 
+The most appropriate configuration for the POS $n$-grams text representation on St-Jean seem to be 250 MFW POS $2$-grams and 1000 MFW POS $3$-grams.
+
 \begin{figure}
   \centering
-  \caption{Average precision over the MFW in the rank list generated using the z-score normalized cosine distance.}
+  \caption{Average precision over the MFW in the rank list generated using the z-score normalized cosine distance on St-Jean POS n-grams text representation.}
   \label{fig:pos_ngrams}
   \includegraphics[width=\linewidth]{img/pos_ngrams.png}
 \end{figure}
@@ -228,7 +240,8 @@ GZip seem to be giving the worse results on every dataset with an average AP of 
 LZMA give the best results on every dataset tested, but BZip2 have close results.
 The cosine-based compression distance (CBC) tend to give better results over the normalized compression distance (NCD).
 In terms of time complexity BZip2 is the fastest algorithm of the 3 proposed, LZMA is ~5-6 times slower than BZip2, and GZip slower than BZip2 by around ~5-20\%.
-No significant time differences is recorded between the NCD and CBC distance measures, since the greater complexity is in the compression algorithm.
+No significant time differences is recorded between the NCD and CBC distance measures, since the greatest complexity reside in the compression algorithm.
+Even though LZMA algorithm give the best results, the configuration retained for the compression based distance is the BZip2 with the Cosine based compresison distance, since it gives relative good results in a short amount of time.
 
 \begin{table}
   \centering
@@ -273,9 +286,9 @@ No significant time differences is recorded between the NCD and CBC distance mea
 \end{table}
 
 \begin{table}
-  \centering
   \label{tab:compression_evaluation_time}
   \caption{Average run time for the rank list computation with the different compression algorithm and distance metrics}
+  \centering
 
   \subcaption{Oxquarry}
   \label{tab:compression_evaluation_time_oxquarry}
@@ -321,19 +334,19 @@ No significant time differences is recorded between the NCD and CBC distance mea
 This section try to understand the errors in our system, in this case the false links (document pairs with different authors) highly ranked on different rank lists.
 The rank list quality is highly based on the feature vector created using the N-MFW, having a good understanding of this vector give good indications of the strength of the system.
 
-To find recurrent errors in our system we use 5 different distance metrics (Manhattan, Tanimoto, Clark, Matusita, Cosine distance) on the relative frequency of the 500-MFW using the St-Jean dataset.
-This generates 5 rank lists.
-The average precision for these rank lists is always greater than 0.7.
-With this 5 rank lists only the top 10 false links are kept to be analyzed.
-Frequent errors are links that often appear in this top 10.
-The goal is now to compare the two feature vectors of the links that are frequent errors.
-Figures~\ref{fig:mfw_vector_error} show two pairs (Zola 49 / Flaubert 63 and Maupassant 10 / Flaubert 52) that appear 4 time out of the 5 rank lists in the top 10 false links.
+To find recurrent errors in our system we use the four different distance metrics retained in Section~\ref{sec:mfw_token_lemma} (Manhattan, Tanimoto, Clark, Cosine distance) on the relative frequency of the 750-MFW using the St-Jean dataset.
+This generates four rank lists.
+For these rank lists the average preicison is in the range 0.73-0.82.
+For the sake of this experiment, every true links are discarded in the rank lists.
+Links often apearing in the top 20 false links are considered as frequent errors.
+The goal is to compare the two feature vectors of the links that are frequent errors.
+Figures~\ref{fig:mfw_vector_error} show two pairs (document 10 from Maupassant / document 52 from Flaubert and document 126 from Fromentin / document 151 from Sainte-Beuve 151) that appear 3 time out of the 4 rank lists in the top 20 false links.
 To be able to understand more easily this vector, the values have been sorted by relative frequencies and using the logarithmic scale.
 When a large proportion of the vectors overlap it indicates a high similarity between the MFW vectors.
 
 \begin{figure}
   \centering
-  \caption{Example of 500-MFW relative frequency vectors for the two documents in a reccurant (4 rank lists out of 5) false link in the top 10 false links}
+  \caption{Example of 750-MFW relative frequency vectors for the two documents in a reccurant (3 rank lists out of 4) false link in the top 20 false links}
   \label{fig:mfw_vector_error}
 
   \subcaption{First example}
@@ -345,17 +358,17 @@ When a large proportion of the vectors overlap it indicates a high similarity be
   \includegraphics[width=\linewidth]{img/mfw_vector_error_1.png}
 \end{figure}
 
-In this case most of the surface overlap, so the distance function will give a low value, and rank this vector high in the list.
 Both document style are close when their feature vector are closely related.
-Determinating that these texts are from a different author can not clearly be established using only this type of representation, no matter the distance metric applied.
-These two vectors pair can be visually compared to true links, which are usually closely realated feature vectors.
-For example the most similar link (ranked 1 using Manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (Stael 157 / Steal 183) or the HPrec-th (last continous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (Maupassant 10 / Maupassant 67), both of these links show a large proportion of overlapping surface, like for the frequent errors vectors.
-A counter example would be the least similar link (ranked last using Manhattan distance) which represent a negatively correlated document pair, Figure~\ref{fig:mfw_vector_last_rl} showcase this link.
+Visually when most the surface overlap, the distance function will give a low value, and rank this link high in the list.
+When two vectors are relatively close together determinating that two texts are from a different author can not clearly be established using only one type of representation, no matter the distance metric applied.
+The frequent errors vector pairs presented in Figure~\ref{fig:mfw_vector_error} can be visually compared actual true links and actual false links, to have a better understanding of this problematic.
+For example the most similar true link (ranked 1 using Manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (document 157 from Stael / document 183 from Steal) or the HPrec-th (last continous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (document 107 from France / document 125 from France), both of these links show a large proportion of overlapping surface, like for the frequent errors vectors.
+A counter example would be the least similar false link (ranked last using Manhattan distance) which represent a negatively correlated document pair, Figure~\ref{fig:mfw_vector_last_rl} showcase this link (document 136 from Sue / document 188 from Regnier).
 As expected, most of this figure surface is non-overlapping.
 
 \begin{figure}
   \centering
-  \caption{500-MFW relative frequency for the two documents ranked $X$ in the rank list using Manhattan distance}
+  \caption{750-MFW relative frequency for the two documents ranked $X$ in the rank list using Manhattan distance}
 
   \subcaption{$X$ = First}
   \label{fig:mfw_vector_first_rl}
@@ -379,10 +392,10 @@ The following experiment try to investigate on this.
 In the St-Jean dataset publication paper, the publication dates of each excepts are available~\cite{st_jean}.
 First the publication date distribution of the dataset must be understood.
 Figure~\ref{fig:dates_distribution} show the distribution of the publication date in the St-Jean dataset.
-The date difference distribution for each pair of documents can be computed, Figure~\ref{fig:dates_differences_all} show case this.
+The date difference distribution for each pair of documents can be computed, Figure~\ref{fig:dates_differences_all} showcase this.
 The average date difference in the dataset is 28.24 years with a standard deviation of 20.73 years.
 Since this dataset contain multiple excerpt from the same book, considering only the links of different authors (false links) is preferable.
-Figure~\ref{fig:dates_differences_false} shows the date differrence distribution of the false links.
+Figure~\ref{fig:dates_differences_false} shows the date difference distribution of the false links.
 As expected the mean increased from 28.24 years to 29.04 years since there are fewer links with small date difference.
 Same authors links (true links) are displayed in Figure~\ref{fig:dates_differences_r_true}, they confirm the previous statement that most of the same authors links have a low date difference with a mean of 5.11 years.
 
@@ -416,88 +429,276 @@ Same authors links (true links) are displayed in Figure~\ref{fig:dates_differenc
   \includegraphics[width=\linewidth]{img/dates_differences_r_false.png}
 \end{figure}
 
-The previous statistics can be compared to Figure~\ref{fig:dates_differences_r_false} which show the date difference density on the top-r false links (670 in case of St-Jean) on a rank list with 80\% average precision (obtained by fusing the 5 ranks list used, ref. Section~\ref{sec:rank_list_fusion}~and~\ref{sec:frequent_errors}).
+The previous statistics can be compared to Figure~\ref{fig:dates_differences_r_false} which show the date difference density on the top-r false links (670 in case of St-Jean) on a rank list with 82\% average precision (obtained by fusing the 4 ranks list used, ref. Section~\ref{sec:rank_list_fusion}~and~\ref{sec:frequent_errors}).
 Two interesting information can be extracted here.
-First the mean is lower by 8.22 years (29.04 - 20.82) compared to the false links distribution which clearly indicate the importance of publication date in the ranking of the documents.
+First the mean is lower by 7.6 years (29.04 - 21.44) compared to the false links and have a narrow standard deviation distribution which clearly indicate the importance of publication date in the ranking of the documents.
 Secondly we can observe a drop after 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ years are harder to discriminate between a true link and a false link than links outside this interval.
 This 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France~\cite{generations}, the birth country of the authors in this dataset.
-Each new generation tend to use its own vocabulary, and thus it can be harder to discriminate author of text belonging to the same generation, if we assume that the authors write their books at around the same age.
+Each new generation tend to use its own vocabulary, and thus it can be harder to discriminate the author of text belonging to the same generation, if we assume that the authors write their books at around the same age.
 In the other hand having different vocabulary can indicate a different time period and is often used to detect document forgery~\cite{savoy_stylo}.
 
 \subsubsection{Rank lists fusion evaluation}
 
 In this experiment, the goal to understand if fusing rank list can improve performance of the rank list.
-The methodology used, is to create multiple rank lists and fuse them for every 4 rank lists combinations.
+The methodology used, is to create $n$ rank lists and fuse them for every $r$ rank lists combinations ($C^n_r$) for the two fusing methods proposed, z-score fusion and regression fusion.
 
-The rank used are the ones obtained by using the following distances' metrics : Manhattan, Tanimoto, Clark, Matusita, Cosine Distance, Kullback-Leibler divergence on both the top 500 MFW tokens and the top 750 MFW tokens 3-grams, with smoothing for all of them.
-This creates 12 rank lists, every 4 combinations of these 12 rank lists creates 495 possible fusions ($C^{12}_{4} = 495$).
-For this 495 fusions, the 3 metrics: Average Precision (AP), R-Precision (RPrec) and High Precision (HPrec) are computed.
-The results are graphically presented in Figure~\ref{fig:fusions} for the dataset Oxquarry~(\ref{fig:fusion_oxquarry}), Brunet~(\ref{fig:fusion_brunet}) and St-Jean~(\ref{fig:fusion_st_jean}).
+The rank list used are the ones obtained by using the 9 following methods ($n=9$), they represent the best configuration retained for each text representation :
+\begin{enumerate}
+  \setcounter{enumi}{-1}
+  \item 750 MFW tokens with Cosine Distance
+  \item 750 MFW tokens with Clark
+  \item 750 MFW tokens with Manhattan
+  \item 750 MFW tokens with Tanimoto
+  \item 3000 MFW tokens 3-grams with Cosine distance
+  \item 8000 MFW tokens 4-grams with Cosine distance
+  \item 250 MFW POS 2-grams with Cosine distance
+  \item 1000 MFW POS 3-grams with Cosine distance
+  \item Compression using BZip3 with the CBC distance.
+\end{enumerate}
+
+The $r$ value is selected to $4$, since it represents the number of different text representation.
+
+The number of possible fusion combinations is with $n=9$ and $r=4$ is $C^{9}_{4} = 126$.
+For this 126 fusions, the 3 metrics: Average Precision (AP), R-Precision (RPrec) and High Precision (HPrec) are computed.
+The results are graphically presented in Figure~\ref{fig:fusions} and statistiques for each metrics are displayed in Table~\ref{tab:fusion_stats}.
+
+To compare the rank list produced by both the Z-Score fusions and the Regression fusion to the non-fused rank lists, two baselines are used.
+One called \textit{Single-Max} which represent the best metrics for each rank list in the fusion and another one called \textit{Single-Mean} which is represented by the mean of each metrics in the fusion.
+A sign test between the two baseline and the two fusion methods in Table~\ref{tab:fusion_sign_test}.
 
 \begin{figure}
   \centering
-  \caption{Evaluation of every combination of 4 rank list fusions using Z-Score and S-Curve}
+  \caption{Evaluation of every combination of 4 rank list fusions using Z-Score and Regression}
   \label{fig:fusions}
 
-  \subcaption{Oxquarry}
-  \label{fig:fusion_oxquarry}
-  \includegraphics[width=\linewidth]{img/fusion_oxquarry.png}
+  \subcaption{Testing on St-Jean A (training St-Jean B)}
+  \label{fig:fusion_B_A}
+  \includegraphics[width=\linewidth]{img/fusion_B_A.png}
 
-  \subcaption{Brunet}
-  \label{fig:fusion_brunet}
-  \includegraphics[width=\linewidth]{img/fusion_brunet.png}
-
-  \subcaption{St-Jean}
-  \label{fig:fusion_st_jean}
-  \includegraphics[width=\linewidth]{img/fusion_st_jean.png}
+  \subcaption{Testing on St-Jean B (training St-Jean A)}
+  \label{fig:fusion_A_B}
+  \includegraphics[width=\linewidth]{img/fusion_A_B.png}
 \end{figure}
 
-To compare the rank list produced by both the S-Curve and Z-Score fusions to the non-fused rank lists, the best metrics of each rank list used for each fusion (denoted here \textit{Single-Max}) is compared using a sign test to the rank list produced by S-Curve fusion in Table~\ref{tab:s_curve_single_max} and in Table~\ref{tab:z_score_single_max} for Z-Score fusion.
-A comparison between the Z-Score fusion and S-Curve fusion is presented in Table~\ref{tab:s_curve_z_score}.
+\begin{table}
+  \centering
+  \caption{Fusion statistics on St-Jean A (training St-Jean B)}
+  \label{tab:fusion_stats}
+
+  \subcaption{Single-Mean}
+  \begin{tabular}{l l l l}
+    \toprule
+    Stats
+    & AP
+    & RPrec
+    & HPrec \\
+    \midrule
+    Min & $0.704$ & $0.627$ & $42.75$ \\
+    Avg$\pm$Std & $0.736\pm0.013$ & $0.656\pm0.012$ & $64.444\pm10.286$ \\
+    Max & $0.766$ & $0.686$ & $84.25$ \\
+    Argmin & [4,6,7,8] & [4,6,7,8] & [0,1,6,7] \\
+    Argmax & [0,2,3,5] & [0,1,2,3] & [2,3,4,8] \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{Single-Max}
+  \begin{tabular}{l l l l}
+    \toprule
+    Stats
+    & AP
+    & RPrec
+    & HPrec \\
+    \midrule
+    Min & $0.726$ & $0.633$ & $68.0$ \\
+    Avg$\pm$Std & $0.769\pm0.009$ & $0.692\pm0.015$ & $88.532\pm9.763$ \\
+    Max & $0.777$ & $0.703$ & $99.0$ \\
+    Argmin & [4,6,7,8] & [4,6,7,8] & [0,1,6,7] \\
+    Argmax & [0,1,2,3] & [0,1,2,3] & [0,1,2,3] \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{Z-Score}
+  \begin{tabular}{l l l l}
+    \toprule
+    Stats
+    & AP
+    & RPrec
+    & HPrec \\
+    \midrule
+    Min & $0.76$ & $0.658$ & $69.0$ \\
+    Avg$\pm$Std & $0.829\pm0.02$ & $0.738\pm0.026$ & $93.833\pm11.108$ \\
+    Max & $0.863$ & $0.779$ & $124.0$ \\
+    Argmin & [4,5,6,7] & [4,5,6,7] & [0,1,4,5] \\
+    Argmax & [0,3,7,8] & [0,3,6,8] & [1,3,6,7] \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{Regression}
+  \begin{tabular}{l l l l}
+    \toprule
+    Stats
+    & AP
+    & RPrec
+    & HPrec \\
+    \midrule
+    Min & $0.712$ & $0.609$ & $65.0$ \\
+    Avg$\pm$Std & $0.764\pm0.016$ & $0.681\pm0.02$ & $72.794\pm12.111$ \\
+    Max & $0.777$ & $0.703$ & $99.0$ \\
+    Argmin & [4,5,6,7] & [4,5,6,7] & [0,1,2,3] \\
+    Argmax & [0,1,2,3] & [2,3,4,5] & [2,3,4,5] \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}
+  \centering
+  \caption{Fusion statistics on St-Jean B (training St-Jean A)}
+  \label{tab:fusion_stats}
+
+  \subcaption{Single-Mean}
+  \begin{tabular}{l l l l}
+    \toprule
+    Stats
+    & AP
+    & RPrec
+    & HPrec \\
+    \midrule
+    Min          & $0.89$         & $0.80$         & $122.25$      \\
+    Avg$\pm$Std & $0.90\pm0.008$ & $0.83\pm0.011$ & $148.11\pm11$ \\
+    Max          & $0.92$         & $0.85$         & $172$         \\
+    Argmin       & [3,4,7,8]   & [1,3,7,8]   & [1,6,7,8]  \\
+    Argmax       & [0,2,5,6]   & [0,2,5,6]   & [0,3,4,5]  \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{Single-Max}
+  \begin{tabular}{l l l l}
+    \toprule
+    Stats
+    & AP
+    & RPrec
+    & HPrec \\
+    \midrule
+    Min          & $0.91$         & $0.82$         & $153.25$      \\
+    Avg$\pm$Std & $0.93\pm0.008$ & $0.86\pm0.012$ & $174.8\pm7$ \\
+    Max          & $0.93$         & $0.87$         & $182$         \\
+    Argmin       & [3,4,7,8]   & [1,3,7,8]   & [1,6,7,8]  \\
+    Argmax       & [0,1,2,3]   & [0,1,2,3]   & [0,1,2,5]  \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{Z-Score}
+  \begin{tabular}{l l l l}
+    \toprule
+    Stats
+    & AP
+    & RPrec
+    & HPrec \\
+    \midrule
+    Min          & $0.94$         & $0.86$         & $153$      \\
+    Avg$\pm$Std & $0.96\pm0.006$ & $0.89\pm0.012$ & $191.3\pm12$ \\
+    Max          & $0.97$         & $0.82$         & $214$         \\
+    Argmin       & [1,2,3,8]   & [2,3,4,8]   & [1,2,3,8]  \\
+    Argmax       & [1,2,5,6]   & [1,2,5,6]   & [2,3,5,7]  \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{Regression}
+  \begin{tabular}{l l l l}
+    \toprule
+    Stats
+    & AP
+    & RPrec
+    & HPrec \\
+    \midrule
+    Min          & $0.88$         & $0.81$         & $124$      \\
+    Avg$\pm$Std & $0.92\pm0.015$ & $0.85\pm0.024$ & $152.9\pm18$ \\
+    Max          & $0.94$         & $0.87$         & $182$         \\
+    Argmin       & [3,4,5,6]   & [1,2,3,4]   & [1,2,3,4]  \\
+    Argmax       & [0,1,2,3]   & [0,1,2,3]   & [5,6,7,8]  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 \begin{table*}
   \centering
-  \caption{Rank list sign test. \textit{The star (*) indicate a Binomial test p-value smaller than 5\%}}
-  \label{tab:fusion_sign_test_comparaisons}
+  \caption{Rank list fusion sign test. \textit{The star (*) indicate a Binomial test p-value smaller than 5\%}}
+  \label{tab:fusion_sign_test}
 
-  \subcaption{S-Curve/Equal/Single-max}
-  \label{tab:s_curve_single_max}
+  \subcaption{Testing St-Jean A (training St-Jean B)}
+  \label{tab:fusion_A_B}
   \begin{tabular}{l c c c c}
     \toprule
-    Metric         & St-Jean     & Brunet      & Oxquarry    & \textbf{Total} \\ \midrule
-    AP             & 161/0/334*  & 208/0/287*  & 1/0/494*    & 370/0/1115*    \\
-    RPrec          & 169/9/317*  & *378/75/42  & 0/2/493*    & 547/86/852*    \\
-    HPrec          & *287/1/207  & 49/87/359*  & 32/11/452*  & 368/99/1018*   \\
-    \textbf{Total} & 617/10/858* & 635/162/688 & 33/13/1439* & 1285/185/2985* \\
+    Metric
+    & Z-Score/T/Single-Mean
+    & Z-Score/T/Single-Max
+    & Regression/T/Single-Mean
+    & Regression/T/Single-Max\\
+    \midrule
+    AP    & *126/0/0 & *126/0/0  & *108/0/18 & 0/81/45* \\
+    RPrec & *126/0/0 & *125/1/0  & *92/4/30  & 0/78/48* \\
+    HPrec & *126/0/0 & *111/0/14 & *79/1/46  & 0/14/112*\\
     \bottomrule
   \end{tabular}
 
-  \subcaption{Z-Score/Equal/Single-max}
-  \label{tab:z_score_single_max}
+  \subcaption{Testing St-Jean B (training St-Jean A)}
+  \label{tab:fusion_A_B}
   \begin{tabular}{l c c c c}
     \toprule
-    Metric        & St-Jean     & Brunet      & Oxquarry    & \textbf{Total} \\ \midrule
-    AP            & *284/0/211  & *285/0/210  & 1/0/494*    & 570/0/915*     \\
-    RPrec         & *312/10/173 & *361/94/40  & 0/0/495*    & 673/104/708    \\
-    HPrec         & *289/0/206  & 35/63/397*  & 79/13/403*  & 403/76/1006*   \\
-    \textbf{Total}& *885/10/590 & 681/157/647 & 80/13/1392* & 1646/180/2629* \\
+    Metric
+    & Z-Score/T/Single-Mean
+    & Z-Score/T/Single-Max
+    & Regression/T/Single-Mean
+    & Regression/T/Single-Max \\
+    \midrule
+    AP    & *126/0/0 & *124/0/2 & *120/0/6  & 0/85/41* \\
+    RPrec & *126/0/0 & *119/2/5 & *114/0/12 & 0/76/50* \\
+    HPrec & *124/0/2 & *73/3/45 & *92/0/34  & 0/25/101*\\
     \bottomrule
   \end{tabular}
 
-  \subcaption{S-Curve/Equal/Z-Score}
-  \label{tab:s_curve_z_score}
-  \begin{tabular}{l c c c c}
-    \toprule
-    Metric        & St-Jean     & Brunet       & Oxquarry     & \textbf{Total} \\ \midrule
-    AP            & 7/0/488*    & 42/0/453*    & *270/0/225   & 319/0/1166*    \\
-    RPrec         & 4/3/488*    & 124/241/130  & 51/96/348*   & 179/340/966*   \\
-    HPrec         & 57/18/420*  & *188/202/105 & 70/34/391*   & 315/254/916*   \\
-    \textbf{Total}& 68/21/1396* & 354/443/688* & 391/130/964* & 813/594/3048*  \\
-    \bottomrule
-  \end{tabular}
 \end{table*}
 
-Using these distance metrics on these datasets, the sign test tends to indicate that the fusion reduce the overall quality of the rank list compared to the best rank list in fusion.
+\begin{table*}
+  \centering
+  \caption{Rank list fusion sign test. \textit{The star (*) indicate a Binomial test p-value smaller than 5\%}}
+  \label{tab:fusion_sign_test}
+
+  \subcaption{Training St-Jean B, Testing St-Jean A}
+  \label{tab:fusion_A_B}
+  \begin{tabular}{l c c c c}
+    \toprule
+    Metric
+    & Z-Score/T/Single-Mean
+    & Z-Score/T/Single-Max
+    & Regression/T/Single-Mean
+    & Regression/T/Single-Max\\
+    \midrule
+    AP    & *126/0/0 & *126/0/0  & *108/0/18 & 0/81/45* \\
+    RPrec & *126/0/0 & *125/1/0  & *92/4/30  & 0/78/48* \\
+    HPrec & *126/0/0 & *111/0/14 & *79/1/46  & 0/14/112*\\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{Training St-Jean A, Testing St-Jean B}
+  \label{tab:fusion_A_B}
+  \begin{tabular}{l c c c c}
+    \toprule
+    Metric
+    & Z-Score/T/Single-Mean
+    & Z-Score/T/Single-Max
+    & Regression/T/Single-Mean
+    & Regression/T/Single-Max \\
+    \midrule
+    AP    & *126/0/0 & *124/0/2 & *120/0/6  & 0/85/41* \\
+    RPrec & *126/0/0 & *119/2/5 & *114/0/12 & 0/76/50* \\
+    HPrec & *124/0/2 & *73/3/45 & *92/0/34  & 0/25/101*\\
+    \bottomrule
+  \end{tabular}
+
+\end{table*}
+
+Using these distance metrics on these datasets, the sign test tends to indicate that the fusion increase the overall quality of the rank list compared to the best rank list in fusion.
 
 But multiple points can be concluded:
 \begin{itemize}
@@ -517,6 +718,7 @@ But multiple points can be concluded:
   The HPrec is most of the time deteriorated with the fusion.
 \end{itemize}
 
+\newpage
 \subsection{Clustering}
 
 \subsubsection{Clustering evaluation metrics}

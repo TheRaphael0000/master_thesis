@@ -17,7 +17,7 @@ import distances
 import compressions
 
 from misc import rank_list_from_distances_matrix
-from misc import normalize
+from misc import normalize_text
 from evaluate import evaluate_linking
 
 
@@ -69,7 +69,7 @@ def most_frequent_word(X, n, z_score=False, lidstone_lambda=0.1):
 def compute_links(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func):
     # Tokens normalization
     if type(X[0]) == str:
-        X = [[normalize(t) for t in xi] for xi in X]
+        X = [[normalize_text(t) for t in xi] for xi in X]
     # Convert text to n_grams
     if type(n_grams) == list or type(n_grams) == tuple or n_grams > 0:
         X = [create_n_grams(xi, n_grams) for xi in X]

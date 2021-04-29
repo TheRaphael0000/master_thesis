@@ -81,13 +81,11 @@ def log(A):
     return np.log(A, where=A > 0, out=np.full(A.shape, np.inf))
 
 
-def normalize_between_0_1(x):
-    """Normalize between 0-1 an array like"""
-    num = x - np.min(x)
-    div = np.max(x) - np.min(x)
-    if div == 0:
-        raise Exception("can't normalize")
-    return num / div
+def normalize(x, a, b):
+    """Normalize between a-b an array like"""
+    input_range = np.max(x) - np.min(x)
+    output_range = b - a
+    return (x - np.min(x)) / input_range * output_range + a
 
 
 def sigmoid(x):
@@ -129,7 +127,7 @@ def simple_plot(X, Y, X_label, Y_label, filename):
     plt.savefig(f"{filename}.png")
 
 
-def normalize(s):
+def normalize_text(s):
     # Removing accents
     s = unicodedata.normalize("NFKD", s)
     s = s.encode("ASCII", "ignore").decode("ASCII")
