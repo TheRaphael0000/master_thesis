@@ -442,29 +442,19 @@ In the other hand having different vocabulary can indicate a different time peri
 In this experiment, the goal to understand if fusing rank list can improve performance of the rank list.
 The methodology used, is to create $n$ rank lists and fuse them for every $r$ rank lists combinations ($C^n_r$) for the two fusing methods proposed, z-score fusion and regression fusion.
 
-The rank list used are the ones obtained by using the 9 following methods ($n=9$), they represent the best configuration retained for each text representation :
-\begin{enumerate}
-  \setcounter{enumi}{-1}
-  \item 750 MFW tokens with Cosine Distance
-  \item 750 MFW tokens with Clark
-  \item 750 MFW tokens with Manhattan
-  \item 750 MFW tokens with Tanimoto
-  \item 3000 MFW tokens 3-grams with Cosine distance
-  \item 8000 MFW tokens 4-grams with Cosine distance
-  \item 250 MFW POS 2-grams with Cosine distance
-  \item 1000 MFW POS 3-grams with Cosine distance
-  \item Compression using BZip3 with the CBC distance.
-\end{enumerate}
-
+The rank list used are the ones obtained by using the 9 retained rank list methods ($n=9$), see Table~\ref{tab:9rl} in annex.
+They represent the best configuration retained for each text representation.
 The $r$ value is selected to $4$, since it represents the number of different text representation.
-
 The number of possible fusion combinations is with $n=9$ and $r=4$ is $C^{9}_{4} = 126$.
 For this 126 fusions, the 3 metrics: Average Precision (AP), R-Precision (RPrec) and High Precision (HPrec) are computed.
-The results are graphically presented in Figure~\ref{fig:fusions} and statistiques for each metrics are displayed in Table~\ref{tab:fusion_stats}.
 
-To compare the rank list produced by both the Z-Score fusions and the Regression fusion to the non-fused rank lists, two baselines are used.
-One called \textit{Single-Max} which represent the best metrics for each rank list in the fusion and another one called \textit{Single-Mean} which is represented by the mean of each metrics in the fusion.
-A sign test between the two baseline and the two fusion methods in Table~\ref{tab:fusion_sign_test}.
+To compare the rank list produced by both the Z-Score fusions and the Regression fusion to the non-fused rank lists, two strategies are used.
+One called \textit{Single-Max} which represent the best metrics for each rank list in the fusion and another one called \textit{Single-Mean} which is represented by the mean of each rank list metrics in the fusion.
+For example, if for a fusion the average precision of the 4 rank lists are : $0.5, 0.6, 0.7, 0.8$. Single-mean would have an average precision of $0.65$ and Single-max an average precision of $0.8$.
+
+The results of every fusion combinations using the proposed rank list and strategies are graphically presented in Figure~\ref{fig:fusions}.
+Statistiques for each metrics and fusion schemes are resumed  Table~\ref{tab:fusion_stats}, it contains for each metric, the minimal value (min), the average and the standard deviation (Avg$\pm$Std), the maximal value, the argmin and argmax for the metrics (ids of the rank list presented above).
+A sign test between the two strategies and the two fusion methods is presented in Table~\ref{tab:fusion_sign_test}.
 
 \begin{figure}
   \centering
@@ -642,7 +632,7 @@ A sign test between the two baseline and the two fusion methods in Table~\ref{ta
   \end{tabular}
 
   \subcaption{Testing St-Jean B (training St-Jean A)}
-  \label{tab:fusion_A_B}
+  \label{tab:fusion_B_A}
   \begin{tabular}{l c c c c}
     \toprule
     Metric
@@ -659,64 +649,14 @@ A sign test between the two baseline and the two fusion methods in Table~\ref{ta
 
 \end{table*}
 
-\begin{table*}
-  \centering
-  \caption{Rank list fusion sign test. \textit{The star (*) indicate a Binomial test p-value smaller than 5\%}}
-  \label{tab:fusion_sign_test}
+Using these distance metrics on St-jean, the sign test tends to indicate that the fusion increase the overall quality of the rank list.
+The three evaluations metrics are high correlated (especially average precision and R-Precision), only the average precision will be explored in depth.
+The Z-Score fusion, produce for every metrics better results than both Single-Mean and Single-Max, the average precision is increase in average by \~10\% compared to the average of the average precision (Single-Mean) of the rank list used, and by ~6\% in average when considering the maximal average precision (Single-Max).
+In the other hand, the Regression fusion, have an average increase of \~3\% in average precision for the Single-Mean and have a decrease of ~1\% when comparing to the Single-Max.
+The results of fusing multiple rank lists when using regression fusion strategy tends to indicate that the resulting rank list in average share the quality of the best rank list used with some slight decreases.
+No particular set of rank list tends to give the best results in every case when fusing with the two strategies, every rank list is present in the argmax, but with the Z-Score fusion, the best results seem to be obtained with rank lists using different text representations.
+The Z-score fusion give the best results overall.
 
-  \subcaption{Training St-Jean B, Testing St-Jean A}
-  \label{tab:fusion_A_B}
-  \begin{tabular}{l c c c c}
-    \toprule
-    Metric
-    & Z-Score/T/Single-Mean
-    & Z-Score/T/Single-Max
-    & Regression/T/Single-Mean
-    & Regression/T/Single-Max\\
-    \midrule
-    AP    & *126/0/0 & *126/0/0  & *108/0/18 & 0/81/45* \\
-    RPrec & *126/0/0 & *125/1/0  & *92/4/30  & 0/78/48* \\
-    HPrec & *126/0/0 & *111/0/14 & *79/1/46  & 0/14/112*\\
-    \bottomrule
-  \end{tabular}
-
-  \subcaption{Training St-Jean A, Testing St-Jean B}
-  \label{tab:fusion_A_B}
-  \begin{tabular}{l c c c c}
-    \toprule
-    Metric
-    & Z-Score/T/Single-Mean
-    & Z-Score/T/Single-Max
-    & Regression/T/Single-Mean
-    & Regression/T/Single-Max \\
-    \midrule
-    AP    & *126/0/0 & *124/0/2 & *120/0/6  & 0/85/41* \\
-    RPrec & *126/0/0 & *119/2/5 & *114/0/12 & 0/76/50* \\
-    HPrec & *124/0/2 & *73/3/45 & *92/0/34  & 0/25/101*\\
-    \bottomrule
-  \end{tabular}
-
-\end{table*}
-
-Using these distance metrics on these datasets, the sign test tends to indicate that the fusion increase the overall quality of the rank list compared to the best rank list in fusion.
-
-But multiple points can be concluded:
-\begin{itemize}
-  \item
-  The three evaluations metrics are high correlated (especially Average Precision and R-Precision), so the columns and lines \textit{Total} in the tables are to be considered lightly and not as an absolute proof.
-  \item
-  The Oxquarry dataset seem particularly not fitted for the fusion using the proposed distance metrics.
-  This can be further explain by taking a look at the Figure~\ref{fig:fusion_oxquarry}.
-  Most of the Single rank lists in this dataset obtain average to poor results, except for two rank list with excellent results.
-  Which considering the setup of the experiment, fusing a very good rank list with multiple bad rank list will certainly produce a rank list with worse results than the best one.
-  The Oxquarry dataset may be an outlier in the Single-max experiment.
-  \item
-  On the St-Jean and Brunet dataset most of the metrics in the experiment Single-max vs Z-Score fusion (Table~\ref{tab:z_score_single_max}) produce significant results in favor of the fusion.
-  \item
-  The Z-score fusion seem to be giving better results on most metrics and datasets over the S-curve fusion.
-  \item
-  The HPrec is most of the time deteriorated with the fusion.
-\end{itemize}
 
 \newpage
 \subsection{Clustering}
@@ -785,54 +725,62 @@ These metrics are used in the clustering task at PAN@CLEF~\cite{pan16}.
 For this experiment, the goal is to test the unsupervised cut method based on the IPS (Iterative positive silhouette) Procedure on the literature dataset.
 When applying the procedure, the number of clusters start at 2, each iteration the silhouette score is computed if it reaches a negative value the procedure stop otherwise the number of cluster is increased and the process is repeated.
 
-The rank list used for this experiment is created by using the z-score fusion of the following distances metrics / text representations : Using word token : smoothed z-scored Manhattan, smoothed Tanimoto, smoothed Clark, smooth Matusita, smoothed z-scored Cosine distance and using 6-grams : smoothed z-scored manhattan and smoothed z-scored Cosine distance. For every rank lists the 500-MFW approach is used.
+The rank list used for this experiment is the one generated using Z-score fusion with retained text representation (9 for St-Jean and 7 for Brunet and Oxquarry), see Section~\ref{sec:annex_retained_text_representation} in annex.
 
-When running the IPS procedure on the dataset, on Figure~\ref{fig:unsupervised_clustering_ob}~and~\ref{fig:unsupervised_clustering_sj} the silhouette score is indicated as each step and compared to the three BCubed metrics.
+When running the IPS procedure on the dataset, on Figures~\ref{fig:unsupervised_clustering} the silhouette score is indicated as each step and compared to the three BCubed metrics.
 For the sake of the experiment, the agglomerative clustering is also run up to a number of cluster equal to the number of documents (singleton clusters).
 Since the rank list used for the clustering is not perfect (every true links at the top), there is no number of cluster with a BCubed $F_1$ score of 1.0.
-The estimated number of cluster is on every dataset overestimated, which means that the median neareast-cluster distance is greater than the median intra-cluster distance even when dealing with the right number of clusters.
+The estimated number of cluster is on every dataset overestimated, average r-ratio difference of $0.21$, which means that the median neareast-cluster distance is greater than the median intra-cluster distance even when dealing with the right number of clusters.
 This can be due to the fact that the rank list is not perfect.
 To mitigate this problem, an easy solution would be to the stop the procedure at for example : $0.1$ instead of $0$.
 
-\begin{figure}
-  \caption{Unsupervised clustering on Oxquarry and Brunet}
-  \label{fig:unsupervised_clustering_ob}
+\begin{table*}
+  \centering
+  \caption{Unsupervised clustering evaluation on the datasets}
+  \label{tab:unsupervised_clustering}
+    \begin{tabular}{l c c c c}
+      \toprule
+      &
+      BCubed $F_1$ Score &
+      BCubed Precision &
+      BCubed Recall &
+      r ratio differences \\
+      \midrule
+      Oxquarry         & 0.73 & 1.00 & 0.58 & 0.23\\
+      Brunet           & 0.82 & 0.94 & 0.72 & 0.11\\
+      St-Jean A        & 0.66 & 1.00 & 0.49 & 0.22\\
+      St-Jean B        & 0.73 & 1.00 & 0.58 & 0.27\\
+      \textbf{Average} &
+      \textbf{0.74} &
+      \textbf{0.98} &
+      \textbf{0.59} &
+      \textbf{0.21} \\
+      \bottomrule
+    \end{tabular}
+\end{table*}
 
-  \subcaption{Oxquarry}
-  \label{fig:unsupervised_clustering_oxquarry}
-  \includegraphics[width=\linewidth]{img/unsupervised_clustering_oxquarry.png}
+\begin{figure}
+  \caption{Unsupervised clustering example on Brunet and St-Jean B}
+  \label{fig:unsupervised_clustering}
 
   \subcaption{Brunet}
   \label{fig:unsupervised_clustering_brunet}
   \includegraphics[width=\linewidth]{img/unsupervised_clustering_brunet.png}
-\end{figure}
-
-\begin{figure}
-  \caption{Unsupervised clustering on St-Jean}
-  \label{fig:unsupervised_clustering_sj}
-
-  \subcaption{St-Jean A}
-  \label{fig:unsupervised_clustering_st_jean_A}
-  \includegraphics[width=\linewidth]{img/unsupervised_clustering_st_jean_A.png}
 
   \subcaption{St-Jean B}
   \label{fig:unsupervised_clustering_st_jean_B}
   \includegraphics[width=\linewidth]{img/unsupervised_clustering_st_jean_B.png}
-
-  \subcaption{St-Jean}
-  \label{fig:unsupervised_clustering_st_jean}
-  \includegraphics[width=\linewidth]{img/unsupervised_clustering_st_jean.png}
 \end{figure}
 
 \subsubsection{Clustering with the supervised cut method}
 
 To evaluate the supervised clustering approach, every dataset were used.
-First a rank list for each dataset is computed using a z-score fusion of the following rank lists based on the token representation : smoothed z-scored Manhattan, smoothed Tanimoto, smoothed Clark, smoothed z-scored Cosine distance, 6-grams smoothed z-scored Manhattan, 6-grams smoothed z-scored Cosine distance.
-The average precision for these rank list are the following : Oxquarry: 0.72 AP, Brunet 0.72 AP, St-Jean A: 0.83 AP, St-Jean B: 0.93 AP.
-Then every pair of datasets is used to create a training/testing evaluation.
+First a rank list for each dataset is computed using a z-score fusion using the retained rank list, see Section~\ref{sec:annex_retained_text_representation} in annex.
+Then every pair of rank list is used to create a training/testing evaluation.
 In other words, a model to create cuts is trained on every dataset and tested on every dataset.
-The model trained to perform the cut is language independent, since the training is only based on the rank list positions of true and false links.
+The model trained to perform the cut is language independent, since the training is only based on the rank list positions of true and false links and the score obtained at each rank.
 The model does not depend on the rank list size since only relative magnitudes are used.
+A vizual example of the cluster selection is printed
 An example of a run using the St-Jean A as training set and St-Jean B as testing is shown visually in Figure~\ref{fig:supervised_clustering_sj}.
 The BCubed $F_1$ scores computed during this experiment are in Table~\ref{tab:training_testing_f_1} and the r ratio difference
 in Table~\ref{tab:training_testing_r_diff}
@@ -850,44 +798,26 @@ Multiple points can be observed with these results:
   When a low r-ratio difference occure, the results tends to show that a large B-Cubed $F_1$ score is obtained, and vice versa.
 \end{itemize}
 
-% oxquarry oxquarry ((1.0, 0.6987179487179487, 0.8226415094339622), 4)
-% oxquarry brunet ((0.9393939393939394, 0.7272727272727273, 0.8198347107438017), 5)
-% oxquarry st_jean_a ((0.929846153846154, 0.7943123543123544, 0.8567521885196939), 4)
-% oxquarry st_jean_b ((1.0, 0.9114285714285714, 0.9536621823617338), 3)
-% brunet oxquarry ((1.0, 0.6298076923076923, 0.7728613569321534), 8)
-% brunet brunet ((0.9545454545454546, 0.5681818181818182, 0.7123473541383989), 10)
-% brunet st_jean_a ((0.976, 0.6814405594405593, 0.8025458074206586), 10)
-% brunet st_jean_b ((1.0, 0.8714285714285714, 0.9312977099236641), 4)
-% st_jean_a oxquarry ((1.0, 0.6426282051282052, 0.7824390243902439), 7)
-% st_jean_a brunet ((0.9393939393939394, 0.7272727272727273, 0.8198347107438017), 5)
-% st_jean_a st_jean_a ((0.976, 0.7343123543123543, 0.8380794958322204), 7)
-% st_jean_a st_jean_b ((1.0, 0.9114285714285714, 0.9536621823617338), 3)
-% st_jean_b oxquarry ((1.0, 0.6426282051282052, 0.7824390243902439), 7)
-% st_jean_b brunet ((0.9545454545454546, 0.6136363636363636, 0.7470355731225297), 9)
-% st_jean_b st_jean_a ((0.976, 0.6994405594405593, 0.8148949029166735), 9)
-% st_jean_b st_jean_b ((1.0, 0.8714285714285714, 0.9312977099236641), 4)
-
-
-
 \begin{figure}
-  \caption{Clustering with the supervised cut method on St-Jean}
+  \caption{Supervised clustering example}
   \label{fig:supervised_clustering_sj}
 
-  \subcaption{Training on St-Jean A}
-  \label{fig:supervised_clustering_training_st_jean_A}
-  \includegraphics[width=\linewidth]{img/supervised_clustering_training_st_jean_A.png}
+  \subcaption{Testing on St-Jean A (training St-Jean A)}
+  \label{fig:supervised_clustering_testing_st_jean_A_with_st_jean_A}
+  \includegraphics[width=\linewidth]{img/supervised_clustering_testing_st_jean_A_with_st_jean_A.png}
 
-  \subcaption{Testing on St-Jean B using the training on St-Jean A}
+  \subcaption{Testing on St-Jean B (training on St-Jean A)}
   \label{fig:supervised_clustering_testing_st_jean_B_with_st_jean_A}
   \includegraphics[width=\linewidth]{img/supervised_clustering_testing_st_jean_B_with_st_jean_A.png}
 \end{figure}
 
 \begin{table*}
   \centering
-  \caption{Supervised clustering evaluation for every possible training testing dataset pairs.}
+  \caption{Supervised clustering evaluation}
+  \label{tab:supervised_clustering}
 
-  \subcaption{BCubed $F_1$ Scores}
-  \label{tab:training_testing_f_1}
+  \subcaption{Every possible training testing dataset pairs. Metrics in order : BCubed $F_1$ Score / BCubed Precision / BCubed Recall / r ratio difference}
+  \label{tab:supervised_clustering_train_test}
   \begin{tabular}{l l| c c c c}
     \toprule
     \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing}\\
@@ -895,26 +825,49 @@ Multiple points can be observed with these results:
                     & Oxquarry & Brunet & St-Jean A & St-Jean B \\
         \midrule
     \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
-        & Oxquarry  & 0.82     & 0.82   & 0.86      & 0.95 \\
-        & Brunet    & 0.77     & 0.71   & 0.80      & 0.93 \\
-        & St-Jean A & 0.78     & 0.82   & 0.83      & 0.95 \\
-        & St-Jean B & 0.78     & 0.74   & 0.81      & 0.93 \\
+        & Oxquarry
+        & 0.82/1.00/0.70/0.08
+        & 0.86/0.91/0.82/0.07
+        & 0.91/0.87/0.95/-0.03
+        & 0.92/0.88/0.98/-0.02
+        \\
+        & Brunet
+        & 0.80/1.00/0.67/0.10
+        & 0.75/0.94/0.62/0.18
+        & 0.79/0.96/0.67/0.09
+        & 0.92/1.00/0.86/0.04
+        \\
+        & St-Jean A
+        & 0.80/1.00/0.67/0.10
+        & 0.82/0.94/0.73/0.11
+        & 0.87/0.93/0.81/0.03
+        & 0.93/0.93/0.94/0.00
+        \\
+        & St-Jean B
+        & 0.80/1.00/0.67/0.10
+        & 0.76/0.94/0.64/0.16
+        & 0.81/0.96/0.70/0.08
+        & 0.92/1.00/0.86/0.04
+        \\
         \bottomrule
   \end{tabular}
 
-  \subcaption{r ratio differences}
-  \label{tab:training_testing_r_diff}
-  \begin{tabular}{l l|c c c c}
+  \subcaption{Metrics averages}
+  \label{tab:supervised_clustering_average}
+  \begin{tabular}{l c c c c}
     \toprule
-    \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing}\\
-    \multicolumn{2}{c}{}
-                    & Oxquarry & Brunet & St-Jean A & St-Jean B \\
-        \midrule
-    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
-        & Oxquarry  & 0.08     & 0.11   & 0.04      & 0.03          \\
-        & Brunet    & 0.15     & 0.22   & 0.10      & 0.04          \\
-        & St-Jean A & 0.13     & 0.11   & 0.07      & 0.03          \\
-        & St-Jean B & 0.13     & 0.20   & 0.09      & 0.04          \\
-        \bottomrule
+    &
+    BCubed $F_1$ Score &
+    BCubed Precision &
+    BCubed Recall &
+    r ratio differences \\
+    \midrule
+    \textbf{Average}
+    & \textbf{0.84}
+    & \textbf{0.95}
+    & \textbf{0.77}
+    & \textbf{0.07}
+    \\
+    \bottomrule
   \end{tabular}
 \end{table*}

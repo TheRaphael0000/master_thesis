@@ -79,7 +79,7 @@ if __name__ == '__main__':
     X_training, Y_training = X2, Y2
     X_testing, Y_testing = X4, Y4
 
-    rls = [compute_links(*e) for e in experiments_(X_testing)]
+    rls = [compute_links(e) for e in experiments_(X_testing)]
     s_curve = s_curves.sigmoid_reciprocal(c=4, r=0.1)
     rls = [s_curves.soft_veto(rl, s_curve) for rl in rls]
     print("Rank lists")
@@ -92,7 +92,7 @@ if __name__ == '__main__':
 
     print("Regression")
     print("Train")
-    rls_training = [compute_links(*e) for e in experiments_(X_training)]
+    rls_training = [compute_links(e) for e in experiments_(X_training)]
     models = []
     for rl in rls_training:
         model, rmse = fusion_regression_training(rl, Y_training)

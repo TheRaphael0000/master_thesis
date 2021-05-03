@@ -27,7 +27,6 @@ from evaluate import evaluate_linking
 from evaluate import evaluate_clustering
 
 from linking import compute_links
-from linking import compute_links_compress
 from linking import most_frequent_word
 
 from clustering import supervised_clustering_training
@@ -61,18 +60,18 @@ def main():
 
     # frequent_errors()
     # dates_differences()
-    fusion()
+    # fusion()
 
     # count_ngrams()
 
     # unsupervised_clustering_evaluation()
-    # supervised_clustering_evaluation()
+    supervised_clustering_evaluation()
 
 
 def distance_over_rank():
     _, _, X, _ = brunet.parse()
 
-    rank_list = compute_links(X, 0, 500, False, 0.1, distances.manhattan)
+    rank_list = compute_links([X, 0, 500, False, 0.1, distances.manhattan])
     plt.figure(figsize=(4, 3), dpi=200)
     plt.plot(range(len(rank_list)), [r[-1] for r in rank_list])
     plt.xlabel("Rank")
@@ -136,7 +135,7 @@ def degradation():
     for i in sizes:
         # limitate the data size
         Xi = [x[:i] for x in X]
-        rl = compute_links(Xi, 0, 500, True, 0.1, distances.cosine_distance)
+        rl = compute_links([Xi, 0, 500, True, 0.1, distances.cosine_distance])
         m = evaluate_linking(rl, Y)
         print(i, m)
         M.append(m)
@@ -181,11 +180,11 @@ def token_vs_lemma():
     for mfw in mfws:
         for zscore, distance in distances_:
             print(mfw)
-            rl_token = compute_links(X_token, 0, mfw, zscore, 1e-1, distance)
+            rl_token = compute_links([X_token, 0, mfw, zscore, 1e-1, distance])
             Mi = evaluate_linking(rl_token, Y)
             M_token.append(Mi)
 
-            rl_lemma = compute_links(X_lemma, 0, mfw, zscore, 1e-1, distance)
+            rl_lemma = compute_links([X_lemma, 0, mfw, zscore, 1e-1, distance])
             Mi = evaluate_linking(rl_lemma, Y)
             M_lemma.append(Mi)
 
@@ -225,7 +224,7 @@ def letter_ngrams():
         print(ngrams_type)
         for mfw in mfws:
             rep = [X, ngrams_type, mfw, True, 1e-1, distances.cosine_distance]
-            rl = compute_links(*rep)
+            rl = compute_links(rep)
             m = evaluate_linking(rl, Y)
             M[ngrams_type].append(m)
             print(mfw, m)
@@ -266,16 +265,17 @@ def first_last_letters_ngrams():
 
         for mfw in mfws:
             print(mfw)
-            rl = compute_links(word_ngrams_X, 0, mfw, True,
-                               1e-1, distances.cosine_distance)
+            rep = [word_ngrams_X, 0, mfw, True,
+                   1e-1, distances.cosine_distance]
+            rl = compute_links()
             m = evaluate_linking(rl, Y)
             M_ngrams.append(m[0])
-            rl = compute_links(word_begin_X, 0, mfw, True,
-                               1e-1, distances.cosine_distance)
+            rep = [word_begin_X, 0, mfw, True, 1e-1, distances.cosine_distance]
+            rl = compute_links(rep)
             m = evaluate_linking(rl, Y)
             M_first.append(m[0])
-            rl = compute_links(word_end_X, 0, mfw, True,
-                               1e-1, distances.cosine_distance)
+            rep = [word_end_X, 0, mfw, True, 1e-1, distances.cosine_distance]
+            rl = compute_links(rep)
             m = evaluate_linking(rl, Y)
             M_last.append(m[0])
 
@@ -311,8 +311,8 @@ def pos_ngrams():
     ngrams_types = [2, 3, 4, (2, 3)]
     for ngrams_type in ngrams_types:
         for mfw in mfws:
-            rl = compute_links(X, ngrams_type, mfw, True,
-                               1e-1, distances.cosine_distance)
+            rep = [X, ngrams_type, mfw, True, 1e-1, distances.cosine_distance]
+            rl = compute_links(rep)
             m = evaluate_linking(rl, Y)
             M[ngrams_type].append(m)
             print(mfw, m)
@@ -355,7 +355,8 @@ def compression_evaluation():
         for compression_method, distance_func in distances_compressions:
             print(compression_method.__name__, distance_func.__name__)
             t0 = time.time()
-            rl = compute_links_compress(X, compression_method, distance_func)
+            rep = (X, compression_method, distance_func)
+            rl = compute_links(rep)
             t = time.time() - t0
             m = evaluate_linking(rl, Y)
             M.append(m)
@@ -406,7 +407,7 @@ def frequent_errors():
     rls = []
 
     for t in text_representations:
-        rl = compute_links(*t)
+        rl = compute_links(t)
         rls.append(rl)
         m = evaluate_linking(rl, Y)
         print(m)
@@ -477,7 +478,7 @@ def dates_differences():
         [X, 0, 750, True, 1e-1, distances.cosine_distance],
     ]
 
-    rls = [compute_links(*t) for t in text_representations]
+    rls = [compute_links(t) for t in text_representations]
     rl = fusion_z_score(rls)
     print(*evaluate_linking(rl, Y))
 
@@ -520,6 +521,39 @@ def dates_differences():
          "img/dates_differences_r_false.png")
 
 
+def tr9(X_token, X_pos):
+    return [
+        [X_token, 0, 750, True, 1e-1, distances.cosine_distance],
+        [X_token, 0, 750, False, 1e-1, distances.clark],
+        [X_token, 0, 750, True, 1e-1, distances.manhattan],
+        [X_token, 0, 750, False, 1e-1, distances.tanimoto],
+        [X_token, 3, 3000, True, 1e-1, distances.cosine_distance],
+        [X_token, 4, 8000, True, 1e-1, distances.cosine_distance],
+        [X_pos, 2, 250, True, 1e-1, distances.cosine_distance],
+        [X_pos, 3, 1000, True, 1e-1, distances.cosine_distance],
+        (X_token, compressions.bz2, distances.cbc)
+    ]
+
+
+def tr7(X_token):
+    return [
+        [X_token, 0, 750, True, 1e-1, distances.cosine_distance],
+        [X_token, 0, 750, False, 1e-1, distances.clark],
+        [X_token, 0, 750, True, 1e-1, distances.manhattan],
+        [X_token, 0, 750, False, 1e-1, distances.tanimoto],
+        [X_token, 3, 3000, True, 1e-1, distances.cosine_distance],
+        [X_token, 4, 8000, True, 1e-1, distances.cosine_distance],
+        (X_token, compressions.bz2, distances.cbc)
+    ]
+
+
+def tr(*X):
+    if len(X) == 2:
+        return tr9(X[0], X[1])
+    else:
+        return tr7(X[0])
+
+
 def fusion():
     # _, X1, Y1 = oxquarry.parse()
     # _, _, X2, Y2 = brunet.parse()
@@ -529,28 +563,13 @@ def fusion():
     X_training, Y_training = (X4_token, X4_pos), Y4
     X_testing, Y_testing = (X3_token, X3_pos), Y3
 
-    def tr(X_token, X_pos):
-        return [
-            [X_token, 0, 750, True, 1e-1, distances.cosine_distance],
-            [X_token, 0, 750, False, 1e-1, distances.clark],
-            [X_token, 0, 750, True, 1e-1, distances.manhattan],
-            [X_token, 0, 750, False, 1e-1, distances.tanimoto],
-            [X_token, 3, 3000, True, 1e-1, distances.cosine_distance],
-            [X_token, 4, 8000, True, 1e-1, distances.cosine_distance],
-            [X_pos, 2, 250, True, 1e-1, distances.cosine_distance],
-            [X_pos, 3, 1000, True, 1e-1, distances.cosine_distance],
-            (X_token, compressions.bz2, distances.cbc)
-        ]
-
     fusion_size = 4
 
     models = []
     print("Training rank lists")
-    for i, t in enumerate(tr(*X_training)):
-        if type(t) == tuple:
-            rl = compute_links_compress(*t)
-        else:
-            rl = compute_links(*t)
+    tr_training = tr9(*X_training)
+    for i, t in enumerate(tr_training):
+        rl = compute_links(t)
         model, rmse = fusion_regression_training(rl, Y_training)
         models.append(model)
         mesures = evaluate_linking(rl, Y_training)
@@ -559,11 +578,9 @@ def fusion():
     M_single = []
     rank_lists = []
     print("Testing rank lists")
-    for i, t in enumerate(tr(*X_testing)):
-        if type(t) == tuple:
-            rl = compute_links_compress(*t)
-        else:
-            rl = compute_links(*t)
+    tr_testing = tr9(*X_testing)
+    for i, t in enumerate(tr_testing):
+        rl = compute_links(t)
         rank_lists.append(rl)
         mesures = evaluate_linking(rl, Y_testing)
         M_single.append(mesures)
@@ -577,7 +594,7 @@ def fusion():
     M_fusion_regression = []
 
     tr_ids = np.array(
-        list(itertools.combinations(range(len(tr(*X_training))), fusion_size)))
+        list(itertools.combinations(range(len(tr_training)), fusion_size)))
 
     for tr_id in tr_ids:
         rls = [rank_lists[i] for i in tr_id]
@@ -604,8 +621,10 @@ def fusion():
     plt.figure(figsize=(6, 4), dpi=200)
     x, y, c = M_single[:, 1], M_single[:, 0], M_single[:, 2]
     plt.scatter(x, y, c=c, marker="o", label="Single rank list", alpha=0.8)
-    x, y, c = M_fusion_regression[:,1], M_fusion_regression[:, 0], M_fusion_regression[:, 2]
-    plt.scatter(x, y, c=c, marker="x", label=f"Regression fusions ({fusion_size} lists)", alpha=0.5)
+    x, y, c = M_fusion_regression[:,
+                                  1], M_fusion_regression[:, 0], M_fusion_regression[:, 2]
+    plt.scatter(x, y, c=c, marker="x",
+                label=f"Regression fusions ({fusion_size} lists)", alpha=0.5)
     x, y, c = M_fusion_z_score[:,
                                1], M_fusion_z_score[:, 0], M_fusion_z_score[:, 2]
     plt.scatter(x, y, c=c, marker="+",
@@ -621,15 +640,20 @@ def fusion():
     print("Fusion Statistics")
 
     def print_statistics_latex(M_list):
-        print("Min &", " & ".join(np.round(M_list.min(axis=0), 3).astype(str)), r"\\")
-        mean_std = zip(np.round(M_list.mean(axis=0), 3).astype(str), np.round(M_list.std(axis=0), 3).astype(str))
+        print("Min &", " & ".join(
+            np.round(M_list.min(axis=0), 3).astype(str)), r"\\")
+        mean_std = zip(np.round(M_list.mean(axis=0), 3).astype(
+            str), np.round(M_list.std(axis=0), 3).astype(str))
         mean_std = [f"{mean}\pm{std}" for mean, std in mean_std]
         print("Mean$\pm$Std &", " & ".join(mean_std), r"\\")
-        print("Max &", " & ".join(np.round(M_list.max(axis=0), 3).astype(str)), r"\\")
+        print("Max &", " & ".join(
+            np.round(M_list.max(axis=0), 3).astype(str)), r"\\")
         argmin = tr_ids[np.argmin(M_list, axis=0)]
-        print("Argmin &", " & ".join([np.array2string(a, separator=",") for a in argmin]), r"\\")
+        print("Argmin &", " & ".join(
+            [np.array2string(a, separator=",") for a in argmin]), r"\\")
         argmax = tr_ids[np.argmax(M_list, axis=0)]
-        print("Argmax &", " & ".join([np.array2string(a, separator=",") for a in argmax]), r"\\")
+        print("Argmax &", " & ".join(
+            [np.array2string(a, separator=",") for a in argmax]), r"\\")
 
     print("Single mean")
     print_statistics_latex(M_single_mean)
@@ -667,20 +691,14 @@ def count_ngrams():
 def unsupervised_clustering_evaluation():
     # _, X, Y = oxquarry.parse()
     # _, _, X, Y = brunet.parse()
-    _, _, _, X, Y = st_jean.parse_B()
+    # _, _, X_pos, X_token, Y = st_jean.parse_A()
+    _, _, X_pos, X_token, Y = st_jean.parse_B()
 
-    text_representations = [
-        [X, 0, 500, True, 1e-1, distances.manhattan],
-        [X, 0, 500, False, 1e-1, distances.tanimoto],
-        [X, 0, 500, False, 1e-1, distances.clark],
-        [X, 0, 500, False, 1e-1, distances.matusita],
-        [X, 0, 500, True, 1e-1, distances.cosine_distance],
-        [X, 6, 500, True, 1e-1, distances.manhattan],
-        [X, 6, 500, True, 1e-1, distances.cosine_distance],
-    ]
+    tr = tr9(X_token, X_pos)
+    # tr = tr7(X)
 
     print("AP RPrec HPrec")
-    rank_lists = [compute_links(*t) for t in text_representations]
+    rank_lists = [compute_links(t) for t in tr]
     for rank_list in rank_lists:
         print(evaluate_linking(rank_list, Y))
 
@@ -725,28 +743,6 @@ def unsupervised_clustering_evaluation():
 
 
 def supervised_clustering_evaluation():
-    def linking(X):
-        text_representations = [
-            [X, 0, 500, True, 1e-1, distances.manhattan],
-            [X, 0, 500, False, 1e-1, distances.tanimoto],
-            [X, 0, 500, False, 1e-1, distances.clark],
-            [X, 0, 500, False, 1e-1, distances.matusita],
-            [X, 0, 500, True, 1e-1, distances.cosine_distance],
-
-            [X, 6, 500, True, 1e-1, distances.manhattan],
-            [X, 6, 500, True, 1e-1, distances.cosine_distance],
-        ]
-        rls = [compute_links(*t) for t in text_representations]
-        rl = fusion_z_score(rls)
-        return rl, rls
-
-    def linking_evaluation(rl, rls, Y):
-        print("AP RPrec HPrec (Used for overall)")
-        for rl_ in rls:
-            print(*evaluate_linking(rl_, Y))
-        print("AP RPrec HPrec (Overall)")
-        print(*evaluate_linking(rl, Y))
-
     def plot(rl, Y, n_clusters_found, n_clusters_actual, filename):
         ns, labels_list = clustering_at_every_n_clusters(rl)
         evaluations = np.array([evaluate_clustering(Y, labels)
@@ -773,34 +769,18 @@ def supervised_clustering_evaluation():
         plt.tight_layout()
         plt.savefig(f"img/{filename}.png")
 
-    def do(X_training, Y_training, X_testing, Y_testing):
-        print("Training")
-        rl, rls = linking(X_training)
-        linking_evaluation(rl, rls, Y_training)
-
-        print("Learning cut")
-        model, eval = supervised_clustering_training(
-            rl, Y_training, return_eval=True)
-        print(eval)
-
-        print("Testing")
-        rl, rls = linking(X_testing)
-        linking_evaluation(rl, rls, Y_testing)
-        labels = supervised_clustering_predict(model, rl)
-        n_clusters_found = len(np.unique(labels))
-        n_clusters_actual = len(np.unique(Y_testing))
-        plot(rl, Y_testing, n_clusters_found,
-             n_clusters_actual, "supervised_clustering_testing")
-        M = evaluate_clustering(Y_testing, labels)
-        diff = n_clusters_found - n_clusters_actual
-        return M, diff
 
     print("Loading")
+    _, X_oxquarry, Y_oxquarry = oxquarry.parse()
+    _, _, X_brunet, Y_brunet = brunet.parse()
+    _, _, X_pos_st_jean_A, X_token_st_jean_A, Y_st_jean_A = st_jean.parse_A()
+    _, _, X_pos_st_jean_B, X_token_st_jean_B, Y_st_jean_B = st_jean.parse_B()
+
     datasets = [
-        oxquarry.parse()[-2:],
-        brunet.parse()[-2:],
-        st_jean.parse_A()[-2:],
-        st_jean.parse_B()[-2:]
+        ([X_oxquarry,], Y_oxquarry),
+        ([X_brunet,], Y_brunet),
+        ([X_pos_st_jean_A, X_token_st_jean_A], Y_st_jean_A),
+        ([X_pos_st_jean_B, X_token_st_jean_B], Y_st_jean_B),
     ]
     dataset_labels = [
         "oxquarry",
@@ -810,20 +790,36 @@ def supervised_clustering_evaluation():
     ]
     ids = range(len(datasets))
 
-    diffs = {}
+    dataset_rls = []
+    np.set_printoptions(precision=2, floatmode="fixed")
 
-    # for X, Y in datasets:
-    #     rl, rls = linking(X)
-    #     linking_evaluation(rl, rls, Y)
+    print("Computing rank lists")
+    for id in ids:
+        X, Y = datasets[id]
+        tr_training = tr(*X)
+        rls = [compute_links(t) for t in tr_training]
+        for rl in rls:
+            M = evaluate_linking(rl, Y)
+            print(M)
+        rl = fusion_z_score(rls)
+        dataset_rls.append(rl)
+        print(dataset_labels[id], evaluate_linking(rl, Y))
 
+    m = []
+    print("Supervised clustering")
     for A, B in itertools.product(ids, ids):
         X_training, Y_training = datasets[A]
+        rl_training = dataset_rls[A]
         X_testing, Y_testing = datasets[B]
-        print(dataset_labels[A], dataset_labels[B])
-        diffs[(A, B)] = do(X_training, Y_training, X_testing, Y_testing)
+        rl_testing = dataset_rls[B]
 
-    for A, B in itertools.product(ids, ids):
-        print(dataset_labels[A], dataset_labels[B], diffs[(A, B)])
+        model = supervised_clustering_training(rl_training, Y_training)
+        Y_pred = supervised_clustering_predict(model, rl_testing)
+        M = evaluate_clustering(Y_testing, Y_pred)
+        m.append(M)
+        print(dataset_labels[A], dataset_labels[B], M)
+
+    print(np.array(m).mean(axis=0))
 
 
 if __name__ == "__main__":

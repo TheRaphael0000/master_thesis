@@ -66,7 +66,7 @@ def most_frequent_word(X, n, z_score=False, lidstone_lambda=0.1):
     return features, mfw
 
 
-def compute_links(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func):
+def compute_links_mfw(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func):
     # Tokens normalization
     if type(X[0]) == str:
         X = [[normalize_text(t) for t in xi] for xi in X]
@@ -84,6 +84,7 @@ def compute_links(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func):
 
 def compute_links_compress(X, compression_method, distance_func):
     X = ["_".join(Xi).encode("utf8") for Xi in X]
+
     X_sizes = [compression_method(Xi) for Xi in X]
 
     pairs_indices = list(itertools.combinations(range(len(X)), 2))
@@ -97,6 +98,15 @@ def compute_links_compress(X, compression_method, distance_func):
     return rank_list
 
 
+def compute_links(text_representation):
+    if type(text_representation) == list:
+        return compute_links_mfw(*text_representation)
+    elif type(text_representation) == tuple:
+        return compute_links_compress(*text_representation)
+    else:
+        return None
+
+
 if __name__ == '__main__':
     # Simple test script for the module
     # _, _, X, Y = brunet.parse()
@@ -104,7 +114,7 @@ if __name__ == '__main__':
     # _, _, _, X, Y = st_jean.parse_B()
 
     print("AP RPrec P@10 HPrec")
-    rank_list = compute_links(X, 3, 500, False, 0.1, distances.manhattan)
+    rank_list = compute_links([X, 3, 500, False, 0.1, distances.manhattan])
     print(*evaluate_linking(rank_list, Y))
-    rank_list = compute_links_compress(X, compressions.lzma, distances.ncd)
+    rank_list = compute_links((X, compressions.bz2, distances.ncd))
     print(*evaluate_linking(rank_list, Y))

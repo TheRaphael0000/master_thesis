@@ -1,8 +1,9 @@
-\section*{Annex \label{sec:annex}}
+\section{Annex \label{sec:annex}}
 
-\subsection*{Datasets / Corpus}
+\subsection{Datasets / Corpus}
+\label{sec:annex_dataset_corpus}
 
-\begin{table*}[h]
+\begin{table*}[H]
   \caption{General information and statistics on the PAN @ CLEF dataset}
   \label{tab:pan_datasets}
 
@@ -78,7 +79,7 @@
 \end{table*}
 
 \twocolumn
-\begin{table}
+\begin{table}[H]
   \caption{Excerpts from the Oxquarry corpus}
   \label{tbl:oxquarry_corpus}
   \begin{tabular}{l l l}
@@ -143,7 +144,7 @@
   \end{tabular}
 \end{table}
 
-\begin{table}
+\begin{table}[H]
   \caption{Excerpts from the Brunet corpus}
   \label{tbl:brunet_corpus}
   \begin{tabular}{l l l}
@@ -202,7 +203,7 @@
 
 \onecolumn
 
-\begin{table}
+\begin{table}[H]
   \caption{Excerpts from the St-Jean Serie A (0-50) corpus}
   \label{tbl:st_jean_corpus_1}
   \begin{tabular}{l l l l}
@@ -267,7 +268,7 @@
 \end{table}
 
 
-\begin{table}
+\begin{table}[H]
   \caption{Excerpts from the St-Jean Serie A (51-100) corpus}
   \label{tbl:st_jean_corpus_2}
   \begin{tabular}{l l l l}
@@ -331,7 +332,7 @@
   \end{tabular}
 \end{table}
 
-\begin{table}
+\begin{table}[H]
   \caption{Excerpts from the St-Jean Serie B (101-150) corpus}
   \label{tbl:st_jean_corpus_3}
   \begin{tabular}{l l l l}
@@ -395,7 +396,7 @@
   \end{tabular}
 \end{table}
 
-\begin{table}
+\begin{table}[H]
   \caption{Excerpts from the St-Jean Serie B (151-200) corpus}
   \label{tbl:st_jean_corpus_4}
   \begin{tabular}{l l l l}
@@ -457,4 +458,125 @@
     200 & Sue Eugène & Les Mystères de Paris & 1842 \\
     \bottomrule
   \end{tabular}
+\end{table}
+
+\newpage
+\subsection{Retained text representation}
+\label{sec:annex_retained_text_representation}
+
+\begin{table}[H]
+  \centering
+  \caption{Retained text representation, text representation with a star (*) are only used for the St-Jean dataset}
+  \label{tab:9rl}
+  \begin{tabular}{c l}
+    \toprule
+    Id &
+    Method \\
+    \midrule
+    0 & 750 MFW tokens with Cosine Distance \\
+    1 & 750 MFW tokens with Clark \\
+    2 & 750 MFW tokens with Manhattan \\
+    3 & 750 MFW tokens with Tanimoto \\
+    4 & 3000 MFW tokens 3-grams with Cosine distance \\
+    5 & 8000 MFW tokens 4-grams with Cosine distance \\
+    *6 & 250 MFW POS 2-grams with Cosine distance \\
+    *7 & 1000 MFW POS 3-grams with Cosine distance \\
+    8 & Compression using BZip2 with the CBC distance. \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}[H]
+  \centering
+  \caption{Oxquarry and Brunet rank lists results for retained text representation}
+  \label{tab:9rl_results_brunet_oxquarry}
+
+  \subcaption{Oxquarry}
+  \begin{tabular}{c r r r}
+    \toprule
+    Method id &
+    Average Precision &
+    R-Precision &
+    High Precision \\
+    \midrule
+    0 & 0.8854 & 0.7938 & 92 \\
+    1 & 0.8904 & 0.8000 & 88 \\
+    2 & 0.6708 & 0.5563 & 39 \\
+    3 & 0.6267 & 0.5688 & 54 \\
+    4 & 0.7742 & 0.6750 & 61 \\
+    5 & 0.7797 & 0.6813 & 84 \\
+    8 & 0.7884 & 0.6938 & 74 \\
+    \textbf{z-score fusion} & 0.8438 & 0.7375 & 90 \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{Brunet}
+  \begin{tabular}{c r r r}
+    \toprule
+    Method id &
+    Average Precision &
+    R-Precision &
+    High Precision \\
+    \midrule
+    0 & 0.7170 & 0.6364 & 19 \\
+    1 & 0.7136 & 0.6667 & 8 \\
+    2 & 0.6811 & 0.6212 & 19 \\
+    3 & 0.6743 & 0.6364 & 22 \\
+    4 & 0.7336 & 0.6667 & 24 \\
+    5 & 0.7397 & 0.6667 & 20 \\
+    8 & 0.7640 & 0.6970 & 25 \\
+    \textbf{z-score fusion} & 0.7586 & 0.6970 & 21 \\
+    \bottomrule
+  \end{tabular}
+
+\end{table}
+
+
+\begin{table}[H]
+  \centering
+  \caption{St-Jean rank lists results for retained text representation}
+  \label{tab:9rl_results_st_jean}
+
+  \subcaption{St-Jean A}
+  \begin{tabular}{c r r r}
+    \toprule
+    Method id &
+    Average Precision &
+    R-Precision &
+    High Precision \\
+    \midrule
+    0 & 0.7770 & 0.6909 & 65 \\
+    1 & 0.7479 & 0.6606 & 68 \\
+    2 & 0.7706 & 0.7030 & 99 \\
+    3 & 0.7574 & 0.6879 & 80 \\
+    4 & 0.7119 & 0.6091 & 75 \\
+    5 & 0.7585 & 0.6515 & 72 \\
+    6 & 0.5888 & 0.5212 & 38 \\
+    7 & 0.7228 & 0.6212 & 66 \\
+    8 & 0.7259 & 0.6333 & 83 \\
+    \textbf{z-score fusion} & 0.8468 & 0.7485 & 92 \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{St-Jean B}
+  \begin{tabular}{c r r r}
+    \toprule
+    Method id &
+    Average Precision &
+    R-Precision &
+    High Precision \\
+    \midrule
+    0 & 0.9366 & 0.8682 & 165 \\
+    1 & 0.9105 & 0.8140 & 124 \\
+    2 & 0.9277 & 0.8566 & 156 \\
+    3 & 0.8866 & 0.8178 & 169 \\
+    4 & 0.9087 & 0.8295 & 172 \\
+    5 & 0.9239 & 0.8566 & 182 \\
+    6 & 0.8565 & 0.7597 & 147 \\
+    7 & 0.9041 & 0.8372 & 156 \\
+    8 & 0.8690 & 0.7674 & 153 \\
+    \textbf{z-score fusion} & 0.9410 & 0.8527 & 183 \\
+    \bottomrule
+  \end{tabular}
+
 \end{table}

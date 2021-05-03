@@ -23,8 +23,9 @@ def supervised_clustering_training(rank_list, Y, return_eval=False, random_state
     if return_eval:
         Y_pred = model.predict(X_rl)
         eval = precision_recall_fscore_support(Y_pred, Y_rl)
-        outputs += [eval]
-    return tuple(outputs)
+        return (model, eval)
+    else:
+        return model
 
 
 def supervised_clustering_predict(model, rank_list):
@@ -35,8 +36,6 @@ def supervised_clustering_predict(model, rank_list):
     # the sum give the position n of the "flip" in the rank list since
     # the n first should be ones
     distance_threshold = rank_list[np.sum(Y_pred)][-1]
-    print("distance_threshold:", distance_threshold)
-    # n_clusters = compute_number_clusters_from_rank_list(rank_list[:np.sum(Y_pred)])
 
     args = {
         "n_clusters": None,

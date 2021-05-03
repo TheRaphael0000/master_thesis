@@ -2,6 +2,8 @@
 
 from misc import compute_r
 
+import numpy as np
+
 import bcubed
 
 
@@ -10,21 +12,24 @@ def evaluate_linking(rank_list, Y):
     ap_ = ap(rank_list, Y)
     rprec_ = rprec(rank_list, Y)
     hprec_ = hprec(rank_list, Y)
-    return ap_, rprec_, hprec_
+    M = np.array([ap_, rprec_, hprec_])
+    return M
 
 
-def evaluate_clustering(Y, pred):
+def evaluate_clustering(Y_true, Y_pred):
     """Combination of metrics used for evaluating the clustering task"""
     # change clustering representation for bcubed computations
     ldict = {}
     cdict = {}
-    for i, (l, c) in enumerate(zip(Y, pred)):
+    for i, (l, c) in enumerate(zip(Y_true, Y_pred)):
         ldict[i] = set([l])
         cdict[i] = set([c])
     bcubed_precision = bcubed.precision(cdict, ldict)
     bcubed_recall = bcubed.recall(cdict, ldict)
     bcubed_fscore = bcubed.fscore(bcubed_precision, bcubed_recall)
-    return bcubed_precision, bcubed_recall, bcubed_fscore
+    r_ratios_diff_ = r_ratios_diff(Y_true, Y_pred)
+    M = np.array([bcubed_fscore, bcubed_precision, bcubed_recall, r_ratios_diff_])
+    return M
 
 
 def precision_at_k(rank_list, Y, k):
@@ -69,3 +74,10 @@ def hprec(rank_list, Y):
             return i
     # every documents in the list are relevant at this point
     return len(rank_list)
+
+
+def r_ratios_diff(Y_true, Y_pred):
+    k = len(np.unique(Y_true))
+    p = len(np.unique(Y_pred))
+    N = len(Y_true)
+    return (p - k) / N
