@@ -1,24 +1,28 @@
 \section{Methods \label{sec:methods}}
 
 To archive clustering, the method adopted was to compare document using the authorship linkings strategies presented in \textit{Evaluation of text representation schemes and distance measures for authorship linking}~\cite{kocher_verification}.
+These method aim to compare the simlarity of documents by considering reccurent stylistic patterns.
+Text patterns can be from either reccurant words, Part-Of-Speech (POS).
+Another possible way compare similarities between document explored in this study is to use compression techniques.
 
-In this study to archive a good clustering, the main objective is to have a reliable authorship linking rank list.
-To try to increase the quality of the rank list, the proposed method is to use a combination of multiple rank list using different strategies to form an optimistically better rank list.
+To archive a good clustering, the main objective is to have the most reliable authorship linking rank list possible.
+To increase the quality of the rank list, the proposed method is to use a combination of multiple rank list using different strategies to form an optimistically better rank list.
 By using the most diverse strategies, we believe it is possible to increase the quality using the principle of combination of evidences.
 
-\subsection{Most frequant words, feature vectors}
+\subsection{Most frequant words (MFW), feature vectors}
 
-To be able to express a document as a feature vector of size N, a common strategy in Stylometry is to find the N most frequent words (N-MFW) in a corpus, and for each document compute the relative frequency of each of these words for the document~\cite{savoy_stylo}.
-For example if the word : "\textit{the}" is in the N-MFW and occurs 50 times in a document with 300 words, its relative frequency is $50/300 = 1/6$, the word and the value will be in the feature vector if the frequency is in the top-N MFW.
-No clear value of N for the N-MFW is to choose over others, but a value between 50-500 tends to produce good results for the word token text representation~\cite{savoy_text_representation}.
+The first method used is called: Most frequant words (acronym: MFW), and try to compare the documents by creating feature vectors containing words frequencies.
+To be able to express a document as a feature vector of size $n$, a common strategy in Stylometry is to find the $n$ most frequent words ($n$-MFW) in a corpus, and for each document compute the relative frequency of each of these words for the document~\cite{savoy_stylo}.
+For example if the word : "\textit{the}" is in the $n$-MFW and occurs $50$ times in a document with $300$ words, its relative frequency is thus $50/300 = 1/6$, the word and the value will be in the feature vector if the frequency is in the top $n$-MFW.
+No clear value of $n$ for the $n$-MFW is to choose over others, but a value between $50$ and $500$ tends to produce good results for the word token text representation~\cite{savoy_text_representation}.
 
 Instead of using directly the words to create the feature vector, another possibility is to use the lemma corresponding to each word, for example the sentence \textit{I saw two men with a saw} its lemmatized version is : \textit{I see two man with a saw} this requires advanced text preprocessing, but it can remove ambiguity.
 
-Another popular method is instead of considering every token as a word, this method aim to create a "word" from short a sequence of letters called $n$-grams using Definition~\ref{def:letters_n_grams}.
-To consider an overlapping word, the whole document is synthesized into a long string by joining every token by a \textit{underscore} : $\_$.
+Another popular method is instead of considering every token as a word, this method aim to create a "word" from a short sequences of letters called $n$-grams using Definition~\ref{def:letters_n_grams}.
+To consider an overlapping word, the whole document is synthesized into a long string by joining every token by an \textit{underscore} : $\_$.
 This technique can be further exploited by combining for example two or more sizes of $n$-grams together.
 $n$-grams can be really effective even though no clear meaning from each $n$-grams can be exploited at first sight.
-A simple explaination of why $n$-grams can be effective is by using $n$-grams of size 3 to 5 in most germanic languages this  can correspond, for example to : the tense of the verbs (i.e. : \textit{ing\_}, \textit{ed\_}), some small common words (\textit{\_the\_}, \textit{\_and\_}, \textit{\_that}), or in French the adverbs (\textit{\_ment}), etc.
+A simple explaination of why $n$-grams can be effective is by using $n$-grams of size 3 to 5 in most germanic languages this can correspond to for example : the tense of the verbs (i.e. : \textit{ing\_}, \textit{ed\_}), some small common words (\textit{\_the\_}, \textit{\_and\_}, \textit{\_that}), or in French the adverbs (\textit{\_ment}), etc.
 
 \begin{definition}[Letters $n$-grams]
   \label{def:letters_n_grams}
@@ -27,8 +31,10 @@ A simple explaination of why $n$-grams can be effective is by using $n$-grams of
   $("\text{fox}", "\text{ox\_}", "\text{x\_i}", "\text{\_is}", "\text{is\_}", "\text{s\_b}", "\text{\_br}", "\text{bro}", "\text{row}", "\text{own}")$
 \end{definition}
 
-An alternative version of the $n$-grams algorithm used in this study called In-word $n$-grams, to differenciate it from the classical $n$-grams algorithm, called here Letters $n$-grams, is described in Definition~\ref{def:words_n_grams}.
+An alternative version of the $n$-grams algorithm used here is defined in~Definition~\ref{def:words_n_grams}.
 This algorithm consider each token as a string to apply the Letters $n$-grams algorithm to.
+To differenciate it from the classical $n$-grams algorithm,
+The latter algorithm, is called in this study In-word $n$-grams (Definition~\ref{def:words_n_grams}) and the other one is  called Letters $n$-grams (\ref{def:letters_n_grams}).
 
 \begin{definition}[In-words $n$-grams]
   \label{def:words_n_grams}
@@ -38,11 +44,11 @@ This algorithm consider each token as a string to apply the Letters $n$-grams al
   $("\text{fox}", "\text{is}", "\text{bro}", "\text{row}, "\text{own}")$
 \end{definition}
 
-Another possible stylistic aspect that can be detected from a text is to consider the sentence constructions.
+Another possible stylistic aspect that can be detected from a text using the MFW approach is to consider the sentence constructions.
 This can be solved by creating short sequences ($n$-grams) of POS tags.
 In this case, each POS is considered as a character in the Letters $n$-grams definition, this type of $n$-grams is also known as w-shingling.
 For example, the sentence : \textit{"The cat eat a fish"} has the following POS tag \textit{"Article Noun Verb Article Noun"} which correspond to the following 3-grams of POS : \textit{"Article Noun Verb"} / \textit{"Noun Verb Article"} / \textit{"Verb Article Noun"}.
-In practice the POS is more detailed, for example instead of just considering the verb, a more detailed POS can be the verb and its tense, the same goes for the other type of POS.
+In practice the POS is more detailed, for example instead of just considering \textit{eat} as a verb, a more detailed POS can be the verb and its tense \textit{Verb-SimplePresent}, the same goes for the other type of POS.
 
 When using features vectors based on the MFW approaches, once each document is represented as a feature vector they can be compared using metric in Section~\ref{sec:fv_distances}.
 
@@ -258,25 +264,25 @@ Z-Score fusion:
 
 \subsubsection{Regression fusion}
 
-Each rank list is ordered by a score, this score depend on distance measure used, thus the order of magnitude of each rank list is different.
-To avoid having to problems in merging rank list with different magnitude, the solution opted is to translate the scores into a probability of being a true link.
+Each rank list is ordered by a score, this score depends on distance measure used, thus the order of magnitude of each rank list is different.
+To avoid having problems in merging rank lists with different magnitude, the solution opted is to translate the scores into a probability of being a true link.
 To do so the logistic regression is used.
 This method is similar to the one proposed in \textit{Anne Le Calvé and Jacques Savoy (2000)}'s paper~\cite{le_calve_database_merging} and used for merging rank list issued from information retrieval systems.
 
 The main idea here is to learn a logistic regression model for each combination text representation and distance metrics used (here denoted \textit{type of rank list}).
-The features used to find the logistic parameters for each link in the rank list are : the log of the relative rank and the the link score.
-Since a probabilty of being a true link is desired, the target value for each true link is 1 and 0 when it's a false link.
+The features used to find the logistic parameters for each link in the rank list are : the log of the relative rank and the link score.
+Since a probability of being a true link is desired, the target value for each true link is 1 and 0 when it's a false link.
 
-Once a model per type of rank list is trained, this model can provide for any new same type rank list, probabilies of each links being a true link.
+Once a model per type of rank list is trained, this model can provide for any new same type rank list, probabilities of each link being a true link.
 The probability framework can now be used on the rank list.
-The fusion result in computing the expected value for each links true link's probability from multiple rank list of differant types.
-In this case, the expected value is simple average of the probabilities, since no link weighting is used.
+The fusion result in computing the expected value for each link true link's probability from a multiple rank list of different types.
+In this case, the expected value is a simple average of the probabilities, since no link weighting is used.
 
 \subsubsection{Soft-veto using S-Curve}
 
-An additional desired is to favor top ranked link and penalize bottom ranked links when fusing rank lists.
+An additional desired constraint is to favor top ranked link and penalize bottom ranked links when fusing rank lists.
 This constraint can be easily explained by observing the distance over the rank graph of the rank list.
-Figure~\ref{fig:distance_over_rank} clearly show us the top ranked links and bottom ranked links have a more sharper decision than in than the middle section.
+Figure~\ref{fig:distance_over_rank} clearly show us the top ranked links and bottom ranked links have a sharper decision than in than the middle section.
 
 \begin{figure}
   \centering
@@ -329,9 +335,8 @@ This soft-veto methodology can be used on certain rank list before fusing, to ha
 \subsection{Authors Clustering}
 
 To find clusters of authors, a possible way is to use a hierarchical clustering algorithm on a rank list.
-In a rank list, each link indicate that both documents should belong to the same cluster in order of certainty.
-The hardest task in this clustering scheme is to find the right cut in the rank list.
-This cut should maximize the number of true links above the cut and the number of false links under the cut.
+In a rank list, at each rank the link indicate if the two documents should belong to the same cluster in order of certainty.
+The hardest task in this clustering scheme is to find where the list should be cutted, such that the number of true links above the cut is maximized and the number of false links under the cut is minimized.
 To find this cut, two apporaches were explored : one using a unsupervised clustering evaluation technique which is totaly unsupervised and another one using a linear model to learn to make this cut but it requires a training dataset.
 
 \subsubsection{Agglomerative clustering}
@@ -373,14 +378,17 @@ This procedure is called Iterative Positive Silhouette (IPS) and was proposed in
 \subsubsection{Learning the threshold in a supervised way}
 
 To learn at which position in the rank list the cut should be, this second idea is to fit a linear model on samples created with the rank list.
-To train the model, a sample is created for each link in the rank list produced with a training dataset.
-In this study the model used is the logistic regression.
+To train the model, a sample is created for each link in a rank list.
 The links labels are either \textit{true} when both document in the link are from the same author and \textit{false} otherwise.
 The features used are : the log of the relative rank ($log(\frac{rank}{|L|})$ and the score of the link.
+Since the training is only based on the relative rank and the score at each rank, the trained model is language independent and size independent.
+But this model is metric dependent, since the score is not normalized.
 
-To find the cut on the test datasets, the fitted model is used on every links in the rank list, the number of \textit{true} labels give the rank at which the last link should be merged.
+In this study the model used is the logistic regression.
+To find the cut on the test datasets, the fitted model is used on every links in the testing rank list, the number of \textit{true} labels give the rank at which the last link should be merged.
+The links are labeled as \textit{true}, when the probability of being a true link is greater than $0.5$.
 This model can be used on any other rank lists produced with the same distance metrics.
-Using agglomerative clustering the maximal distance threshold can be the score of the last link to merged.
+Using agglomerative clustering the maximal distance threshold is the score of the last link to merged.
 
 \subsection{Pipeline}
 

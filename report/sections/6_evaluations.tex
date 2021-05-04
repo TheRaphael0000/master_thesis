@@ -453,7 +453,7 @@ One called \textit{Single-Max} which represent the best metrics for each rank li
 For example, if for a fusion the average precision of the 4 rank lists are : $0.5, 0.6, 0.7, 0.8$. Single-mean would have an average precision of $0.65$ and Single-max an average precision of $0.8$.
 
 The results of every fusion combinations using the proposed rank list and strategies are graphically presented in Figure~\ref{fig:fusions}.
-Statistiques for each metrics and fusion schemes are resumed  Table~\ref{tab:fusion_stats}, it contains for each metric, the minimal value (min), the average and the standard deviation (Avg$\pm$Std), the maximal value, the argmin and argmax for the metrics (ids of the rank list presented above).
+Statistiques for each metrics and fusion schemes are resumed Tables~\ref{tab:fusion_stats_A_B}/\ref{tab:fusion_stats_B_A}, it contains for each metric, the minimal value (min), the average and the standard deviation (Avg$\pm$Std), the maximal value, the argmin and argmax for the metrics (ids of the rank list presented above).
 A sign test between the two strategies and the two fusion methods is presented in Table~\ref{tab:fusion_sign_test}.
 
 \begin{figure}
@@ -473,7 +473,7 @@ A sign test between the two strategies and the two fusion methods is presented i
 \begin{table}
   \centering
   \caption{Fusion statistics on St-Jean A (training St-Jean B)}
-  \label{tab:fusion_stats}
+  \label{tab:fusion_stats_A_B}
 
   \subcaption{Single-Mean}
   \begin{tabular}{l l l l}
@@ -543,7 +543,7 @@ A sign test between the two strategies and the two fusion methods is presented i
 \begin{table}
   \centering
   \caption{Fusion statistics on St-Jean B (training St-Jean A)}
-  \label{tab:fusion_stats}
+  \label{tab:fusion_stats_B_A}
 
   \subcaption{Single-Mean}
   \begin{tabular}{l l l l}
@@ -777,10 +777,9 @@ To mitigate this problem, an easy solution would be to the stop the procedure at
 To evaluate the supervised clustering approach, every dataset were used.
 First a rank list for each dataset is computed using a z-score fusion using the retained rank list, see Section~\ref{sec:annex_retained_text_representation} in annex.
 Then every pair of rank list is used to create a training/testing evaluation.
-In other words, a model to create cuts is trained on every dataset and tested on every dataset.
-The model trained to perform the cut is language independent, since the training is only based on the rank list positions of true and false links and the score obtained at each rank.
+In other words, a model to create cuts is trained on every dataset and tested on all the datasets.
+
 The model does not depend on the rank list size since only relative magnitudes are used.
-A vizual example of the cluster selection is printed
 An example of a run using the St-Jean A as training set and St-Jean B as testing is shown visually in Figure~\ref{fig:supervised_clustering_sj}.
 The BCubed $F_1$ scores computed during this experiment are in Table~\ref{tab:training_testing_f_1} and the r ratio difference
 in Table~\ref{tab:training_testing_r_diff}

@@ -3,7 +3,7 @@
 In this section, the different corpus used will be introduced.
 Two types of corpus were selected for this study.
 Three literary corpus containing excerpts of English (1 corpus) and French (2 corpus) novels.
-Aswell as the ones used for PAN @ CLEF 2016 campaign~\cite{pan16}, which contain reviews and articles written in English, Dutch and Greek.
+As well as the ones used for PAN @ CLEF 2016 campaign~\cite{pan16}, which contain reviews and articles written in English, Dutch and Greek.
 
 \subsection{Literature corpus}
 \label{sec:lit_corpus}
@@ -15,21 +15,22 @@ The number of text per authors is relatively large, these datasets have a low $r
 
 The corpus Oxquarry contain 52 excerpts from English novels from 9 different authors (Butler, Chesterton, Conrad, Forster, Hardy, Morris, Orczy, Tressel, Stevenson).
 The complete list of novel and authors can be found in annex in Table~\ref{tbl:oxquarry_corpus}.
-The dataset Oxquarry is already tokenized, which means every word or punctuation are on a separated line.
+The dataset Oxquarry is already tokenized, which means every word and punctuation are already separated.
 
 The Brunet french corpus contain exactly 4 excerpts of novels for each of the 11 authors for a total of 44 excerpts.
-The complete list of novel and authors can be found in annexe in Tables~\ref{tbl:brunet_corpus}.
-Authors present in this dataset : Balzac, Chateaubriand, Flaubert, Marivaux, Maupassant, \\
+The complete list of novel and authors can be found in annex in Tables~\ref{tbl:brunet_corpus}.
+Authors present in this dataset are : Balzac, Chateaubriand, Flaubert, Marivaux, Maupassant, \\
 Proust, Rousseau, Sand, Vernes, Voltaire, Zola.
 Brunet is already tokenized in two different ways : One using the actual tokens in the text, and another one using only lemma.
 
 The Saint-Jean dataset was also used~\cite{unine_corpus}.
-It contains 200 excepts of 68 French novels written during the XIX century from 31 different authors~\cite{st_jean}.
+It contains 200 excepts from 68 French novels written by 30 different authors during the XIX century~\cite{st_jean}.
+St-Jean has a token, a lemma and a parts-of-speech representations.
 Dates of publications of each excerpt are available for this dataset.
-A complete list of novel and authors can be found in annex in Tables~\ref{tbl:st_jean_corpus_1}/\ref{tbl:st_jean_corpus_2}/\ref{tbl:st_jean_corpus_3}/\ref{tbl:st_jean_corpus_4}.
-Since this dataset is have more documents than the other one and was created such that it can be spliced in two parts, the statistics of the two parts and the whole corpus is displayed in Table~\ref{tab:lit_datasets}.
-One part contain the first 100 texts and the other one, the 100 following, which are called St Jean Serie A and St-Jean Serie B.
-Both parts are approximately contained the same number of authors and the same number of true links.
+A complete list of novel and authors can be found in Tables~\ref{tbl:st_jean_corpus_1}/\ref{tbl:st_jean_corpus_2}/\ref{tbl:st_jean_corpus_3}/\ref{tbl:st_jean_corpus_4} in annex.
+Since this dataset have more documents than the other one and was created such that it can be spliced in two parts, the statistics of the two parts and the whole corpus is displayed in Table~\ref{tab:lit_datasets}.
+One part contain the first 100 texts and the other one, the 100 following, which are called respectively \textit{St-Jean Serie A} and \textit{St-Jean Serie B}.
+Both parts approximately contain the same number of authors and the same number of true links.
 
 \begin{table*}
   \centering
@@ -60,12 +61,11 @@ Both parts are approximately contained the same number of authors and the same n
 
 \subsection{PAN @ CLEF 2016}
 
-During PAN @ CLEF 2016 clustering campaign, multiple dataset where given to the participants.
+During PAN @ CLEF 2016 clustering campaign, a dataset was given to the participants.
 The dataset was separated in two parts : a training part where 18 clustering problems and solutions were available and a second part with 18 problems without solutions.
 The problems are in 3 languages (English, Dutch, Greek) and two genres (articles and reviews)~\cite{pan16}.
 
 Detailed statistics on this dataset can be found in annex in Table~\ref{tab:pan_datasets}.
-The r ratio is closer to 1 than 0 for most of the problems, which indicate a rather larger number of single cluster.
-Making the baseline \textit{Singleton Cluster} (metrics evaluated such that each document are considered in a different cluster) a challenging problem for this dataset to overcome.
+The r ratio is closer to 1 than 0 for most of the problems, which indicate a rather larger number of single cluster, making the baseline \textit{Singleton Cluster} (metrics evaluated such that each document are considered in a different cluster) a challenging problem for this dataset to overcome.
 The mean number of tokens for each problem in this dataset is in the range $[142-1533]$, which compared to the literary datasets presented in Section~\ref{sec:lit_corpus} correspond to ~2\%-15\% tokens.
 Additionally, the true links' ratio is rather low for all problem which mean without strong comparison metrics, finding the correct true links is even harder, thus Singleton Cluster can give better results with most of the standard approaches.

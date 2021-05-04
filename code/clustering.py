@@ -31,7 +31,8 @@ def supervised_clustering_training(rank_list, Y, return_eval=False, random_state
 def supervised_clustering_predict(model, rank_list):
     # compute distance threshold
     X = features_from_rank_list(rank_list)
-    Y_pred = model.predict(X)
+    pos = np.sum(model.predict(X))
+    # pos = np.sum(model.predict_proba(X)[:,1] > 0.5)
 
     # the sum give the position n of the "flip" in the rank list since
     # the n first should be ones

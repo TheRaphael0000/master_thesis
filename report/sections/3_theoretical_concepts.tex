@@ -11,66 +11,75 @@ This section contain basic notions commonly used in the authorship attribution, 
 \end{definition}
 
 \begin{definition}[Author]
-  An author $Y_i$ is a string describing the author. Example:
+  An author $Y_j$ is a string describing the author. Example:
   \begin{equation}
-    Y_i = "\text{Zola}"
+    Y_j = "\text{Zola}"
   \end{equation}
+  Since this study is related to clustering, authors are also called clusters.
 \end{definition}
 
 \begin{definition}[Corpus]
-  The corpus is a list of document X of size N and a list of authors Y of size k.
-  \begin{equation}
-    X = (X_1, X_2, X_3, X_{...}, X_N)
-  \end{equation}
-  \begin{equation}
+  A corpus contain two lists $X$ and $Y$.
+  $X$ contain is a list of documents $X_i$ of size $N$ and $Y$ a list of authors $Y_j$ of size $k$.
+  \begin{gather}
+    X = (X_1, X_2, X_3, X_{...}, X_N) \\
     N = |X|
-  \end{equation}
-  \begin{equation}
-    Y = (Y_1, Y_2, Y_3, Y_{...}, Y_k)
-  \end{equation}
-  \begin{equation}
+  \end{gather}
+  \begin{gather}
+    Y = (Y_1, Y_2, Y_3, Y_{...}, Y_k) \\
     k = |Y|
-  \end{equation}
+  \end{gather}
 \end{definition}
 
 \begin{definition}[Text Authorship]
-  The function $f$, is a surjective-only function which map the every text $X$ to a single author $Y$
+  The function $f$, is a surjective-only function which map every text $X_i$ to a single author $Y_j$
   \begin{equation}
-    Y = f(X)
+    Y_j = f(X_i)
   \end{equation}
-  The set of $\hat{Y}_a$ is the set of document written by $a$.
+  The set of $\hat{Y}_a$ is the set of document written by $Y_a$.
   \begin{equation}
     \hat{Y}_a = \{X_i | f(X_i) = a\}
   \end{equation}
   \begin{equation}
-    N = \sum_{i} |\hat{Y}_i|
+    N = \sum_{j}^k |\hat{Y}_j|
   \end{equation}
 
 \end{definition}
 
 \begin{definition}[Relevant set]
-  The relevant set contain every possible pairs (also called links) of document with the same authors. Links in this set are called \textit{true links} in this study. Every other pairs are called \textit{false links}, since they don't have the same authors.
+  The relevant set $R$ contain every possible pairs of document with the same authors.
+  Links in this set are called \textit{true links} in this study.
   \begin{equation}
     \label{def:relevant_set}
-    R = \{(X_a, X_b) | f(X_a) = f(X_b) \land X_a \neq X_b) \forall (X_a, X_b)\}
+    R = \{(X_a, X_b)\ |\ \left( f(X_a) = f(X_b) \right) \land \left(X_a \neq X_b \right) \forall (X_a, X_b)\}
   \end{equation}
+  The non-relevant set $R$ contain every \textit{false links}.
+  Every links are contain in $L$, the union of the relevant and non-relevant set.
+  \begin{equation}
+    \bar{R} = \{(X_a, X_b)\ |\ \left( f(X_a) \neq f(X_b) \right) \land \left(X_a \neq X_b \right) \forall (X_a, X_b)\}
+  \end{equation}
+  \begin{gather}
+    R \cap \bar{R} = \emptyset \\
+    L = \bar{R} \cup R \\
+    |L| = \frac{N * (N-1)}{2}
+  \end{gather}
 \end{definition}
 
 \begin{definition}[r ratio~\cite{pan16}]
-  The ratio between the number of clusters k and the number of documents N in a given corpus.
+  The r ratio is the ratio between the number of different authors $k$ and the number of documents $N$ in a given corpus.
   \begin{equation}
     r = \frac{k}{N}
   \end{equation}
   The inverse of the r ratio is equaivalent to the mean number of documents per authors.
   \begin{equation}
-    \frac{1}{r} = \frac{N}{k} = \frac{1}{k} \cdot \sum_{i} |\hat{Y}_i|
+    \frac{1}{r} = \frac{N}{k} = \frac{1}{k} \cdot \sum_{i} |\hat{Y}_j|
   \end{equation}
-  If r is close to 0, most documents are in multi-documents clusters and there is a great density of true links.
-  In this other hand, if r is close to 1, most of the document belong to single document clusters and there are few true links.
+  If $r$ is close to $0$, most documents are written by different authors and there is a great density of true links.
+  In this other hand, if $r$ is close to $1$, most of the document are written by a single authors and there are few true links.
 \end{definition}
 
 \begin{definition}[true links' ratio]
-  The ratio between the number of true links |R| and the number of links |L| in a given corpus.
+  The true links' ratio is the ratio between the number of true links $|R|$ and the number of links $|L|$ in a given corpus.
   \begin{equation}
     tl_r = \frac{|R|}{|L|}
   \end{equation}

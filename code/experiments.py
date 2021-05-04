@@ -60,12 +60,14 @@ def main():
 
     # frequent_errors()
     # dates_differences()
-    # fusion()
+    # fusion_evaluation()
+    # every_fusion()
 
     # count_ngrams()
 
     # unsupervised_clustering_evaluation()
-    supervised_clustering_evaluation()
+    # supervised_clustering_evaluation()
+    pass
 
 
 def distance_over_rank():
@@ -554,7 +556,7 @@ def tr(*X):
         return tr7(X[0])
 
 
-def fusion():
+def fusion_evaluation():
     # _, X1, Y1 = oxquarry.parse()
     # _, _, X2, Y2 = brunet.parse()
     _, X3_pos, X3_lemma, X3_token, Y3 = st_jean.parse_A()
@@ -635,7 +637,7 @@ def fusion():
     cbar.set_label("HPrec")
     plt.legend()
     plt.tight_layout()
-    plt.savefig("img/fusion.png")
+    plt.savefig("img/fusion_evaluation.png")
 
     print("Fusion Statistics")
 
@@ -673,6 +675,31 @@ def fusion():
     print(*sign_test(M_fusion_regression, M_single_mean))
     print("Regression/T/Single-max")
     print(*sign_test(M_fusion_regression, M_single_max))
+
+
+# def every_fusion():
+#     print("Loading")
+#     _, X_oxquarry, Y_oxquarry = oxquarry.parse()
+#     _, _, X_brunet, Y_brunet = brunet.parse()
+#     _, _, X_pos_st_jean_A, X_token_st_jean_A, Y_st_jean_A = st_jean.parse_A()
+#     _, _, X_pos_st_jean_B, X_token_st_jean_B, Y_st_jean_B = st_jean.parse_B()
+#
+#     datasets = [
+#         ([X_oxquarry,], Y_oxquarry),
+#         ([X_brunet,], Y_brunet),
+#         ([X_pos_st_jean_A, X_token_st_jean_A], Y_st_jean_A),
+#         ([X_pos_st_jean_B, X_token_st_jean_B], Y_st_jean_B),
+#     ]
+#
+#     for Xs, Ys in datasets:
+#         tr_ = tr(Xs)
+#         rls = []
+#         for i in tr_:
+#             rl = compute_links(i)
+#             print(evaluate_linking(rl, Ys))
+#             rls.append(rl)
+#         rl = fusion_z_score(rls)
+#         print(evaluate_linking(rl, Ys))
 
 
 def count_ngrams():
@@ -815,6 +842,7 @@ def supervised_clustering_evaluation():
 
         model = supervised_clustering_training(rl_training, Y_training)
         Y_pred = supervised_clustering_predict(model, rl_testing)
+
         M = evaluate_clustering(Y_testing, Y_pred)
         m.append(M)
         print(dataset_labels[A], dataset_labels[B], M)
