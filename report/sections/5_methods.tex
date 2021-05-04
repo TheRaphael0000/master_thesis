@@ -2,7 +2,7 @@
 
 To archive clustering, the method adopted was to compare document using the authorship linkings strategies presented in \textit{Evaluation of text representation schemes and distance measures for authorship linking}~\cite{kocher_verification}.
 These method aim to compare the simlarity of documents by considering reccurent stylistic patterns.
-Text patterns can be from either reccurant words, Part-Of-Speech (POS).
+Text patterns can be for example from either reccurant words or Part-Of-Speech (POS).
 Another possible way compare similarities between document explored in this study is to use compression techniques.
 
 To archive a good clustering, the main objective is to have the most reliable authorship linking rank list possible.
@@ -26,22 +26,20 @@ A simple explaination of why $n$-grams can be effective is by using $n$-grams of
 
 \begin{definition}[Letters $n$-grams]
   \label{def:letters_n_grams}
-  A letter $n$-grams is a special type of tokenization which is constructed by creating a token of size $n$ for each substrings starting from the position $0$ to \textit{text\_size} - $n$.
-  Example: Using 3-grams The string: "fox\_is\_brown" is converted to: \\
-  $("\text{fox}", "\text{ox\_}", "\text{x\_i}", "\text{\_is}", "\text{is\_}", "\text{s\_b}", "\text{\_br}", "\text{bro}", "\text{row}", "\text{own}")$
+  A letter $n$-grams is a special type of tokenization which is constructed by creating a token of size $n$ for each substrings starting from the position $0$ to \textit{text\_size} $- n - 1$.
+  Example: Using 3-grams The string: \textit{"fox\_is\_brown"} is converted to: (\textit{"fox", "ox\_", "x\_i", "\_is", "is\_", "s\_b", "\_br", "bro", "row", "own"})
 \end{definition}
 
 An alternative version of the $n$-grams algorithm used here is defined in~Definition~\ref{def:words_n_grams}.
 This algorithm consider each token as a string to apply the Letters $n$-grams algorithm to.
 To differenciate it from the classical $n$-grams algorithm,
-The latter algorithm, is called in this study In-word $n$-grams (Definition~\ref{def:words_n_grams}) and the other one is  called Letters $n$-grams (\ref{def:letters_n_grams}).
+The latter algorithm, is called in this study In-word $n$-grams (Definition~\ref{def:words_n_grams}) and the other one is  called Letters $n$-grams (Definition~\ref{def:letters_n_grams}).
 
 \begin{definition}[In-words $n$-grams]
   \label{def:words_n_grams}
   In-word $n$-grams are created by applying the Letters $n$-grams algorithm on a each tokens.
   When a token is smaller than $n$, the whole token is considered.
-  Example: Using words 3-grams on following tokens: ["fox", "is", "brown"] is converted to: \\
-  $("\text{fox}", "\text{is}", "\text{bro}", "\text{row}, "\text{own}")$
+  Example: Using words 3-grams on following tokens: ["fox", "is", "brown"] is converted to: (\textit{"fox", "is", "bro", "row, "own"})
 \end{definition}
 
 Another possible stylistic aspect that can be detected from a text using the MFW approach is to consider the sentence constructions.
@@ -57,7 +55,7 @@ When using features vectors based on the MFW approaches, once each document is r
 
 To be able to compare vector, different metrics can be used depending on the usage.
 Usually two types of metrics for vector comparison can be used: Vector similarities and Vector distances, the first yield a large value when the two vectors are closely related and the second a small value when they are similar.
-The following definitions are one of the few most common $L^1$/$L^2$/$cosine$ based distance.
+The following definitions are one of the few most common $L^1$/$L^2$/$cosine$ based distances.
 
 \begin{definition}[Manhattan distance ($L^1$ based)]
   To compute the Manhattan distance the following formula is used.
@@ -132,7 +130,7 @@ The following definitions are one of the few most common $L^1$/$L^2$/$cosine$ ba
 
 \subsubsection{Normalization}
 
-Sometimes vectors can not be easily compared with some previously cited distance metrics, because they deal with different order of magnitude.
+Sometimes when vectors deal with different order of magnitude, they can be not easily compared with some previously cited distance metrics.
 Thus using a normalization can make the task easier.
 
 \begin{definition}[Z-score normalization~\cite{savoy_stylo}]
@@ -141,15 +139,17 @@ Thus using a normalization can make the task easier.
     Zscore(A) = \frac{A - \mu}{\sigma}
   \end{equation}
   When using the z-score normalization on MFW vectors, $\mu$ and $\sigma$ usually are vectors containing the mean and the standard deviation of each terms in the corpus.
-  The Manhattan distance applied on a Z-score normalized MFW vector is also called Burrows's Delta~\cite{savoy_stylo}.
 \end{definition}
+
+The Manhattan distance applied on a Z-score normalized MFW vector is also called Burrows's Delta~\cite{savoy_stylo}.
 
 \subsubsection{Smoothing}
 
-When considering relative term frequencies they can be used as a probability of occurrence by using the maximum likelihood principle.
-The main problem with this approach is that we tend to overestimate the probability of occurrence of frequent terms and underestimate the probability of occurrence of low frequency terms, for example if a word is not found in a document this doesn't mean the probability of the author using this word is 0.
+Relative term frequencies can be considered as a probability of occurrence by using the maximum likelihood principle.
+The main problem with this approach is that the probability of occurrence of frequent terms tend to be overhestimated and underestimate the probability of occurrence of low frequency terms.
+If for example, a term is not present in a document its relative term frequency is 0, but this should not mean that the probability of the author using this word is 0.
 The solution proposed is to use smoothing, such as the Lidstone smoothing presented in Definition~\ref{def:lidstone_smoothing}.
-Smoothing techniques can help distance functions based on probabilities, such as the Kullback-Leibler Divergence.
+Smoothing techniques can help distance functions based on probabilities, such as the Kullback-Leibler Divergence.~\cite{savoy_stylo}
 
 \begin{definition}[Lidstone smoothing~\cite{savoy_stylo}]
   \label{def:lidstone_smoothing}
@@ -166,20 +166,14 @@ In this study, when a smoothing technique is used, except stated otherwise, the 
 This section covers the compression based strategy to compute a distance between two documents.
 The main idea is to compress two documents A, B, compress the string concatenation AB of A, B and compare their sizes after compression using one of the distance measure demonstrated below.
 Commonly a lossless compression algorithm is used, such as the Lempel-Ziv family (GZIP), block sorting family (BZip2), statistical family (PPM)~\cite{comparing_compression}.
-This technique is based on the fact that compressing algorithm tries to lower the Shannon entropy of a document, thus when compressing a document with a large Shannon entropy the compressed document should have a larger size after compression than to a document with a small Shannon entropy.
+This technique is based on the fact that compression algorithms tries to lower the Shannon entropy of a document, thus when compressing a document with a large Shannon entropy the compressed document should have a larger size after compression than a document with a small Shannon entropy.
 When concatenating two documents with a lot in common, the entropy of the concatenated document should be lower than if the two documents are very different.
-This approach is to produce rank lists is nearly parameterless, only a distance metric and compression algorithm is needed.
+This approach has the benefit can produce rank lists in a nearly parameterless manner, only a distance metric and compression algorithm is needed.
+A main drawback with this technique is the fact that the results can not be properly explained.
 
-In this study the lossless compression algorithm used are the ones present in the python standard library : GZip, BZip2, LZMA~\cite{python_compression}.
-Each compression algorithm can be tweaked with different parameters, the default settings are used except for the compression level (trade-off compression time and compression size) setted to the highest parameter to have smallest possible files.
-
-\begin{definition}[Normalized compression distance~\cite{savoy_stylo}~\cite{comparing_compression}]
-  The normalized compression distance of two documents A and B using the size after compression C is computed as follow:
-  \begin{equation}
-    NCD(A, B) = \frac{C(AB) - \min(C(A), C(B))}{\max(C(A), C(B))}
-  \end{equation}
-  Give a value in $\left[0, 1+\epsilon\right]$, with $\epsilon$ being a small positive value created by the imperfection of compression algorithms).
-\end{definition}
+In this study the lossless compression algorithm used are : GZip, BZip2, LZMA. These algorithm are already implemented in the python standard library~\cite{python_compression}.
+Each compression algorithm can be tweaked with different parameters, the default settings are used except for the compression level (trade-off compression time and compression size).
+By setting the compression level to the maximal setting, this ensure that the produced file will have the lowest possible Shannon entropy reachable with this algorithm, thus providing the best possible approximation of distance when used with the compression distances.
 
 \begin{definition}[Conditional complexity of compression~\cite{savoy_stylo}~\cite{comparing_compression}]
   The conditional complexity of compression of two documents A and B using the size after compression C is computed as follow:
@@ -187,6 +181,15 @@ Each compression algorithm can be tweaked with different parameters, the default
     CCC(A, B) = C(AB) - C(A)
   \end{equation}
   This metrics is not easy to use since the order of magnitude is not bounded and can depend a lot on the text sizes.
+  The following ones try to mitigate this problem.
+\end{definition}
+
+\begin{definition}[Normalized compression distance~\cite{savoy_stylo}~\cite{comparing_compression}]
+  The normalized compression distance of two documents A and B using the size after compression C is computed as follow:
+  \begin{equation}
+    NCD(A, B) = \frac{C(AB) - \min(C(A), C(B))}{\max(C(A), C(B))}
+  \end{equation}
+  This metric gives a value in the range $\left[0, 1+\epsilon\right]$, with $\epsilon$ being a small positive value created by the imperfection of compression algorithms.
 \end{definition}
 
 \begin{definition}[Compression-based cosine~\cite{savoy_stylo}~\cite{comparing_compression}]
@@ -194,17 +197,17 @@ Each compression algorithm can be tweaked with different parameters, the default
   \begin{equation}
     CBC(A, B) = 1 - \frac{C(A) + C(B) - C(AB)}{\sqrt{C(A) \cdot C(B)}}
   \end{equation}
-  Like for the cosine distance Definition~\ref{def:cosine_dist}, this metric is the interval $\left[-1, 1 \right]$
+  This metric have the same properties as the cosine distance (Definition~\ref{def:cosine_dist}).
 \end{definition}
 
 \subsection{Rank lists}
 
-The rank list are used to order pairs of document in a order that meet application wise purposes.
-In the case of authorship verification, the top pairs are the most similar and the bottom pairs are the ones that are the least similar.
+Rank lists are used to order objects such that the most interesting object is at the top and every subsequent object become less interesting.
+In information retrival systems, rank lists are used to order the results from the most relevant to the user's query to the least relevant.
 
-\begin{definition}[Ranked list]
+\begin{definition}[Ranked list for authorship verification]
   A ranked list is a ordered list containing pairs of document.
-  In most cases, the rank list contain every possible pairs of documents.
+  In most cases, the rank list contain every possible pairs of documents (every links).
   The ranked list is generally ordered by a score which can be either be ascendant in the case of scoring based on distance metrics and descendant when using similarity metrics.
   \begin{equation}
     L = (((X_a, X_b), Score(X_a, X_b)) | X_a \neq X_b \forall (X_a, X_b))
@@ -217,12 +220,12 @@ In the case of authorship verification, the top pairs are the most similar and t
 \subsection{Rank list fusion}
 \label{sec:rank_list_fusion}
 
-The idea of rank list fusion is to combine multiple rank lists in such way that the resulting rank list is more accurate modelization of a best rank list.
-The hypotetical best possible rank list in the case of authorship clustering is one such that show every true links (same authors document pairs) at the top and every false links (different author document pairs) at the bottom, therefore maximizing every metrics in Section~\ref{sec:rl_eval}.
+The idea of rank list fusion is to combine multiple rank lists in such way that the resulting rank list is more accurate modelization of the real rank list.
+The hypotetical best possible approximation of the real rank list in the case of authorship clustering is one such that  every true links (same authors document pairs) are at the top and every false links (different author document pairs) are at the bottom, therefore maximizing every metrics in Section~\ref{sec:rl_eval}.
 
 \subsubsection{Z-Score fusion}
 
-To merge scored rank list with differents order of magnitude, a simple and rather effective approach is to normalize every rank lists scores using the z-score (See Definition~\ref{def:z_score}) and takes the mean value for each link of its score in every normalized rank lists.
+To merge scored rank list with differents order of magnitude, a simple and rather effective approach is to normalize every rank lists scores using the z-score (See Definition~\ref{def:z_score}) and then compute the merge rank list score for every link by taking the arithmetic mean of the same link score for every normalized rank lists.
 
 \textbf{Example with the two rank lists:}
 
@@ -262,6 +265,8 @@ Z-Score fusion:
   \bottomrule
 \end{tabular}
 
+This method can provide good results, but lack of theoretical foundations.
+
 \subsubsection{Regression fusion}
 
 Each rank list is ordered by a score, this score depends on distance measure used, thus the order of magnitude of each rank list is different.
@@ -273,10 +278,10 @@ The main idea here is to learn a logistic regression model for each combination 
 The features used to find the logistic parameters for each link in the rank list are : the log of the relative rank and the link score.
 Since a probability of being a true link is desired, the target value for each true link is 1 and 0 when it's a false link.
 
-Once a model per type of rank list is trained, this model can provide for any new same type rank list, probabilities of each link being a true link.
+Once a model per type of rank list is trained, this model can provide for any new same type rank list, probabilities for each link being of being a true link.
 The probability framework can now be used on the rank list.
-The fusion result in computing the expected value for each link true link's probability from a multiple rank list of different types.
-In this case, the expected value is a simple average of the probabilities, since no link weighting is used.
+To obtain the most reliable probability given multiple observations (different rank lists), the fusion result in computing the expected value for each link's probability using these observations.
+In this case, the expected value is a simple average of the probabilities, since no weighting is used on the rank lists.
 
 \subsubsection{Soft-veto using S-Curve}
 
