@@ -58,29 +58,25 @@ Usually two types of metrics for vector comparison can be used: Vector similarit
 The following definitions are one of the few most common $L^1$/$L^2$/$cosine$ based distances.
 
 \begin{definition}[Manhattan distance ($L^1$ based)]
-  To compute the Manhattan distance the following formula is used.
   \begin{equation}
     dist_{Manhattan}(A, B) = \sum_{i=1}^{m} |A_i - B_i|
   \end{equation}
 \end{definition}
 
 \begin{definition}[Tanimoto distance ($L^1$ based, normalized)]
-  To compute the Tanimoto distance the following formula is used.
-  It's a components-wised normalized version of the manhattan distance.
   \begin{equation}
     dist_{Tanimoto}(A, B) = \frac{dist_{Manhattan}(A, B)}{\sum_{i=1}^{m} max(A_i, B_i)}
   \end{equation}
+  It's a components-wised normalized version of the manhattan distance.
 \end{definition}
 
 \begin{definition}[Euclidean distance ($L^2$ based)]
-  To compute the Euclidean distance the following formula is used.
   \begin{equation}
     dist_{Euclidian}(A, B) = \sqrt{\sum_{i=0}^{m}(A_i - B_i)^2}
   \end{equation}
 \end{definition}
 
 \begin{definition}[Matusita distance ($L^2$ based, square rooted values)]
-  To compute the Matusita distance the following formula is used.
   \begin{equation}
     \begin{split}
       dist_{Matusita}(A, B) &= dist_{Euclidian}(A', B') \\
@@ -90,7 +86,6 @@ The following definitions are one of the few most common $L^1$/$L^2$/$cosine$ ba
 \end{definition}
 
 \begin{definition}[Clark distance ($L^2$ based)~\cite{kocher_verification}]
-  To compute the Clark distance the following formula is used.
   \begin{equation}
     dist_{Clark}(A, B) = \sqrt{\sum_{i=0}^{m}\left(\frac{|A_i - B_i|}{A_i + B_i}\right)^2}
   \end{equation}
@@ -113,25 +108,23 @@ The following definitions are one of the few most common $L^1$/$L^2$/$cosine$ ba
 \end{definition}
 
 \begin{definition}[Kullback-Leibler divergence (relative entropy)]
-  To compute the Kullback-Leibler divergence the formula below is used.
   \begin{equation}
     dist_{kld}(A, B) = \sum_{i=0}^{m} A_i \cdot \log(\frac{A_i}{B_i})
   \end{equation}
 \end{definition}
 
 \begin{definition}[Jeffrey divergence~\cite{kocher_verification}]
-  To compute the Jeffrey divergence the formula below is used.
-  It represents the difference between two probability distribution.
   \begin{equation}
     dist_{j\_divergence}(A, B) = \sum_{i=0}^{m} (A_i - B_i) \cdot \log(\frac{A_i}{B_i})
   \end{equation}
+  It represents the difference between two probability distribution.
 \end{definition}
 
 
 \subsubsection{Normalization}
 
-Sometimes when vectors deal with different order of magnitude, they can be not easily compared with some previously cited distance metrics.
-Thus using a normalization can make the task easier.
+Sometimes when vectors deal with different order of magnitude, they can not be easily compared with some previously cited distance metrics.
+Thus using a normalization can improve the performances.
 
 \begin{definition}[Z-score normalization~\cite{savoy_stylo}]
   \label{def:z_score}
@@ -334,24 +327,25 @@ Figure~\ref{fig:s_curve_r} shows the r parameter influance of a sigmoid with $c 
   \includegraphics[width=\linewidth]{img/s_curve_r.png}
 \end{figure}
 
-To apply the soft-veto, each score in the rank list is multiplied by the s-curve correspond rank.
-This soft-veto methodology can be used on certain rank list before fusing, to have a more cleaved decision on the link nature.
+To apply the soft-veto, each score in the rank list is multiplied by the s-curve at the same rank.
+This soft-veto methodology aimed to be used on rank list before fusing, to have a more cleaved decision on the links positions.
 
 \subsection{Authors Clustering}
 
 To find clusters of authors, a possible way is to use a hierarchical clustering algorithm on a rank list.
 In a rank list, at each rank the link indicate if the two documents should belong to the same cluster in order of certainty.
-The hardest task in this clustering scheme is to find where the list should be cutted, such that the number of true links above the cut is maximized and the number of false links under the cut is minimized.
-To find this cut, two apporaches were explored : one using a unsupervised clustering evaluation technique which is totaly unsupervised and another one using a linear model to learn to make this cut but it requires a training dataset.
+The hardest task in this clustering scheme is to find where the list should be cut (also called \textit{threshold}).
+The cut should be made such that the number of true links above the cut is maximized and the number of false links under the cut is minimized.
+To find this cut, two approaches were explored : one using an unsupervised clustering evaluation technique which is totally unsupervised and another one using a linear model to learn to make this cut, but it requires a training dataset.
 
 \subsubsection{Agglomerative clustering}
 
 The scikit-learn package~\cite{sklearn} provide an implementation bottom-up implementation of the hierarchical clustering, which is usually called agglomerative clustering.
 Using this approach, at the start of the algorithm, each document belong to a different cluster.
-Clusters are merge based on the scores in the rank list, each step the algorithm merge clusters using the minimal score based on the linkage criteria.
-Multiple linkage criteria are available : \textit{ward} (metric that aim to minimize the variance of the cluster merged), \textit{average-linkage} (use the average score of each links of the cluster merged), \textit{complete-linkage} (use the maximal score of the cluster merged), \textit{single-linkage} (use the minimal score of the cluster merged).
-Ward linkage was discarded since the implementation only allow euclidean distance for its computation.
-Since the number of clusters is unknown, the merging procedure is stopped based on a maximal threshold.
+Clusters are merged based on the scores in the rank list, each step the algorithm merge clusters using the minimal score based on the linkage criteria.
+Multiple linkage criteria are available : \textit{ward} (metric that aim to minimize the variance of the cluster merged), \textit{average-linkage} (use the average score of each link of the cluster merged), \textit{complete-linkage} (use the maximal score of the cluster merged), \textit{single-linkage} (use the minimal score of the cluster merged).
+Ward linkage was discarded since the current implementation only allow euclidean distance for its computation.
+Since the number of clusters is unknown, the merging procedure is stopped based on a maximal threshold (cut).
 In this study the optimal threshold is found using two approach, one in an unsupervised way and another one in a supervised way.
 
 \subsubsection{Learning the threshold in a unsupervised way}

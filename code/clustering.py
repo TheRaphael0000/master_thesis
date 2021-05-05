@@ -32,11 +32,10 @@ def supervised_clustering_predict(model, rank_list):
     # compute distance threshold
     X = features_from_rank_list(rank_list)
     pos = np.sum(model.predict(X))
+    # both lines equaivalent
     # pos = np.sum(model.predict_proba(X)[:,1] > 0.5)
 
-    # the sum give the position n of the "flip" in the rank list since
-    # the n first should be ones
-    distance_threshold = rank_list[np.sum(Y_pred)][-1]
+    distance_threshold = rank_list[pos][-1]
 
     args = {
         "n_clusters": None,
@@ -51,11 +50,13 @@ def supervised_clustering_predict(model, rank_list):
     return labels
 
 
-def unsupervised_clustering(rank_list, return_scores=False):
+def unsupervised_clustering(rank_list, ips_stop=0, return_scores=False):
     distances_matrix = distances_matrix_from_rank_list(rank_list)
-    silhouette_by_clusters = {}
 
     ns = list(range(2, distances_matrix.shape[0]))
+    silhouette_scores = []
+
+    labels = None
 
     for n in ns:
         args = {
@@ -69,23 +70,17 @@ def unsupervised_clustering(rank_list, return_scores=False):
         silhouettes = silhouette_samples(distances_matrix, ac.labels_)
         score = np.median(silhouettes)
 
-        if score > 0:
-            silhouette_by_clusters[n] = (score, ac.labels_)
-        else:
+        if score <= ips_stop:
             break
 
-    # use the closest to 0 silhouette score
-    # in case the score never goes below 0
-    silhouette_by_scores = dict(silhouette_by_clusters.values())
-    minimal_score = min(np.abs(np.array(list(silhouette_by_scores.keys()))))
-    best_labels = silhouette_by_scores[minimal_score]
+        labels = ac.labels_
+        silhouette_scores.append(score)
 
-    outputs = [best_labels]
+    outputs = [labels]
 
     if return_scores:
-        ns = silhouette_by_clusters.keys()
-        scores = [silhouette_by_clusters[n][0] for n in ns]
-        outputs += [(ns, scores)]
+        explored_ns = ns[:len(silhouette_scores)]
+        outputs += [(explored_ns, silhouette_scores)]
 
     return tuple(outputs)
 

@@ -63,10 +63,8 @@ def main():
     # fusion_evaluation()
     # every_fusion()
 
-    # count_ngrams()
-
     # unsupervised_clustering_evaluation()
-    # supervised_clustering_evaluation()
+    supervised_clustering_evaluation()
     pass
 
 
@@ -392,23 +390,18 @@ def compression_evaluation():
 
 def frequent_errors():
     print("loading")
-    _, _, _, X, Y = st_jean.parse()
+    _, X_pos, _, X_token, Y = st_jean.parse()
 
-    text_representations = [
-        [X, 0, 750, True, 1e-1, distances.manhattan],
-        [X, 0, 750, False, 1e-1, distances.tanimoto],
-        [X, 0, 750, False, 1e-1, distances.clark],
-        [X, 0, 750, True, 1e-1, distances.cosine_distance],
-    ]
+    trs = tr(X_token, X_pos)
 
-    top_n = 20
+    top_n = 30
     keep = 2
 
     incorrectly_ranked = defaultdict(lambda: 0)
 
     rls = []
 
-    for t in text_representations:
+    for t in trs:
         rl = compute_links(t)
         rls.append(rl)
         m = evaluate_linking(rl, Y)
@@ -427,7 +420,7 @@ def frequent_errors():
     top_errors = Counter(dict(incorrectly_ranked)).most_common(keep)
     print(top_errors)
 
-    features, mfw = most_frequent_word(X, 500, lidstone_lambda=1e-1)
+    features, mfw = most_frequent_word(X_token, 750, lidstone_lambda=1e-1)
 
     def plot(a, b, filename):
         A, B = features[a, :], features[b, :]
@@ -449,7 +442,7 @@ def frequent_errors():
     (a, b), score = rl[0]
     plot(a, b, f"img/mfw_vector_first_rl.png")
 
-    (a, b), score = rl[m[-1] - 1]
+    (a, b), score = rl[int(m[-1] - 1)]
     plot(a, b, f"img/mfw_vector_first_last_rl.png")
 
     for i, ((a, b), errors) in enumerate(top_errors):
@@ -460,7 +453,8 @@ def frequent_errors():
 
 
 def dates_differences():
-    info, _, _, X, Y = st_jean.parse()
+    print("loading")
+    info, X_pos, _, X_token, Y = st_jean.parse()
 
     s = 5
 
@@ -473,16 +467,15 @@ def dates_differences():
     plt.tight_layout()
     plt.savefig("img/dates_distribution.png")
 
-    text_representations = [
-        [X, 0, 750, True, 1e-1, distances.manhattan],
-        [X, 0, 750, False, 1e-1, distances.tanimoto],
-        [X, 0, 750, False, 1e-1, distances.clark],
-        [X, 0, 750, True, 1e-1, distances.cosine_distance],
-    ]
+    trs = tr(X_token, X_pos)
 
-    rls = [compute_links(t) for t in text_representations]
+    rls = []
+    for t in trs:
+        rl = compute_links(t)
+        rls.append(rl)
+        print(evaluate_linking(rl, Y))
     rl = fusion_z_score(rls)
-    print(*evaluate_linking(rl, Y))
+    print(evaluate_linking(rl, Y))
 
     date_diffs = np.array([np.abs(dates[a] - dates[b]) for (a, b), s in rl])
 
@@ -677,52 +670,43 @@ def fusion_evaluation():
     print(*sign_test(M_fusion_regression, M_single_max))
 
 
-# def every_fusion():
-#     print("Loading")
-#     _, X_oxquarry, Y_oxquarry = oxquarry.parse()
-#     _, _, X_brunet, Y_brunet = brunet.parse()
-#     _, _, X_pos_st_jean_A, X_token_st_jean_A, Y_st_jean_A = st_jean.parse_A()
-#     _, _, X_pos_st_jean_B, X_token_st_jean_B, Y_st_jean_B = st_jean.parse_B()
-#
-#     datasets = [
-#         ([X_oxquarry,], Y_oxquarry),
-#         ([X_brunet,], Y_brunet),
-#         ([X_pos_st_jean_A, X_token_st_jean_A], Y_st_jean_A),
-#         ([X_pos_st_jean_B, X_token_st_jean_B], Y_st_jean_B),
-#     ]
-#
-#     for Xs, Ys in datasets:
-#         tr_ = tr(Xs)
-#         rls = []
-#         for i in tr_:
-#             rl = compute_links(i)
-#             print(evaluate_linking(rl, Ys))
-#             rls.append(rl)
-#         rl = fusion_z_score(rls)
-#         print(evaluate_linking(rl, Ys))
+def every_fusion():
+    print("Loading")
+    _, X_oxquarry, Y_oxquarry = oxquarry.parse()
+    _, _, X_brunet, Y_brunet = brunet.parse()
+    _, X_pos_st_jean_A, _, X_token_st_jean_A, Y_st_jean_A = st_jean.parse_A()
+    _, X_pos_st_jean_B, _, X_token_st_jean_B, Y_st_jean_B = st_jean.parse_B()
+
+    datasets = [
+        ([X_oxquarry,], Y_oxquarry),
+        ([X_brunet,], Y_brunet),
+        ([X_token_st_jean_A, X_pos_st_jean_A], Y_st_jean_A),
+        ([X_token_st_jean_B, X_pos_st_jean_B], Y_st_jean_B),
+    ]
 
 
-def count_ngrams():
-    words = open("corpus/english_dictionary.txt").read().split("\n")
-    words = [normalize(w) for w in words]
-
-    print(len(words))
-
-    print(len(Counter(word_n_grams([words], 1)[0])))
-    print(len(Counter(word_n_grams([words], 2)[0])))
-    print(len(Counter(word_n_grams([words], 3)[0])))
-    print(len(Counter(word_n_grams([words], 4)[0])))
-    print(len(Counter(word_n_grams([words], 5)[0])))
+    for Xs, Ys in datasets:
+        tr_ = tr(*Xs)
+        rls = []
+        for i in tr_:
+            rl = compute_links(i)
+            print(evaluate_linking(rl, Ys))
+            rls.append(rl)
+        rl = fusion_z_score(rls)
+        print(evaluate_linking(rl, Ys), "(overall)")
+        print()
 
 
 def unsupervised_clustering_evaluation():
     # _, X, Y = oxquarry.parse()
-    # _, _, X, Y = brunet.parse()
-    # _, _, X_pos, X_token, Y = st_jean.parse_A()
-    _, _, X_pos, X_token, Y = st_jean.parse_B()
+    _, _, X, Y = brunet.parse()
+    # _, X_pos, _, X_token, Y = st_jean.parse_A()
+    # _, X_pos, _, X_token, Y = st_jean.parse_B()
 
-    tr = tr9(X_token, X_pos)
-    # tr = tr7(X)
+    # tr = tr9(X_token, X_pos)
+    tr = tr7(X)
+
+    ips_stop = 0.1
 
     print("AP RPrec HPrec")
     rank_lists = [compute_links(t) for t in tr]
@@ -734,31 +718,32 @@ def unsupervised_clustering_evaluation():
     print(evaluate_linking(rank_list_overall, Y))
 
     labels, silhouette_scores = unsupervised_clustering(
-        rank_list_overall, return_scores=True)
+        rank_list_overall, ips_stop=ips_stop, return_scores=True)
 
-    print("bcubed.precision", "bcubed.recall", "bcubed.fscore")
+    print("bcubed.precision", "bcubed.recall", "bcubed.fscore", "r ratio diff")
     print(evaluate_clustering(Y, labels))
 
     ns, labels_list = clustering_at_every_n_clusters(rank_list_overall)
     evaluations = np.array([evaluate_clustering(Y, labels)
                             for labels in labels_list])
 
-    n_clusters_found = max(silhouette_scores[0])
+    n_clusters_found = len(np.unique(labels))
     n_clusters_actual = len(np.unique(Y))
 
     plt.figure(figsize=(6, 4), dpi=200)
-    plt.plot(ns, evaluations[:, 0], label="BCubed Precision")
-    plt.plot(ns, evaluations[:, 1], label="BCubed Recall")
-    plt.plot(ns, evaluations[:, 2], label="BCubed $F_1$ Score")
+    plt.plot(ns, evaluations[:, 0], label="BCubed $F_1$ Score")
+    plt.plot(ns, evaluations[:, 1], label="BCubed Precision")
+    plt.plot(ns, evaluations[:, 2], label="BCubed Recall")
+    plt.plot(ns, evaluations[:, 3], label="r ratio diff")
     plt.plot(*silhouette_scores, label="Silhouette Score")
     plt.axvline(n_clusters_found, 0, 1,
-                ls="dashed", c="C3", label="IPS Procedure #Clusters")
+                ls="dashed", c="C4", label="IPS Procedure #Clusters")
     plt.axvline(n_clusters_actual, 0, 1,
                 ls="dashed", c="C2", label="Actual #Clusters")
     xmin, xmax, ymin, ymax = plt.axis()
     ypos = ymax / 2 - ymin / 2
     plt.text(n_clusters_found, ypos,
-             f"{n_clusters_found}", c="C3", rotation="vertical")
+             f"{n_clusters_found}", c="C4", rotation="vertical")
     plt.text(n_clusters_actual, ypos,
              f"{n_clusters_actual}", c="C2", rotation="vertical")
     plt.legend(loc="upper right")
@@ -800,14 +785,14 @@ def supervised_clustering_evaluation():
     print("Loading")
     _, X_oxquarry, Y_oxquarry = oxquarry.parse()
     _, _, X_brunet, Y_brunet = brunet.parse()
-    _, _, X_pos_st_jean_A, X_token_st_jean_A, Y_st_jean_A = st_jean.parse_A()
-    _, _, X_pos_st_jean_B, X_token_st_jean_B, Y_st_jean_B = st_jean.parse_B()
+    _, X_pos_st_jean_A, _, X_token_st_jean_A, Y_st_jean_A = st_jean.parse_A()
+    _, X_pos_st_jean_B, _, X_token_st_jean_B, Y_st_jean_B = st_jean.parse_B()
 
     datasets = [
         ([X_oxquarry,], Y_oxquarry),
         ([X_brunet,], Y_brunet),
-        ([X_pos_st_jean_A, X_token_st_jean_A], Y_st_jean_A),
-        ([X_pos_st_jean_B, X_token_st_jean_B], Y_st_jean_B),
+        ([X_token_st_jean_A, X_pos_st_jean_A], Y_st_jean_A),
+        ([X_token_st_jean_B, X_pos_st_jean_B], Y_st_jean_B),
     ]
     dataset_labels = [
         "oxquarry",
@@ -818,7 +803,6 @@ def supervised_clustering_evaluation():
     ids = range(len(datasets))
 
     dataset_rls = []
-    np.set_printoptions(precision=2, floatmode="fixed")
 
     print("Computing rank lists")
     for id in ids:
@@ -851,4 +835,5 @@ def supervised_clustering_evaluation():
 
 
 if __name__ == "__main__":
+    np.set_printoptions(precision=2, floatmode="fixed")
     main()
