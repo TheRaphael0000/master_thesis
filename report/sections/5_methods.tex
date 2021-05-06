@@ -164,7 +164,7 @@ When concatenating two documents with a lot in common, the entropy of the concat
 This approach has the benefit can produce rank lists in a nearly parameterless manner, only a distance metric and compression algorithm is needed.
 A main drawback with this technique is the fact that the results can not be properly explained.
 
-In this study the lossless compression algorithm used are : GZip, BZip2, LZMA. These algorithm are already implemented in the python standard library~\cite{python_compression}.
+In this study the lossless compression algorithm used are : GZip, BZip2, LZMA. These algorithm are already implemented in the python standard library~\cite{python_standard_library}.
 Each compression algorithm can be tweaked with different parameters, the default settings are used except for the compression level (trade-off compression time and compression size).
 By setting the compression level to the maximal setting, this ensure that the produced file will have the lowest possible Shannon entropy reachable with this algorithm, thus providing the best possible approximation of distance when used with the compression distances.
 

@@ -2,6 +2,7 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+import math
 
 from misc import normalize, sigmoid, sigmoid_r
 
@@ -10,7 +11,13 @@ def soft_veto(rank_list, s_curve):
     x, y = s_curve(len(rank_list))
     updated_rank_list = []
     for i, (link, score) in enumerate(rank_list):
-        updated_rank_list.append((link, score * y[i]))
+        if y[i] == np.inf:
+            new_score = np.inf
+        elif y[i] == -np.inf:
+            new_score = -np.inf
+        else:
+            new_score = score * y[i]
+        updated_rank_list.append((link, new_score))
     return updated_rank_list
 
 
@@ -29,6 +36,18 @@ def sigmoid_reciprocal(c=4, r=0.25):
         return x, y
     return generator
 
+
+def full_boost(top, bottom):
+    def generator(n):
+        n1 = math.ceil(n * top)
+        n2 = math.ceil(n * (1 - bottom))
+        if n1 > n2:
+            raise Exception("Overlapping veto")
+        y = np.ones((n,))
+        y[:n1] = -np.inf
+        y[n2:] = np.inf
+        return None, y
+    return generator
 
 if __name__ == '__main__':
     plt.figure(figsize=(4, 3), dpi=200)

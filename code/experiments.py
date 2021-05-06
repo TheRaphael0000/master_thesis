@@ -61,10 +61,11 @@ def main():
     # frequent_errors()
     # dates_differences()
     # fusion_evaluation()
+    fusion_with_soft_veto()
     # every_fusion()
 
     # unsupervised_clustering_evaluation()
-    supervised_clustering_evaluation()
+    # supervised_clustering_evaluation()
     pass
 
 
@@ -562,7 +563,7 @@ def fusion_evaluation():
 
     models = []
     print("Training rank lists")
-    tr_training = tr9(*X_training)
+    tr_training = tr9(*X_training)[0:5]
     for i, t in enumerate(tr_training):
         rl = compute_links(t)
         model, rmse = fusion_regression_training(rl, Y_training)
@@ -573,7 +574,7 @@ def fusion_evaluation():
     M_single = []
     rank_lists = []
     print("Testing rank lists")
-    tr_testing = tr9(*X_testing)
+    tr_testing = tr9(*X_testing)[0:5]
     for i, t in enumerate(tr_testing):
         rl = compute_links(t)
         rank_lists.append(rl)
@@ -670,6 +671,72 @@ def fusion_evaluation():
     print(*sign_test(M_fusion_regression, M_single_max))
 
 
+def fusion_with_soft_veto():
+    print("Loading")
+    _, X_oxquarry, Y_oxquarry = oxquarry.parse()
+    _, _, X_brunet, Y_brunet = brunet.parse()
+    _, X_pos_st_jean_A, _, X_token_st_jean_A, Y_st_jean_A = st_jean.parse_A()
+    _, X_pos_st_jean_B, _, X_token_st_jean_B, Y_st_jean_B = st_jean.parse_B()
+
+    datasets = [
+        (([X_oxquarry, ], Y_oxquarry), "Oxquarry"),
+        (([X_brunet, ], Y_brunet), "Brunet"),
+        (([X_token_st_jean_A, X_pos_st_jean_A], Y_st_jean_A), "St-Jean A"),
+        (([X_token_st_jean_B, X_pos_st_jean_B], Y_st_jean_B), "St-Jean B"),
+    ]
+
+    (X, Y), name = datasets[0]
+
+    rls = []
+    tr_ = tr(*X)
+
+    print("linking")
+    for i, t in enumerate(tr_):
+        rl = compute_links(t)
+        mesures = evaluate_linking(rl, Y)
+        print(i, *mesures)
+        rls.append(rl)
+
+    print("vanilla")
+    rl = fusion_z_score(rls)
+    M_vanilla = evaluate_linking(rl, Y)[0]
+
+    print("soft veto")
+    resolution = 25
+    cs = np.linspace(0, 0.1, resolution)
+    rs = np.linspace(0, 0.3, resolution)
+    print(cs)
+    print(rs)
+    c_r = np.array(list(itertools.product(cs, rs)))
+    M_softveto = []
+    for a, b in c_r:
+        s_curve = s_curves.full_boost(top=a, bottom=b)
+        # s_curve = s_curves.sigmoid_reciprocal(c=a, r=b)
+        rls_veto = [s_curves.soft_veto(rl, s_curve) for rl in rls]
+        rl = fusion_z_score(rls_veto)
+        M_softveto.append(evaluate_linking(rl, Y)[0])
+
+    M_softveto = np.array(M_softveto).reshape((resolution, -1))
+    M_softveto -= M_vanilla
+
+    vmax = np.max(np.abs([np.min(M_softveto), np.max(M_softveto)]))
+
+    print(np.max(M_softveto))
+    print(c_r[np.argmax(M_softveto)])
+
+    plt.scatter(x=c_r[:, 0], y=c_r[:, 1],
+                c=M_softveto, cmap="RdYlGn", marker="s",
+                vmin=-vmax, vmax=vmax
+                )
+    plt.colorbar()
+    plt.xlabel("top")
+    plt.ylabel("bottom")
+    plt.xticks(np.linspace(np.min(cs), np.max(cs), 6))
+    plt.yticks(np.linspace(np.min(rs), np.max(rs), 6))
+    plt.tight_layout()
+    plt.savefig("img/soft_veto_heat.png")
+
+
 def every_fusion():
     print("Loading")
     _, X_oxquarry, Y_oxquarry = oxquarry.parse()
@@ -678,12 +745,11 @@ def every_fusion():
     _, X_pos_st_jean_B, _, X_token_st_jean_B, Y_st_jean_B = st_jean.parse_B()
 
     datasets = [
-        ([X_oxquarry,], Y_oxquarry),
-        ([X_brunet,], Y_brunet),
+        ([X_oxquarry, ], Y_oxquarry),
+        ([X_brunet, ], Y_brunet),
         ([X_token_st_jean_A, X_pos_st_jean_A], Y_st_jean_A),
         ([X_token_st_jean_B, X_pos_st_jean_B], Y_st_jean_B),
     ]
-
 
     for Xs, Ys in datasets:
         tr_ = tr(*Xs)
@@ -781,7 +847,6 @@ def supervised_clustering_evaluation():
         plt.tight_layout()
         plt.savefig(f"img/{filename}.png")
 
-
     print("Loading")
     _, X_oxquarry, Y_oxquarry = oxquarry.parse()
     _, _, X_brunet, Y_brunet = brunet.parse()
@@ -789,8 +854,8 @@ def supervised_clustering_evaluation():
     _, X_pos_st_jean_B, _, X_token_st_jean_B, Y_st_jean_B = st_jean.parse_B()
 
     datasets = [
-        ([X_oxquarry,], Y_oxquarry),
-        ([X_brunet,], Y_brunet),
+        ([X_oxquarry, ], Y_oxquarry),
+        ([X_brunet, ], Y_brunet),
         ([X_token_st_jean_A, X_pos_st_jean_A], Y_st_jean_A),
         ([X_token_st_jean_B, X_pos_st_jean_B], Y_st_jean_B),
     ]

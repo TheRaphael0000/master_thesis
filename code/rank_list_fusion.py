@@ -7,6 +7,7 @@ import scipy as sp
 
 from sklearn.metrics import mean_squared_error
 
+import random
 import s_curves
 import distances
 from corpus import brunet, oxquarry, st_jean
@@ -17,30 +18,38 @@ from misc import features_from_rank_list
 from misc import labels_from_rank_list
 
 
-def rank_list_fusion(links, scores, order=1):
-    n_lists = links.shape[0]
-    n_links = links.shape[1]
-
+def rank_list_fusion(rls, order=1):
     # grouping same links
     grp_by_link = defaultdict(list)
-    for list_indice in range(n_lists):
-        for link_indice in range(n_links):
-            link = links[list_indice, link_indice]
-            score = scores[list_indice, link_indice]
-            grp_by_link[tuple(link)].append(score)
+    for rl in rls:
+        for link, score in rl:
+            grp_by_link[link].append(score)
     # averaging
     for k in grp_by_link:
         grp_by_link[k] = np.mean(grp_by_link[k])
+
     rl = list(dict(grp_by_link).items())
+    # shuffle to avoid keeping (score value) in the same order (for debug)
+    random.shuffle(rl)
     rl.sort(key=lambda x: order*x[-1])
     return rl
 
 
-def fusion_z_score(rank_lists):
-    links = np.array([[link for link, score in rl] for rl in rank_lists])
-    scores = np.array([[score for link, score in rl] for rl in rank_lists])
-    zscores = sp.stats.zscore(scores, axis=1)
-    return rank_list_fusion(links, zscores)
+def fusion_z_score(rls):
+    updated_rls = []
+    for rl in rls:
+        links = [link for link, score in rl]
+        scores = np.array([score for link, score in rl])
+        infs = scores == np.inf
+        ninfs = scores == -np.inf
+        scores[infs|ninfs] = np.nan
+        zscores = sp.stats.zscore(scores, nan_policy="omit")
+        zscores[infs] = np.inf
+        zscores[ninfs] = -np.inf
+        zscores = list(zscores)
+        updated_rls.append(zip(links, zscores))
+
+    return rank_list_fusion(updated_rls)
 
 
 def fusion_regression_training(rank_list, Y):
@@ -54,14 +63,17 @@ def fusion_regression_training(rank_list, Y):
 
 def fusion_regression_testing(model, rank_list):
     Xs = features_from_rank_list(rank_list)
-    Y_pred = model.predict_proba(Xs)
+    Y_pred = model.predict_proba(Xs)[:,1]
     return Y_pred
 
 
-def fusion_regression(models, rank_lists):
-    links = np.array([[link for link, score in rl] for rl in rank_lists])
-    scores = np.array([fusion_regression_testing(model, rl) for model, rl in zip(models, rank_lists)])
-    return rank_list_fusion(links, scores, order=-1)
+def fusion_regression(models, rls):
+    updated_rls = []
+    for model, rl in zip(models, rls):
+        links = [link for link, score in rl]
+        scores = list(fusion_regression_testing(model, rl))
+        updated_rls.append(zip(links, scores))
+    return rank_list_fusion(updated_rls, order=-1)
 
 
 if __name__ == '__main__':
