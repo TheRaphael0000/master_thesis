@@ -1,0 +1,144 @@
+\subsection{Most frequant words (MFW), feature vectors}
+
+The first method used is called: Most frequant words (acronym: MFW), and try to compare the documents by creating feature vectors containing words frequencies.
+To be able to express a document as a feature vector of size $n$, a common strategy in Stylometry is to find the $n$ most frequent words ($n$-MFW) in a corpus, and for each document compute the relative frequency of each of these words for the document~\cite{savoy_stylo}.
+For example if the word : "\textit{the}" is in the $n$-MFW and occurs $50$ times in a document with $300$ words, its relative frequency is thus $50/300 = 1/6$, the word and the value will be in the feature vector if the frequency is in the top $n$-MFW.
+No clear value of $n$ for the $n$-MFW is to choose over others, but a value between $50$ and $500$ tends to produce good results for the word token text representation~\cite{savoy_text_representation}.
+
+Instead of using directly the words to create the feature vector, another possibility is to use the lemma corresponding to each word, for example the sentence \textit{I saw two men with a saw} its lemmatized version is : \textit{I see two man with a saw} this requires advanced text preprocessing, but it can remove ambiguity.
+
+Another popular method is instead of considering every token as a word, this method aim to create a "word" from a short sequences of letters called $n$-grams using Definition~\ref{def:letters_n_grams}.
+To consider an overlapping word, the whole document is synthesized into a long string by joining every token by an \textit{underscore} : $\_$.
+This technique can be further exploited by combining for example two or more sizes of $n$-grams together.
+$n$-grams can be really effective even though no clear meaning from each $n$-grams can be exploited at first sight.
+A simple explaination of why $n$-grams can be effective is by using $n$-grams of size 3 to 5 in most germanic languages this can correspond to for example : the tense of the verbs (i.e. : \textit{ing\_}, \textit{ed\_}), some small common words (\textit{\_the\_}, \textit{\_and\_}, \textit{\_that}), or in French the adverbs (\textit{\_ment}), etc.
+
+\begin{definition}[Letters $n$-grams]
+  \label{def:letters_n_grams}
+  A letter $n$-grams is a special type of tokenization which is constructed by creating a token of size $n$ for each substrings starting from the position $0$ to \textit{text\_size} $- n - 1$.
+  Example: Using 3-grams The string: \textit{"fox\_is\_brown"} is converted to: (\textit{"fox", "ox\_", "x\_i", "\_is", "is\_", "s\_b", "\_br", "bro", "row", "own"})
+\end{definition}
+
+An alternative version of the $n$-grams algorithm used here is defined in~Definition~\ref{def:words_n_grams}.
+This algorithm consider each token as a string to apply the Letters $n$-grams algorithm to.
+To differenciate it from the classical $n$-grams algorithm,
+The latter algorithm, is called in this study In-word $n$-grams (Definition~\ref{def:words_n_grams}) and the other one is  called Letters $n$-grams (Definition~\ref{def:letters_n_grams}).
+
+\begin{definition}[In-words $n$-grams]
+  \label{def:words_n_grams}
+  In-word $n$-grams are created by applying the Letters $n$-grams algorithm on a each tokens.
+  When a token is smaller than $n$, the whole token is considered.
+  Example: Using words 3-grams on following tokens: ["fox", "is", "brown"] is converted to: (\textit{"fox", "is", "bro", "row, "own"})
+\end{definition}
+
+Another possible stylistic aspect that can be detected from a text using the MFW approach is to consider the sentence constructions.
+This can be solved by creating short sequences ($n$-grams) of POS tags.
+In this case, each POS is considered as a character in the Letters $n$-grams definition, this type of $n$-grams is also known as w-shingling.
+For example, the sentence : \textit{"The cat eat a fish"} has the following POS tag \textit{"Article Noun Verb Article Noun"} which correspond to the following 3-grams of POS : \textit{"Article Noun Verb"} / \textit{"Noun Verb Article"} / \textit{"Verb Article Noun"}.
+In practice the POS is more detailed, for example instead of just considering \textit{eat} as a verb, a more detailed POS can be the verb and its tense \textit{Verb-SimplePresent}, the same goes for the other type of POS.
+
+When using features vectors based on the MFW approaches, once each document is represented as a feature vector they can be compared using metric in Section~\ref{sec:fv_distances}.
+
+\subsubsection{Vectors distances}
+\label{sec:fv_distances}
+
+To be able to compare vector, different metrics can be used depending on the usage.
+Usually two types of metrics for vector comparison can be used: Vector similarities and Vector distances, the first yield a large value when the two vectors are closely related and the second a small value when they are similar.
+The following definitions are one of the few most common $L^1$/$L^2$/$cosine$ based distances.
+
+\begin{definition}[Manhattan distance ($L^1$ based)]
+  \begin{equation}
+    dist_{Manhattan}(A, B) = \sum_{i=1}^{m} |A_i - B_i|
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Tanimoto distance ($L^1$ based, normalized)]
+  \begin{equation}
+    dist_{Tanimoto}(A, B) = \frac{dist_{Manhattan}(A, B)}{\sum_{i=1}^{m} max(A_i, B_i)}
+  \end{equation}
+  It's a components-wised normalized version of the manhattan distance.
+\end{definition}
+
+\begin{definition}[Euclidean distance ($L^2$ based)]
+  \begin{equation}
+    dist_{Euclidian}(A, B) = \sqrt{\sum_{i=0}^{m}(A_i - B_i)^2}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Matusita distance ($L^2$ based, square rooted values)]
+  \begin{equation}
+    \begin{split}
+      dist_{Matusita}(A, B) &= dist_{Euclidian}(A', B') \\
+      \text{with }A' &= \sqrt{A}\text{ and }B' = \sqrt{B}
+    \end{split}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Clark distance ($L^2$ based)~\cite{kocher_verification}]
+  \begin{equation}
+    dist_{Clark}(A, B) = \sqrt{\sum_{i=0}^{m}\left(\frac{|A_i - B_i|}{A_i + B_i}\right)^2}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Cosine distance (Inner product based)]
+  \label{def:cosine_dist}
+  To compute the Cosine distance, first the cosine similarity must be computed.
+  \begin{equation}
+    sim_{Cosine}(A, B) = \frac{A \cdot B}{\sqrt{A \cdot A}\sqrt{B \cdot B}}
+  \end{equation}
+  The cosine similarity is ranged between -1 and 1.
+  With 1 beeing exactly the same, -1 the total opposite and 0 orthogonal.
+  \begin{equation}
+    dist_{Cosine}(A, B) = 1 - sim_{Cosine}(A, B)
+  \end{equation}
+  \begin{equation}
+    dist_{Angular\ cosine}(A, B) = \frac{cos^{-1}sim_{Cosine}(A, B)}{\pi}
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Kullback-Leibler divergence (relative entropy)]
+  \begin{equation}
+    dist_{kld}(A, B) = \sum_{i=0}^{m} A_i \cdot \log(\frac{A_i}{B_i})
+  \end{equation}
+\end{definition}
+
+\begin{definition}[Jeffrey divergence~\cite{kocher_verification}]
+  \begin{equation}
+    dist_{j\_divergence}(A, B) = \sum_{i=0}^{m} (A_i - B_i) \cdot \log(\frac{A_i}{B_i})
+  \end{equation}
+  It represents the difference between two probability distribution.
+\end{definition}
+
+
+\subsubsection{Normalization}
+
+Sometimes when vectors deal with different order of magnitude, they can not be easily compared with some previously cited distance metrics.
+Thus using a normalization can improve the performances.
+
+\begin{definition}[Z-score normalization~\cite{savoy_stylo}]
+  \label{def:z_score}
+  \begin{equation}
+    Zscore(A) = \frac{A - \mu}{\sigma}
+  \end{equation}
+  When using the z-score normalization on MFW vectors, $\mu$ and $\sigma$ usually are vectors containing the mean and the standard deviation of each terms in the corpus.
+\end{definition}
+
+The Manhattan distance applied on a Z-score normalized MFW vector is also called Burrows's Delta~\cite{savoy_stylo}.
+
+\subsubsection{Smoothing}
+
+Relative term frequencies can be considered as a probability of occurrence by using the maximum likelihood principle.
+The main problem with this approach is that the probability of occurrence of frequent terms tend to be overhestimated and underestimate the probability of occurrence of low frequency terms.
+If for example, a term is not present in a document its relative term frequency is 0, but this should not mean that the probability of the author using this word is 0.
+The solution proposed is to use smoothing, such as the Lidstone smoothing presented in Definition~\ref{def:lidstone_smoothing}.
+Smoothing techniques can help distance functions based on probabilities, such as the Kullback-Leibler Divergence.~\cite{savoy_stylo}
+
+\begin{definition}[Lidstone smoothing~\cite{savoy_stylo}]
+  \label{def:lidstone_smoothing}
+  \begin{equation}
+    p(t_i, D_j) = \frac{tf_{i,j} + \lambda}{n + \lambda \cdot |V|}
+  \end{equation}
+  With $t_i$ the i-th term, $D_j$ the j-th document, $tf_{i,j}$ the number of occurrence of the i-th term in $D_j$, $|V|$ the size of the vocabulary, $\lambda$ a small value ($\lambda = 1$ special, case called Laplace smoothing, but generally a smaller value such as 0.1 give good results), n the total number of words in the document $D_j$.
+\end{definition}
+
+In this study, when a smoothing technique is used, except stated otherwise, the Lidstone smoothing is used with $\lambda = 0.1$.

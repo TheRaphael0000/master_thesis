@@ -1,10 +1,3 @@
-\section{Corpus \label{sec:corpus}}
-
-In this section, the different corpus used will be introduced.
-Two types of corpus were selected for this study.
-Three literary corpus containing excerpts of English (1 corpus) and French (2 corpus) novels.
-As well as the ones used for PAN @ CLEF 2016 campaign~\cite{pan16}, which contain reviews and articles written in English, Dutch and Greek.
-
 \subsection{Literature corpus}
 \label{sec:lit_corpus}
 
@@ -57,15 +50,3 @@ Both parts approximately contain the same number of authors and the same number 
     \bottomrule
   \end{tabular}
 \end{table*}
-
-
-\subsection{PAN @ CLEF 2016}
-
-During PAN @ CLEF 2016 clustering campaign, a dataset was given to the participants.
-The dataset was separated in two parts : a training part where 18 clustering problems and solutions were available and a second part with 18 problems without solutions.
-The problems are in 3 languages (English, Dutch, Greek) and two genres (articles and reviews)~\cite{pan16}.
-
-Detailed statistics on this dataset can be found in Table~\ref{tab:pan_datasets} in annex.
-The r ratio is closer to 1 than 0 for most of the problems, which indicate a rather larger number of single cluster, making the baseline \textit{Singleton Cluster} (metrics evaluated such that each document are considered in a different cluster) a challenging problem for this dataset to overcome.
-The mean number of tokens for each problem in this dataset is in the range $[142-1533]$, which compared to the literary datasets presented in Section~\ref{sec:lit_corpus} correspond to ~2\%-15\% tokens.
-Additionally, the true links' ratio is rather low for all problem which mean without strong comparison metrics, finding the correct true links is even harder, thus Singleton Cluster can give better results with most of the standard approaches.

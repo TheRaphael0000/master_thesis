@@ -1,0 +1,16 @@
+\subsection{Rank lists}
+
+Rank lists are used to order objects such that the most interesting object is at the top and every subsequent object become less interesting.
+In information retrival systems, rank lists are used to order the results from the most relevant to the user's query to the least relevant.
+
+\begin{definition}[Ranked list for authorship verification]
+  A ranked list is a ordered list containing pairs of document.
+  In most cases, the rank list contain every possible pairs of documents (every links).
+  The ranked list is generally ordered by a score which can be either be ascendant in the case of scoring based on distance metrics and descendant when using similarity metrics.
+  \begin{equation}
+    L = (((X_a, X_b), Score(X_a, X_b)) | X_a \neq X_b \forall (X_a, X_b))
+  \end{equation}
+  \begin{equation}
+    |L| = \frac{N \cdot (N - 1)}{2}
+  \end{equation}
+\end{definition}
