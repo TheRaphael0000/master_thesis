@@ -53,6 +53,7 @@ def main():
     # degradation()
     # token_vs_lemma()
     # letter_ngrams()
+    letter_ngrams_2()
     # first_last_letters_ngrams()
     # pos_ngrams()
 
@@ -61,7 +62,7 @@ def main():
     # frequent_errors()
     # dates_differences()
     # fusion_evaluation()
-    fusion_with_soft_veto()
+    # fusion_with_soft_veto()
     # every_fusion()
 
     # unsupervised_clustering_evaluation()
@@ -167,16 +168,7 @@ def token_vs_lemma():
     M_lemma = []
 
     mfws = np.arange(100, 2000 + 1, 100)
-    distances_ = [
-        (True, distances.manhattan),
-        (False, distances.tanimoto),
-        (True, distances.euclidean),
-        (False, distances.matusita),
-        (False, distances.clark),
-        (True, distances.cosine_distance),
-        (False, distances.kld),
-        (False, distances.j_divergence),
-    ]
+    distances_ = distances.vector_distances
 
     for mfw in mfws:
         for zscore, distance in distances_:
@@ -242,6 +234,24 @@ def letter_ngrams():
     plt.ylabel("Average Precision (AP)")
     plt.tight_layout()
     plt.savefig("img/letter_ngrams.png")
+
+def letter_ngrams_2():
+    print("loading")
+    # _, _, _, X, Y = st_jean.parse()
+    _, _, X, Y = brunet.parse()
+    # _, X, Y = oxquarry.parse()
+
+    configurations = [
+        (3, 3000),
+        (4, 8000),
+    ]
+
+    for n_grams_type, mfw in configurations:
+        for zscore, distance in distances.vector_distances:
+            rep = [X, n_grams_type, mfw, zscore, 1e-1, distance]
+            rl = compute_links(rep)
+            m = evaluate_linking(rl, Y)
+            print(n_grams_type, mfw, distance.__name__, m)
 
 
 def first_last_letters_ngrams():

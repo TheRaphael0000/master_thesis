@@ -68,6 +68,18 @@ def j_divergence(A, B):
     return s
 
 
+vector_distances = [
+    (True, manhattan),
+    (False, tanimoto),
+    (True, euclidean),
+    (False, matusita),
+    (False, clark),
+    (True, cosine_distance),
+    (False, kld),
+    (False, j_divergence),
+]
+
+
 # Distances for compression strategies
 def ncd(A, B, AB):
     return (AB - min(A, B)) / max(A, B)

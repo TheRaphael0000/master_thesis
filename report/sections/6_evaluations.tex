@@ -109,9 +109,10 @@ In most cases, the token representation provide on both dataset a greater averag
 An interesting example to be worth noticing concern the Manhattan distance, when using the token representation it tends to decrease the AP faster than the lemma representation as the MFW vector size increase.
 The euclidean distance seem to be the least appropriate distance measure for this task.
 The Clark distance have a really poor average precision when the MFW vector is too small but after reaching 500 it produces one of the best pay-off of the experiment.
+Using the most appropriate MFW-vector size for each distance metric, the choice using the right distance metric with these text representations, can increase the average precision by a factor of $13$ to $17$ \% depending on the dataset.
 Over all, the cosine distance seem to be one of the most appropriate choice when dealing with these datasets and text representations.
 
-For the next experiments dealing with this text representation, four distance mesures are retained : Cosine distance, Clark, Manhattan and Tanimoto, with a MFW vector size of 750.
+For the next experiments dealing with this text representation, four distance mesures retained : Cosine distance, Clark, Manhattan and Tanimoto, with a MFW vector size of 750.
 
 \begin{figure}
   \centering
@@ -131,8 +132,11 @@ For the next experiments dealing with this text representation, four distance me
 
 In this experiment the whole text is considered to create letters $n$-grams for the text representation, see Definition~\ref{def:letters_n_grams}.
 As for the other experiment the MFW approach is used to create the feature vector.
-On these vectors the distance measure used to create the rank list is the z-score normalized cosine distance.
-The goal is to compare the influence of $n$ parameter of the $n$-grams over the size of the feature vector.
+To reduce the field the possible parameters, the experiment is splited in two parts :
+The first part is to find the size of the $n$ parameter of the $n$-grams, and the number of MFW. The second is to compare the distance metrics with the previously found parameters.
+
+\textbf{First Part}\\
+For the first part, the z-score normalized cosine distance measure is used to compare the vectors and create the rank list.
 The parameters used are: a varying MFW vector size ranging between 500 and 15000 with a step of 500 and a $n$ for the following values : $3, 4, 5, (2, 3), (3, 4), (4, 5)$, the tuples $(a, b)$ correspond to both $a$-grams and $b$-grams in the same text representation.
 The number of different $n$-grams is not clear, but it is assumed to be larger than the vocabulary of the texts, thus the importance of having larger vector when dealing with long texts such as the literature datasets.
 When considering letters $n$-grams the text representation increase size by a factor of approximately $t$, with $t$ being the average token length.
@@ -140,15 +144,13 @@ The average token size for the literature dataset is displayed Table~\ref{tab:li
 To avoid having too large text representation a possible idea is to remove the hapax legomena (tokens appearing only once in the corpus) before applying the $n$-grams algorithm.
 This pruning approach was explored in~\cite{kocher_linking} but was not used in this study.
 
-Figure~\ref{fig:letter_ngrams} show the results of this experiment on the Oxquarry dataset (\ref{fig:letter_ngrams_oxquarry}) , Brunet (\ref{fig:letter_ngrams_brunet}) and St-Jean (\ref{fig:letter_ngrams_st_jean}).
+Figure~\ref{fig:letter_ngrams} show the results of the first part of the experiment on the Oxquarry dataset (\ref{fig:letter_ngrams_oxquarry}), Brunet (\ref{fig:letter_ngrams_brunet}) and St-Jean (\ref{fig:letter_ngrams_st_jean}).
 The trends seems to indicate that a lower $n$ value converge with lower MFW vector size but reach a maximal value faster.
 With $3$-grams, $\sim 3000-4000$-MFW give good results on both datasets with this distance metric.
 On the Brunet dataset, after reaching the maximal average precision at $\sim 4000$-MFW, a larger number of frequent words decrease the precision until reaching the maximal number of differant $3$-grams at $\sim 6500$-MFW, which is not the case on Oxquarry.
-On St-Jean, the $3$-grams and $(2,3)$-grams don't reach high average precision on low number of MFW like for the Brunet and Oxquarry.
+On St-Jean, the $3$-grams and $(2,3)$-grams don't reach an high average precision with a low number of MFW like for the Brunet and Oxquarry.
 $4$-grams also can be efficient but require a larger MFW vector, around $\sim 4000$-MFW give good result for both Brunet and St-Jean but on Oxquarry it requires around $\sim 8000$ to have similar results as the $3000$ $3$-grams.
-Even though other distance metrics can give different results,
-
-For the letters $n$-grams text representation, the retained configurations for next experiments are : $3$-grams with $3000$-MFW and $4$-grams with $8000$-MFW.
+For the first part, the retained parameters for the $n$-grams text representation are the $3$-grams with $3000$-MFW and $4$-grams with $8000$-MFW.
 
 \begin{figure}
   \caption{Letters $n$-grams representation over number of MFW with different $n$}
@@ -166,6 +168,62 @@ For the letters $n$-grams text representation, the retained configurations for n
   \label{fig:letter_ngrams_st_jean}
   \includegraphics[width=\linewidth]{img/letter_ngrams_st_jean.png}
 \end{figure}
+
+\textbf{Second Part}\\
+As stated earlier, in the second part the objective it to compare the distance metrics with the $3$-grams/$3000$-MFW and $4$-grams/$8000$-MFW.
+The distance metrics used are the ones presented in Section~\ref{sec:fv_distances}.
+The results for this experiment are in Table~\ref{tab:letter_ngrams}.
+Since the number of MFW and the size of the $n$-grams was optimized on the cosine distance, the results may be biased.
+
+For the $3$-grams, the following results can be observed:
+The cosine distance give the best results.
+Though two distances metrics can compete with the cosine distance on certain datasets with the $3$-grams approach, namely the Manhattan distance and the Clark distance.
+A worth noticing results, is the euclidean distance, which have polarized results: on Oxquarry the average precision is $0.72$ and on St-Jean only $0.47$.
+Using the right distance measure can have a relative increase up to $36$\%, when comparing the worse distance metric to the best of each dataset.
+
+For the $4$-grams approach, as for the $3$-grams the cosine is the best measure with this configuration.
+The Manhattan distance and the Clark distance also are the second choice.
+The euclidean have the same behavior as for $3$-grams on the dataset.
+For this configuration of $4$-grams with $8000$-MFW, using the right distance measure is less impactful than the $3$-grams approach but still can have a relative increase in  performance of $28$\% when changing from the worse distance metric to the best, with these datasets.
+
+\begin{table}
+  \centering
+  \caption{Average precision for $n$-grams with every metrics, on the 3 datasets (best result for the dataset in bold).}
+  \label{tab:letter_ngrams}
+
+  \subcaption{$3$-grams with $3000$-MFW}
+  \begin{tabular}{l c c c}
+    \toprule
+    Distance metric & Oxquarry & Brunet & St-Jean \\
+    \midrule
+    Manhattan & \textbf{0.77} & 0.66 & 0.62 \\
+    Tanimoto & 0.64 & 0.66 & 0.62 \\
+    Euclidean & 0.72 & 0.63 & 0.47 \\
+    Matusita & 0.60 & 0.66 & 0.58 \\
+    Clark & 0.64 & \textbf{0.73} & 0.63 \\
+    Cosine & \textbf{0.77} & \textbf{0.73} & \textbf{0.74} \\
+    KLD & 0.57 & 0.65 & 0.54 \\
+    JD & 0.58 & 0.66 & 0.56 \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{$4$-grams with $8000$-MFW}
+  \begin{tabular}{l c c c}
+    \toprule
+    Distance metric & Oxquarry & Brunet & St-Jean \\
+    \midrule
+    Manhattan & 0.76 & 0.69 & 0.73 \\
+    Tanimoto & 0.68 & 0.68 & 0.68 \\
+    Euclidean & 0.73 & 0.65 & 0.55 \\
+    Matusita & 0.63 & 0.68 & 0.65 \\
+    Clark & 0.67 & 0.72 & 0.75 \\
+    Cosine & \textbf{0.78} & \textbf{0.74} & \textbf{0.78} \\
+    KLD & 0.61 & 0.66 & 0.60 \\
+    JD & 0.61 & 0.67 & 0.63 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 
 \subsubsection{MFW First letters, last letters, word n-grams of tokens}
 
