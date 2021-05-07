@@ -1,0 +1,220 @@
+\subsection{Clustering}
+
+\subsubsection{Clustering evaluation metrics}
+
+\begin{definition}[Cluster difference]
+  This metric aim to evaluate if the clustering found the right number of cluster.
+  The cluster difference is the number cluster found $p$ minus the actual number of cluster $k$.
+  \begin{equation}
+    Cluster_{diff} = p - k
+  \end{equation}
+  A positive value indicate an overestimation of the real number of cluster, a negative value indicate the underestimation.
+  Zero indicate that the right number of cluster was found.
+  This value can be normalized by the number of documents N, which correspond to the difference of the r ratios.
+  As stated in the PAN16 evaluation campaign paper, estimating correctly the r ratio tends to indicate a good clustering~\cite{pan16}.
+  \begin{equation}
+    r_{diff} = \frac{p}{N} - \frac{k}{N} = \frac{p - k}{N}
+  \end{equation}
+\end{definition}
+
+To evaluate clustering, the metrics used are the BCubed~\cite{bcubed} family (called sometimes $B^3$, in this report).
+BCubed has shown to satisfy 4 following importants constraints when evaluating clusterings : \textit{Cluster Homogeneity} (different categories should be in the different clusters), \textit{Cluster Completness} (same categories should belong to the same cluster) and the \textit{Rag Bag constraint} (noisy/miscellaneous categories should be in the same cluster and not in 'healthy' clusters) and the \textit{Cluster size vs quantity constraints} (favorise large cluster)~\cite{bcubed}.
+These metrics are used in the clustering task at PAN@CLEF~\cite{pan16}.
+
+\begin{definition}[Correctness~\cite{bcubed}]
+  The $BCubed$ metric family is based on the the following \textit{Correctness} principle.
+  Let L(e) and C(e) be the category and the cluster of an element e.
+  The Correctness is following the biconditional condition on the category and cluster equality (biconditional: $A \Longleftrightarrow B \equiv (A \land B) \lor (\neg A \land \neg B)$).
+  \begin{gather*}
+    Correctness(e, e') = \\
+    \begin{cases}
+      1, & if (L(e) = L(e')) \Longleftrightarrow (C(e) = C(e'))\\
+      0, & otherwise
+    \end{cases}
+  \end{gather*}
+  In other terms, the correctness has a value of one (100\% correct) if the two elements are in the both in the same cluster and has the same category OR both in a different cluster and a different category.
+\end{definition}
+
+\begin{definition}[$BCubed$ Precision~\cite{bcubed}]
+  The $BCubed$ Precision correspond to the average of correctness for all elements on the average of all element such that \textbf{their clusters are the same}.
+  \begin{equation}
+    B^3_{precision} = \text{Avg}_{e}[\text{Avg}_{e' C(e)=C(e')}[Correctness(e, e')]]
+  \end{equation}
+\end{definition}
+
+\begin{definition}[$BCubed$ Recall~\cite{bcubed}]
+  The $BCubed$ Recall correspond to the average of correctness for all elements on the average of all element such that \textbf{their categories are the same}.
+  \begin{equation}
+    B^3_{recall} = \text{Avg}_{e}[\text{Avg}_{e' L(e)=L(e')}[Correctness(e, e')]]
+  \end{equation}
+\end{definition}
+
+\begin{definition}[$BCubed F_1$ Score~\cite{bcubed}]
+  $BCubed F_1$ Score uses the harmonic mean between the $B^3_{precision}$ and $B^3_{recall}$.
+  \begin{equation}
+    B^3_{F_1} =
+    2 \cdot \frac{B^3_{precision} \cdot B^3_{recall}}
+    {B^3_{precision} + B^3_{recall}}
+  \end{equation}
+  The $F_\beta$ measures, not shown here, provide a parametric way to represent with a single value the two counterbalancing measures in this case, the $B^3_{F_1}$ is computed using the $F$ measures with $\beta = 1$ and the $B^3_{precision}$ and $B^3_{recall}$ scores.
+\end{definition}
+
+\subsubsection{Clustering unsupervised cut method}
+
+For this experiment, the goal is to test the unsupervised cut method based on the IPS (Iterative positive silhouette) Procedure on the literature dataset.
+When applying the procedure, the number of clusters start at 2, each iteration the silhouette score is computed if it reaches a negative value the procedure stop otherwise the number of cluster is increased and the process is repeated.
+
+The rank list used for this experiment is the one generated using Z-score fusion with retained text representation (9 for St-Jean and 7 for Brunet and Oxquarry), see Section~\ref{sec:annex_retained_text_representation} in annex.
+
+When running the IPS procedure on the dataset, on Figures~\ref{fig:unsupervised_clustering} the silhouette score is indicated as each step and compared to the three BCubed metrics.
+For the sake of the experiment, the agglomerative clustering is also run up to a number of cluster equal to the number of documents (singleton clusters).
+The detailed score on the unsupervised clustering is presented in Table~\ref{tab:unsupervised_clustering_0}.
+
+Since the rank list used for the clustering is not perfect (every true links at the top), there is no number of cluster with a BCubed $F_1$ score of 1.0.
+The estimated number of cluster is on every dataset overestimated, average r-ratio difference of $0.21$, which means that the median neareast-cluster distance is greater than the median intra-cluster distance even when dealing with the right number of clusters.
+This can be due to the fact that the rank list used for the clustering is not perfect (AP $\neq 1$).
+
+To mitigate this problem, an easy solution would be to the stop the procedure at for example : $0.1$ instead of $0$.
+When running the IPS with a stop at $0.1$ on the dataset, the obtained results are presented in Table~\ref{tab:unsupervised_clustering_01}.
+The average r-ratio difference drop to $0.13$ when stopping the procedure at $0.1$ instead of $0$, which seem to improve the results, especially for the Brunet and St-Jean A dataset.
+No solid founding are used for tweaking this parameter.
+
+\begin{table}
+  \centering
+  \caption{Unsupervised clustering evaluation on the datasets}
+  \label{tab:unsupervised_clustering}
+
+  \subcaption{IPS Standard Procedure (stop at 0.0)}
+  \label{tab:unsupervised_clustering_0}
+  \begin{tabular}{l c c c c}
+    \toprule
+    &
+    $B^3_{F_1}$ &
+    $B^3_{precision}$  &
+    $B^3_{recall}$  &
+    $r_{diff}$ \\
+    \midrule
+    Oxquarry         & 0.73 & 1.00 & 0.58 & 0.23\\
+    Brunet           & 0.82 & 0.94 & 0.73 & 0.11\\
+    St-Jean A        & 0.64 & 1.00 & 0.47 & 0.22\\
+    St-Jean B        & 0.74 & 1.00 & 0.59 & 0.26\\
+    \textbf{Average} &
+    \textbf{0.73} &
+    \textbf{0.99} &
+    \textbf{0.59} &
+    \textbf{0.21} \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{IPS Procedure with stop at 0.1}
+  \label{tab:unsupervised_clustering_01}
+  \begin{tabular}{l c c c c}
+    \toprule
+    &
+    $B^3_{F_1}$ &
+    $B^3_{precision}$  &
+    $B^3_{recall}$  &
+    $r_{diff}$ \\
+    \midrule
+    Oxquarry         & 0.74 & 1.00 & 0.59 & 0.21\\
+    Brunet           & 0.82 & 0.82 & 0.82 & 0.05\\
+    St-Jean A        & 0.84 & 0.89 & 0.79 & 0.03\\
+    St-Jean B        & 0.77 & 1.00 & 0.62 & 0.21\\
+    \textbf{Average} &
+    \textbf{0.79} &
+    \textbf{0.93} &
+    \textbf{0.71} &
+    \textbf{0.13} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{figure}
+  \caption{Unsupervised clustering example on Brunet and St-Jean B}
+  \label{fig:unsupervised_clustering}
+
+  \subcaption{Brunet}
+  \label{fig:unsupervised_clustering_brunet}
+  \includegraphics[width=\linewidth]{img/unsupervised_clustering_brunet.png}
+
+  \subcaption{St-Jean B}
+  \label{fig:unsupervised_clustering_st_jean_B}
+  \includegraphics[width=\linewidth]{img/unsupervised_clustering_st_jean_B.png}
+\end{figure}
+
+\subsubsection{Clustering with the supervised cut method}
+
+To evaluate the supervised clustering approach, every dataset were used.
+First a rank list for each dataset is computed using a z-score fusion using the retained rank list, see Section~\ref{sec:annex_retained_text_representation} in annex.
+Then every pair of rank list is used to create a training/testing evaluation.
+In other words, a model to create cuts is trained on every dataset and tested on all the datasets.
+
+The model does not depend on the rank list size since only relative magnitudes are used.
+The BCubed $F_1$ metrics and the r ratio difference are computed during this experiment and are in presented in Table~\ref{tab:supervised_clustering_train_test}, for every pairs of dataset.
+The average values obtained for each metrics is presented in Table~\ref{tab:supervised_clustering_average}.
+
+Multiple points can be observed with these results:
+\begin{itemize}
+  \item
+  When testing the cut model, having a rank list of good quality tends to produce better clustering, no matter the quality of the rank list used for the training.
+  \item
+  Using the best rank list for training the cut model does not always give the best results.
+  An example to illustrate this observation, the St-Jean B dataset have the best rank list with an average precision of 0.97, when using the model trained on this rank list, F1 scores yield by the clustering using this model are : 0.80/0.76/0.82/0.97 (avg: 0.84).
+  In the other hand, when using Oxquarry for the training with a rank list of 0.84 AP, the F1 score obtained are : 0.82/0.86/0.88/0.92 (avg: 0.87).
+  The Oxquarry dataset seem to be the best dataset to train the model to perform the cut and Brunet the least effective.
+\end{itemize}
+
+\begin{table*}
+  \centering
+  \caption{Supervised clustering evaluation}
+  \label{tab:supervised_clustering}
+
+  \subcaption{Every possible training testing dataset pairs. Metrics in order : $B^{3}_{F_1}$ / $B^{3}_{precision}$ / $B^{3}_{recall}$ / $r_{diff}$}
+  \label{tab:supervised_clustering_train_test}
+  \begin{tabular}{l l| c c c c}
+    \toprule
+    \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing} \\
+    \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B \\
+    \midrule
+    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
+    & Oxquarry
+    & 0.82/1.00/0.70/0.08
+    & 0.86/0.91/0.82/0.07
+    & 0.88/0.84/0.93/-0.03
+    & 0.92/0.88/0.98/-0.02 \\
+    & Brunet
+    & 0.80/1.00/0.67/0.10
+    & 0.75/0.94/0.62/0.18
+    & 0.81/0.98/0.69/0.09
+    & 0.91/1.00/0.83/0.05 \\
+    & St-Jean A
+    & 0.80/1.00/0.67/0.10
+    & 0.79/0.94/0.68/0.14
+    & 0.83/0.89/0.77/0.04
+    & 0.97/1.00/0.94/0.02 \\
+    & St-Jean B
+    & 0.80/1.00/0.67/0.10
+    & 0.76/0.94/0.64/0.16
+    & 0.82/0.96/0.72/0.07
+    & 0.97/1.00/0.94/0.02 \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{Metrics averages}
+  \label{tab:supervised_clustering_average}
+  \begin{tabular}{l c c c c}
+    \toprule
+    & $B^{3}_{F_1}$
+    & $B^{3}_{precision}$
+    & $B^{3}_{recall}$
+    & $r_{diff}$ \\
+    \midrule
+    \textbf{Average}
+    & \textbf{0.84}
+    & \textbf{0.95}
+    & \textbf{0.77}
+    & \textbf{0.07}
+    \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
