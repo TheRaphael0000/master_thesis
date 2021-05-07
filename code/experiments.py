@@ -53,9 +53,10 @@ def main():
     # degradation()
     # token_vs_lemma()
     # letter_ngrams()
-    letter_ngrams_2()
+    # letter_ngrams_2()
     # first_last_letters_ngrams()
     # pos_ngrams()
+    pos_ngrams_2()
 
     # compression_evaluation()
 
@@ -235,6 +236,7 @@ def letter_ngrams():
     plt.tight_layout()
     plt.savefig("img/letter_ngrams.png")
 
+
 def letter_ngrams_2():
     print("loading")
     # _, _, _, X, Y = st_jean.parse()
@@ -340,6 +342,24 @@ def pos_ngrams():
     plt.ylabel("Average Precision (AP)")
     plt.tight_layout()
     plt.savefig("img/pos_ngrams.png")
+
+
+def pos_ngrams_2():
+    print("loading")
+    _, X, _, _, Y = st_jean.parse()
+
+    M = defaultdict(list)
+
+    configurations = [
+        (2, 250),
+        (3, 1000),
+    ]
+
+    for ngrams_type, mfw in configurations:
+        for zscore, distance in distances.vector_distances:
+            rep = [X, ngrams_type, mfw, zscore, 1e-1, distance]
+            rl = compute_links(rep)
+            print(ngrams_type, mfw, distance.__name__, evaluate_linking(rl, Y))
 
 
 def compression_evaluation():
