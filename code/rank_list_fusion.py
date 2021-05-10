@@ -67,11 +67,14 @@ def fusion_regression_testing(model, rank_list):
     return Y_pred
 
 
-def fusion_regression(models, rls):
+def fusion_regression(models, rls, alter_scores=None):
     updated_rls = []
     for model, rl in zip(models, rls):
         links = [link for link, score in rl]
-        scores = list(fusion_regression_testing(model, rl))
+        scores = fusion_regression_testing(model, rl)
+        if alter_scores is not None:
+            scores = alter_scores(scores)
+        scores = list(scores)
         updated_rls.append(zip(links, scores))
     return rank_list_fusion(updated_rls, order=-1)
 

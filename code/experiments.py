@@ -56,7 +56,7 @@ def main():
     # letter_ngrams_2()
     # first_last_letters_ngrams()
     # pos_ngrams()
-    pos_ngrams_2()
+    # pos_ngrams_2()
 
     # compression_evaluation()
 
@@ -64,6 +64,7 @@ def main():
     # dates_differences()
     # fusion_evaluation()
     # fusion_with_soft_veto()
+    veto_fusion()
     # every_fusion()
 
     # unsupervised_clustering_evaluation()
@@ -699,6 +700,71 @@ def fusion_evaluation():
     print(*sign_test(M_fusion_regression, M_single_mean))
     print("Regression/T/Single-max")
     print(*sign_test(M_fusion_regression, M_single_max))
+
+
+def veto_fusion():
+
+    def _linking(X, Y):
+        rls = [compute_links(t) for t in tr(*X)]
+        for rl in rls:
+            print(evaluate_linking(rl, Y))
+        return rls
+
+    def _method(threshold, value):
+        def f(scores):
+            scores[scores < threshold] = value
+            return scores
+        return f
+
+    def _veto_fusions(rls_training, rls_testing, Y_training, Y_testing, value):
+        models = [fusion_regression_training(
+            rl, Y_training)[0] for rl in rls_training]
+        rl_no_veto = fusion_regression(models, rls_testing)
+        baseline = evaluate_linking(rl_no_veto, Y_testing)[0]
+        y = []
+        for xi in x:
+            rl_veto = fusion_regression(
+                models, rls_testing, alter_scores=_method(xi, value))
+            m = evaluate_linking(rl_veto, Y_testing)
+            y.append(m[0])
+        y = np.array(y) - baseline
+        return y
+
+    def _plot(value, c):
+        print(value)
+        y = _veto_fusions(rls_A, rls_B, Y_A, Y_B, value)
+        print("A B", np.max(y), x[np.argmax(y)])
+        plt.plot(x, y, label="train A, test B", ls="dotted", c=c, alpha=0.5)
+        y = _veto_fusions(rls_B, rls_A, Y_B, Y_A, value)
+        print("B A", np.max(y), x[np.argmax(y)])
+        plt.plot(x, y, label="train B, test A", ls="dashed", c=c, alpha=0.5)
+
+    print("Loading")
+    _, X_pos_A, _, X_token_A, Y_A = st_jean.parse_A()
+    _, X_pos_B, _, X_token_B, Y_B = st_jean.parse_B()
+    print("A")
+    rls_A = _linking((X_token_A, X_pos_A), Y_A)
+    print("B")
+    rls_B = _linking((X_token_B, X_pos_B), Y_B)
+
+    x = np.linspace(0.01, 0.25, 25)
+    values = [0, -1, -len(rls_A), -np.inf]
+
+    custom_lines = [
+        Line2D([0], [0], color="k", lw=2, ls="dotted"),
+        Line2D([0], [0], color="k", lw=2, ls="dashed"),
+    ] + [Line2D([0], [0], color=f"C{i}", lw=2) for i in range(len(values))]
+    labels = ["Train A / Test B", "Train B / Test A"] + \
+        [f"Set {str(v)}" for v in values]
+
+    plt.figure(figsize=(6, 4), dpi=200)
+    for i, value in enumerate(values):
+        _plot(value, f"C{str(i)}")
+    plt.xlabel("Threshold")
+    plt.ylabel("AP diff.")
+    plt.legend(custom_lines, labels)
+    plt.tight_layout()
+    plt.savefig("img/veto.png")
 
 
 def fusion_with_soft_veto():

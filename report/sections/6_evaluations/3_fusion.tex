@@ -1,4 +1,6 @@
-\subsection{Rank lists fusion evaluation \label{sec:eval_fusion}}
+\subsection{Rank lists fusion}
+
+\subsubsection{Rank list fusion evaluation \label{sec:eval_fusion}}
 
 In this experiment, the goal to understand if fusing rank list can improve performance of the rank list.
 The methodology used, is to create $n$ rank lists and fuse them for every $r$ rank lists combinations ($C^n_r$) for the two fusing methods proposed, z-score fusion and regression fusion.
@@ -221,3 +223,44 @@ The results of fusing multiple rank lists when using regression fusion strategy 
 This can be further confirmed by looking at Table~\ref{tab:fusion_B_A}, which shows in the column Regression/T/Single-Max more ties than the average and in Figure~\ref{fig:fusions} where most Regression score and and Single rank list score overlap.
 No particular set of rank list tends to give the best results in every case when fusing with the two strategies, every rank list is present in the argmax, but with the Z-Score fusion, the best results seem to be obtained with rank lists using different text representations.
 The Z-score fusion give the best results overall.
+
+\subsubsection{Fusion veto}
+
+In this experiment, the goal is to understand if the veto method can improve the average precision on the fused rank lists using the regression fusion method.
+
+To do so, the St-Jean retained rank list are used (ref. Table~\ref{tab:9rl_results_st_jean} in annex).
+The fusion scheme is learnt on first St-Jean A and trained on St-Jean B (ref. Section~\ref{sec:regression_fusion}), then the inverse.
+After computing the probabilities for each link in each rank list on the testing set, the probabilities under the threshold are set according to each proposed veto strategy (set to $0$, $-1$, $-n$, $-\infty$).
+The threshold is analysed for the vales between $0.01$ and $0.50$, with a step of $0.01$.
+After a threshold of $0.50$, the veto shouldn't be applied since it corresponds to the probability of being a false link is smaller than the probability of being a true link.
+The fusion of the rank list is normally computed with the average of the probabilities.
+When computing the average of the probabilities when containing $-\infty$ always yield a $-\infty$ probability.
+To understand if the veto improve the results, the difference between the average precision of the rank list obtained by fusing with the veto strategy and the average precision of the rank list without the veto is computed.
+
+The average precision difference over the threshold value is visually presented in Figure~\ref{fig:veto}, and the best configurations found are summarized in Table~\ref{tab:veto}.
+
+\begin{figure}
+  \caption{Veto strategies evaluations on St-Jean A and B depending on the threshold}
+  \label{fig:veto}
+  \includegraphics[width=\linewidth]{img/veto.png}
+\end{figure}
+
+\begin{table}
+  \centering
+  \caption{Maximal gain on the average precision using the veto / Argmax}
+  \label{tab:veto}
+  \begin{tabular}{l r r}
+    \toprule
+                   & Train A / Test B & Train B / Test A \\
+    \midrule
+    Set to $0$     & 0.000/0.03       & 0.000/0.01       \\
+    Set to $-1$    & 0.006/0.03       & 0.025/0.01       \\
+    Set to $-n$    & 0.004/0.03       & 0.028/0.01       \\
+    Set to $-\inf$ & -0.002/0.01      & -0.096/0.01      \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The overall the veto strategy seem to be a bad option.
+The best result obtained is only an increase of 0.028 in average precision, with a tiny threshold (the closest to a non threshold approach) which may indicate an increase due to random factors.
+Using the infinity strategy only give worse results.

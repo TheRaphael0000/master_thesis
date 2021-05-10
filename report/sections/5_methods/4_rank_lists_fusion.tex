@@ -48,7 +48,7 @@ Z-Score fusion:
 
 This method can provide good results, but lack of theoretical foundations.
 
-\subsubsection{Regression fusion}
+\subsubsection{Regression fusion \label{sec:regression_fusion}}
 
 Each rank list is ordered by a score, this score depends on distance measure used, thus the order of magnitude of each rank list is different.
 To avoid having problems in merging rank lists with different magnitude, the solution opted is to translate the scores into a probability of being a true link.
@@ -61,8 +61,19 @@ Since a probability of being a true link is desired, the target value for each t
 
 Once a model per type of rank list is trained, this model can provide for any new same type rank list, probabilities for each link being of being a true link.
 The probability framework can now be used on the rank list.
-To obtain the most reliable probability given multiple observations (different rank lists), the fusion result in computing the expected value for each link's probability using these observations.
+To obtain the most reliable probability given multiple observations (different rank lists), the fusion results in computing the expected value for each link's probability using these observations.
 In this case, the expected value is a simple average of the probabilities, since no weighting is used on the rank lists.
+
+\subsubsection{Veto}
+
+To try to improve the results, a veto system is proposed.
+The idea here is to have a veto on link with low probatilities.
+The following assumption is made: if a link have a low probability in a rank list before the fusion, this probably indicate a false link according to this rank list, thus having theses links at the bottom of the rank list after the fusion can improve the results.
+
+To fullfill the previously stated assumption, a possible way is to find every links in the ranks list before the fusion where the probability is under a certain threshold, and alter this probability with a lower one.
+The proposed solution is to set the probability of the affected links (probability of beeing a true link below the threshold) to one of these values : $0$, $-1$, $-n$, $-\infty$, with $n = \#(ranks lists for the fusion)$.
+The greater, the value the stronger the penality of the veto.
+The $-\infty$ method is the only veto method in the first meaning of the veto definition, every links below the probability will have its final score also equal to $-\infty$ thus in the fused rank list all these links are at the bottom but their order is not defined.
 
 \subsubsection{Soft-veto using S-Curve}
 
