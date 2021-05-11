@@ -4,6 +4,7 @@ from collections import Counter
 import unicodedata
 import numpy as np
 from scipy.stats import binom_test
+from scipy.stats import wilcoxon
 import matplotlib.pyplot as plt
 
 
@@ -118,15 +119,6 @@ def rank_list_to_txt(rank_list, Y):
             f.write(f"{rank}, {'1' if Y[a] == Y[b] else '0'}, {str(score)}\n")
 
 
-def simple_plot(X, Y, X_label, Y_label, filename):
-    plt.figure(figsize=(4, 3), dpi=200)
-    plt.plot(X, Y)
-    plt.xlabel(X_label)
-    plt.ylabel(Y_label)
-    plt.tight_layout()
-    plt.savefig(f"{filename}.png")
-
-
 def normalize_text(s):
     # Removing accents
     s = unicodedata.normalize("NFKD", s)
@@ -157,3 +149,20 @@ def word_n_grams(X, n):
             words.extend(n_grams)
         texts.append(words)
     return texts
+
+
+def rank_list_distance(A, B):
+    def rl_to_rank_dict(rl):
+        return {link: i for i, (link, score) in enumerate(rl)}
+
+    dA = rl_to_rank_dict(A)
+    dB = rl_to_rank_dict(B)
+    assert set(dA.keys()) == set(dB.keys())
+    keys = dA.keys()
+
+    dists = [dB[k] - dA[k] for k in keys]
+    try:
+        statistic, pvalue = wilcoxon(dists)
+        return pvalue
+    except ValueError:
+        return np.nan

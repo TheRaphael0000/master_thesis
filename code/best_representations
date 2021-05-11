@@ -1,9 +1,0 @@
-750 Token Cosine distance
-750 Token Clark
-750 Token Manhattan
-750 Token Tanimoto
-3000 Token letters 3-grams
-8000 Token letters 4-grams
-250 POS 2-grams
-1000 POS 3-grams
-BZip2 CBC

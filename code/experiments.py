@@ -35,7 +35,6 @@ from clustering import unsupervised_clustering
 from clustering import clustering_at_every_n_clusters
 
 from misc import sign_test
-from misc import simple_plot
 from misc import first_letters_cut
 from misc import word_n_grams
 from misc import last_letters_cut
@@ -43,6 +42,7 @@ from misc import sigmoid
 from misc import sigmoid_r
 from misc import compute_r
 from misc import normalize
+from misc import rank_list_distance
 
 
 def main():
@@ -944,14 +944,14 @@ def supervised_clustering_evaluation():
         plt.savefig(f"img/{filename}.png")
 
     print("Loading")
-    _, X_oxquarry, Y_oxquarry = oxquarry.parse()
-    _, _, X_brunet, Y_brunet = brunet.parse()
-    _, X_pos_st_jean_A, _, X_token_st_jean_A, Y_st_jean_A = st_jean.parse_A()
-    _, X_pos_st_jean_B, _, X_token_st_jean_B, Y_st_jean_B = st_jean.parse_B()
+    info_oxquarry, X_oxquarry, Y_oxquarry = oxquarry.parse()
+    info_brunet, X_lemma_brunet, X_token_brunet, Y_brunet = brunet.parse()
+    info_st_jean_A, X_pos_st_jean_A, X_lemma_st_jean_A, X_token_st_jean_A, Y_st_jean_A = st_jean.parse_A()
+    info_st_jean_B, X_pos_st_jean_B, X_lemma_st_jean_B, X_token_st_jean_B, Y_st_jean_B = st_jean.parse_B()
 
     datasets = [
         ([X_oxquarry, ], Y_oxquarry),
-        ([X_brunet, ], Y_brunet),
+        ([X_token_brunet, ], Y_brunet),
         ([X_token_st_jean_A, X_pos_st_jean_A], Y_st_jean_A),
         ([X_token_st_jean_B, X_pos_st_jean_B], Y_st_jean_B),
     ]
@@ -995,6 +995,34 @@ def supervised_clustering_evaluation():
     print(np.array(m).mean(axis=0))
 
 
+def rank_list_distances():
+    info_brunet, X_lemma_brunet, X_token_brunet, Y_brunet = brunet.parse()
+    X, Y = (X_token_brunet,), Y_brunet
+
+    trs = tr(*X)[0:]
+
+    rls = [compute_links(t) for t in trs]
+    for rl in rls:
+        print(evaluate_linking(rl, Y))
+
+    s = len(rls)
+    ids = range(s)
+
+    d = []
+
+    for Ai, Bi in itertools.product(ids, ids):
+        A, B = rls[Ai], rls[Bi]
+        dist = rank_list_distance(A, B)
+        d.append(dist)
+
+    d = np.array(d).reshape((s, s))
+    print(d)
+    print(np.nanmean(d, axis=0))
+
+
+
+
 if __name__ == "__main__":
     np.set_printoptions(precision=2, floatmode="fixed")
-    main()
+    rank_list_distances()
+    # main()
