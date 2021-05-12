@@ -266,3 +266,75 @@ The best result obtained is only an increase of 0.028 in average precision, with
 Using the infinity strategy only give worse results.
 
 \subsection{Rank lists correlations}
+
+As stated previously, we believe fusing high quality rank lists (high AP), with the most different results can increase the quality of the fusion.
+The idea here is to propose a way to find differences between rank lists to be able to try to verify this assumption.
+To compare rank list the method used is to use the Wilcoxon signed-rank test on rank differences between every links in the rank lists.
+For example:\\
+
+\textbf{Rank list 1}
+
+\begin{tabular}{r l}
+Rank & Link\\
+   0 & (0, 1)\\
+   1 & (1, 2)\\
+   2 & (0, 2)\\
+\end{tabular}
+
+\textbf{Rank list 2}
+
+\begin{tabular}{r l}
+Rank & Link\\
+   0 & (1, 2)\\
+   1 & (0, 2)\\
+   2 & (0, 1)\\
+\end{tabular}
+
+\textbf{Rank differences}
+
+\begin{tabular}{r l}
+Link   & Rank difference\\
+(1, 2) & $0 - 1 = -1$\\
+(0, 2) & $1 - 2 = -1$\\
+(0, 1) & $2 - 0 = 2$\\
+\end{tabular}
+
+From the rank difference, the Wilcoxon sign-rank test is computed, the $p$-value obtained by the Wilcoxon sign-rank test indicate the probabiliy of encountering such rank difference if the null hypothesis is correct, in this case the null hypothesis represent that both rank list are the same (a 0 absolute rank differences).
+The Wilcoxon sign-rank test consider the magnitude of the differences in its computation, which makes it a good test for such application.
+A high $p$-value indicate a high corellation between the rank lists and a low value a low corellation between the two rank lists.
+
+An important point to consider with the Wilcoxon sign-rank test's p-value, is that in no cases, this number evaluate the quality of the rank lists.
+It only considers the similarity of the rank list.
+Two major problems arise when only considering this number :
+\begin{enumerate}
+  \item
+  If two rank list are highly correlated (large $p$-value), it is still possible that both have the same \textit{good answers}.
+  \item
+  If two rank list are lowly correlated (low $p$-value), it is still possible that both have totaly different \textit{bad answers}.
+\end{enumerate}
+The first problem, is avoided by the fact the fusion is only performed to try to increase the quality of the rank lists, so having two good rank lists with nearly the same results, will not increase the quality, if the our assumption is correct.
+The second problem, can not be overlooked, if noisy rank lists are present, as far as we now, in no cases these can be detected.
+To mitigate this problem, the proposed solution is to also take into account the mean of the average precision of the two rank lists (Single-Mean metric), or to directly cherry-pick rank list with known good results.
+
+The $p$-value for each combination of retained rank list (see Table~\ref{tab:9rl} in annex) in St-Jean is presented in Table~\ref{tab:rl_correlations}.
+
+\begin{table*}
+  \centering
+  \caption{Retained rank lists comparaison using the Wilcoxon signed-rank test's p-value on St-Jean}
+  \label{tab:rl_correlations}
+  \begin{tabular}{r|r r r r r r r r r}
+    \toprule
+      &    0 &    1 &    2 &    3 &    4 &    5 &    6 &    7 &    8 \\
+    \midrule
+    0 & 1.00 & 0.28 & 0.20 & 0.54 & 0.64 & 0.68 & 0.79 & 0.85 & 0.05 \\
+    1 &    - & 1.00 & 0.30 & 0.69 & 0.42 & 0.61 & 0.70 & 0.48 & 0.19 \\
+    2 &    - &    - & 1.00 & 0.42 & 0.45 & 0.28 & 0.52 & 0.23 & 0.16 \\
+    3 &    - &    - &    - & 1.00 & 0.26 & 0.63 & 0.54 & 0.47 & 0.24 \\
+    4 &    - &    - &    - &    - & 1.00 & 0.67 & 0.43 & 0.51 & 0.01 \\
+    5 &    - &    - &    - &    - &    - & 1.00 & 0.59 & 0.73 & 0.01 \\
+    6 &    - &    - &    - &    - &    - &    - & 1.00 & 0.63 & 0.59 \\
+    7 &    - &    - &    - &    - &    - &    - &    - & 1.00 & 0.25 \\
+    8 &    - &    - &    - &    - &    - &    - &    - &    - & 1.00 \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
