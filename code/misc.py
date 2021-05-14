@@ -161,8 +161,7 @@ def rank_list_distance(A, B):
     keys = dA.keys()
 
     dists = [dB[k] - dA[k] for k in keys]
-    try:
-        statistic, pvalue = wilcoxon(dists)
-        return pvalue
-    except ValueError:
-        return np.nan
+    
+    num = np.sum(np.abs(dists))
+    den = (len(dists) * (len(dists)-1)) / 2
+    return num / den
