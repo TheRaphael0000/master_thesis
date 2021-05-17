@@ -14,7 +14,7 @@ For the sake of this experiment, every true links are discarded in the rank list
 Links often apearing in the top 30 false links are considered as frequent errors.
 The goal is to compare the two feature vectors of the frequent errors.
 In this case, the visualization is based on the 750-MFW tokens representation.
-Figures~\ref{fig:mfw_vector_error} show two pairs (document 57 from Sand / document 183 from Stael and document 57 from Sand / document 141 from Stael) that appear 6 time out of the 9 rank lists in the top 30 false links.
+Figures~\ref{fig:mfw_vector_error} show two pairs (document 57 from Sand / document 141 from Stael and document 57 from Sand / document 183 from Stael) that appear 6 time out of the 9 rank lists in the top 30 false links.
 To be able to understand more easily this vector, the values have been sorted by relative frequencies and using the logarithmic scale.
 When a large proportion of the vectors overlap it indicates a high similarity between the MFW vectors.
 
@@ -36,8 +36,8 @@ Both document style are close when their feature vector are closely related.
 Visually when most the surface overlap, the distance function will give a low value, and rank this link high in the list.
 When two vectors are relatively close together determinating that two texts are from a different author can not clearly be established using only one type of representation, no matter the distance metric applied.
 The frequent errors vector pairs presented in Figure~\ref{fig:mfw_vector_error} can be visually compared actual true links and actual false links, to have a better understanding of this problematic.
-For example the most similar true link (ranked 1 using Manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (document 157 from Stael / document 183 from Steal) or the HPrec-th (last continous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (document 4 from Flaubert / document 82 from Flaubert), both of these links show a large proportion of overlapping surface, like for the frequent errors vectors.
-A counter example would be the least similar false link (ranked last using Manhattan distance) which represent a negatively correlated document pair, Figure~\ref{fig:mfw_vector_last_rl} showcase this link (document 92 from Zola / document 191 from Stael).
+For example the most similar true link (ranked 1 using Manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (document 157 from Stael / document 183 from Steal) or the HPrec-th (last continous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (document 22 from Gautier / document 53 from Gautier), both of these links show a large proportion of overlapping surface, like for the frequent errors vectors.
+A counter example would be the least similar false link (ranked last using Manhattan distance) which represent a negatively correlated document pair, Figure~\ref{fig:mfw_vector_last_rl} showcase this link (document 183 from Stael / document 194 from Regnier).
 As expected, most of this figure surface is non-overlapping.
 
 \begin{figure}
@@ -105,7 +105,7 @@ Same authors links (true links) are displayed in Figure~\ref{fig:dates_differenc
 
 The previous statistics can be compared to Figure~\ref{fig:dates_differences_r_false} which show the date difference density on the top-r false links (670 in case of St-Jean) on a rank list with 85\% average precision (z-score fusion of the retained text representations, Table~\ref{tab:9rl_results_st_jean_A_B}).
 Two interesting information can be extracted here.
-First the mean is lower by 7.44 years (29.04 - 21.60) compared to the false links and have a narrow standard deviation distribution which clearly indicate the importance of publication date in the ranking of the documents.
+First the mean is lower by 7.75 years (29.04 - 21.29) compared to the false links and have a narrow standard deviation distribution which clearly indicate the importance of publication date in the ranking of the documents.
 Secondly we can observe a drop after 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ years are harder to discriminate between a true link and a false link than links outside this interval.
 This 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France~\cite{generations}, the birth country of the authors in this dataset.
 Each new generation tend to use its own vocabulary, and thus it can be harder to discriminate the author of text belonging to the same generation, if we assume that the authors write their books at around the same age.

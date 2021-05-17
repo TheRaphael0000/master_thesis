@@ -5,6 +5,7 @@ import unicodedata
 import numpy as np
 from scipy.stats import binom_test
 from scipy.stats import wilcoxon
+from scipy.stats import weightedtau
 import matplotlib.pyplot as plt
 
 
@@ -159,9 +160,7 @@ def rank_list_distance(A, B):
     dB = rl_to_rank_dict(B)
     assert set(dA.keys()) == set(dB.keys())
     keys = dA.keys()
-
-    dists = [dB[k] - dA[k] for k in keys]
     
-    num = np.sum(np.abs(dists))
-    den = (len(dists) * (len(dists)-1)) / 2
-    return num / den
+    vA, vB = [dA[k] for k in keys], [dB[k] for k in keys]
+    correlation, pvalue = weightedtau(vA, vB)
+    return correlation

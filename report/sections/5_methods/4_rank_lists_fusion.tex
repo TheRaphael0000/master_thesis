@@ -81,17 +81,10 @@ An additional desired constraint is to favor top ranked link and penalize bottom
 This constraint can be easily explained by observing the distance over the rank graph of the rank list.
 Figure~\ref{fig:distance_over_rank} clearly show us the top ranked links and bottom ranked links have a sharper decision than in than the middle section.
 
-\begin{figure}
-  \centering
-  \caption{Distance over rank in the rank list using the smoothed Manhattan distance, 500 MFW tokens on the Brunet dataset}
-  \label{fig:distance_over_rank}
-  \includegraphics[width=\linewidth]{img/distance_over_rank.png}
-\end{figure}
-
 Top ranked links correspond to similar documents and bottom links correspond to negatively correlated documents.
 Assuming that the top rank are true links after the rank list fusion these link should also be top rank.
 The same reasoning can be apply for the bottom links by assuming them as false links.
-A weighting curve, here called soft-veto, can be design accordingly such that top links are boosted and bottom links hindered.
+A weighting curve, here called soft-veto, can be design accordingly such that the score of top links are boosted and  bottom links score hindered.
 
 Using the reciprocal of the sigmoid function such curve can modelized.
 
@@ -104,20 +97,32 @@ Using the reciprocal of the sigmoid function such curve can modelized.
   S^{-1}(x) = -\ln{\frac{x-1}{x}}
 \end{equation}
 
-The steepness of the curve can be ajusted by changing the start and the end of the interval and then normalizing the values between 0 and 1.
+The steepness of the curve can be ajusted by changing the start and the end of the interval and then normalizing the values between -1 and 1.
 Figure~\ref{fig:s_curve_c} shows the $S^-1(x)$ function normalized between -1 and 1 for the intervals between $\lim\limits_{c \rightarrow 0} \left[S(c), S(c)\right]$ and $\left[S(-20), S(+20)\right]$.
 A greater interval size increase the steepness which correspond to an increase of the rank conservation of the top and bottom ranked links and decreasing the rank conservation of the middle ranked links.
-
 To break the symmetry for the curve, to be able to increase the conservation of the top rank while decreasing the conservation of the bottom ranked.
-The solution proposed is to take $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$.
+The solution proposed is to add a new parameter $r$, then take $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$.
 Figure~\ref{fig:s_curve_r} shows the r parameter influance of a sigmoid with $c = 4$ and $r \in \left[0.1, 0.9\right]$.
+The $c$ parameter must be in the interval $\left]0, \infty\right[$, with a value close to $0$ the soft-veto have a weak effect and with a large value, for example 20, the soft veto has a strong effect on the top and bottom, see Figure~\ref{fig:s_curve_c}.
+The $r$ parameter must be in the interval $\left]0, 1\right[$, with a value close to $0$ the soft-veto have a strong effect on the top ranked links and with a large value a strong effect on the bottom ranked links, see Figure~\ref{fig:s_curve_r}.
+
+To apply the soft-veto, each score in the rank list is multiplied by the s-curve at the same rank.
+This soft-veto methodology aimed to be used on rank list before fusing, to have a more cleaved decision on the links positions.
+
+\begin{figure}
+  \centering
+  \caption{Distance over rank in the rank list using the smoothed Manhattan distance, 500 MFW tokens on the Brunet dataset}
+  \label{fig:distance_over_rank}
+  \includegraphics[width=\linewidth]{img/distance_over_rank.png}
+\end{figure}
+
 
 \begin{figure}
   \centering
   \caption{S-Curves parameters}
   \label{fig:s_curve_params}
 
-  \subcaption{$S^-1(x)$, sampled in $\left[S(-c), S(+c)\right]$ and normalized between 0 and 1}
+  \subcaption{$S^-1(x)$, sampled in $\left[S(-c), S(+c)\right]$ and normalized between -1 and 1}
   \label{fig:s_curve_c}
   \includegraphics[width=\linewidth]{img/s_curve_c.png}
 
@@ -125,6 +130,3 @@ Figure~\ref{fig:s_curve_r} shows the r parameter influance of a sigmoid with $c 
   \label{fig:s_curve_r}
   \includegraphics[width=\linewidth]{img/s_curve_r.png}
 \end{figure}
-
-To apply the soft-veto, each score in the rank list is multiplied by the s-curve at the same rank.
-This soft-veto methodology aimed to be used on rank list before fusing, to have a more cleaved decision on the links positions.

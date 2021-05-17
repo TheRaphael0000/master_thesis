@@ -2,3 +2,4 @@ matplotlib
 bcubed
 sklearn
 adjustText
+tqdm

@@ -31,8 +31,18 @@
     breaklinks=true,
 }
 
+\newtheoremstyle{definition}% name of the style to be used
+  {2\topsep}% measure of space to leave above the theorem. E.g.: 3pt
+  {2\topsep}% measure of space to leave below the theorem. E.g.: 3pt
+  {\itshape}% name of font to use in the body of the theorem
+  { }% measure of space to indent
+  {\bfseries}% name of head font
+  {\\}% punctuation between head and body
+  { }% space after theorem head; " " = normal interword space
+  {\thmname{#1}\thmnumber{ #2}\textnormal{\thmnote{ (#3)}}}
+
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}
+\newtheorem{definition}{Definition}[section]
 
 \begin{document}
 \pagenumbering{roman}
@@ -69,8 +79,7 @@
 \subfile{sections/4_corpus/0_corpus}
 \subfile{sections/5_methods/0_methods}
 \subfile{sections/6_evaluations/0_evaluations}
-\subfile{sections/7_discussion/0_discussion}
-\subfile{sections/8_conclusion/0_conclusion}
+\subfile{sections/7_conclusion/0_conclusion}
 \clearpage
 
 \onecolumn

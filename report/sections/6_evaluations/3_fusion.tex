@@ -224,20 +224,23 @@ This can be further confirmed by looking at Table~\ref{tab:fusion_B_A}, which sh
 No particular set of rank list tends to give the best results in every case when fusing with the two strategies, every rank list is present in the argmax, but with the Z-Score fusion, the best results seem to be obtained with rank lists using different text representations.
 The Z-score fusion give the best results overall.
 
-\subsubsection{Fusion veto}
+\subsubsection{Veto evaluation}
 
 In this experiment, the goal is to understand if the veto method can improve the average precision on the fused rank lists using the regression fusion method.
 
 To do so, the St-Jean retained rank list are used (ref. Table~\ref{tab:9rl_results_st_jean} in annex).
 The fusion scheme is learnt on first St-Jean A and trained on St-Jean B (ref. Section~\ref{sec:regression_fusion}), then the inverse.
 After computing the probabilities for each link in each rank list on the testing set, the probabilities under the threshold are set according to each proposed veto strategy (set to $0$, $-1$, $-n$, $-\infty$).
-The threshold is analysed for the vales between $0.01$ and $0.50$, with a step of $0.01$.
-After a threshold of $0.50$, the veto shouldn't be applied since it corresponds to the probability of being a false link is smaller than the probability of being a true link.
-The fusion of the rank list is normally computed with the average of the probabilities.
-When computing the average of the probabilities when containing $-\infty$ always yield a $-\infty$ probability.
-To understand if the veto improve the results, the difference between the average precision of the rank list obtained by fusing with the veto strategy and the average precision of the rank list without the veto is computed.
+The threshold is analysed for the values between $0.01$ and $0.50$, with a step of $0.01$.
+A threshold of $0.50$ is an upperbound, after this value the probability of being a false link is smaller than the probability of being a true link.
+The fusion of the rank list is normally computed with the average of the probabilities with one small difference for the $-\infty$ strategy when a $-\infty$ is encountered in the mean, the mean will always be $-\infty$.
+To understand if the veto improve the results, the average precision gain of the rank list between the veto strategy and without the veto.
 
 The average precision difference over the threshold value is visually presented in Figure~\ref{fig:veto}, and the best configurations found are summarized in Table~\ref{tab:veto}.
+
+Overall the veto strategy seem to be a bad option.
+The best result obtained is only a gain of 0.0285 average precision, with a tiny threshold (0.01, the closest to a non threshold approach) which may indicate an increase due to random factors.
+Using the infinity strategy only give worse results.
 
 \begin{figure}
   \caption{Veto strategies evaluations on St-Jean A and B depending on the threshold}
@@ -253,119 +256,123 @@ The average precision difference over the threshold value is visually presented 
     \toprule
                    & Train A / Test B & Train B / Test A \\
     \midrule
-    Set to $0$     & 0.000/0.03       & 0.000/0.01       \\
-    Set to $-1$    & 0.006/0.03       & 0.025/0.01       \\
-    Set to $-n$    & 0.004/0.03       & 0.028/0.01       \\
-    Set to $-\inf$ & -0.002/0.01      & -0.096/0.01      \\
+    Set to $0$     & 4.08e-04/0.03 & -2.89e-05/0.01 \\
+    Set to $-1$    & 6.25e-03/0.03 & 2.51e-02/0.01 \\
+    Set to $-n$    & 3.73e-03/0.03 & 2.85e-02/0.01 \\
+    Set to $-\inf$ & -1.47e-03/0.01 & -9.66e-02/0.01 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-The overall the veto strategy seem to be a bad option.
-The best result obtained is only an increase of 0.028 in average precision, with a tiny threshold (the closest to a non threshold approach) which may indicate an increase due to random factors.
-Using the infinity strategy only give worse results.
+\subsubsection{Soft-veto evaluation}
 
-\clearpage
+To evalute the performance of the soft veto strategy, the idea is to compute the average precision gain obtained when using the soft-veto.
+The gain is computed by subtracting the average precision of the z-score fusion without the soft-veto to the average precision of the z-score fusion with the soft-veto.
+The soft-veto has two parameters : $c$ and $r$, to be able to find the best parameters the grid seach approach is used.
+Since the $c$ parameter must be in the interval $\left]0, \infty\right[$ and the $r$ parameter must be in the interval $\left]0, \infty\right[$, the grid is constructed from the cartesian product of the following two sets.
+$c = \left\{0 + \epsilon, 1, 2, 3, ..., 19, 20\right\}$, with $\epsilon$ a small value (for example $10^{-6}$) and $r = \left\{0.10, 0.14, 0.18, 0.22, ..., 0.86, 0.90\right\}$.
+When computing the soft-veto gain using the grid search on the retained rank lists from Oxquarry (see Table~\ref{tab:9rl}), Figure~\ref{fig:soft_veto} is obtained.
 
-\subsection{Average precision fusion gain relation with the diversity}
+The best parameters are c=18 and r=0.14 with an average precision gain of 3.50e-04.
+As for the veto experiment, no real average precision gain can be obtained using this strategy since the average precision gain is small and can be due to random factors.
 
-As stated previously, we believe fusing high quality rank lists (high AP), with the most different results can increase the quality of the fusion.
-Here the goal is first, to propose a way to find differences between rank lists.
-And second try to verify the assumption.
+\begin{figure}
+  \caption{Average precision gain with soft veto s-curve on Oxquarry}
+  \label{fig:soft_veto}
+  \includegraphics[width=\linewidth]{img/soft_veto.png}
+\end{figure}
 
-To compute a distance between rank list the following method is used.
-For each link in the rank list, the absolute rank difference is computed.
-Then the sum of absolute difference give an indication the differences in the rank list.
-This value can be normalized between 0 and 1, by diving by $\frac{n\cdot(n-1)}{2}$ with $n$ being the number of links in the rank list.
+\subsubsection{Average precision fusion gain relation with the rank lists diversity}
 
-Example:\\
+As stated previously, we believe fusing high quality rank lists (high AP), with the most diverse results can increase the quality of the fusion.
+First, a correlation metric to compare the rank lists must be selected.
+And second compare the correlation coefficient to the average precision gain to verify the assumption.
 
-\textbf{Rank list A}
+To compute a correlation between two rank lists, the Kendall rank correlation coefficient is used~\cite{scipy}.
+The Kendall rank correlation computes a correlation index based on the ordinal association between the two rank lists ranks by computing the difference in terms of number of swaps needed to sorts the rank lists ranks of the two lists.
 
-\begin{tabular}{r l}
-Rank & Link\\
-   0 & (0, 1)\\
-   1 & (1, 2)\\
-   2 & (0, 2)\\
-\end{tabular}
+The default weighing strategy called \textit{hyperbolic weighing} is used, it favours top ranks in the same fashion as the reciprocal rank ($1 / (r + 1)$).
+The Kendall coefficient is ranged between -1 and 1, with 1 being an identical correlation and -1 a completely different correlation.
+If our assumption is correct, the average precision gain obtained by fusing two rank lists should be negatively correlated to the rank list Kendall correlation coefficient.
+A large gain, when the rank lists are different, thus a low rank list correlation coefficient, and vice versa.
 
-\textbf{Rank list B}
+The fusion strategy used here is the z-score fusion, since this strategy is parameterless and obtained satisfying results during previous experiments.
+As for previous experiments dealing with fusion, the gain in average precision when comparing a set of rank list to a fused rank list can be established in the two following ways : \textit{Single-Mean} and \textit{Single-Max}.
+Single-Mean represent the rank lists mean average precision and Single-Max the rank list maximal average precision.
+Figure~\ref{tab:example_single_mean_single_max} contain a small example with two rank lists for the Single-Mean and Single-Max methods to compute the average precision gain.
 
-\begin{tabular}{r l}
-Rank & Link\\
-   0 & (1, 2)\\
-   1 & (0, 2)\\
-   2 & (0, 1)\\
-\end{tabular}
+Table~\ref{tab:rl_correlations} show the Kendall correlation coefficient for every combination of retained rank list in St-Jean (see Table~\ref{tab:9rl} in annex).
+For every pair of retained rank lists in St-Jean the Single-Mean fusion gain is computed and is compared to the distance in Figure~\ref{fig:rl_correlations}.
+Using the linear regression, the best line for these point is computed~\ref{scipy}.
+Reproducing this experiment for every corpus and fusion gain computation methods, the results are in Table~\ref{tab:rl_correlations_regression}.
 
-\textbf{Absolute rank differences}
-
-\begin{tabular}{r l}
-Link   & Rank difference\\
-(1, 2) & $\left|0 - 1\right| = 1$\\
-(0, 2) & $\left|1 - 2\right| = 1$\\
-(0, 1) & $\left|2 - 0\right| = 2$\\
-\end{tabular}
-
-The distance between the rank list A and rank list B is $(1 + 1 + 2) / ((3 \cdot (3 - 1))/ 2) = 4/6 = 0.66$
-
-A low distance (close to $0.0$) indicate a high correlation between the rank lists and a high distance (close to $1.0$) a low correlation between the two rank lists.
-If our assumption is correct, the average precision gain obtained by fusing two rank lists should be positively correlated to the distance between them.
-A large gain, when the rank lists are different, thus a high rank list distance, and vice versa.
-As for previous experiments dealing with fusion, the gain in average precision when comparing a set of rank list to a fused rank list can be computed with the two following ways : \textit{Single-Mean} and \textit{Single-Max}.
-
-Table~\ref{tab:rl_correlations} show the rank list distance for every combination of retained rank list in St-Jean (see Table~\ref{tab:9rl} in annex).
+For all experiment the linear correlation coefficient, $r$-value, is negative, which indicate that the average precision gain is negatively correlated to the Kendall correlation coefficient between the rank lists.
+Thus, the assumption that suggested that the more diverse the rank lists are, the higher the quality of the fusion, seem to be confirmed.
+The $p$-value for the linear regression (null hypothesis: the slope is 0) obtained after the regression is below 5\% for every of the Single-Mean experiments and for the Single-Max St-Jean corpus.
+A clear linear relationship between the average precision gain and rank list diversity is observed on these datasets / average precision gain computation method.
+Using the Single-Max strategy on Oxquarry and Brunet give a p-value of 15.1\% and 7.04\% respectively which can indicate that the correlation between the average precision gain and the diversity of the rank list can be obtained by random factors on these datasets with this comparison strategy.
 
 \begin{table}
   \centering
-  \caption{Retained rank lists distances among them on St-Jean}
+  \caption{Example Single-Mean, Single-Max Average Precision gain}
+  \label{tab:example_single_mean_single_max}
+  \begin{tabular}{l r}
+    \toprule
+    \textbf{Rank list} & \textbf{Average precision} \\
+    \midrule
+    Rank list A & $0.8$ \\
+    Rank list B & $0.6$ \\
+    Rank list fusion A-B & $0.9$ \\
+    \midrule
+    \textbf{Strategy} & \textbf{Average precision gain} \\
+    Single-Mean & $0.9 - (0.8 + 0.6) / 2 = 0.2$ \\
+    Single-Max & $0.9 - \max(0.8, 0.6) = 0.1$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table}
+  \centering
+  \caption{Retained rank lists Kendall correlation coefficient among them on St-Jean}
   \label{tab:rl_correlations}
   \begin{tabular}{r|r r r r r r r r}
     \toprule
     id &    1 &    2 &    3 &    4 &    5 &    6 &    7 &    8 \\
     \midrule
-    0  & 0.28 & 0.32 & 0.38 & 0.22 & 0.18 & 0.31 & 0.31 & 0.42 \\
-    1  &    - & 0.25 & 0.34 & 0.34 & 0.32 & 0.42 & 0.41 & 0.35 \\
-    2  &    - &    - & 0.28 & 0.37 & 0.35 & 0.42 & 0.42 & 0.33 \\
-    3  &    - &    - &    - & 0.40 & 0.38 & 0.42 & 0.41 & 0.34 \\
-    4  &    - &    - &    - &    - & 0.10 & 0.31 & 0.32 & 0.41 \\
-    5  &    - &    - &    - &    - &    - & 0.30 & 0.30 & 0.40 \\
-    6  &    - &    - &    - &    - &    - &    - & 0.12 & 0.47 \\
-    7  &    - &    - &    - &    - &    - &    - &    - & 0.47 \\
-    8  &    - &    - &    - &    - &    - &    - &    - &    - \\
+    0  & 0.86 & 0.83 & 0.80 & 0.88 & 0.91 & 0.81 & 0.82 & 0.73 \\
+    1  &    - & 0.87 & 0.83 & 0.80 & 0.83 & 0.73 & 0.75 & 0.79 \\
+    2  &    - &    - & 0.84 & 0.78 & 0.80 & 0.72 & 0.74 & 0.82 \\
+    3  &    - &    - &    - & 0.78 & 0.81 & 0.75 & 0.77 & 0.80 \\
+    4  &    - &    - &    - &    - & 0.95 & 0.81 & 0.81 & 0.77 \\
+    5  &    - &    - &    - &    - &    - & 0.82 & 0.83 & 0.78 \\
+    6  &    - &    - &    - &    - &    - &    - & 0.94 & 0.66 \\
+    7  &    - &    - &    - &    - &    - &    - &    - & 0.69 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-For every pair of retained rank lists in St-Jean the Single-Mean fusion gain is computed and is compared to the distance in Figure~\ref{fig:rl_correlations}.
-Using the linear regression, the best line for these point is computed.
-Reproducing this experiment for every corpus and fusion gain computation methods, the results are in Table~\ref{tab:rl_correlations_regression}.
-
 \begin{figure}
+  \centering
   \caption{Fusion average precision gain (using Single-Mean scheme) over rank list distance on St-Jean}
   \label{fig:rl_correlations}
   \includegraphics[width=\linewidth]{img/rank_list_correlation_mean_st_jean.png}
 \end{figure}
 
 \begin{table}
+  \centering
   \caption{Linear regression on the average precision gain over wilcoxon p-value}
   \label{tab:rl_correlations_regression}
   \begin{tabular}{l r r r r r}
     \toprule
     Corpus/Method      & $r$-value & $p$-value & Std. error \\
     \midrule
-    Oxquarry/Single-Mean & 0.66 & 1.21e-03 & 7.11e-02 \\
-    Brunet/Single-Mean   & 0.90 & 3.35e-08 & 1.52e-02 \\
-    St-Jean/Single-Mean  & 0.93 & 3.29e-16 & 2.11e-02 \\
+    Oxquarry/Single-Mean & -0.63 & 2.04e-03 & 4.36e-02 \\
+    Brunet/Single-Mean   & -0.89 & 7.14e-08 & 2.17e-02 \\
+    St-Jean/Single-Mean  & -0.92 & 1.50e-15 & 3.01e-02 \\
     \midrule
-    Oxquarry/Single-Max  & 0.13 & 5.66e-01 & 1.43e-01 \\
-    Brunet/Single-Max    & 0.30 & 1.93e-01 & 3.43e-02 \\
-    St-Jean/Single-Max   & 0.87 & 8.05e-12 & 2.98e-02 \\
+    Oxquarry/Single-Max  & -0.32 & 1.51e-01 & 8.15e-02 \\
+    Brunet/Single-Max    & -0.40 & 7.04e-02 & 4.50e-02 \\
+    St-Jean/Single-Max   & -0.86 & 1.51e-11 & 4.14e-02 \\
     \bottomrule
   \end{tabular}
 \end{table}
-
-For all experiment the correlation coefficient, $r$-value, is positive, which indicate that the average precision gain is positively correlated to the rank list distance.
-Thus, the assumption that suggested that the more diverse the rank lists are, the higher the quality of the fusion, seem to be confirmed.
-Though the $p$-value for the linear regression (null hypothesis: the slope is 0) obtained after the regression is only below 5\% for the Single-Mean experiments and the St-Jean corpus.
-\clearpage
