@@ -2,21 +2,6 @@
 
 \subsubsection{Clustering evaluation metrics}
 
-\begin{definition}[Cluster difference]
-  This metric aim to evaluate if the clustering found the right number of cluster.
-  The cluster difference is the number cluster found $p$ minus the actual number of cluster $k$.
-  \begin{equation}
-    Cluster_{diff} = p - k
-  \end{equation}
-  A positive value indicate an overestimation of the real number of cluster, a negative value indicate the underestimation.
-  Zero indicate that the right number of cluster was found.
-  This value can be normalized by the number of documents N, which correspond to the difference of the r ratios.
-  As stated in the PAN16 evaluation campaign paper, estimating correctly the r ratio tends to indicate a good clustering~\cite{pan16}.
-  \begin{equation}
-    r_{diff} = \frac{p}{N} - \frac{k}{N} = \frac{p - k}{N}
-  \end{equation}
-\end{definition}
-
 To evaluate clustering, the metrics used are the BCubed~\cite{bcubed} family (called sometimes $B^3$, in this report).
 BCubed has shown to satisfy 4 following importants constraints when evaluating clusterings : \textit{Cluster Homogeneity} (different categories should be in the different clusters), \textit{Cluster Completness} (same categories should belong to the same cluster) and the \textit{Rag Bag constraint} (noisy/miscellaneous categories should be in the same cluster and not in 'healthy' clusters) and the \textit{Cluster size vs quantity constraints} (favorise large cluster)~\cite{bcubed}.
 These metrics are used in the clustering task at PAN@CLEF~\cite{pan16}.
@@ -57,6 +42,23 @@ These metrics are used in the clustering task at PAN@CLEF~\cite{pan16}.
     {B^3_{precision} + B^3_{recall}}
   \end{equation}
   The $F_\beta$ measures, not shown here, provide a parametric way to represent with a single value the two counterbalancing measures in this case, the $B^3_{F_1}$ is computed using the $F$ measures with $\beta = 1$ and the $B^3_{precision}$ and $B^3_{recall}$ scores.
+\end{definition}
+
+An additional metric introduced and used in this study is the Cluster difference.
+
+\begin{definition}[Cluster difference]
+  This metric aim to evaluate if the clustering found the right number of cluster.
+  The cluster difference is the number cluster found $p$ minus the actual number of cluster $k$.
+  \begin{equation}
+    Cluster_{diff} = p - k
+  \end{equation}
+  A positive value indicate an overestimation of the real number of cluster, a negative value indicate the underestimation.
+  Zero indicate that the right number of cluster was found.
+  This value can be normalized by the number of documents N, which correspond to the difference of the r ratios.
+  As stated in the PAN16 evaluation campaign paper, estimating correctly the r ratio tends to indicate a good clustering~\cite{pan16}.
+  \begin{equation}
+    r_{diff} = \frac{p}{N} - \frac{k}{N} = \frac{p - k}{N}
+  \end{equation}
 \end{definition}
 
 \subsubsection{Clustering unsupervised cut method}
