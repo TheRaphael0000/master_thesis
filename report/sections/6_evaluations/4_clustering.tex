@@ -78,7 +78,7 @@ This can be due to the fact that the rank list used for the clustering is not pe
 
 To mitigate this problem, an easy solution would be to the stop the procedure at for example : $0.1$ instead of $0$.
 When running the IPS with a stop at $0.1$ on the dataset, the obtained results are presented in Table~\ref{tab:unsupervised_clustering_01}.
-The average r-ratio difference drop to $0.13$ when stopping the procedure at $0.1$ instead of $0$, which seem to improve the results, especially for the Brunet and St-Jean A dataset.
+The average r-ratio difference drop to $0.13$, which result in a 38\% improvement when stopping the procedure at $0.1$ instead of $0$, this tweaking seem to improve the results, especially for the St-Jean A corpus, which have an relative $B^3_{F_1}$ increase of +24\%.
 No solid founding are used for tweaking this parameter.
 
 \begin{table}
@@ -169,9 +169,9 @@ Two conclusion can be drawn with these results:
 \end{itemize}
 
 The conclusion to the two previous points is that having a good rank list is more important for testing than training.
-Some known properties of some rank lists give better results when used for training.
+No clear rank lists property was found which makes some of them better to train the model.
 The supervised cut method tends to produce better results in average than the unsupervised proposed method.
-In average an increase of +8\% in $B^3_{F_1}$ can be obtained when using the supervised clustering model proposed over the unsupervised model with the IPS stop procedure at 0.1 and +14\% over the IPS stop procedure at 0.
+An increase of +8\% in $B^3_{F_1}$ can be obtained when using the supervised clustering model proposed over the unsupervised tweaked clustering model (IPS stop procedure at 0.1) and +14\% over the IPS stop procedure at 0.
 
 \begin{table*}
   \centering

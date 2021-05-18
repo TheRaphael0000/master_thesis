@@ -57,7 +57,8 @@ def distances_matrix_from_rank_list(rank_list):
     """Create a distance matrix from a rank list"""
     indices = list(itertools.chain.from_iterable([i[0] for i in rank_list]))
     max_ = max(indices) + 1
-    distances_matrix = np.zeros((max_, max_,))
+    distances_matrix = np.empty((max_, max_,))
+    distances_matrix[:] = np.nan
     for (a, b), dist in rank_list:
         distances_matrix[a, b] = dist
         distances_matrix[b, a] = dist
