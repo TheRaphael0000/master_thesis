@@ -61,7 +61,7 @@ An additional metric introduced and used in this study is the Cluster difference
   \end{equation}
 \end{definition}
 
-\subsubsection{Clustering unsupervised cut method}
+\subsubsection{Unsupervised clustering evaluation}
 
 For this experiment, the goal is to test the unsupervised cut method based on the IPS (Iterative positive silhouette) Procedure on the literature dataset.
 When applying the procedure, the number of clusters start at 2, each iteration the silhouette score is computed if it reaches a negative value the procedure stop otherwise the number of cluster is increased and the process is repeated.
@@ -144,7 +144,7 @@ No solid founding are used for tweaking this parameter.
   \includegraphics[width=\linewidth]{img/unsupervised_clustering_st_jean_B.png}
 \end{figure}
 
-\subsubsection{Clustering with the supervised cut method}
+\subsubsection{Supervised clustering evaluation}
 
 To evaluate the supervised clustering approach, every dataset were used.
 First a rank list for each dataset is computed using a z-score fusion using the retained rank list, see Section~\ref{sec:annex_retained_text_representation} in annex.
@@ -155,16 +155,23 @@ The model does not depend on the rank list size since only relative magnitudes a
 The BCubed $F_1$ metrics and the r ratio difference are computed during this experiment and are in presented in Table~\ref{tab:supervised_clustering_train_test}, for every pairs of dataset.
 The average values obtained for each metrics is presented in Table~\ref{tab:supervised_clustering_average}.
 
-Multiple points can be observed with these results:
+Two conclusion can be drawn with these results:
 \begin{itemize}
   \item
   When testing the cut model, having a rank list of good quality tends to produce better clustering, no matter the quality of the rank list used for the training.
+  When testing the clustering model on St-Jean B (the corpus with the best rank list obtained, 0.96 AP), it obtains in average the best $B^3_{F_1}$ 0.93 for any training model.
+  The least performing rank list also have the least accurate results during the clustering task, Brunet with 0.76 AP have an average clustering $B^3_{F_1}$ of 0.80.
   \item
   Using the best rank list for training the cut model does not always give the best results.
-  An example to illustrate this observation, the St-Jean B dataset have the best rank list with an average precision of 0.97, when using the model trained on this rank list, F1 scores yield by the clustering using this model are : 0.80/0.76/0.82/0.97 (avg: 0.84).
-  In the other hand, when using Oxquarry for the training with a rank list of 0.84 AP, the F1 score obtained are : 0.82/0.86/0.88/0.92 (avg: 0.87).
-  The Oxquarry dataset seem to be the best dataset to train the model to perform the cut and Brunet the least effective.
+  An example to illustrate this observation, the St-Jean B dataset have the best rank list with an average precision of 0.96, but the best rank list for training the clustering model is Oxquarry with an average $r_{diff}$ of 0.02 and an average $B^3_{F_1}$ of 0.87.
+  In the other hand, St-Jean B have an average $r_{diff}$ of 0.09 and an average $B^3_{F_1}$ of 0.83.
+  The Oxquarry rank list seem to be the best dataset to train the model to perform the cut and Brunet the least effective.
 \end{itemize}
+
+The conclusion to the two previous points is that having a good rank list is more important for testing than training.
+Some known properties of some rank lists give better results when used for training.
+The supervised cut method tends to produce better results in average than the unsupervised proposed method.
+In average an increase of +8\% in $B^3_{F_1}$ can be obtained when using the supervised clustering model proposed over the unsupervised model with the IPS stop procedure at 0.1 and +14\% over the IPS stop procedure at 0.
 
 \begin{table*}
   \centering
@@ -191,14 +198,14 @@ Multiple points can be observed with these results:
     & 0.91/1.00/0.83/0.05 \\
     & St-Jean A
     & 0.80/1.00/0.67/0.10
-    & 0.79/0.94/0.68/0.14
-    & 0.83/0.89/0.77/0.04
+    & 0.82/0.94/0.73/0.11
+    & 0.87/0.93/0.81/0.03
     & 0.97/1.00/0.94/0.02 \\
     & St-Jean B
     & 0.80/1.00/0.67/0.10
     & 0.76/0.94/0.64/0.16
     & 0.82/0.96/0.72/0.07
-    & 0.97/1.00/0.94/0.02 \\
+    & 0.93/1.00/0.84/0.04 \\
     \bottomrule
   \end{tabular}
 
@@ -211,12 +218,15 @@ Multiple points can be observed with these results:
     & $B^{3}_{recall}$
     & $r_{diff}$ \\
     \midrule
-    \textbf{Average}
-    & \textbf{0.84}
-    & \textbf{0.95}
-    & \textbf{0.77}
-    & \textbf{0.07}
-    \\
+    Testing on Oxquarry     & 0.81 & 1.00 & 0.68 & 0.09 \\
+    Testing on Brunet       & 0.80 & 0.93 & 0.70 & 0.13 \\
+    Testing on St-Jean A    & 0.85 & 0.93 & 0.79 & 0.04 \\
+    Testing on St-Jean B    & 0.93 & 0.97 & 0.91 & 0.02 \\
+    Training on Oxquarry    & 0.87 & 0.91 & 0.86 & 0.02 \\
+    Training on Brunet      & 0.82 & 0.98 & 0.71 & 0.10 \\
+    Training on St-Jean A   & 0.86 & 0.97 & 0.79 & 0.06 \\
+    Training on St-Jean B   & 0.83 & 0.97 & 0.73 & 0.09 \\
+    \textbf{Global average} & \textbf{0.85} & \textbf{0.96} & \textbf{0.77} & \textbf{0.07} \\
     \bottomrule
   \end{tabular}
 \end{table*}

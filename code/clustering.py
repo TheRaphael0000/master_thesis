@@ -56,7 +56,7 @@ def unsupervised_clustering(rank_list, ips_stop=0, return_scores=False):
     ns = list(range(2, distances_matrix.shape[0]))
     silhouette_scores = []
 
-    labels = None
+    labels = np.zeros((distances_matrix.shape[0],), dtype=int)
 
     for n in ns:
         args = {
@@ -76,13 +76,13 @@ def unsupervised_clustering(rank_list, ips_stop=0, return_scores=False):
         labels = ac.labels_
         silhouette_scores.append(score)
 
-    outputs = [labels]
+    if not return_scores:
+        return labels
+    
+    explored_ns = ns[:len(silhouette_scores)]
+    scores = (explored_ns, silhouette_scores)
 
-    if return_scores:
-        explored_ns = ns[:len(silhouette_scores)]
-        outputs += [(explored_ns, silhouette_scores)]
-
-    return tuple(outputs)
+    return labels, scores
 
 
 def clustering_at_every_n_clusters(rank_list):

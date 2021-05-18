@@ -313,6 +313,9 @@ The $p$-value for the linear regression (null hypothesis: the slope is 0) obtain
 A clear linear relationship between the average precision gain and rank list diversity is observed on these datasets / average precision gain computation method.
 Using the Single-Max strategy on Oxquarry and Brunet give a p-value of 15.1\% and 7.04\% respectively which can indicate that the correlation between the average precision gain and the diversity of the rank list can be obtained by random factors on these datasets with this comparison strategy.
 
+Since the Single-Mean average precision gain follow a linear model, the gain can be predicted from the Kendall correlation coefficient. It's also possible to optimise the gain directly from the Kendall correlation coefficient, the lowest the correlation coefficient the greater the Single-Mean gain will be.
+Knowing the average precision of rank lists it is possible to estimate Single-Mean gain with a linear model.
+
 \begin{table}
   \centering
   \caption{Example Single-Mean, Single-Max Average Precision gain}
