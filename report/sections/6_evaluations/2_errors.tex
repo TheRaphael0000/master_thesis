@@ -18,6 +18,14 @@ Figures~\ref{fig:mfw_vector_error} show two pairs (document 57 from Sand / docum
 To be able to understand more easily this vector, the values have been sorted by relative frequencies and using the logarithmic scale.
 When a large proportion of the vectors overlap it indicates a high similarity between the MFW vectors.
 
+Both document style are close when their feature vector are closely related.
+Visually when most the surface overlap, the distance function will give a low value, and rank this link high in the list.
+When two vectors are relatively close together determinating that two texts are from a different author can not clearly be established using only one type of representation, no matter the distance metric applied.
+The frequent errors vector pairs presented in Figure~\ref{fig:mfw_vector_error} can be visually compared actual true links and actual false links, to have a better understanding of this problematic.
+For example the most similar true link (ranked 1 using Manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (document 157 from Stael / document 183 from Steal) or the HPrec-th (last continous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (document 22 from Gautier / document 53 from Gautier), both of these links show a large proportion of overlapping surface, like for the frequent errors vectors.
+A counter example would be the least similar false link (ranked last using Manhattan distance) which represent a negatively correlated document pair, Figure~\ref{fig:mfw_vector_last_rl} showcase this link (document 183 from Stael / document 194 from Regnier).
+As expected, most of this figure surface is non-overlapping.
+
 \begin{figure}
   \centering
   \caption{Example of 750-MFW relative frequency vectors for the two documents in a reccurant (6 rank lists out of 9) false link in the top 30 false links}
@@ -31,14 +39,6 @@ When a large proportion of the vectors overlap it indicates a high similarity be
   \label{fig:mfw_vector_error_1}
   \includegraphics[width=\linewidth]{img/mfw_vector_error_1.png}
 \end{figure}
-
-Both document style are close when their feature vector are closely related.
-Visually when most the surface overlap, the distance function will give a low value, and rank this link high in the list.
-When two vectors are relatively close together determinating that two texts are from a different author can not clearly be established using only one type of representation, no matter the distance metric applied.
-The frequent errors vector pairs presented in Figure~\ref{fig:mfw_vector_error} can be visually compared actual true links and actual false links, to have a better understanding of this problematic.
-For example the most similar true link (ranked 1 using Manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (document 157 from Stael / document 183 from Steal) or the HPrec-th (last continous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (document 22 from Gautier / document 53 from Gautier), both of these links show a large proportion of overlapping surface, like for the frequent errors vectors.
-A counter example would be the least similar false link (ranked last using Manhattan distance) which represent a negatively correlated document pair, Figure~\ref{fig:mfw_vector_last_rl} showcase this link (document 183 from Stael / document 194 from Regnier).
-As expected, most of this figure surface is non-overlapping.
 
 \begin{figure}
   \centering
@@ -61,55 +61,60 @@ As expected, most of this figure surface is non-overlapping.
 
 When dealing with false links ranked high in the rank list, as the previous experiment showed, some excerpt use similar words.
 These shared words might be related to the era the book was written in.
-The following experiment try to investigate on this.
+The following experiment try to investigate on this by analysing the difference in publication date for the most incorrect document pairs in the rank lists.
 
-In the St-Jean dataset publication paper, the publication dates of each excepts are available~\cite{st_jean}.
-First the publication date distribution of the dataset must be understood.
-Figure~\ref{fig:dates_distribution} show the distribution of the publication date in the St-Jean dataset.
-The date difference distribution for each pair of documents can be computed, Figure~\ref{fig:dates_differences_all} showcase this.
-The average date difference in the dataset is 28.24 years with a standard deviation of 20.73 years.
-Since this dataset contain multiple excerpt from the same book, considering only the links of different authors (false links) is preferable.
-Figure~\ref{fig:dates_differences_false} shows the date difference distribution of the false links.
-As expected the mean increased from 28.24 years to 29.04 years since there are fewer links with small date difference.
-Same authors links (true links) are displayed in Figure~\ref{fig:dates_differences_r_true}, they confirm the previous statement that most of the same authors links have a low date difference with a mean of 5.11 years.
+In the St-Jean corpus publication paper, the publication dates of each excepts are available~\cite{st_jean}.
+First the publication date distribution of the corpus must be understood.
+Figure~\ref{fig:dates_distribution} show the distribution of the publication date in the St-Jean corpus.
+The corpus mainly focus on the two last thirds of the XIX century, only a few books publish between 1800 and 1830 are present.
+The date difference distribution for each pair of documents can be computed, Figure~\ref{fig:dates_differences_true_false} shows the date difference distribution for the true and false links, the union of both of them represent every possible document pairs, in this Figure the bars are stacked to represent every link.
+Table~\ref{tab:date_differences} show statistics on the distributions.
+True links have a low mean date difference of 5.11 years, this is explained by the fact that most authors in St-Jean have excepts from the same book and the authors publish their books during their career.
+For St-Jean the largest date difference from the same author (the longest career) is 31 years, which correspond to the two following books  from Victor Hugo : \textit{Notre Dame de Paris} (1831) and \textit{Les Misérables} (1862).
+The average date difference for the false links is 28.24 years with a standard deviation of 20.73 years.
+Since there is a lot more false links than true links, the overall average only drop from 29.04 years to 28.24 years.
+
+The previous statistics can be compared to Figure~\ref{fig:dates_differences_r_false} which show the date difference density on the top-r false links (670 in case of St-Jean) on a rank list with 85\% average precision (z-score fusion of the retained text representations, Table~\ref{tab:9rl_results_st_jean_A_B}).
+Two interesting information can be extracted here.
+First the mean is lower by 7.75 years (29.04 - 21.29) compared to every false links and have a narrow standard deviation distribution.
+Having a lower mean in this case indicate that less mistakes are made for document pairs with a lower date difference, which can lead to the following conclusion : publication date have an importance in documents pair ranking.
+Secondly, we can observe a drop after 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ years are harder to discriminate between a true link and a false link than links outside this interval.
+This 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France~\cite{generations}, authors birth country in this corpus.
+Each new generation tend to use its own vocabulary, and thus it can be harder to discriminate the author of text belonging to the same generation, if we assume that the authors write their books at around the same age.
+In the other hand, having different vocabulary can indicate a different time period and is often used to detect document forgery~\cite{savoy_stylo}.
 
 \begin{figure}
   \centering
-  \caption{Dates and Date differences denstiy distributions on St-Jean for every excerpt}
+  \caption{Dates distribution and date differences distribution on St-Jean}
 
-  \subcaption{Date distribution}
+  \subcaption{Dates distribution}
   \label{fig:dates_distribution}
   \includegraphics[width=\linewidth]{img/dates_distribution.png}
 
-  \subcaption{Date difference denstiy distributions}
-  \label{fig:dates_differences_all}
-  \includegraphics[width=\linewidth]{img/dates_differences_all.png}
-\end{figure}
+  \subcaption{True and false links date differences distribution}
+  \label{fig:dates_differences_true_false}
+  \includegraphics[width=\linewidth]{img/dates_differences_true_false.png}
 
-\begin{figure}
-  \centering
-  \caption{Date difference denstiy distributions in St-Jean}
-
-  \subcaption{False links}
-  \label{fig:dates_differences_false}
-  \includegraphics[width=\linewidth]{img/dates_differences_false.png}
-
-  \subcaption{True links}
-  \label{fig:dates_differences_r_true}
-  \includegraphics[width=\linewidth]{img/dates_differences_r_true.png}
-
-  \subcaption{Top-r false links using a rank list with 85\% average precision.}
+  \subcaption{Top-r false links using a rank list with 85\% average precision}
   \label{fig:dates_differences_r_false}
   \includegraphics[width=\linewidth]{img/dates_differences_r_false.png}
 \end{figure}
 
-The previous statistics can be compared to Figure~\ref{fig:dates_differences_r_false} which show the date difference density on the top-r false links (670 in case of St-Jean) on a rank list with 85\% average precision (z-score fusion of the retained text representations, Table~\ref{tab:9rl_results_st_jean_A_B}).
-Two interesting information can be extracted here.
-First the mean is lower by 7.75 years (29.04 - 21.29) compared to the false links and have a narrow standard deviation distribution which clearly indicate the importance of publication date in the ranking of the documents.
-Secondly we can observe a drop after 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ years are harder to discriminate between a true link and a false link than links outside this interval.
-This 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France~\cite{generations}, the birth country of the authors in this dataset.
-Each new generation tend to use its own vocabulary, and thus it can be harder to discriminate the author of text belonging to the same generation, if we assume that the authors write their books at around the same age.
-In the other hand having different vocabulary can indicate a different time period and is often used to detect document forgery~\cite{savoy_stylo}.
+\begin{table}
+  \centering
+  \caption{Date differences statistics}
+  \label{tab:date_differences}
+    \begin{tabular}{l r r}
+      \toprule
+      Links                & Mean  & Std   \\
+      \midrule
+      True links           &  5.11 &  7.06 \\
+      False links          & 29.04 & 20.58 \\
+      True and False links & 28.24 & 20.73 \\
+      top-r False links    & 21.29 & 16.00 \\
+      \bottomrule
+    \end{tabular}
+\end{table}
 
 \subsubsection{Distances matrix visualization}
 
