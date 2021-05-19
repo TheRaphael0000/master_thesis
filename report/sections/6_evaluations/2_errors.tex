@@ -110,3 +110,35 @@ Secondly we can observe a drop after 35 years of date difference, which indicate
 This 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France~\cite{generations}, the birth country of the authors in this dataset.
 Each new generation tend to use its own vocabulary, and thus it can be harder to discriminate the author of text belonging to the same generation, if we assume that the authors write their books at around the same age.
 In the other hand having different vocabulary can indicate a different time period and is often used to detect document forgery~\cite{savoy_stylo}.
+
+\subsubsection{Distances matrix visualization}
+
+When computing the rank lists, each link have its distance calculated and can be represented in a matrix for the non-comutative distances functions and in a symmetric matrix for the comutative distances functions.
+In this matrix each document represant a row and a column.
+To visualize represent the distances matrix and each element of the matrix is mapped to a pixel in an 2D image.
+The element value in the matrix is mapped to the pixel bightness, the low values are in light colors and high values in dark colors.
+A perfect distance matrix should have each same author documents pair with a low distances (light color in the image) and different authors documents pairs with a high distance (dark color in the image).
+The greater the contrast between the true links (same author documents) and the false links (different authors documents) is, the better the text representation is, since the related rank list will have a greater average precision.
+When the documents are sorted alphabetically by their authors and if the distances matrix can represent correctly the author style, same authors documents have generally a low distance, this creates light color squares in the diagonal.
+The square size is related to the number of document written by this author.
+The diagonal is the lightest color (white), since the distance between two same document is always 0, with respect to the identity of indiscernibles axoim of the distance functions.
+
+The distance matrix for the best retained representation (highest average precision) and the worse retained text representation (lowest average precision) is visually presented in Figure~\ref{fig:distances_matrix_oxquarry} for Oxquarry.
+Respectively the Clark distance on the $750$-MFW which gives an average precision of $0.89$, and the Tanimito distance on the $750$-MFW gives an $0.63$ average precision.
+The diagonal is white in both images, light color square in the diagonal can clearly be observed on both distance matrix visualizations.
+Clark have overall a good distances matrix, except some document pairs from Conrad, Hardy and Orczy which have darker colors, these are  ranked under the some false links in the rank list.
+For Tanimoto, firstly one can observe these stripes, which are due to the max function in its computation, which create more cleaved decision in the score value.
+The main suspects for this observation is probably due to some high frequency term only used in some excerpts, thus when normalizing by the sum of maxima in the Tanimoto computation, document with these high relative frequency create these stripes.
+
+\begin{figure}
+  \caption{Distance matrix visualization Oxquarry}
+  \label{fig:distances_matrix_oxquarry}
+
+  \caption{Best retained text representation for Oxquarry ($750$-MFW tokens with Clark)}
+  \label{fig:distance_matrix_oxquarry_clark}
+  \includegraphics{img/distance_matrix_oxquarry_clark.png}
+
+  \caption{Worse retained text representation for Oxquarry ($750$-MFW tokens with Tanimoto)}
+  \label{fig:distance_matrix_oxquarry_tanimoto}
+  \includegraphics{img/distance_matrix_oxquarry_tanimoto.png}
+\end{figure}

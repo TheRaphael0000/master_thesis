@@ -165,3 +165,21 @@ def rank_list_distance(A, B):
     vA, vB = [dA[k] for k in keys], [dB[k] for k in keys]
     correlation, pvalue = weightedtau(vA, vB)
     return correlation
+
+
+def sort_Y_and_distance_matrix(Y, distances_matrix):
+    Y = np.array(Y)
+    Y_arg = np.argsort(Y)
+    Y = Y[Y_arg]
+    distances_matrix = distances_matrix[Y_arg,:]
+    distances_matrix = distances_matrix[:,Y_arg]
+    return Y, distances_matrix
+
+
+def subset_Y_and_distance_matrix(Y, distances_matrix, subset):
+    Y = np.array(Y)
+    ids = np.array(list(itertools.chain(*[np.argwhere(Y == s_)[:,0] for s_ in subset]))).flatten()
+    Y = Y[ids]
+    distances_matrix = distances_matrix[ids, :]
+    distances_matrix = distances_matrix[:, ids]
+    return Y, distances_matrix
