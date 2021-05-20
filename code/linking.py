@@ -40,16 +40,20 @@ def create_n_grams(words, ns):
     return n_grams
 
 
-def most_frequent_word(X, n, z_score=False, lidstone_lambda=0.1):
+def most_frequent_word(X, n, z_score=False, lidstone_lambda=0.1, remove_hapax=True):
     # Counting the terms in each documents
     counters = [Counter(xi) for xi in X]
     # Remove hapax legomenon for each texts
-    counters = [Counter({w: n for w, n in dict(c).items() if n > 1})
-                for c in counters]
+    if remove_hapax:
+        counters = [Counter({w: n for w, n in dict(c).items() if n > 1})
+                    for c in counters]
     # Computing the corpus word frequency
     total = reduce(lambda x, y: x + y, counters)
+    # n bounding
+    if n > len(total):
+        n = len(total)
     # Selecting n mfw
-    mfw = dict(total.most_common(n))
+    mfw = dict(total.most_common(len(total)))
     # keep only the mfw in each counter
     features = [[c[k] for k in mfw.keys()] for c in counters]
     # Transforming the tf to a 2D numpy array
@@ -66,7 +70,7 @@ def most_frequent_word(X, n, z_score=False, lidstone_lambda=0.1):
     return features, mfw
 
 
-def compute_links_mfw(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func):
+def compute_links_mfw(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func, remove_hapax=True):
     # Tokens normalization
     if type(X[0]) == str:
         X = [[normalize_text(t) for t in xi] for xi in X]
@@ -74,7 +78,7 @@ def compute_links_mfw(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func
     if type(n_grams) == list or type(n_grams) == tuple or n_grams > 0:
         X = [create_n_grams(xi, n_grams) for xi in X]
     # Create features
-    features, mfw = most_frequent_word(X, n_mfw, z_score, lidstone_lambda)
+    features, mfw = most_frequent_word(X, n_mfw, z_score, lidstone_lambda, remove_hapax)
     # Compute link distances into a 2D matrix
     distances_matrix = squareform(pdist(features, metric=distance_func))
     # Computing the rank list of for this distance matrix

@@ -22,6 +22,8 @@ def euclidean(A, B):
 
 
 def matusita(A, B):
+    A = np.abs(A)
+    B = np.abs(B)
     A = np.sqrt(A)
     B = np.sqrt(B)
     return euclidean(A, B)
