@@ -321,52 +321,91 @@ Using an optimized distance metric can increase the average precision by up to $
 
 The retained configurations using the POS $n$-grams text representation is the $250$-MFW POS $2$-grams using the smoothed z-scored Cosine Distance and $1000$-MFW POS $3$-grams using the smoothed z-scored Manhattan distance.
 
-\subsubsection{Every tokens vectors}
+\subsubsection{Every vocabulary tokens in the feature vectors}
 
-This experiment aim to show the importance limiting the maximal number of words when creating the vector representing the author.
-The whole corpus vocabulary is used to create the MFW-vector.
+This experiment aim to show the importance of limiting the words used when creating the vector representing the document.
+Previously the MFW methods was proposed to limit the words used to the most frequents, and have shown to increase the
+to have better rank lists.
+Three approach are compared, the first use the whole corpus vocabulary to create the feature vector, denoted \textit{every token}.
+In the second, every token appearing more than once are used to create the vector, denoted \textit{without hapax legomena}.
+And for the last the vector contain the 750 most frequent words, denoted \textit{750-MFW}.
+The eight proposed distance measures are evaluated for the three approach using the average precision metric on the three literature corpuses.
+To under more easily the results for the three approach, the every token approach is used as a baseline from where the average precision gain is computed.
+
+Table~\ref{tab:baseline_every_token} show the average precision baseline using every token.
+Table~\ref{tab:gain_without_hapax_legomena} and Table~\ref{tab:gain_750_mfw} show the gain for the without hapax legomena and 750-MFW approach respectively.
+
+When looking at the baseline : the Manhattan, Euclidean and Clark distance measure have a terrible average precision all are below 0.3 in average.
+The other metric have average to good results which range from 0.58 for the KLD to 0.79 with the Cosine distance.
+The cosine distance with every token reach a 0.91 average precision for the Oxquarry corpus.
+When removing hapax legomena, for most metrics the gain in average precision is limited, except for the Clark distance where the average precision rise from 0.3 to 0.5.
+After limiting to the 750-MFW, the Manhattan, Euclidean and Clark distance, the ones that had terrible results for the baseline increase their average precision by around 48\% which correspond to an average precision of 0.71, 0.63 and 0.78 respectively, which makes them in the same range as the other metrics in the baseline.
+Across every metric and dataset, removing hapax legomena increase the average precision in average by 0.04, and limiting to the 750-MFW by 0.21.
+
+From this experiment, each distance metric can be placed in one of the two following categories : the ones sensible to noisy vectors, the ones not sensible.
+In the first category are : Manhattan, Clark and Euclidean, in the second : Cosine, Matusita and Tanimoto.
+As for KLD and JD, they are nor in the first nor the second since both of them had a small gain in regard to the Oxquarry corpus but larger gain for the St-Jean dataset.
+Further, test are required to classify these distance metrics.
 
 
 \begin{table}
   \centering
-  \caption{Rank lists average precision using every tokens on the distances metrics and datasets.}
-  \label{}
+  \caption{Rank lists average precision depending on the number of token used}
 
-  \subcaption{Without Z-score}
-  \label{}
-  \begin{tabular}{l c c c|c}
+  \subcaption{Baseline every token}
+  \label{tab:baseline_every_token}
+  \begin{tabular}{l r r r|r}
     \toprule
     Metric & Oxquarry & Brunet & St-Jean & Mean \\
     \midrule
-    Manhattan & 0.62 & 0.66 & 0.71 & \textbf{0.66} \\
-    Tanimoto  & 0.62 & 0.66 & 0.71 & \textbf{0.66} \\
-    Euclidean & 0.50 & 0.62 & 0.62 & 0.58 \\
-    Matusita  & 0.60 & 0.64 & 0.61 & 0.61 \\
-    Clark     & 0.60 & 0.44 & 0.46 & 0.50 \\
-    Cosine    & 0.51 & 0.57 & 0.60 & 0.56 \\
-    KLD       & 0.57 & 0.61 & 0.55 & 0.58 \\
-    JD        & 0.58 & 0.64 & 0.57 & 0.59 \\
+    Manhattan & 0.27 & 0.21 & 0.17 & 0.22 \\
+    Tanimoto  & 0.63 & 0.65 & 0.70 & 0.66 \\
+    Euclidean & 0.19 & 0.19 & 0.08 & 0.15 \\
+    Matusita  & 0.61 & 0.63 & 0.62 & 0.62 \\
+    Clark     & 0.40 & 0.28 & 0.21 & 0.30 \\
+    Cosine    & 0.91 & 0.73 & 0.73 & 0.79 \\
+    KLD       & 0.58 & 0.59 & 0.56 & 0.58 \\
+    JD        & 0.59 & 0.63 & 0.59 & 0.60 \\
     \midrule
-    Mean      & 0.57 & 0.60 & 0.60 & 0.59 \\
+    Mean      & 0.52 & 0.49 & 0.46 & 0.49 \\
     \bottomrule
   \end{tabular}
 
-  \subcaption{With Z-score}
-  \label{}
-  \begin{tabular}{l c c c|c}
+  \subcaption{Gain without hapax legomena}
+  \label{tab:gain_without_hapax_legomena}
+  \begin{tabular}{l r r r|r}
     \toprule
     Metric & Oxquarry & Brunet & St-Jean & Mean \\
     \midrule
-    Manhattan & 0.38 & 0.26 & 0.19 & 0.27 \\
-    Tanimoto  & 0.14 & 0.11 & 0.04 & 0.10 \\
-    Euclidean & 0.30 & 0.20 & 0.08 & 0.19 \\
-    Matusita  & 0.25 & 0.19 & 0.10 & 0.18 \\
-    Clark     & 0.17 & 0.10 & 0.06 & 0.11 \\
-    Cosine    & 0.93 & 0.71 & 0.71 & \textbf{0.78} \\
-    KLD       & 0.13 & 0.08 & 0.03 & 0.08 \\
-    JD        & 0.13 & 0.08 & 0.03 & 0.08 \\
+    Manhattan & +0.10 & +0.05 & +0.02 & +0.06 \\
+    Tanimoto  & -0.00 & +0.01 & +0.00 & +0.01 \\
+    Euclidean & +0.11 & +0.01 & +0.00 & +0.04 \\
+    Matusita  & -0.01 & +0.01 & -0.01 & -0.00 \\
+    Clark     & +0.19 & +0.16 & +0.25 & +0.20 \\
+    Cosine    &  0.02 & -0.02 & -0.02 & -0.01 \\
+    KLD       & -0.02 & +0.02 & -0.01 & -0.00 \\
+    JD        & -0.01 & +0.01 & -0.02 & -0.01 \\
     \midrule
-    Mean      & 0.30 & 0.22 & 0.16 & 0.23 \\
+    Mean      & +0.05 & +0.03 & +0.03 & +0.04 \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{Gain 750-MFW}
+  \label{tab:gain_750_mfw}
+  \begin{tabular}{l r r r|r}
+    \toprule
+    Metric & Oxquarry & Brunet & St-Jean & Mean \\
+    \midrule
+    Manhattan & +0.40 & +0.47 & +0.59 & +0.49 \\
+    Tanimoto  & +0.00 & +0.03 & +0.05 & +0.03 \\
+    Euclidean & +0.43 & +0.45 & +0.57 & +0.48 \\
+    Matusita  & +0.02 & +0.05 & +0.12 & +0.06 \\
+    Clark     & +0.49 & +0.44 & +0.53 & +0.48 \\
+    Cosine    & -0.02 & -0.02 & +0.06 & +0.01 \\
+    KLD       & +0.02 & +0.07 & +0.12 & +0.07 \\
+    JD        & +0.02 & +0.04 & +0.12 & +0.06 \\
+    \midrule
+    Mean      & +0.17 & +0.19 & +0.27 & +0.21 \\
     \bottomrule
   \end{tabular}
 \end{table}

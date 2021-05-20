@@ -45,15 +45,14 @@ def most_frequent_word(X, n, z_score=False, lidstone_lambda=0.1, remove_hapax=Tr
     counters = [Counter(xi) for xi in X]
     # Remove hapax legomenon for each texts
     if remove_hapax:
-        counters = [Counter({w: n for w, n in dict(c).items() if n > 1})
-                    for c in counters]
+        counters = [Counter({w: n for w, n in dict(c).items() if n > 1}) for c in counters]
     # Computing the corpus word frequency
     total = reduce(lambda x, y: x + y, counters)
     # n bounding
     if n > len(total):
         n = len(total)
     # Selecting n mfw
-    mfw = dict(total.most_common(len(total)))
+    mfw = dict(total.most_common(n))
     # keep only the mfw in each counter
     features = [[c[k] for k in mfw.keys()] for c in counters]
     # Transforming the tf to a 2D numpy array
