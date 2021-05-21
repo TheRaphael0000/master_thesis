@@ -61,6 +61,63 @@ An additional metric introduced and used in this study is the Cluster difference
   \end{equation}
 \end{definition}
 
+\subsubsection{Hierarchical clustering parameters}
+
+As explained in Section~\ref{sec:authors_clustering}, the hierarchical clustering decide clusters based on bottom-up approach and have two main parameters, the stopping criterion and the linkage criterion.
+In this experiment, the goal is two find the best criterion our dataset for both stopping procedures.
+For the stopping procedure based on the number of cluster, used in the unsupervised clustering approach, the agglomerative clustering is stopped at the right number of cluster, this depends on the corpus.
+Then the $B^3_{F_1}$ score is computed for every corpus and linkage criterion.
+But for the distance threshold stop procedure, the right distance threshold is not known, so the idea is to stop the algorithm at each merging step, evaluate the solution using the $B^3_{F_1}$ score and only retain the best score for each dataset and criterion.
+Since the libraby used does not provide a simple way to stop at each merge, a trick was used to avoid re-implementing or modifing the algorithm, which concist to increase the distance threshold by a small value until the number of clusters found is the greater then number of authors.
+The $B^3_{F_1}$ score retained is the maximal reached during every steps.
+The step should be small enough to ensure that the algorithm is stopped at each merging at least.
+This method is high inefficiant and is only used to get the results needed for the choice in criterion.
+If the step is small enough, and not merging are missed, the value obtained is guaranteed to be the optimal clustering for this rank list.
+
+The results for both stopping procedure are presented in Table~\ref{tab:clustering_linkages}.
+On every corpus the average linkage criterion $B^3_{F_1}$ score is better or equal to the single and complete linkage score which results in  average to a better linkage criterion.
+The average linkage criterion is used for every subsequent experiments.
+
+\begin{table}
+  \centering
+  \caption{$B^3_{F_1}$ over linkage criterion for every corpus}
+  \label{tab:clustering_linkages}
+
+  \subcaption{Using the number of cluster as stopping procedure}
+  \label{tab:clustering_linkages_stop_clusters}
+  \begin{tabular}{l c c c}
+    \toprule
+           & \multicolumn{3}{c}{Linkage criterion} \\
+    Corpus & Single & Complete & Average \\
+    \midrule
+    Oxquarry  & 0.81 & 0.81 & 0.82 \\
+    Brunet    & 0.81 & 0.79 & 0.81 \\
+    St-Jean A & 0.85 & 0.85 & 0.85 \\
+    St-Jean B & 0.96 & 0.97 & 0.97 \\
+    St-Jean   & 0.79 & 0.87 & 0.88 \\
+    \midrule
+    Mean      & 0.84 & 0.86 & 0.87 \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{Using the distance threshold as stopping procedure}
+  \label{tab:clustering_linkages_stop_distance_threshold}
+  \begin{tabular}{l c c c}
+    \toprule
+           & \multicolumn{3}{c}{Linkage criterion} \\
+    Corpus & Single & Complete & Average \\
+    \midrule
+    Oxquarry  & 0.89 & 0.87 & 0.89 \\
+    Brunet    & 0.84 & 0.85 & 0.86 \\
+    St-Jean A & 0.86 & 0.87 & 0.87 \\
+    St-Jean B & 0.98 & 0.97 & 0.99 \\
+    St-Jean   & 0.87 & 0.90 & 0.89 \\
+    \midrule
+    Mean      & 0.89 & 0.89 & 0.90 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \subsubsection{Unsupervised clustering evaluation}
 
 For this experiment, the goal is to test the unsupervised cut method based on the IPS (Iterative positive silhouette) Procedure on the literature dataset.
@@ -73,13 +130,15 @@ For the sake of the experiment, the agglomerative clustering is also run up to a
 The detailed score on the unsupervised clustering is presented in Table~\ref{tab:unsupervised_clustering_0}.
 
 Since the rank list used for the clustering is not perfect (every true links at the top), there is no number of cluster with a BCubed $F_1$ score of 1.0.
-The estimated number of cluster is on every dataset overestimated, average r-ratio difference of $0.21$, which means that the median neareast-cluster distance is greater than the median intra-cluster distance even when dealing with the right number of clusters.
+The estimated number of cluster is on every dataset overestimated, since the average r-ratio difference is positive $0.21$ and the $B^3_{precision}$ is larger than the $B^3_{recall}$, which means that the median neareast-cluster distance is greater than the median intra-cluster distance even when dealing with the right number of clusters.
 This can be due to the fact that the rank list used for the clustering is not perfect (AP $\neq 1$).
 
 To mitigate this problem, an easy solution would be to the stop the procedure at for example : $0.1$ instead of $0$.
 When running the IPS with a stop at $0.1$ on the dataset, the obtained results are presented in Table~\ref{tab:unsupervised_clustering_01}.
 The average r-ratio difference drop to $0.13$, which result in a 38\% improvement when stopping the procedure at $0.1$ instead of $0$, this tweaking seem to improve the results, especially for the St-Jean A corpus, which have an relative $B^3_{F_1}$ increase of +24\%.
 No solid founding are used for tweaking this parameter.
+
+To further improve the results, instead of iterating on the number of clusters as proposed in the original paper~\cite{automated_unsupervised}, iterating over the distance threshold can improve the results, but increase the complexity.
 
 \begin{table}
   \centering

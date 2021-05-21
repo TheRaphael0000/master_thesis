@@ -58,7 +58,7 @@ def distances_matrix_from_rank_list(rank_list):
     indices = list(itertools.chain.from_iterable([i[0] for i in rank_list]))
     max_ = max(indices) + 1
     distances_matrix = np.empty((max_, max_,))
-    distances_matrix[:] = np.nan
+    distances_matrix[:] = min([d for l, d in rank_list])
     for (a, b), dist in rank_list:
         distances_matrix[a, b] = dist
         distances_matrix[b, a] = dist

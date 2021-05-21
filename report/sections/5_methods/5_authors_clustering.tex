@@ -1,4 +1,4 @@
-\subsection{Authors Clustering}
+\subsection{Authors Clustering \label{sec:authors_clustering}}
 
 To find clusters of authors, a possible way is to use a hierarchical clustering algorithm on a rank list.
 In a rank list, at each rank the link indicate if the two documents should belong to the same cluster in order of certainty.
@@ -13,8 +13,8 @@ Using this approach, at the start of the algorithm, each document belong to a di
 Clusters are merged based on the scores in the rank list, each step the algorithm merge clusters using the minimal score based on the linkage criteria.
 Multiple linkage criteria are available : \textit{ward} (metric that aim to minimize the variance of the cluster merged), \textit{average-linkage} (use the average score of each link of the cluster merged), \textit{complete-linkage} (use the maximal score of the cluster merged), \textit{single-linkage} (use the minimal score of the cluster merged).
 Ward linkage was discarded since the current implementation only allow euclidean distance for its computation.
-Since the number of clusters is unknown, the merging procedure is stopped based on a maximal threshold (cut).
-In this study the optimal threshold is found using two approach, one in an unsupervised way and another one in a supervised way.
+The merging procedure can be stopped either of the two following criteria : When a certain number of cluster is reached or when the minimal score for the next merge is above a certain value (distance threshold).
+In this study both stopping procedure are used, one in an unsupervised way and another one in a supervised way.
 
 \subsubsection{Learning the threshold in a unsupervised way}
 
@@ -38,7 +38,7 @@ See definition~\ref{def:silhouette}.
 \end{definition}
 
 When iterating over the number of clusters each times the median silhouette score for each cluster is computed.
-When this score reach below 0, the last positive score clusters is kept.
+When this score is below 0, the last positive score clusters is kept.
 If the procedure does not reach a score below 0, the maximal is kept.
 This procedure is called Iterative Positive Silhouette (IPS) and was proposed in~\cite{automated_unsupervised}.
 
