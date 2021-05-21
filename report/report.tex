@@ -11,7 +11,6 @@
 \usepackage{float}
 \usepackage[margin=0.7in]{geometry}
 \usepackage{graphicx}
-\usepackage{hyperref}
 \usepackage{multirow}
 \usepackage[parfill]{parskip}
 \usepackage{subcaption}
@@ -23,6 +22,13 @@
 
 \renewcommand{\familydefault}{\sfdefault}
 \renewcommand{\listtheoremname}{List of definitions}
+
+\usepackage[pdfauthor={Raphaël Margueron},
+            pdftitle={Rank List Fusions using mutiple Text Representations Strategies for Authorship Clustering},
+            pdfsubject={},
+            pdfkeywords={Rank List, Fusions, Text Representations, Authorship Clustering},
+            pdfproducer={},
+            pdfcreator={}]{hyperref}
 
 \hypersetup{
     % colorlinks=true,
@@ -48,7 +54,7 @@
 \pagenumbering{roman}
 \setcounter{page}{-1}
 
-\date{}
+\date{Mars-August, 2021}
 \author{Raphaël Margueron}
 
 \begin{titlepage}
@@ -75,11 +81,10 @@
 \pagenumbering{arabic}
 \subfile{sections/1_introduction/0_introduction}
 \subfile{sections/2_state_of_the_art/0_state_of_the_art}
-\subfile{sections/3_theoretical_concepts/0_theoretical_concepts}
-\subfile{sections/4_corpus/0_corpus}
-\subfile{sections/5_methods/0_methods}
-\subfile{sections/6_evaluations/0_evaluations}
-\subfile{sections/7_conclusion/0_conclusion}
+\subfile{sections/3_corpora_and_basic_notions/0_corpora_and_basic_notions}
+\subfile{sections/4_methods/0_methods}
+\subfile{sections/5_evaluations/0_evaluations}
+\subfile{sections/6_conclusion/0_conclusion}
 \clearpage
 
 \onecolumn
