@@ -161,7 +161,7 @@ def rank_list_distance(A, B):
     dB = rl_to_rank_dict(B)
     assert set(dA.keys()) == set(dB.keys())
     keys = dA.keys()
-    
+
     vA, vB = [dA[k] for k in keys], [dB[k] for k in keys]
     correlation, pvalue = weightedtau(vA, vB)
     return correlation

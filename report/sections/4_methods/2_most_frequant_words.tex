@@ -1,17 +1,34 @@
-\subsection{Most frequant words (MFW), feature vectors}
+\subsection{Most frequent words (MFW), feature vectors}
 
-The first method used is called: Most frequant words (acronym: MFW), and try to compare the documents by creating feature vectors containing words frequencies.
-To be able to express a document as a feature vector of size $n$, a common strategy in Stylometry is to find the $n$ most frequent words ($n$-MFW) in a corpus, and for each document compute the relative frequency of each of these words for the document~\cite{savoy_stylo}.
-For example if the word : "\textit{the}" is in the $n$-MFW and occurs $50$ times in a document with $300$ words, its relative frequency is thus $50/300 = 1/6$, the word and the value will be in the feature vector if the frequency is in the top $n$-MFW.
-No clear value of $n$ for the $n$-MFW is to choose over others, but a value between $50$ and $500$ tends to produce good results for the word token text representation~\cite{savoy_text_representation}.
+The first method used to represent and compare the documents is called: Most frequant words (acronym: MFW), and try to compare documents by creating feature vectors containing words frequencies for the most common words.
+To be able to express a document as a feature vector of size $n$, a common strategy in Stylometry is to find the $n$ most frequent words ($n$-MFW) in a corpus, and for each document compute their word relative frequency by dividing by the total number of $n$-MFW in the document~\cite{savoy_stylo}.
+The resulting vector will represent the MFW proportions contained in a document.
+For example if in a specific corpus the $5$-MFW are "\textit{the, was, i, she, he}" and this document :
 
-Instead of using directly the words to create the feature vector, another possibility is to use the lemma corresponding to each word, for example the sentence \textit{I saw two men with a saw} its lemmatized version is : \textit{I see two man with a saw} this requires advanced text preprocessing, but it can remove ambiguity.
+"\textit{i realize now that i was not looking in i was looking out and he on the other side was looking in}"\cite{ddlc}
 
-Another popular method is instead of considering every token as a word, this method aim to create a "word" from a short sequences of letters called $n$-grams using Definition~\ref{def:letters_n_grams}.
-To consider an overlapping word, the whole document is synthesized into a long string by joining every token by an \textit{underscore} : $\_$.
-This technique can be further exploited by combining for example two or more sizes of $n$-grams together.
+Will be converted to the following vector:
+
+\begin{center}
+\begin{tabular}{l c c c c c}
+  \toprule
+                     & the & was & i   & she & he  \\
+  \midrule
+  occurrences         & 1   & 3   & 3   & 0   & 1   \\
+  relative frequency & 1/8 & 3/8 & 3/8 & 0/8 & 1/8 \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+No clear value of $n$ for the $n$-MFW is to choose over others, but depending on the documents' length a value between $50$ and $500$ tends to produce good results for the word token text representation~\cite{savoy_text_representation}.
+
+Instead of using directly the words to create the feature vector, another possibility is to use the lemma corresponding to each word, for example the sentence \textit{i saw two men with a saw} its lemmatized version is : \textit{i see two man with a saw} this requires advanced text preprocessing, but it can remove ambiguity.
+
+Instead of considering every token as a word, another popular method is to create a "word" from a short sequences of letters called Letters $n$-grams using Definition~\ref{def:letters_n_grams}.
+To consider an overlapping word, the whole document is synthesized into a long string by joining every token by an \textit{underscore} : $\_$, to remove visual ambiguity due to the nature of the space character.
+Thes technique can be further exploited by combining for example two or more $n$-grams sizes together.
 $n$-grams can be really effective even though no clear meaning from each $n$-grams can be exploited at first sight.
-A simple explaination of why $n$-grams can be effective is by using $n$-grams of size 3 to 5 in most germanic languages this can correspond to for example : the tense of the verbs (i.e. : \textit{ing\_}, \textit{ed\_}), some small common words (\textit{\_the\_}, \textit{\_and\_}, \textit{\_that}), or in French the adverbs (\textit{\_ment}), etc.
+A simple explanation on why $n$-grams can be effective is by using $n$-grams of size 3 to 5 in most Germanic languages this can correspond to for example : the tense of the verbs (i.e. : \textit{ing\_}, \textit{ed\_}), some small common words (\textit{\_the\_}, \textit{\_and\_}, \textit{\_that}), or in French the adverbs (\textit{\_ment}), etc.
 
 \begin{definition}[Letters $n$-grams]
   \label{def:letters_n_grams}
@@ -19,14 +36,14 @@ A simple explaination of why $n$-grams can be effective is by using $n$-grams of
   Example: Using 3-grams The string: \textit{"fox\_is\_brown"} is converted to: (\textit{"fox", "ox\_", "x\_i", "\_is", "is\_", "s\_b", "\_br", "bro", "row", "own"})
 \end{definition}
 
-An alternative version of the $n$-grams algorithm used here is defined in~Definition~\ref{def:words_n_grams}.
-This algorithm consider each token as a string to apply the Letters $n$-grams algorithm to.
+An alternative version of the $n$-grams algorithm used here is defined in Definition~\ref{def:words_n_grams}.
+This algorithm considers each token as a string to apply the Letters $n$-grams algorithm to.
 To differenciate it from the classical $n$-grams algorithm,
 The latter algorithm, is called in this study In-word $n$-grams (Definition~\ref{def:words_n_grams}) and the other one is  called Letters $n$-grams (Definition~\ref{def:letters_n_grams}).
 
 \begin{definition}[In-words $n$-grams]
   \label{def:words_n_grams}
-  In-word $n$-grams are created by applying the Letters $n$-grams algorithm on a each tokens.
+  In-word $n$-grams are created by applying the Letters $n$-grams algorithm on each token.
   When a token is smaller than $n$, the whole token is considered.
   Example: Using words 3-grams on following tokens: ["fox", "is", "brown"] is converted to: (\textit{"fox", "is", "bro", "row, "own"})
 \end{definition}
@@ -50,6 +67,20 @@ The following definitions are one of the few most common $L^1$/$L^2$/$cosine$ ba
   \begin{equation}
     dist_{Manhattan}(A, B) = \sum_{i=1}^{m} |A_i - B_i|
   \end{equation}
+  Example:
+
+  $A = \left[-2, 3, -5, 7, -11, 13 \right]$
+  
+  $B = \left[1, 2, 4, 8, 16, 32 \right]$
+  \begin{equation*}
+    \begin{aligned}
+      dist_{Manhattan}(A, B) =& |-2 - 1| + |3 - 2| + |-5 - 4| \\
+                             +& |7 - 8| + |-11 - 16| + |13 - 32| \\
+                             =& |-3| + |1| + |-9| \\
+                             +& |-1| + |-27| + |-19| \\
+                             =& 60
+    \end{aligned}
+  \end{equation*}
 \end{definition}
 
 \begin{definition}[Tanimoto distance ($L^1$ based, normalized)]
