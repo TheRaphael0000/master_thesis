@@ -1,0 +1,34 @@
+\subsection{Pre-processing}
+
+A pre-processing of the data is realized to prepare the data for the next steps.
+The pre-procssing is in two parts.
+The first part is specific to each corpus and the second is the same for every corpus.
+
+Oxquarry and Brunet are already tokenized such that every token is in a seperate line.
+Additionaly Brunet have a lemma representation of the texts, which in this case in contained in a seperate file in the same way as the token files.
+For these two copora, a simple script to create the document vector is used.
+
+St-Jean is also already tokenized but each document have its three representation (token, lemma and POS) in the same file, they are sparated by a comma on each line.
+There are a few additional preprocessing needed for this corpus.
+When the word \textit{des} (equivalant to a plural \textit{the}) is encounter, the tokenizer used to created the St-Jean files created two lines for this word since it can be lemmatized into either \textit{de} (\textit{some/any}) or \textit{le} (\textit{the}).
+To avoid having these words weighted twice, only the first line is kept.
+St-Jean also have another specificity, it contains both the numerical representation of numbers and the textual representation.
+For example the number $89$ is written in St-Jean as :
+\texttt{
+<Nombre 89>,<>,<>
+quatre,quatre,72
+vingt,vingt,72
+neuf,neuf,72
+<Fin nombre>,<>,<>
+}
+The first line is the actual number found in the text, the three next lines are the words used to spell this number in french (\textit{quatre} = $4$, \textit{vingt} = $20$, \texit{neuf} = $9$, $4 \cdot 20 + 9 = 89$).
+Only the numberical representation is kept, in the example $89$.
+When the number is already written in full letters in the text, the parser did not tokenized it this way, only one line is created.
+The first two line of each document are ignored for St-Jean since they contain metadata for the document, such as an the number of tokens in the document, the name of the collection and the id written is full text.
+
+For Oxquarry, Brunet and St-Jean the authors of each document are contained in a single text file.
+On each line the author of the document for the document with an id equivalent to the line number, eg. author on line 1 is for document 1, author on line 2 is for document 2, etc...
+
+For the PAN16 corpus there is no document tokenization.
+A simple tokenization is realized which consider every ASCII ponctuation symbols (\textit{!"#\$\%&'()*+,-./:;<=>?@\[\\\]^_`\{|\}~}), line breaks and spaces as a  separator.
+Since they are written in multiple languages no further rules are applied to tokenize more effectively the texts.
