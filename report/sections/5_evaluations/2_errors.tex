@@ -1,34 +1,40 @@
 \subsection{Errors analysis}
 
-This section aim to understand the errors of the system, provide potential cues to solve them.
+This section aim to understand : the errors of the system to try to solve them and to inspect the results to improve them.
 
 \subsubsection{Frequent errors}
 \label{sec:frequent_errors}
 
-This section try to understand the errors in the system, in this case the false links (document pairs with different authors) highly ranked on different rank lists.
-The rank list quality is highly based on the feature vector created using the $n$-MFW, having a good understanding of this vector give good indications of the strength of the system.
+For this experiment, the goal is to try to understand the errors in the system, in this case the false links (document pairs with different authors) highly ranked on different rank lists.
+The rank list quality is high based on the text representation and the distance function, but mostly on the first.
+The previous statement can be deduced by the following reasoning : For example when using the $n$-MFW method, if two documents feature vector are closely related (nearly identical), no matter the distance function they should have a low distance, since every distance function should give a distance of 0 when computing the distance between two identical vectors.
+We believe some errors in the system are due to documents having close feature vectors values even though they are not from the same authors.
+To motivate this statement the following experiment is realized.
 
-To find recurrent errors in the system, the retained methods in Section~\ref{sec:mfw_token_lemma} on the relative frequency of the 750-MFW using the whole St-Jean dataset.
-This generates the 9 rank lists, presented in Table~\ref{tab:9rl_results_st_jean_A_B} in annex.
-For the sake of this experiment, every true links are discarded in the rank lists.
-Links often apearing in the top 30 false links are considered as frequent errors.
-The goal is to compare the two feature vectors of the frequent errors.
-In this case, the visualization is based on the 750-MFW tokens representation.
-Figures~\ref{fig:mfw_vector_error} show two pairs (document 57 from Sand / document 141 from Stael and document 57 from Sand / document 183 from Stael) that appear 6 time out of the 9 rank lists in the top 30 false links.
-To be able to understand more easily this vector, the values have been sorted by relative frequencies and using the logarithmic scale.
+The 4 token-based retained rank list from the St-Jean corpus are used, see Table~\ref{tab:9rl_results_st_jean_A_B} in annex.
+These 4 rank lists are using same text representation, in this case the relative frequency of the $750$-MFW tokens as feature vector, only the distance function used to create the rank list is different.
+The goal is to compare the feature vector of the two documents for some specific link, in our case the following where choosen : Frequent errors, Ranked first in a rank list (most similar vectors, according to the distance function), Ranked last in a rank list (least similar vectors) and Ranked HPrec-th in a rank list.
+Links often appearing in the top 20 false links in all 4 rank lists are considered as frequent errors.
+The rank list used for the comparaison is the one with the best average precision, in this case the one using Manhattan distance, with an average precision of 0.78.
+To perform a comparaison, a visualization of the feature vector is done using a bar plot.
+In this case, the visualization is based on the $750$-MFW tokens representation, since the rank lists were created using this vector size.
+To be able to understand more easily this vector, the values have been sorted by the mean relative frequencies and use a logarithmic scale.
 When a large proportion of the vectors overlap it indicates a high similarity between the MFW vectors.
-
 Both document style are close when their feature vector are closely related.
-Visually when most the surface overlap, the distance function will give a low value, and rank this link high in the list.
-When two vectors are relatively close together determinating that two texts are from a different author can not clearly be established using only one type of representation, no matter the distance metric applied.
+Visually when most the surface overlap, the distance function will give a low value, and with a correct distance measure should be ranked high in the list.
+
+Figures~\ref{fig:mfw_vector_error} show the feature vector of two frequent errors document pairs (document 48 from Vigny / document 62 from Dumas and document 10 from Maupassant / document 52 from Flaubert), these link appear in the top 20 false links of 3 out 4 rank lists.
 The frequent errors vector pairs presented in Figure~\ref{fig:mfw_vector_error} can be visually compared actual true links and actual false links, to have a better understanding of this problematic.
-For example the most similar true link (ranked 1 using Manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (document 157 from Stael / document 183 from Steal) or the HPrec-th (last continous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (document 22 from Gautier / document 53 from Gautier), both of these links show a large proportion of overlapping surface, like for the frequent errors vectors.
+For example the most similar true link (ranked 1 using Manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (documents 30 and 116 from Sand) or the HPrec-th (last continuous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (documents 184 and 192 from Barbey), both of these links show a large proportion of overlapping surface, like for the frequent errors vectors.
 A counter example would be the least similar false link (ranked last using Manhattan distance) which represent a negatively correlated document pair, Figure~\ref{fig:mfw_vector_last_rl} showcase this link (document 183 from Stael / document 194 from Regnier).
 As expected, most of this figure surface is non-overlapping.
 
+When two vectors are relatively close together, determining that two texts are from a different author can not clearly be established using only one type of representation, no matter the distance metric applied.
+Thus, this experiment showcase the need of having multiple text representation to obtain more robust solutions.
+
 \begin{figure}
   \centering
-  \caption{Example of 750-MFW relative frequency vectors for the two documents in a reccurant (6 rank lists out of 9) false link in the top 30 false links}
+  \caption{Example of 750-MFW relative frequency vectors for the two documents in a reccurant false link in the top 20 false links}
   \label{fig:mfw_vector_error}
 
   \subcaption{First example}
