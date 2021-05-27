@@ -1,6 +1,59 @@
-\subsection{Errors analysis}
+\subsection{Results analysis}
 
 This section aim to understand : the errors of the system to try to solve them and to inspect the results to improve them.
+
+\subsubsection{Distances' matrix visualization}
+
+When computing the rank lists, each link have its distance calculated and can be represented in a matrix for the non-commutative distances functions and in a symmetric matrix for the commutative distances functions.
+In this matrix each document represent a row and a column and the elements of the matrix to a link.
+To visually represent the distances' matrix, each element of the matrix is mapped to a pixel in an 2D image.
+The element value in the matrix is mapped to the pixel brightness, the low values are in light colours and high values in dark colours.
+A good distance matrix should have each same author documents pair with a low distances (light colour in the image) and different authors documents pairs with a high distance (dark colour in the image).
+The greater the contrast between the true links (same author documents) and the false links (different authors documents) is, the better the text representation is, since the related rank list will have a greater average precision.
+When the documents are sorted alphabetically by their authors and if the distances' matrix can represent correctly the author style, same authors documents have generally a low distance, this creates light colour squares in the diagonal.
+The square size is related to the number of document written by this author.
+The diagonal is the lightest colour (white), since the distance between two same documents is always 0, with respect to the identity of indiscernible axiom of the distance functions.
+
+The distance matrix for the best retained representation (the highest average precision) and the worse retained text representation (the lowest average precision) is visually presented in Figure~\ref{fig:distances_matrix_oxquarry} for Oxquarry.
+Respectively the Clark distance on the $750$-MFW which gives an average precision of $0.89$, and the Tanimito distance on the $750$-MFW gives an $0.63$ average precision.
+The diagonal is white in both images, a light colour square in the diagonal can clearly be observed on both distance matrix visualizations, even thought some are slightly tainted.
+Clark has overall a good distances matrix, except some document pairs from Conrad, Hardy and Orczy which have darker colours, these are ranked below some false links in the rank list.
+For Tanimoto, firstly one can observe these stripes, which are due to the max function in its computation, which create more cleaved decision in the score value.
+The main suspects for this observation is probably due to some high frequency term only used in some excerpts, thus when normalizing by the sum of maxima in the Tanimoto computation, document with these high relative frequency create these stripes.
+
+\begin{figure}
+  \caption{Distance matrix visualization Oxquarry}
+  \label{fig:distances_matrix_oxquarry}
+
+  \caption{Best retained text representation for Oxquarry ($750$-MFW tokens with Clark)}
+  \label{fig:distance_matrix_oxquarry_clark}
+  \includegraphics{img/distance_matrix_oxquarry_clark.png}
+
+  \caption{Worse retained text representation for Oxquarry ($750$-MFW tokens with Tanimoto)}
+  \label{fig:distance_matrix_oxquarry_tanimoto}
+  \includegraphics{img/distance_matrix_oxquarry_tanimoto.png}
+\end{figure}
+
+\subsubsection{Rank list links distribution across score}
+
+When dealing with rank list, an interesting way to analyse the results is to inspect the true and false links in an histogram.
+Figure~\ref{fig:links_distribution_fusion} show the of true and false in an histogram for St-Jean B.
+Figure~\ref{fig:links_distribution_fusion_regression} show the rank list obtain by fusion the retained rank list (ref. Table~\ref{tab:9rl_results_st_jean_B} in annex) using the Linear regression fusion method and Figure~\ref{fig:links_distribution_fusion_z_score} the Z-score fusion of the retained rank list on St-Jean B.
+
+{\color{red} todo}
+
+\begin{figure}
+  \caption{Links distribution across score on St-Jean B}
+  \label{fig:links_distribution_fusion}
+
+  \subcaption{Linear regression fusion (training St-Jean A)}
+  \label{fig:links_distribution_fusion_regression}
+  \includegraphics[width=\linewidth]{img/links_distribution_fusion_regression.png}
+
+  \subcaption{Z-Score fusion}
+  \label{fig:links_distribution_fusion_z_score}
+  \includegraphics[width=\linewidth]{img/links_distribution_fusion_z_score.png}
+\end{figure}
 
 \subsubsection{Frequent errors}
 \label{sec:frequent_errors}
@@ -126,35 +179,3 @@ Out of the 18 possible false link for these excerpts, 12 are in the top-r false 
       \bottomrule
     \end{tabular}
 \end{table}
-
-\subsubsection{Distances' matrix visualization}
-
-When computing the rank lists, each link have its distance calculated and can be represented in a matrix for the non-commutative distances functions and in a symmetric matrix for the commutative distances functions.
-In this matrix each document represent a row and a column and the elements of the matrix to a link.
-To visually represent the distances' matrix, each element of the matrix is mapped to a pixel in an 2D image.
-The element value in the matrix is mapped to the pixel brightness, the low values are in light colours and high values in dark colours.
-A good distance matrix should have each same author documents pair with a low distances (light colour in the image) and different authors documents pairs with a high distance (dark colour in the image).
-The greater the contrast between the true links (same author documents) and the false links (different authors documents) is, the better the text representation is, since the related rank list will have a greater average precision.
-When the documents are sorted alphabetically by their authors and if the distances' matrix can represent correctly the author style, same authors documents have generally a low distance, this creates light colour squares in the diagonal.
-The square size is related to the number of document written by this author.
-The diagonal is the lightest colour (white), since the distance between two same documents is always 0, with respect to the identity of indiscernible axiom of the distance functions.
-
-The distance matrix for the best retained representation (the highest average precision) and the worse retained text representation (the lowest average precision) is visually presented in Figure~\ref{fig:distances_matrix_oxquarry} for Oxquarry.
-Respectively the Clark distance on the $750$-MFW which gives an average precision of $0.89$, and the Tanimito distance on the $750$-MFW gives an $0.63$ average precision.
-The diagonal is white in both images, a light colour square in the diagonal can clearly be observed on both distance matrix visualizations, even thought some are slightly tainted.
-Clark has overall a good distances matrix, except some document pairs from Conrad, Hardy and Orczy which have darker colours, these are ranked below some false links in the rank list.
-For Tanimoto, firstly one can observe these stripes, which are due to the max function in its computation, which create more cleaved decision in the score value.
-The main suspects for this observation is probably due to some high frequency term only used in some excerpts, thus when normalizing by the sum of maxima in the Tanimoto computation, document with these high relative frequency create these stripes.
-
-\begin{figure}
-  \caption{Distance matrix visualization Oxquarry}
-  \label{fig:distances_matrix_oxquarry}
-
-  \caption{Best retained text representation for Oxquarry ($750$-MFW tokens with Clark)}
-  \label{fig:distance_matrix_oxquarry_clark}
-  \includegraphics{img/distance_matrix_oxquarry_clark.png}
-
-  \caption{Worse retained text representation for Oxquarry ($750$-MFW tokens with Tanimoto)}
-  \label{fig:distance_matrix_oxquarry_tanimoto}
-  \includegraphics{img/distance_matrix_oxquarry_tanimoto.png}
-\end{figure}

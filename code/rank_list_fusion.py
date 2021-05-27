@@ -61,6 +61,15 @@ def fusion_regression_training(rank_list, Y):
     return model, mean_squared_error(Y_pred, Ys, squared=False)
 
 
+def fusion_regression_trainings(rank_lists, Y):
+    models, mses = [], []
+    for rank_list in rank_lists:
+        model, mse = fusion_regression_training(rank_list, Y)
+        models.append(model)
+        mses.append(mse)
+    return models, mses
+
+
 def fusion_regression_testing(model, rank_list):
     Xs = features_from_rank_list(rank_list)
     Y_pred = model.predict_proba(Xs)[:,1]
