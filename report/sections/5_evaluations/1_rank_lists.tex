@@ -2,7 +2,7 @@
 
 In this section, the goal is to find the most adapted parameters for each rank list method proposed in Section~\ref{sec:methods}.
 After each experiment, the most convincing metrics are retained for the fusion step in Section~\ref{sec:eval_fusion}.
-The results for each retained methods is summarized Section~\ref{sec:annex_retained_text_representation} in annex.
+The results of these experiments are summarized in Section~\ref{sec:annex_retained_text_representation} in annex.
 
 \subsubsection{Rank list evaluation metrics}
 \label{sec:rl_eval}
@@ -64,10 +64,14 @@ The presented metrics are well know in the authorship verification and the infor
 Previous studies have shown the importance of having documents of good quality and with at least 5000 tokens to have reliable results.
 Skilled authors can easily change their style to imitate others for small texts, but it becomes more difficult for larger texts~\cite{savoy_stylo}.
 
-For this study, an experiment on the St-Jean dataset is accomplish, in the order to show the importance of having large documents.
-In order to test this parameter, the number of token is artificially modified by considering only the $n$ first tokens for each text, with $n$ ranging between 9000 and 250 with steps of 250 tokens.
+For this study, an experiment on the St-Jean corpus is accomplish, in the order to show the importance of having large documents.
+To test this parameter, the number of token is artificially modified by considering only the $n$ first tokens for each text, with $n$ ranging between 9000 and 250 with steps of 250 tokens.
 Figure~\ref{img:degradation} shows the three metrics used (Average precision, RPrec, HPrec) over the number of tokens.
 Every metrics decrease over the text size, which indicate that it becomes harder to determinate documents pairs with the same author as the text size decrease.
+
+PAN16 corpus is a difficult corpus due to its small size, thus extracting reliable features for each text to estimate each style is also a difficult task.
+After multiple tests, the PAN @ CLEF 2016 corpus is not used further in this study due to its difficulty in finding reliable Stylometric clues.
+For this study having standard and easier corpus is required in order to show the proposed methods.
 
 \begin{figure}
   \centering
@@ -75,9 +79,6 @@ Every metrics decrease over the text size, which indicate that it becomes harder
   \caption{St-Jean ranks list evaluation on AP, RPrec and HPrec over the text size. Rank list computed using 500 MFW and the zscored-normalized cosine distance}
   \label{img:degradation}
 \end{figure}
-
-PAN16 dataset is a difficult dataset due to its small size, thus extracting reliable features for each text to estimate each style is also a difficult task.
-After multiple tests, the PAN @ CLEF 2016 dataset is not used further in this study due to its difficulty in finding reliable Stylometric clues.
 
 \subsubsection{MFW Token and Lemma}
 \label{sec:mfw_token_lemma}
@@ -425,6 +426,9 @@ The cosine-based compression distance (CBC) tend to give better results over the
 In terms of time complexity BZip2 is the fastest algorithm of the 3 proposed, LZMA is $\sim ~5-6$ times slower than BZip2, and GZip slower than BZip2 by around $\sim 5-20$\%.
 No significant time differences is recorded between the NCD and CBC distance measures, since the greatest complexity reside in the compression algorithm.
 Even though LZMA algorithm give the best results, the configuration retained for the compression based distance is the BZip2 with the Cosine based compression distance, since it gives relative good results in a short amount of time.
+Previous study show that the distance measure choice was more impactful than the choice of the compression algorithm in the regarding the quality of the results~\cite{comparing_compression}.
+Our results tend to indicate the opposite, ref~\ref{tab:compression_evaluation_results}.
+The distance measures does not impact a lot our results, but the compression algorithm does.
 
 For this text representation the retained configuration is the BZip2 algorithm with the CBC distance measure.
 The Bzip2 was selected even though LZMA give slightly better results, due to the huge difference in run time.

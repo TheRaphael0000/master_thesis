@@ -75,6 +75,74 @@ The proposed solution is to set the probability of the affected links (probabili
 The greater, the value the stronger the penality of the veto.
 The $-\infty$ method is the only veto method in the first meaning of the veto definition, every links below the probability will have its final score also equal to $-\infty$ thus in the fused rank list all these links are at the bottom but their order is not defined.
 
+Table~\ref{tab:veto_example} showcase an example for this method.
+As you can see with the rank lists in the example, rank list 1 give a 0.20 probabiliy for link 4 of being a true link but rank list 3 give this link a 0.80 probabiliy.
+Without the veto the link is ranked 3rd but with the veto the link is ranked 5th tie with link 5.
+The $-n$, method provide a why to avoid having tie and keep the strong impact of the $-\infty$ veto.
+By setting to $0$ or $-1$ it lightens the effect of the veto.
+
+\begin{table}
+  \centering
+  \caption{Veto fusion example}
+  \label{tab:veto_example}
+
+  \subcaption{Rank lists probabilites}
+  \begin{tabular}{l l l}
+    \toprule
+    Rank list 1 & Rank list 2 & Rank list 3 \\
+    \midrule
+    0 : 0.95    & 0 : 0.90    & 5 : 0.90 \\
+    1 : 0.75    & 3 : 0.70    & 4 : 0.80 \\
+    2 : 0.60    & 4 : 0.65    & 0 : 0.70 \\
+    3 : 0.50    & 1 : 0.50    & 1 : 0.60 \\
+    4 : 0.20    & 2 : 0.30    & 2 : 0.50 \\
+    5 : 0.10    & 5 : 0.10    & 3 : 0.40 \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{Rank list average link probability without veto}
+  \begin{tabular}{l l l}
+    \toprule
+    Rank & Link: Average \\
+    \midrule
+    1st & 0 : $(0.95 + 0.90 + 0.70)/3 = 0.85$ \\
+    2nd & 1 : $(0.75 + 0.50 + 0.60)/3 = 0.62$ \\
+    3rd & 4 : $(0.20 + 0.65 + 0.80)/3 = 0.55$ \\
+    4th & 3 : $(0.50 + 0.70 + 0.40)/3 = 0.53$ \\
+    5th & 2 : $(0.60 + 0.30 + 0.50)/3 = 0.47$ \\
+    6th & 5 : $(0.10 + 0.10 + 0.90)/3 = 0.37$ \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{$-\infty$ veto with threshold at 0.25}
+  \begin{tabular}{l l l}
+    \toprule
+    Rank list 1 & Rank list 2 & Rank list 3 \\
+    \midrule
+    0 : 0.95    & 0 : 0.90    & 5 : 0.90 \\
+    1 : 0.75    & 3 : 0.70    & 4 : 0.80 \\
+    2 : 0.60    & 4 : 0.65    & 0 : 0.70 \\
+    3 : 0.50    & 1 : 0.50    & 1 : 0.60 \\
+    4 : -inf    & 2 : 0.30    & 2 : 0.50 \\
+    5 : -inf    & 5 : -inf    & 3 : 0.40 \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{Rank list average link probability and $-1$ veto}
+  \begin{tabular}{l l l}
+    \toprule
+    Rank & Link: Average \\
+    \midrule
+    1st & 0 : $(0.95 + 0.90 + 0.70)/3 = 0.85$ \\
+    2nd & 1 : $(0.75 + 0.50 + 0.60)/3 = 0.62$ \\
+    3rd & 3 : $(0.50 + 0.70 + 0.40)/3 = 0.53$ \\
+    4th & 2 : $(0.60 + 0.30 + 0.50)/3 = 0.47$ \\
+    5-6th & 4 : $(-inf + 0.65 + 0.80)/3 = -inf$ \\
+    5-6th & 5 : $(-inf + -inf + 0.90)/3 = -inf$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \subsubsection{Soft-veto using S-Curve}
 
 An additional desired constraint is to favor top ranked link and penalize bottom ranked links when fusing rank lists.
