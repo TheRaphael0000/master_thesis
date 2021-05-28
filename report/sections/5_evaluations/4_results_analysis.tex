@@ -34,25 +34,30 @@ The main suspects for this observation is probably due to some high frequency te
   \includegraphics{img/distance_matrix_oxquarry_tanimoto.png}
 \end{figure}
 
-\subsubsection{Rank list links distribution across score}
+\subsubsection{Links scores distribution in rank lists}
 
-When dealing with rank list, an interesting way to analyse the results is to inspect the true and false links in an histogram.
-Figure~\ref{fig:links_distribution_fusion} show the of true and false in an histogram for St-Jean B.
-Figure~\ref{fig:links_distribution_fusion_regression} show the rank list obtain by fusion the retained rank list (ref. Table~\ref{tab:9rl_results_st_jean_B} in annex) using the Linear regression fusion method and Figure~\ref{fig:links_distribution_fusion_z_score} the Z-score fusion of the retained rank list on St-Jean B.
+In Savoy (2014)'s \textit{Estimating the Probability of an Authorship Attribution} they modelized the distribution of the true and false links across the score obtained using a mixture of 2 beta distribution.
+Using the 2 beta distribution models an approximation of the probability of being a true link can be computed.
 
-{\color{red} todo}
+Figure~\ref{fig:links_distribution_fusion} show the density of true and false link as well as a beta distribution estimation for St-Jean.
+Figure~\ref{fig:links_score_density_fusion_regression} show the rank list obtain by fusion the retained rank list (ref. Table~\ref{tab:9rl_results_st_jean_B} in annex) using the regression fusion method, the density is calculated on the probability of each link being a true link.
+Figure~\ref{fig:links_score_density_fusion_z_score} show the Z-score fusion distance density of the retained rank list on St-Jean, the score has been normalized between 0 and 1 using Definition~\ref{def:normalization} to be able to estimate the beta distribution.
+
+The results obtained by the regression fusion already are a probability of being a true link so the use of the beta distribution is limited.
+As it can be observed on the plot, the two distribution are already well seperated.
+In the other hand, for the z-score fusion, it is possible to hestimate the probability of being a true link using the area under the curve of the two beta distribution.
 
 \begin{figure}
-  \caption{Links distribution across score on St-Jean B}
+  \caption{Links score distribution and beta distribution estimation for St-Jean}
   \label{fig:links_distribution_fusion}
 
-  \subcaption{Linear regression fusion (training St-Jean A)}
-  \label{fig:links_distribution_fusion_regression}
-  \includegraphics[width=\linewidth]{img/links_distribution_fusion_regression.png}
+  \subcaption{Linear regression fusion (training Oxquarry)}
+  \label{fig:links_score_density_fusion_regression}
+  \includegraphics[width=\linewidth]{img/links_score_density_fusion_regression.png}
 
   \subcaption{Z-Score fusion}
-  \label{fig:links_distribution_fusion_z_score}
-  \includegraphics[width=\linewidth]{img/links_distribution_fusion_z_score.png}
+  \label{fig:links_score_density_fusion_z_score}
+  \includegraphics[width=\linewidth]{img/links_score_density_fusion_z_score.png}
 \end{figure}
 
 \subsubsection{Frequent errors}

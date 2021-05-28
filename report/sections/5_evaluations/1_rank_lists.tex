@@ -517,6 +517,34 @@ The Bzip2 was selected even though LZMA give slightly better results, due to the
   \end{tabular}
 \end{table}
 
-\subsection{Retained rank lists}
+\subsubsection{Retained rank lists}
 
-{\color{red}todo}
+For the next experiments, medium to high quality rank list are required.
+The previous experiments tried to find some good rank list produced across different text representation.
+The retained text representation are presented in Table~\ref{tab:9rl}.
+Four of them are using the MFW tokens, two MFW tokens n-grams, one the compression and two the MFW POS n-grams.
+The complete evaluation of the rank list produced on these text representation for the three literary corpora are presented in Section~\ref{sec:annex_retained_text_representation} in annex.
+
+\begin{table*}
+  \centering
+  \caption{Retained text representation, text representation with a star (*) are only used for the St-Jean dataset}
+  \label{tab:9rl}
+  \begin{tabular}{c l l c}
+    \toprule
+    Id &
+    Text representation &
+    Distance measure &
+    Z-Score \\
+    \midrule
+    0 & $750$-MFW tokens & Cosine Distance & x\\
+    1 & $750$-MFW tokens & Clark & \\
+    2 & $750$-MFW tokens & Manhattan & x\\
+    3 & $750$-MFW tokens & Tanimoto & \\
+    4 & $3000$-MFW tokens $3$-grams & Cosine distance & x\\
+    5 & $8000$-MFW tokens $4$-grams & Cosine distance & x\\
+    6 & BZip2 compression & CBC distance & \\
+    *7 & $250$-MFW POS $2$-grams & Cosine distance & x\\
+    *8 & $1000$-MFW POS $3$-grams & Manhattan distance & x\\
+    \bottomrule
+  \end{tabular}
+\end{table*}

@@ -149,13 +149,26 @@ Thus using a normalization can improve the performances.
 \begin{definition}[Z-score normalization~\cite{savoy_stylo}]
   \label{def:z_score}
   \begin{equation}
-    Zscore(A) = \frac{A - \mu}{\sigma}
+    Zscore(X) = \frac{X - \mu}{\sigma}
   \end{equation}
   When using the z-score normalization on MFW vectors, $\mu$ and $\sigma$ usually are vectors containing the mean and the standard deviation of each terms in the corpus.
 \end{definition}
 
 The Manhattan distance applied on a Z-score normalized MFW vector is also called Burrows's Delta~\cite{savoy_stylo}.
 In this study, the following distance metrics are always normalized using the Z-score normalization before hand : Manhattan, Euclidean and Cosine Distance, since they tends to produce better results when normalized.
+
+\begin{definition}[Normalization]
+  \label{def:normalization}
+  \begin{equation}
+    Normalize(X) = \left[\left(X - Min(X)\right) / \left(Max(X) - Min(X)\right)\right]
+  \end{equation}
+  To linearly normalize any list of number X in the interval $[0, 1]$.
+
+  \begin{equation}
+    Normalize(X, a, b) = Normalize(X) * (b - a) + a, \textit{ With }b - a > 0
+  \end{equation}
+  To linearly normalize any list of number X in the interval $[a, b]$.
+\end{definition}
 
 \subsubsection{Smoothing}
 
