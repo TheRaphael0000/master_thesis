@@ -37,21 +37,21 @@ The main suspects for this observation is probably due to some high frequency te
 \subsubsection{Links scores distribution in rank lists}
 
 In Savoy (2014)'s \textit{Estimating the Probability of an Authorship Attribution} they modelized the distribution of the true and false links across the score obtained using a mixture of 2 beta distribution.
-Using the 2 beta distribution models an approximation of the probability of being a true link can be computed.
+Using the 2 beta distribution models an approximation of the probability of being a true link can be computed using the following formula.
 
-Figure~\ref{fig:links_distribution_fusion} show the density of true and false link as well as a beta distribution estimation for St-Jean.
-Figure~\ref{fig:links_score_density_fusion_regression} show the rank list obtain by fusion the retained rank list (ref. Table~\ref{tab:9rl_results_st_jean_B} in annex) using the regression fusion method, the density is calculated on the probability of each link being a true link.
-Figure~\ref{fig:links_score_density_fusion_z_score} show the Z-score fusion distance density of the retained rank list on St-Jean, the score has been normalized between 0 and 1 using Definition~\ref{def:normalization} to be able to estimate the beta distribution.
+Figure~\ref{fig:links_score_density} show the density of true and false link as well as a beta distribution estimation for St-Jean (Regression fusion in \ref{fig:links_score_density_fusion_regression} and Z-Score fusion in \ref{fig:links_score_density_fusion_z_score}).
+For the Z-score fusion, the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization} to be able to estimate the beta distribution.
 
-The results obtained by the regression fusion already are a probability of being a true link so the use of the beta distribution is limited.
-As it can be observed on the plot, the two distribution are already well seperated.
+The results obtained by the regression fusion already are a probability of being a true link so the use of the beta distribution is limited, the two distribution are already well seperated.
 In the other hand, for the z-score fusion, it is possible to hestimate the probability of being a true link using the area under the curve of the two beta distribution.
+The vectical line indicate the postion where both beta distribution have the same probability of being a true link and false link (same area under the curve).
+This point can be used as alternative decision point where the cut should be made in the rank list, this ensure that both false positives and false negatives are minimized.
 
 \begin{figure}
   \caption{Links score distribution and beta distribution estimation for St-Jean}
-  \label{fig:links_distribution_fusion}
+  \label{fig:links_score_density}
 
-  \subcaption{Linear regression fusion (training Oxquarry)}
+  \subcaption{Regression fusion (training Oxquarry)}
   \label{fig:links_score_density_fusion_regression}
   \includegraphics[width=\linewidth]{img/links_score_density_fusion_regression.png}
 
