@@ -6,6 +6,7 @@ import numpy as np
 from scipy.stats import binom_test
 from scipy.stats import wilcoxon
 from scipy.stats import weightedtau
+from scipy.stats import beta
 import matplotlib.pyplot as plt
 
 
@@ -183,3 +184,41 @@ def subset_Y_and_distance_matrix(Y, distances_matrix, subset):
     distances_matrix = distances_matrix[ids, :]
     distances_matrix = distances_matrix[:, ids]
     return Y, distances_matrix
+
+
+def fit_beta(Xi):
+    mean = np.mean(Xi)
+    var = np.std(Xi)**2
+    _ = ((mean * (1 - mean))/var - 1)
+    a = mean * _
+    b = (1 - mean) * _
+    return beta(a, b)
+
+
+def find_two_beta_same_area(b1, b2):
+    if b1.mean() > b2.mean():
+        beta_left, beta_right = b2, b1
+    else:
+        beta_left, beta_right = b1, b2
+    
+    i_max = 1000
+    alpha = 1e-15
+    
+    dt_l = 0
+    dt_r = 1
+    for _ in range(i_max):
+        dt = (dt_r - dt_l) / 2 + dt_l
+        s_l = beta_left.cdf(dt)
+        s_r = 1 - beta_right.cdf(dt)
+        
+        delta_s = s_r - s_l
+                
+        if np.abs(delta_s) < alpha:
+            break
+
+        if delta_s > 0:
+            dt_l = dt
+        else:
+            dt_r = dt
+            
+    return dt

@@ -4,6 +4,7 @@ import numpy as np
 
 from collections import defaultdict
 
+from scipy.stats import beta
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import precision_recall_fscore_support
@@ -13,34 +14,56 @@ from sklearn.metrics import davies_bouldin_score
 from misc import distances_matrix_from_rank_list
 from misc import features_from_rank_list
 from misc import labels_from_rank_list
+from misc import fit_beta
+from misc import find_two_beta_same_area
 
 
-def supervised_clustering_training(rank_list, Y, return_eval=False, random_state=0):
-    X_rl = features_from_rank_list(rank_list)
-    Y_rl = labels_from_rank_list(rank_list, Y)
-    model = LogisticRegression(random_state=random_state).fit(X_rl, Y_rl)
-    outputs = [model]
-    if return_eval:
-        Y_pred = model.predict(X_rl)
-        eval = precision_recall_fscore_support(Y_pred, Y_rl)
-        return (model, eval)
-    else:
-        return model
-
-
-def supervised_clustering_predict(model, rank_list):
+def dist_thresh_logistic_regression(rl_training, Y_training, rl_testing):
+    X_rl = features_from_rank_list(rl_training)
+    Y_rl = labels_from_rank_list(rl_training, Y_training)
+    model = LogisticRegression(random_state=0).fit(X_rl, Y_rl)
+    
     # compute distance threshold
-    X = features_from_rank_list(rank_list)
+    X = features_from_rank_list(rl_testing)
     pos = np.sum(model.predict(X))
     # both lines equaivalent
     # pos = np.sum(model.predict_proba(X)[:,1] > 0.5)
 
-    distance_threshold = rank_list[pos][-1]
+    distance_threshold = rl_testing[pos][-1]
+    
+    return distance_threshold
 
+
+def dist_thresh_two_beta(rl_training, Y_training):
+    links = np.array(list(zip(*rl_training))[0])
+    scores = np.array(list(zip(*rl_training))[1])
+    labels = np.array([Y_training[a] == Y_training[b] for a, b in links])
+    
+    # if it's not a probability normalize between 0 and 1
+    normalize = False
+    if np.max(scores) > 1 or np.min(scores) < 0:
+        normalize = True
+        min_ = np.min(scores)
+        input_range = np.max(scores) - min_
+        scores = (scores - min_) / input_range
+
+    beta_true = fit_beta(scores[labels])
+    beta_false = fit_beta(scores[~labels])
+        
+    dt = find_two_beta_same_area(beta_true, beta_false)
+    
+    # un-normalize
+    if normalize:
+        dt = dt * input_range + min_
+        
+    return dt
+
+
+def clustering_at_dist_thresh(distance_threshold, rank_list, linkage="average"):
     args = {
         "n_clusters": None,
         "affinity": "precomputed",
-        "linkage": "average",
+        "linkage": linkage,
         "distance_threshold": distance_threshold
     }
     ac = AgglomerativeClustering(**args)

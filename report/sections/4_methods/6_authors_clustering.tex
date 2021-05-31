@@ -4,7 +4,7 @@ To find clusters of authors, a possible way is to use a hierarchical clustering 
 In a rank list, at each rank the link indicate if the two documents should belong to the same cluster in order of certainty.
 The hardest task in this clustering scheme is to find where the list should be cut (also called \textit{threshold}).
 The cut should be made such that the number of true links above the cut is maximized and the number of false links under the cut is minimized.
-To find this cut, two approaches were explored : one using an unsupervised clustering evaluation technique which is totally unsupervised and another one using a linear model to learn to make this cut, but it requires a training dataset.
+To find this cut, two approaches were explored : one using an unsupervised clustering evaluation technique which is totally unsupervised, another one using a linear model to learn to make this cut, but it requires a training corpus and a semi-supervised method which re-use a threshold based on the statistical best threshold on corpus training corpus.
 
 \subsubsection{Agglomerative clustering}
 
@@ -42,7 +42,39 @@ When this score is below 0, the last positive score clusters is kept.
 If the procedure does not reach a score below 0, the maximal is kept.
 This procedure is called Iterative Positive Silhouette (IPS) and was proposed in~\cite{automated_unsupervised}.
 
-\subsubsection{Learning the threshold in a supervised way}
+\subsubsection{Learning the threshold in a semi-supervised way using two Beta distributions}
+
+In Savoy (2014)'s \textit{Estimating the Probability of an Authorship Attribution} they modelized the distribution of the true and false links across the score obtained using a mixture of 2 beta distribution~\cite{savoy_probability}.
+Using these two beta distribution models, the position where the area under the curve for both models is maximized (same area under the cut for both models), this correspond to the position where the true positive and true negatives are maximized, thus the statistical best possible location whereto seperate the rank list.
+To find the position where both beta distribution have the same area under the curve, there might be analtical ways to solve this problematic using the analytic form of the beta distribution cumulative distribution function (CDF, probability, area under the curve) but was ignored for this study.
+Instead the position is found using a dichotomic search between 0 and 1 and and evaluate CDF for the two beta distribution until to converge to the same value.
+
+Figure~\ref{fig:links_score_density} show the density of true and false link as well as a beta distribution estimation for St-Jean (Regression fusion in \ref{fig:links_score_density_fusion_regression} and Z-Score fusion in \ref{fig:links_score_density_fusion_z_score}).
+For the metrics with a score out of the interval 0-1 (such as the Z-score fusion), the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization} to be able to estimate the beta distribution.
+
+The results obtained by the regression fusion are a probability of being a true link so the two distribution are well seperated and can be modelized by the two beta distributions.
+In the other hand, when using the z-score fusion is used, the score is more mixed, but can also be modelized using the two beta distributions.
+As explained in~\cite{savoy_probability} the beta distribution is better suited for authorship problem than the gaussian distribution since it can grasps a large amount of distribution shapes with its parameters flexibility.
+The vectical line indicate the postion found where both beta distribution have the same probability of being a true link and false link (same area under the curve) using the dichotomic search.
+This point can be used as alternative decision point where the cut should be made in the rank list, this ensure that both false positives and false negatives are minimized.
+Since the authors of each link must be known to find the cut, the idea is here to find the cut location using a rank list with known true and false links and re-use the same value for the new corpora.
+The linkage parameter for this method is the complete linkage, since the cut correspond to the position where the most extremes of the same categories, either true or false links meet.
+This method is considered as semi-supervised since the only learnt parameter is a real number, the distance threshold, and do not consider any new rank list.
+
+\begin{figure}
+  \caption{Links score distribution and beta distribution estimation for St-Jean}
+  \label{fig:links_score_density}
+
+  \subcaption{Regression fusion (training Oxquarry)}
+  \label{fig:links_score_density_fusion_regression}
+  \includegraphics[width=\linewidth]{img/links_score_density_fusion_regression.png}
+
+  \subcaption{Z-Score fusion}
+  \label{fig:links_score_density_fusion_z_score}
+  \includegraphics[width=\linewidth]{img/links_score_density_fusion_z_score.png}
+\end{figure}
+
+\subsubsection{Learning the threshold in a supervised way using Logistic Regression}
 
 To learn at which position in the rank list the cut should be, this second idea is to fit a linear model on samples created with the rank list.
 To train the model, a sample is created for each link in a rank list.

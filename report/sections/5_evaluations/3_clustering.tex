@@ -203,6 +203,113 @@ To further improve the results, instead of iterating on the number of clusters a
   \includegraphics[width=\linewidth]{img/unsupervised_clustering_st_jean_B.png}
 \end{figure}
 
+
+\subsubsection{Semi-supervised clustering evaluation}
+
+To evaluate the semi-supervised clustering approach, every corpus were used.
+First a rank list for each corpus is computed using a z-score fusion using the retained rank list, see Section~\ref{sec:annex_retained_text_representation} in annex.
+For each rank list, the distance threshold is computed, using the two beta approach, this correspond to the training phase.
+Then for every distance threshold and rank list pair, the clustering is evaluated using the $B^3$ family and the $r_{diff}$.
+
+The distance thresholds found for the z-score fusion rank lists for each corpus are in Table~\ref{tab:semi_supervised_clustering_thresholds}
+The complete evaluation using Oxquarry, Brunet, St-Jean A and B, is presented in Table~\ref{tab:semi_supervised_clustering_train_test}.
+The average values obtained for each metrics is presented in Table~\ref{tab:semi_supervised_clustering_average}.
+
+The following conclusions can be drawn with these results:
+\begin{itemize}
+  \item
+  A rather wide range of distance threshold is found depending on the corpus. They are in the interval $\left[-0.42, -0.96\right]$ which correspond to 14\% of the interval containing every z-scores for these datasets ($\left[-4.79, 2.63\right]$).
+  \item
+  The average r-ratio is positive, which indicate that this method tends to overestimate the number of clusters, but is really close to find the right number of clusters.
+  \item
+  The better the average precision of the rank list used, the better the $B^3_{F_1}$ score seem to be, when using this method, with the exception of the Oxquarry corpus which have better average precision then Brunet but a lower $B^3_{F_1}$ score in average when testing with these corpora.
+  \item
+  The distance threshold use only have a slight impact when comparing the average $B^3_{F_1}$ score across the corpus.
+  The St-Jean A corpus give the best $B^3_{F_1}$ and regarding the number of clusters Oxquarry seem to be the best corpus for the training.
+\end{itemize}
+
+The semi-supervised cut method tends to produce better results in average than the unsupervised proposed method.
+An increase of +8\% in $B^3_{F_1}$ can be obtained when using the supervised clustering model proposed over the unsupervised tweaked clustering model (IPS stop procedure at 0.1) and +15\% over the IPS stop procedure at 0.
+
+\begin{table}
+  \centering
+  \caption{Distance threshold found with the two beta distribution on every corpora when using the z-score fusion of the retained rank lists}
+  \label{tab:semi_supervised_clustering_thresholds}
+
+  \begin{tabular}{l r}
+    \toprule
+    Corpus & Threshold \\
+    \midrule
+    Oxquarry & -0.42 \\
+    Brunet & -0.62 \\
+    St-Jean A & -0.76 \\
+    St-Jean B & -0.96 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\begin{table*}
+  \centering
+  \caption{Semi-supervised clustering evaluation}
+  \label{tab:semi_supervised_clustering}
+
+  \subcaption{Every possible distance threshold (DT) and retained z-score rank list pairs. Metrics in order : $B^{3}_{F_1}$ / $B^{3}_{precision}$ / $B^{3}_{recall}$ / $r_{diff}$}
+  \label{tab:semi_supervised_clustering_train_test}
+  \begin{tabular}{l l| c c c c}
+    \toprule
+    \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing} \\
+    \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B \\
+    \midrule
+    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{DT}}}
+    & Oxquarry
+    & 0.82/1.00/0.70/0.08
+    & 0.81/0.85/0.77/0.07
+    & 0.86/0.84/0.87/-0.02
+    & 0.91/0.86/0.98/-0.03
+    \\
+    & Brunet
+    & 0.82/1.00/0.70/0.08
+    & 0.81/0.85/0.77/0.07
+    & 0.87/0.86/0.87/-0.01
+    & 0.92/0.88/0.98/-0.02
+    \\
+    & St-Jean A
+    & 0.82/1.00/0.70/0.08
+    & 0.85/0.94/0.77/0.09
+    & 0.87/0.86/0.87/-0.01
+    & 0.97/0.97/0.98/0.00
+    \\
+    & St-Jean B
+    & 0.80/1.00/0.67/0.10
+    & 0.84/1.00/0.73/0.14
+    & 0.84/0.93/0.77/0.04
+    & 0.90/0.97/0.83/0.04
+    \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{Metrics averages}
+  \label{tab:semi_supervised_clustering_average}
+  \begin{tabular}{l c c c c}
+    \toprule
+    & $B^{3}_{F_1}$
+    & $B^{3}_{precision}$
+    & $B^{3}_{recall}$
+    & $r_{diff}$ \\
+    \midrule
+    Testing on Oxquarry               & 0.82 & 1.00 & 0.69 &  0.08 \\
+    Testing on Brunet                 & 0.83 & 0.91 & 0.76 &  0.09 \\
+    Testing on St-Jean A              & 0.86 & 0.88 & 0.85 &  0.00 \\
+    Testing on St-Jean B              & 0.93 & 0.92 & 0.94 & -0.00 \\
+    Distance threshold from Oxquarry  & 0.85 & 0.89 & 0.83 & 0.02 \\
+    Distance threshold from Brunet    & 0.86 & 0.90 & 0.83 & 0.03 \\
+    Distance threshold from St-Jean A & 0.88 & 0.94 & 0.83 & 0.04 \\
+    Distance threshold from St-Jean B & 0.85 & 0.98 & 0.75 & 0.08 \\
+    \textbf{Global average} & \textbf{0.86} & \textbf{0.93} & \textbf{0.81} & \textbf{0.04} \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
 \subsubsection{Supervised clustering evaluation}
 
 To evaluate the supervised clustering approach, every dataset were used.
@@ -237,7 +344,7 @@ An increase of +8\% in $B^3_{F_1}$ can be obtained when using the supervised clu
   \caption{Supervised clustering evaluation}
   \label{tab:supervised_clustering}
 
-  \subcaption{Every possible training testing dataset pairs. Metrics in order : $B^{3}_{F_1}$ / $B^{3}_{precision}$ / $B^{3}_{recall}$ / $r_{diff}$}
+  \subcaption{Every possible threshold and dataset pairs. Metrics in order : $B^{3}_{F_1}$ / $B^{3}_{precision}$ / $B^{3}_{recall}$ / $r_{diff}$}
   \label{tab:supervised_clustering_train_test}
   \begin{tabular}{l l| c c c c}
     \toprule
@@ -249,22 +356,26 @@ An increase of +8\% in $B^3_{F_1}$ can be obtained when using the supervised clu
     & 0.82/1.00/0.70/0.08
     & 0.86/0.91/0.82/0.07
     & 0.88/0.84/0.93/-0.03
-    & 0.92/0.88/0.98/-0.02 \\
+    & 0.92/0.88/0.98/-0.02
+    \\
     & Brunet
     & 0.80/1.00/0.67/0.10
     & 0.75/0.94/0.62/0.18
     & 0.81/0.98/0.69/0.09
-    & 0.91/1.00/0.83/0.05 \\
+    & 0.91/1.00/0.83/0.05
+    \\
     & St-Jean A
     & 0.80/1.00/0.67/0.10
     & 0.82/0.94/0.73/0.11
     & 0.87/0.93/0.81/0.03
-    & 0.97/1.00/0.94/0.02 \\
+    & 0.97/1.00/0.94/0.02
+    \\
     & St-Jean B
     & 0.80/1.00/0.67/0.10
     & 0.76/0.94/0.64/0.16
     & 0.82/0.96/0.72/0.07
-    & 0.93/1.00/0.84/0.04 \\
+    & 0.93/1.00/0.84/0.04
+    \\
     \bottomrule
   \end{tabular}
 
