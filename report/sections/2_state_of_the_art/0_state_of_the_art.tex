@@ -1,14 +1,14 @@
 \section{State of the art \label{sec:state_of_the_art}}
 
-In this section, previous works used as a knowledge base for this study are presented. Some are from papers published in scientific magasins, others are from PAN @ CLEF, a scientific group which propose shared tasks every years since 2009 in the field of text forensics and stylometry~\cite{pan_webis}.
+In this section, previous works used as a knowledge base for this study are presented. Some are from papers published in scientific magazines, others are from PAN @ CLEF, a scientific group which propose shared tasks every year since 2009 in the field of text forensics and stylometry~\cite{pan_webis}.
 
-Authorship clustering is a domain in which a set of documents written by different authors is given and the goal is to group documents into clusters which only contain document written by the same author.
+Authorship clustering is a domain in which a set of documents written by different authors is given, and the goal is to group documents into clusters which only contain document written by the same author.
 Authorship clustering is closely related to two other authorship topics : authorship attribution and authorship verification.
-Authorship attribution try to determinate who wrote a document, given a collection of documents and authorship verification aim to identify if two documents are written by the same author.
+Authorship attribution try to determine who wrote a document, given a collection of documents and authorship verification aim to identify if two documents are written by the same author.
 A clustering problem can be split into a series of authorship verification by considering every pair of documents as a verification task, the clusters are created grouping every positive verified pairs, these are also called links~\cite{pan16_clustering_site}.
 
-When dealing with large amount of data compresion methods can be used to compute similarities.
-This methods were used and evaluated in Oliveira and Justino (2013) for the authorship attribution task.
+When dealing with large amount of data compression methods can be used to compute similarities.
+These methods were used and evaluated in Oliveira and Justino (2013) for the authorship attribution task.
 Compression based model had shown to be a good alternative to other traditional feature and pattern based models~\cite{comparing_compression}.
 
 In 2014, Kocher and Savoy proposed an unsupervised authorship verification model called \textsc{SPATIUM-L1} based on most most frequent words in texts. It uses the L1 norm to be able to discriminate if a text come from the same author as another one.
@@ -18,20 +18,20 @@ It obtained one of the best results when compared to the other model of the PAN 
 During the PAN @ CLEF 2016, in the authorship clustering shared task, the participants were given multiple collections of documents, to identify authorship links and group documents by the same author.
 The documents are in 3 different languages, single authored~\cite{pan16}.
 The solutions proposed by Bagnall for this problem was to use recurrent neural networks to create a language model for the given documents and then use this model to compute similarities between documents~\cite{bagnall_pan16}.
-In the other hand Kocher used a feature vector based on most frequent terms in the texts and a distance threshold between these vector to indicate a potential authorship link~\cite{kocher_pan16}.
+On the other hand, Kocher used a feature vector based on most frequent terms in the texts and a distance threshold between these vector to indicate a potential authorship link~\cite{kocher_pan16}.
 
-In Mirco Kocher and Jacques Savoy (2018)'s paper they aim to evaluate different text representation scheme for the authorship linking task~\cite{kocher_linking}.
-In this paper they compared the authors style, using feature vectors constructed on the most frequent occurrences of the following text representations : words frequencies, lemma frequencies, Part-Of-Speach (POS) tags frequencies, short sequences of POS tags, as well as $n$-grams frequencies.
+In Kocher and Savoy (2018)'s paper they aim to evaluate different text representation scheme for the authorship linking task~\cite{kocher_linking}.
+They compared the authors style, using feature vectors constructed on the most frequent occurrences of the following text representations : words frequencies, lemma frequencies, Part-Of-Speach (POS) tags frequencies, short sequences of POS tags, as well as $n$-grams frequencies.
 The distance measures used to compare the vectors are : $L^1$ norms (Manhattan, Tanimoto), $L^2$ norm (Matusita, Clark), inner products (Cosine distance) and the Jeffery divergence.
 Depending on the corpus, the text representation and the evaluation metric used, no clear text representation and distance measures were the giving the best result for all the problems.
 
 During the PAN @ CLEF 2020, the clustering task was not one of the shared task, but the closest related task was the Authorship Verification.
-For this competition, a large corpus containing around 276'000 document pairs and smaller with 52'000 document pairs, both of them are in the english language and their documents around 21'000 characters~\cite{overview_pan20}.
-Weerasinghe and Greenstadt proposed using the manhattan distance between two features vector based on multiple clues.
+For this competition, a large corpus containing around 276'000 document pairs and smaller with 52'000 document pairs, both of them are in the English language and their documents around 21'000 characters~\cite{overview_pan20}.
+Weerasinghe and Greenstadt proposed using the Manhattan distance between two features vector based on multiple clues.
 They created the feature vector based on the following principles : Character n-grams, POS n-grams, special characters, frequency of function words, number of characters, number of words, average number of character per word, word-length distribution (between 1 and 10), the vocabulary richness (using hapax-legomenon and dis-legomenon ratios), POS chunks and NP and VP construction.
 For the classification, a Linear Regression and Neural Network model was trained on respectively the small and large dataset, they obtained one of the best  model of the shared task~\cite{feature_vector_pan20}.
-Another method for this task proposed by Araujo, Gómez and Fuentes was to use a siamese neural network using words n-grams with a size from 1 to 3 (short sequences of words) for their feature vector~\cite{siamese_network_pan20}.
-Instead Ikae for this task used Labbé similarity on the most frequent tokens from each authors and the ones in the English language~\cite{unine_pan20}.
+Another method for this task proposed by Araujo, Gómez and Fuentes was to use a Siamese neural network using words n-grams with a size from 1 to 3 (short sequences of words) for their feature vector~\cite{siamese_network_pan20}.
+Instead, Ikae for this task used Labbé similarity on the most frequent tokens from each author and the ones in the English language~\cite{unine_pan20}.
 
-Another domain often used in conjonction with most authorship tasks is the stylometry.
+Another domain often used in conjunction with most authorship tasks is the stylometry.
 Stylometry main focus is to identify the writing methods of an author, for example: the choice of words, the combinations of words, sentence structure, punctuation~\cite{savoy_stylo}.

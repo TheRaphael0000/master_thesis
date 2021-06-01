@@ -18,20 +18,34 @@ from misc import fit_beta
 from misc import find_two_beta_same_area
 
 
-def dist_thresh_logistic_regression(rl_training, Y_training, rl_testing):
+def dist_thresh_logistic_regression(rl_training, Y_training, rl_testing, prob_threshold=0.5):
     X_rl = features_from_rank_list(rl_training)
     Y_rl = labels_from_rank_list(rl_training, Y_training)
     model = LogisticRegression(random_state=0).fit(X_rl, Y_rl)
     
     # compute distance threshold
     X = features_from_rank_list(rl_testing)
-    pos = np.sum(model.predict(X))
-    # both lines equaivalent
-    # pos = np.sum(model.predict_proba(X)[:,1] > 0.5)
+    # fit the model
+    probs = model.predict_proba(X)[:,1]
+        
+    if np.sum(probs == prob_threshold) >= 1:
+        # exact probability threshold
+        pos = np.sum(probas >= prob_threshold)
+        dt = rl_testing[pos][-1]
+        return dt
+    else:
+        # linear interpolation of the probability
+        i_s = list(range(len(probs)))
+        pos1 = i_s[np.sum(probs > prob_threshold)]
+        pos2 = i_s[::-1][np.sum(probs < prob_threshold)]
+        prob1 = probs[pos1]
+        prob2 = probs[pos2]
+        dt1 = rl_testing[pos1][-1]
+        dt2 = rl_testing[pos2][-1]
 
-    distance_threshold = rl_testing[pos][-1]
-    
-    return distance_threshold
+        alpha = (prob_threshold - prob1) / (prob2 - prob1)
+        dt = (dt2 - dt1) * alpha + dt1
+        return dt
 
 
 def dist_thresh_two_beta(rl_training, Y_training):

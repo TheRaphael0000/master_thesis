@@ -1,14 +1,15 @@
 \subsection{Basic notions \label{sec:basic_notions}}
 
-This section contain basic notions commonly used in the authorship attribution, authorship verification and authorship clustering.
-Aswell as basic metric to evaluate some properties in a corpus.
+This section contain basic notions commonly used in the authorship attribution, verification and clustering.
+Aswell as basic metric to evaluate simple properties in a corpus.
 
 \begin{definition}[Document]
-  A document $X_i$ is a ordered list of token. A token is a non empty string. Example:
+  A document $X_i$ is a ordered list of token. A token is a non-empty string. Example:
   \begin{equation}
     X_i = ("\text{the}", "\text{quick}", "\text{brown}", "\text{fox}", "\text{.}")
   \end{equation}
-  To obtain tokens from a long string contraining a non-tokenized document, a tokenizer i needed.
+  To obtain tokens from a long string containing a non-tokenized document, a tokenizer i needed.
+  A document correspond to a sample without feature selection in the data science field.
 \end{definition}
 
 \begin{definition}[Author]
@@ -17,6 +18,7 @@ Aswell as basic metric to evaluate some properties in a corpus.
     Y_j = "\text{Zola}"
   \end{equation}
   Since this study is related to clustering, authors are also called clusters.
+  Authors are the ground truth labels for the clustering task.
 \end{definition}
 
 \begin{definition}[Corpus]
@@ -30,6 +32,7 @@ Aswell as basic metric to evaluate some properties in a corpus.
     Y = (Y_1, Y_2, Y_3, Y_{...}, Y_k) \\
     k = |Y|
   \end{gather}
+  A corpus is also called a dataset in most data science problems.
 \end{definition}
 
 \begin{definition}[Text Authorship]
@@ -44,18 +47,19 @@ Aswell as basic metric to evaluate some properties in a corpus.
   \begin{equation}
     N = \sum_{j}^k |\hat{Y}_j|
   \end{equation}
-
+  In authorship verification, the goal is to find this $f$ function, which can estimate the author based on new document and previous documents from this author and documents from other authors.
+  For the clustering task, finding such function is also needed, with the exception that the exact author is not required.
+  Instead, only knowing that two document are from the same author is required, see Definition~\ref{def:relevant_set}.
 \end{definition}
 
-\begin{definition}[Relevant set]
-  The relevant set $R$ contain every possible pairs of document with the same authors.
+\begin{definition}[Relevant set\label{def:relevant_set}]
+  The relevant set $R$ contain every possible pairs of documents with the same authors.
   Links in this set are called \textit{true links} in this study.
   \begin{equation}
-    \label{def:relevant_set}
     R = \{(X_a, X_b)\ |\ \left( f(X_a) = f(X_b) \right) \land \left(X_a \neq X_b \right) \forall (X_a, X_b)\}
   \end{equation}
   The non-relevant set $R$ contain every \textit{false links}.
-  Every links are contain in $L$, the union of the relevant and non-relevant set.
+  All links are contained in $L$, the union of the relevant and non-relevant set.
   \begin{equation}
     \bar{R} = \{(X_a, X_b)\ |\ \left( f(X_a) \neq f(X_b) \right) \land \left(X_a \neq X_b \right) \forall (X_a, X_b)\}
   \end{equation}
@@ -64,6 +68,7 @@ Aswell as basic metric to evaluate some properties in a corpus.
     L = \bar{R} \cup R \\
     |L| = \frac{N * (N-1)}{2}
   \end{gather}
+  The authorship clustering task aim to estimate these sets.
 \end{definition}
 
 \begin{definition}[r ratio~\cite{pan16}]
@@ -71,17 +76,22 @@ Aswell as basic metric to evaluate some properties in a corpus.
   \begin{equation}
     r = \frac{k}{N}
   \end{equation}
-  The inverse of the r ratio is equaivalent to the mean number of documents per authors.
+  The inverse of the r ratio is equivalent to the mean number of documents per authors.
   \begin{equation}
     \frac{1}{r} = \frac{N}{k} = \frac{1}{k} \cdot \sum_{i} |\hat{Y}_j|
   \end{equation}
   If $r$ is close to $0$, most documents are written by different authors and there is a great density of true links.
-  In this other hand, if $r$ is close to $1$, most of the document are written by a single authors and there are few true links.
+  On this other hand, if $r$ is close to $1$, most of the document are written by a single authors and there are few true links.
 \end{definition}
 
 \begin{definition}[true links' ratio]
   The true links' ratio is the ratio between the number of true links $|R|$ and the number of links $|L|$ in a given corpus.
+  This ratio is an alternative to the r ratio and is correlated for corpus having the same number of documents per authors.
   \begin{equation}
     tl_r = \frac{|R|}{|L|}
   \end{equation}
+  The value range in the interval $\left[0, 1\right]$.
+  The lower the true links' ratio is, the closer to the Singleton Cluster baseline the corpus is.
+  The Singleton Cluster baseline consider every sample as a different label (respectively every documents is from a different author).
+  With a large true links' ratio, the dataset can be estimated with a Single Cluster baseline, which consider every sample is in the same cluster (respectively every documents are written by the same author).
 \end{definition}

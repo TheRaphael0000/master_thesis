@@ -53,7 +53,7 @@ This method can provide good results, but lack of theoretical foundations.
 Each rank list is ordered by a score, this score depends on distance measure used, thus the order of magnitude of each rank list is different.
 To avoid having problems in merging rank lists with different magnitude, the solution opted is to translate the scores into a probability of being a true link.
 To do so the logistic regression is used.
-This method is similar to the one proposed in \textit{Anne Le Calvé and Jacques Savoy (2000)}'s paper~\cite{le_calve_database_merging} and used for merging rank list issued from information retrieval systems.
+This method is similar to the one proposed in \textit{Anne Le Calvé and Jacques Savoy (2000)}'s paper~\cite{le_calve_database_merging} and was used for merging rank list issued from information retrieval systems.
 
 The main idea here is to learn a logistic regression model for each combination text representation and distance metrics used (here denoted \textit{type of rank list}).
 The features used to find the logistic parameters for each link in the rank list are : the log of the relative rank and the link score.

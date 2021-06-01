@@ -16,7 +16,7 @@ Ward linkage was discarded since the current implementation only allow euclidean
 The merging procedure can be stopped either of the two following criteria : When a certain number of cluster is reached or when the minimal score for the next merge is above a certain value (distance threshold).
 In this study both stopping procedure are used, one in an unsupervised way and another one in a supervised way.
 
-\subsubsection{Learning the threshold in a unsupervised way}
+\subsubsection{Unsupervised clustering}
 
 The idea is to run the agglomerative clustering on multiple time and stop at each number of clusters.
 This produce $N$ possible clusterings, each of those can be evaluated using the silhouette score.
@@ -42,22 +42,22 @@ When this score is below 0, the last positive score clusters is kept.
 If the procedure does not reach a score below 0, the maximal is kept.
 This procedure is called Iterative Positive Silhouette (IPS) and was proposed in~\cite{automated_unsupervised}.
 
-\subsubsection{Learning the threshold in a semi-supervised way using two Beta distributions}
+\subsubsection{Semi-supervised distance threshold selection using two Beta distributions}
 
 In Savoy (2014)'s \textit{Estimating the Probability of an Authorship Attribution} they modelized the distribution of the true and false links across the score obtained using a mixture of 2 beta distribution~\cite{savoy_probability}.
-Using these two beta distribution models, the position where the area under the curve for both models is maximized (same area under the cut for both models), this correspond to the position where the true positive and true negatives are maximized, thus the statistical best possible location whereto seperate the rank list.
-To find the position where both beta distribution have the same area under the curve, there might be analtical ways to solve this problematic using the analytic form of the beta distribution cumulative distribution function (CDF, probability, area under the curve) but was ignored for this study.
-Instead the position is found using a dichotomic search between 0 and 1 and and evaluate CDF for the two beta distribution until to converge to the same value.
+Using these two beta distribution models, the position where the area under the curve for both models is maximized (same area under the cut for both models), correspond to the position where the true positive and true negatives are maximized, thus the statistical best possible location whereto separate the rank list.
+To find the position where both beta distribution have the same area under the curve, there might be analytical ways to solve this problematic using the analytic form of the beta distribution cumulative distribution function (CDF, probability, area under the curve) but was ignored for this study.
+Instead, the position is found using a dichotomic search between 0 and 1 and evaluate CDF for the two beta distribution until to converge to the same value.
 
 Figure~\ref{fig:links_score_density} show the density of true and false link as well as a beta distribution estimation for St-Jean (Regression fusion in \ref{fig:links_score_density_fusion_regression} and Z-Score fusion in \ref{fig:links_score_density_fusion_z_score}).
 For the metrics with a score out of the interval 0-1 (such as the Z-score fusion), the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization} to be able to estimate the beta distribution.
 
-The results obtained by the regression fusion are a probability of being a true link so the two distribution are well seperated and can be modelized by the two beta distributions.
+The results obtained by the regression fusion are a probability of being a true link, so the two distribution are well separated and can be modelized by the two beta distributions.
 In the other hand, when using the z-score fusion is used, the score is more mixed, but can also be modelized using the two beta distributions.
-As explained in~\cite{savoy_probability} the beta distribution is better suited for authorship problem than the gaussian distribution since it can grasps a large amount of distribution shapes with its parameters flexibility.
-The vectical line indicate the postion found where both beta distribution have the same probability of being a true link and false link (same area under the curve) using the dichotomic search.
-This point can be used as alternative decision point where the cut should be made in the rank list, this ensure that both false positives and false negatives are minimized.
-Since the authors of each link must be known to find the cut, the idea is here to find the cut location using a rank list with known true and false links and re-use the same value for the new corpora.
+As explained in~\cite{savoy_probability} the beta distribution is better suited for authorship problem than the Gaussian distribution since it can grasp a large amount of distribution shapes with its parameters' flexibility.
+The vertical line indicate the position found where both beta distribution have the same probability of being a true link and false link (same area under the curve) using the dichotomic search.
+This point can be used as a decision point where the cut should be made in the rank list, this ensures that both false positives and false negatives are minimized.
+Since the authors of each link must be known to find the cut, the idea is here to find the cut location using a rank list with known true and false links and re-use the same value for new corpora.
 The linkage parameter for this method is the complete linkage, since the cut correspond to the position where the most extremes of the same categories, either true or false links meet.
 This method is considered as semi-supervised since the only learnt parameter is a real number, the distance threshold, and do not consider any new rank list.
 
@@ -74,17 +74,43 @@ This method is considered as semi-supervised since the only learnt parameter is 
   \includegraphics[width=\linewidth]{img/links_score_density_fusion_z_score.png}
 \end{figure}
 
-\subsubsection{Learning the threshold in a supervised way using Logistic Regression}
+\subsubsection{Supervised distance threshold selection using Logistic Regression}
 
-To learn at which position in the rank list the cut should be, this second idea is to fit a linear model on samples created with the rank list.
+To learn at which position in the rank list the cut should be, this third idea is to fit a linear model on samples created from the rank list.
 To train the model, a sample is created for each link in a rank list.
-The links labels are either \textit{true} when both document in the link are from the same author and \textit{false} otherwise.
+The links labels are either \textit{true} (1.0) when both document in the link are from the same author and \textit{false} (0.0) otherwise.
 The features used are : the log of the relative rank ($log(\frac{rank}{|L|})$ and the score of the link.
 Since the training is only based on the relative rank and the score at each rank, the trained model is language independent and size independent.
-But this model is metric dependent, since the score is not normalized.
+But this model is metric dependent, since the score magnitude can variate depending on the distance function.
 
 In this study the model used is the logistic regression.
-To find the cut on the test datasets, the fitted model is used on every links in the testing rank list, the number of \textit{true} labels give the rank at which the last link should be merged.
-The links are labeled as \textit{true}, when the probability of being a true link is greater than $0.5$.
-This model can be used on any other rank lists produced with the same distance metrics.
-Using agglomerative clustering the maximal distance threshold is the score of the last link to merged.
+The advantage of using a regression model is that the output of the model will correspond to a probability of being a true link according to the model.
+To find the cut on the test datasets, the fitted model predict the probability of being a true link on every link in the new rank list.
+From these predictions a probability threshold must be chosen.
+Having a probability threshold at $0.5$, minimize both false negatives and the false positives.
+This can be adjusted, for example if false negatives are more important to minimize, a probability threshold at $0.6$ can be selected instead or $0.4$ if the false positive should be minimized.
+For the sake of simplicity, the probability threshold chosen is $0.5$.
+
+The distance threshold is chosen by linearly interpolating the probability threshold with its closest probability on the left and right sides to their scores.
+Example:
+
+\begin{tabular}{l r r}
+  \toprule
+  Rank & Probability & Score \\
+  \midrule
+  (...) & &\\
+  45th & 0.54 & 15 \\
+  46th & 0.52 & 13 \\
+  47th & 0.49 & 12 \\
+  48th & 0.48 & 10 \\
+  (...) & & \\
+  \bottomrule
+\end{tabular}
+
+To compute the score for the probability threshold $0.5$ with the rank list above.
+\begin{align}
+    \alpha &= \frac{0.5 - 0.49}{0.52 - 0.49} = \frac{1}{3} \\
+    \textit{score}_{0.5} &= (13 - 12) \cdot \alpha + 12 = 12 + \frac{1}{3}
+\end{align}
+
+The logistic regression model can be re-used on any other rank lists produced with the same distance metrics.

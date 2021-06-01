@@ -115,7 +115,7 @@ The following definitions are one of the few most common $L^1$/$L^2$/$cosine$ ba
   \label{def:cosine_dist}
   To compute the Cosine distance, first the cosine similarity must be computed.
   \begin{equation}
-    sim_{Cosine}(A, B) = \frac{A \cdot B}{\sqrt{A \cdot A}\sqrt{B \cdot B}}
+    sim_{Cosine}(A, B) = \frac{\langle A, B \rangle}{\sqrt{\langle A , A \rangle}\sqrt{\langle B, B \rangle}}
   \end{equation}
   The cosine similarity is ranged between -1 and 1.
   With 1 beeing exactly the same, -1 the total opposite and 0 orthogonal.
@@ -123,7 +123,7 @@ The following definitions are one of the few most common $L^1$/$L^2$/$cosine$ ba
     dist_{Cosine}(A, B) = 1 - sim_{Cosine}(A, B)
   \end{equation}
   \begin{equation}
-    dist_{Angular\ cosine}(A, B) = \frac{cos^{-1}sim_{Cosine}(A, B)}{\pi}
+    dist_{Angular\_cosine}(A, B) = \frac{cos^{-1}\left( sim_{Cosine}(A, B) \right)}{\pi}
   \end{equation}
 \end{definition}
 
