@@ -12,6 +12,7 @@
 \usepackage[margin=0.7in]{geometry}
 \usepackage{graphicx}
 \usepackage{multirow}
+\usepackage{newfloat}
 \usepackage[parfill]{parskip}
 \usepackage{subcaption}
 \usepackage{subfiles}
@@ -38,8 +39,8 @@
 }
 
 \newtheoremstyle{definition}% name of the style to be used
-  {2\topsep}% measure of space to leave above the theorem. E.g.: 3pt
-  {2\topsep}% measure of space to leave below the theorem. E.g.: 3pt
+  {0.5cm}% measure of space to leave above the theorem. E.g.: 3pt
+  {0.5cm}% measure of space to leave below the theorem. E.g.: 3pt
   {\itshape}% name of font to use in the body of the theorem
   { }% measure of space to indent
   {\bfseries}% name of head font
@@ -48,7 +49,16 @@
   {\thmname{#1}\thmnumber{ #2}\textnormal{\thmnote{ (#3)}}}
 
 \theoremstyle{definition}
-\newtheorem{definition}{Definition}[section]
+\newtheorem{definition}{Definition}
+
+% \newfloat{example}{}{lop}
+% \floatname{example}{Example}
+\DeclareFloatingEnvironment[
+  fileext=loe,
+  listname={List of Examples},
+  name=Example
+]{example}
+\DeclareCaptionSubType{example}
 
 \begin{document}
 \pagenumbering{roman}
@@ -80,10 +90,15 @@
 \twocolumn
 \pagenumbering{arabic}
 \subfile{sections/1_introduction/0_introduction}
+\clearpage
 \subfile{sections/2_state_of_the_art/0_state_of_the_art}
+\clearpage
 \subfile{sections/3_definitions_and_corpora/0_definitions_and_corpora}
+\clearpage
 \subfile{sections/4_methods/0_methods}
+\clearpage
 \subfile{sections/5_evaluations/0_evaluations}
+\clearpage
 \subfile{sections/6_conclusion/0_conclusion}
 \clearpage
 

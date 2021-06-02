@@ -7,46 +7,55 @@ The hypotetical best possible approximation of the real rank list in the case of
 \subsubsection{Z-Score fusion}
 
 To merge scored rank list with differents order of magnitude, a simple and rather effective approach is to normalize every rank lists scores using the z-score (See Definition~\ref{def:z_score}) and then compute the merge rank list score for every link by taking the arithmetic mean of the same link score for every normalized rank lists.
-
-\textbf{Example with the two rank lists:}
-
-Rank list A (Mean = 50, Std = 40.82):
-
-\begin{tabular}{c l r r}
-  \toprule
-  Rank & Link name & Score & Z-Score \\
-  \midrule
-  0 & (0, 1) & $100$ & $1.22$ \\
-  1 & (1, 2) & $50$ & $0$ \\
-  2 & (0, 2) & $0$ & $-1.22$ \\
-  \bottomrule
-\end{tabular}
-
-Rank list B (Mean = 0.33, Std = 0.17):
-
-\begin{tabular}{c l r r}
-  \toprule
-  Rank & Link name & Score & Z-Score \\
-  \midrule
-  0 & (1, 2) & $0.5$ & $0.98$ \\
-  1 & (0, 1) & $0.4$ & $0.39$ \\
-  2 & (0, 2) & $0.1$ & $-1.37$ \\
-  \bottomrule
-\end{tabular}
-
-Z-Score fusion:
-
-\begin{tabular}{c l l}
-  \toprule
-  Rank & Link name & Average Z-Score \\
-  \midrule
-  0 & (0, 1) & $(0.39 + 1.22) / 2$ = $0.81$ \\
-  1 & (1, 2) & $(0 + 0.98) / 2$ = $0.49$ \\
-  2 & (0, 2) & $(-1.22 + -1.37) / 2$ = $-1.30$ \\
-  \bottomrule
-\end{tabular}
-
+Table~\ref{tab:example_z_score_fusion} show an example of the z-score score fusion computation using two simple rank lists.
 This method can provide good results, but lack of theoretical foundations.
+
+\begin{table}
+  \centering
+  \caption{Example: Z-Score fusion of two rank lists}
+  \label{tab:example_z_score_fusion}
+
+  \subcaption{Rank list A (Mean = 50, Std = 40.82)}
+  \label{}
+  \begin{tabular}{c l r r}
+    \toprule
+    Rank & Link name & Score & Z-Score \\
+    \midrule
+    0 & (0, 1) & $100$ & $1.22$ \\
+    1 & (1, 2) & $50$ & $0$ \\
+    2 & (0, 2) & $0$ & $-1.22$ \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5cm}
+
+  \subcaption{Rank list B (Mean = 0.33, Std = 0.17)}
+  \label{}
+  \begin{tabular}{c l r r}
+    \toprule
+    Rank & Link name & Score & Z-Score \\
+    \midrule
+    0 & (1, 2) & $0.5$ & $0.98$ \\
+    1 & (0, 1) & $0.4$ & $0.39$ \\
+    2 & (0, 2) & $0.1$ & $-1.37$ \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5cm}
+
+  \subcaption{Z-Score fusion}
+  \label{}
+  \begin{tabular}{c l l}
+    \toprule
+    Rank & Link name & Average Z-Score \\
+    \midrule
+    0 & (0, 1) & $(0.39 + 1.22) / 2$ = $0.81$ \\
+    1 & (1, 2) & $(0 + 0.98) / 2$ = $0.49$ \\
+    2 & (0, 2) & $(-1.22 + -1.37) / 2$ = $-1.30$ \\
+    \bottomrule
+  \end{tabular}
+
+\end{table}
 
 \subsubsection{Regression fusion \label{sec:regression_fusion}}
 
@@ -100,6 +109,8 @@ By setting to $0$ or $-1$ it lightens the effect of the veto.
     \bottomrule
   \end{tabular}
 
+  \vspace{0.5cm}
+
   \subcaption{Rank list average link probability without veto}
   \begin{tabular}{l l l}
     \toprule
@@ -114,6 +125,8 @@ By setting to $0$ or $-1$ it lightens the effect of the veto.
     \bottomrule
   \end{tabular}
 
+  \vspace{0.5cm}
+
   \subcaption{$-\infty$ veto with threshold at 0.25}
   \begin{tabular}{l l l}
     \toprule
@@ -127,6 +140,8 @@ By setting to $0$ or $-1$ it lightens the effect of the veto.
     5 : -inf    & 5 : -inf    & 3 : 0.40 \\
     \bottomrule
   \end{tabular}
+
+  \vspace{0.5cm}
 
   \subcaption{Rank list average link probability and $-1$ veto}
   \begin{tabular}{l l l}
@@ -193,6 +208,8 @@ This soft-veto methodology aimed to be used on rank list before fusing, to have 
   \subcaption{$S^-1(x)$, sampled in $\left[S(-c), S(+c)\right]$ and normalized between -1 and 1}
   \label{fig:s_curve_c}
   \includegraphics[width=\linewidth]{img/s_curve_c.png}
+
+  \vspace{0.5cm}
 
   \subcaption{Sampling $S^-1(x)$ with $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$}
   \label{fig:s_curve_r}

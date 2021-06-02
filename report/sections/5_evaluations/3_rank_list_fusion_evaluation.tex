@@ -1,4 +1,4 @@
-\subsection{Rank lists fusion}
+\subsection{Rank lists fusion evaluation}
 
 \subsubsection{Rank list fusion evaluation \label{sec:eval_fusion}}
 
@@ -367,19 +367,30 @@ Knowing the average precision of rank lists it is possible to estimate Single-Me
 
 \begin{table}
   \centering
-  \caption{Linear regression on the average precision gain over wilcoxon p-value}
+  \caption{Linear regression on the average precision gain over Kendall r-coefficient}
   \label{tab:rl_correlations_regression}
+
+  \subcaption{Single-Mean}
   \begin{tabular}{l r r r r r}
     \toprule
-    Corpus/Method      & $r$-value & $p$-value & Std. error \\
+    Corpus/Method & $r$-value & $p$-value & Std. error \\
     \midrule
-    Oxquarry/Single-Mean & -0.63 & 2.04e-03 & 4.36e-02 \\
-    Brunet/Single-Mean   & -0.89 & 7.14e-08 & 2.17e-02 \\
-    St-Jean/Single-Mean  & -0.93 & 9.30e-17 & 2.49e-02 \\
+    Oxquarry & -0.63 & 2.04e-03 & 4.36e-02 \\
+    Brunet   & -0.89 & 7.14e-08 & 2.17e-02 \\
+    St-Jean  & -0.93 & 9.30e-17 & 2.49e-02 \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5cm}
+
+  \subcaption{Single-Max}
+  \begin{tabular}{l r r r r r}
+    \toprule
+    Corpus/Method & $r$-value & $p$-value & Std. error \\
     \midrule
-    Oxquarry/Single-Max  & -0.32 & 1.51e-01 & 8.15e-02 \\
-    Brunet/Single-Max    & -0.40 & 7.04e-02 & 4.50e-02 \\
-    St-Jean/Single-Max   & -0.86 & 1.60e-11 & 3.72e-02 \\
+    Oxquarry  & -0.32 & 1.51e-01 & 8.15e-02 \\
+    Brunet    & -0.40 & 7.04e-02 & 4.50e-02 \\
+    St-Jean   & -0.86 & 1.60e-11 & 3.72e-02 \\
     \bottomrule
   \end{tabular}
 \end{table}

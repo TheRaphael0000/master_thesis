@@ -16,11 +16,11 @@ In information retrival systems, rank lists are used to order the results from t
 \end{definition}
 
 This method is not the most efficiant, since it needs to compute the distance function for pairs of vectors ($\frac{n \cdot (n - 1)}{2}$) and thus have computetional and space complexity of $O(n^2)$.
-Table~\ref{tab:rank_list_example} show a simple example using 2D points and the manhattan distance (presented in Section~\ref{sec:fv_distances}) to create a rank list.
+Table~\ref{tab:rank_list_example} show a simple example using 2D points and the Manhattan distance (presented in Section~\ref{sec:fv_distances}) to create a rank list.
 
 \begin{table}
   \centering
-  \caption{Rank list example using 2D points and the manhattan distance}
+  \caption{Example: Rank list computation using 2D points and the Manhattan distance}
   \label{tab:rank_list_example}
 
   \subcaption{List of 2D points}
@@ -35,6 +35,8 @@ Table~\ref{tab:rank_list_example} show a simple example using 2D points and the 
     \bottomrule
   \end{tabular}
 
+  \vspace{0.5cm}
+
   \subcaption{Pairwise manhanttan distances}
   \begin{tabular}{l l}
     \toprule
@@ -48,6 +50,8 @@ Table~\ref{tab:rank_list_example} show a simple example using 2D points and the 
     (2, 3) & $|4+1| + |6+4| = 15$ \\
     \bottomrule
   \end{tabular}
+
+  \vspace{0.5cm}
 
   \subcaption{Ordered rank list}
   \begin{tabular}{l c r}

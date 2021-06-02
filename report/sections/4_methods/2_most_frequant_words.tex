@@ -3,22 +3,31 @@
 The first method used to represent and compare the documents is called: Most frequant words (acronym: MFW), and try to compare documents by creating feature vectors containing words frequencies for the most common words.
 To be able to express a document as a feature vector of size $n$, a common strategy in Stylometry is to find the $n$ most frequent words ($n$-MFW) in a corpus, and for each document compute their word relative frequency by dividing by the total number of $n$-MFW in the document~\cite{savoy_stylo}.
 The resulting vector will represent the MFW proportions contained in a document.
-For example suppose if in a specific corpus the $5$-MFW are "\textit{the, was, i, she, he}" and contain the following document :
+Example~\ref{ex:mfw_vector} show for the MFW vector computation.
 
-"\textit{i realize now that i was not looking in i was looking out and he on the other side was looking in}"\cite{ddlc}
+\begin{example}
+  \caption{MFW vector computation}
+  \label{ex:mfw_vector}
 
-This document will be converted to the following vector using the MFW method:
+  \begin{subexample}
+    \subcaption{Text}
+    "\textit{i realize now that i was not looking in i was looking out and he on the other side was looking in}"\cite{ddlc}
+    Suppose that the corpus in which this text belong the $5$-MFW are "\textit{the, was, i, she, he}".
+  \end{subexample}
 
-\begin{center}
-\begin{tabular}{l c c c c c}
-  \toprule
-                     & the & was & i   & she & he  \\
-  \midrule
-  occurrences         & 1   & 3   & 3   & 0   & 1   \\
-  relative frequency & 1/8 & 3/8 & 3/8 & 0/8 & 1/8 \\
-  \bottomrule
-\end{tabular}
-\end{center}
+  \begin{subexample}
+    \subcaption{Vector}
+    \centering
+    \begin{tabular}{l c c c c c}
+      \toprule
+                         & the & was & i   & she & he  \\
+      \midrule
+      occurrences         & 1   & 3   & 3   & 0   & 1   \\
+      relative frequency & 1/8 & 3/8 & 3/8 & 0/8 & 1/8 \\
+      \bottomrule
+    \end{tabular}
+  \end{subexample}
+\end{example}
 
 No clear value of $n$ for the $n$-MFW is to choose over others, but depending on the documents' length a value between $50$ and $500$ tends to produce good results for the word token text representation~\cite{savoy_text_representation}.
 One of the main advantage of this reprentation is that once a distance is computed based on this vector. The results can be easily explained, since the feature vector is basicaly the proportion of the most frequent words in a document.

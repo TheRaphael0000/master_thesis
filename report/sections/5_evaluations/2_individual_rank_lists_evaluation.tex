@@ -1,4 +1,4 @@
-\subsection{Individual rank lists strategies \label{sec:eval_rl}}
+\subsection{Individual rank lists evaluation \label{sec:eval_rl}}
 
 In this section, the goal is to find the most adapted parameters for each rank list method proposed in Section~\ref{sec:methods}.
 After each experiment, the most convincing metrics are retained for the fusion step in Section~\ref{sec:eval_fusion}.
@@ -53,6 +53,8 @@ For the next experiments dealing with this text representation, four distance me
   \label{fig:token_vs_lemma_brunet}
   \includegraphics[width=0.9\linewidth]{img/token_vs_lemma_brunet.png}
 
+  \vspace{0.5cm}
+
   \subcaption{St-Jean}
   \label{fig:token_vs_lemma_st_jean}
   \includegraphics[width=0.9\linewidth]{img/token_vs_lemma_st_jean.png}
@@ -90,9 +92,13 @@ For the first part, the retained parameters for the $n$-grams text representatio
   \label{fig:letter_ngrams_oxquarry}
   \includegraphics[width=\linewidth]{img/letter_ngrams_oxquarry.png}
 
+  \vspace{0.5cm}
+
   \subcaption{Brunet}
   \label{fig:letter_ngrams_brunet}
   \includegraphics[width=\linewidth]{img/letter_ngrams_brunet.png}
+
+  \vspace{0.5cm}
 
   \subcaption{St-Jean}
   \label{fig:letter_ngrams_st_jean}
@@ -137,6 +143,8 @@ For this configuration of $4$-grams with $8000$-MFW, using the right distance me
     \bottomrule
   \end{tabular}
 
+  \vspace{0.5cm}
+
   \subcaption{$4$-grams with $8000$-MFW}
   \begin{tabular}{l c c c}
     \toprule
@@ -153,7 +161,6 @@ For this configuration of $4$-grams with $8000$-MFW, using the right distance me
     \bottomrule
   \end{tabular}
 \end{table}
-
 
 \subsubsection{MFW First letters, last letters, word $n$-grams of tokens}
 
@@ -188,6 +195,8 @@ Figure~\ref{fig:first_last_letters_ngrams_brunet} shows the results for the Brun
   \subcaption{Oxquarry}
   \label{fig:first_last_letters_ngrams_oxquarry}
   \includegraphics[width=\linewidth]{img/first_last_letters_ngrams_oxquarry.png}
+
+  \vspace{0.5cm}
 
   \subcaption{Brunet}
   \label{fig:first_last_letters_ngrams_brunet}
@@ -293,7 +302,6 @@ In the first category are : Manhattan, Clark and Euclidean, in the second : Cosi
 As for KLD and JD, they are nor in the first nor the second since both of them had a small gain in regard to the Oxquarry corpus but larger gain for the St-Jean dataset.
 Further, test are required to classify these distance metrics.
 
-
 \begin{table}
   \centering
   \caption{Rank lists average precision depending on the number of token used}
@@ -317,6 +325,8 @@ Further, test are required to classify these distance metrics.
     \bottomrule
   \end{tabular}
 
+  \vspace{0.5cm}
+
   \subcaption{Gain without hapax legomena}
   \label{tab:gain_without_hapax_legomena}
   \begin{tabular}{l r r r|r}
@@ -335,6 +345,8 @@ Further, test are required to classify these distance metrics.
     Mean      & +0.05 & +0.03 & +0.03 & +0.04 \\
     \bottomrule
   \end{tabular}
+
+  \vspace{0.5cm}
 
   \subcaption{Gain 750-MFW}
   \label{tab:gain_750_mfw}
@@ -395,6 +407,8 @@ The Bzip2 was selected even though LZMA give slightly better results, due to the
     \bottomrule
   \end{tabular}
 
+  \vspace{0.5cm}
+
   \subcaption{Brunet}
   \label{tab:compression_evaluation_brunet}
   \begin{tabular}{l c c}
@@ -406,6 +420,8 @@ The Bzip2 was selected even though LZMA give slightly better results, due to the
     LZMA           & 0.78/0.73/27 & 0.79/0.73/31 \\
     \bottomrule
   \end{tabular}
+
+  \vspace{0.5cm}
 
   \subcaption{St-Jean}
   \label{tab:compression_evaluation_st_jean}
@@ -437,6 +453,8 @@ The Bzip2 was selected even though LZMA give slightly better results, due to the
     \bottomrule
   \end{tabular}
 
+  \vspace{0.5cm}
+
   \subcaption{Brunet}
   \label{tab:compression_evaluation_time_brunet}
   \begin{tabular}{l c c}
@@ -448,6 +466,8 @@ The Bzip2 was selected even though LZMA give slightly better results, due to the
     LZMA      & 46.6s & 46.8s \\
     \bottomrule
   \end{tabular}
+
+  \vspace{0.5cm}
 
   \subcaption{St-Jean}
   \label{tab:compression_evaluation_time_st_jean}

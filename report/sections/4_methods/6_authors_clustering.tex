@@ -47,19 +47,21 @@ This procedure is called Iterative Positive Silhouette (IPS) and was proposed in
 In Savoy (2014)'s \textit{Estimating the Probability of an Authorship Attribution} they modelized the distribution of the true and false links across the score obtained using a mixture of 2 beta distribution~\cite{savoy_probability}.
 Using these two beta distribution models, the position where the area under the curve for both models is maximized (same area under the cut for both models), correspond to the position where the true positive and true negatives are maximized, thus the statistical best possible location whereto separate the rank list when false positive and false negatives are to be minimized (standard non-weighted minimization errors).
 To find the position where both beta distribution have the same area under the curve, there might be analytical ways to solve this problematic using the beta distribution cumulative distribution function analytic form (CDF, probability, area under the curve) but was ignored for this study.
-Instead, the position is found using a dichotomic search between 0 and 1 and evaluate CDF for the two beta distribution until to converge to the same value.
+Instead, the equiprobable position is found using a dichotomic search between 0 and 1 and evaluate CDF for the two beta distribution until to converge to the same value (e.g. until the area difference is a small value such as $10^-15$).
 
 Figure~\ref{fig:links_score_density} show the density of true and false link as well as a beta distribution estimation for St-Jean (Regression fusion in \ref{fig:links_score_density_fusion_regression} and Z-Score fusion in \ref{fig:links_score_density_fusion_z_score}).
-For the metrics with a score out of the interval 0-1 (such as the Z-score fusion), the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization} to be able to estimate the beta distribution.
+For the metrics with a score outside the interval $[0, 1]$ (such as the Z-score fusion), the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization} to be able to estimate the beta distribution.
 
 The results obtained by the regression fusion are a probability of being a true link, so the two distribution are well separated and can be modelized by the two beta distributions.
 In the other hand, when using the z-score fusion is used, the score is more mixed, but can also be modelized using the two beta distributions.
 As explained in~\cite{savoy_probability} the beta distribution is better suited for authorship problem than the Gaussian distribution since it can grasp a large amount of distribution shapes with its parameters' flexibility.
-The vertical line indicate the position found where both beta distribution have the same probability of being a true link and false link (same area under the curve) using the dichotomic search.
+The vertical line indicate the equiprobable position where both beta distribution have the same probability of being a true link and false link (same area under the curve) using the dichotomic search.
 This point can be used as a decision point where the cut should be made in the rank list, this ensures that both false positives and false negatives are minimized.
-Since the authors of each link must be known to find the cut, the idea is here to find the cut location using a rank list with known true and false links and re-use the same value for new corpora.
+Since the authors of each document must be known to find the cut, the idea is here to find the cut location using corpus with known authors and re-use the same value for new corpora, thus turn this method supervised.
+But we consider this method as semi-supervised since the only \textit{learnt} parameter is a real number, the distance threshold, and this method do not consider any new corpus for this value computation.
 The linkage parameter for this method is the complete linkage, since the cut correspond to the position where the most extremes of the same categories, either true or false links meet.
-This method is considered as semi-supervised since the only learnt parameter is a real number, the distance threshold, and do not consider any new rank list.
+
+In the case of a weighted importance of the false positives over the false negatives, the position can be change such that the true link surface instead of corresponding to 50\% of the sum of both surface to for example 60\%.
 
 \begin{figure}
   \caption{Links score distribution and beta distribution estimation for St-Jean}
@@ -68,6 +70,8 @@ This method is considered as semi-supervised since the only learnt parameter is 
   \subcaption{Regression fusion (training Oxquarry)}
   \label{fig:links_score_density_fusion_regression}
   \includegraphics[width=\linewidth]{img/links_score_density_fusion_regression.png}
+
+  \vspace{0.5cm}
 
   \subcaption{Z-Score fusion}
   \label{fig:links_score_density_fusion_z_score}
@@ -92,25 +96,34 @@ This can be adjusted, for example if false negatives are more important to minim
 For the sake of simplicity, the probability threshold chosen is $0.5$.
 
 The distance threshold is chosen by linearly interpolating the probability threshold with its closest probability on the left and right sides to their scores.
-Example:
-
-\begin{tabular}{l r r}
-  \toprule
-  Rank & Probability & Score \\
-  \midrule
-  (...) & &\\
-  45th & 0.54 & 15 \\
-  46th & 0.52 & 13 \\
-  47th & 0.49 & 12 \\
-  48th & 0.48 & 10 \\
-  (...) & & \\
-  \bottomrule
-\end{tabular}
-
-To compute the score for the probability threshold $0.5$ with the rank list above.
-\begin{align}
-    \alpha &= \frac{0.5 - 0.49}{0.52 - 0.49} = \frac{1}{3} \\
-    \textit{score}_{0.5} &= (13 - 12) \cdot \alpha + 12 = 12 + \frac{1}{3}
-\end{align}
-
+Table~\ref{tab:example_linear_interpolation} show an example of linear interpolation computation using a probability threshold of $0.5$.
 The logistic regression model can be re-used on any other rank lists produced with the same distance metrics.
+
+\begin{table}
+  \centering
+  \caption{Example: Linear interpolation for Supervised distance threshold selection}
+  \label{tab:example_linear_interpolation}
+
+  \subcaption{Rank list with link probability and score}
+  \begin{tabular}{l r r}
+    \toprule
+    Rank & Probability & Score \\
+    \midrule
+    (...) & &\\
+    45th & 0.54 & 15 \\
+    46th & 0.52 & 13 \\
+    47th & 0.49 & 12 \\
+    48th & 0.48 & 10 \\
+    (...) & & \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5cm}
+
+  \subcaption{Linear interpolation}
+  \begin{align}
+      \alpha &= \frac{0.5 - 0.49}{0.52 - 0.49} = \frac{1}{3} \\
+      \textit{score}_{0.5} &= (13 - 12) \cdot \alpha + 12 = 12 + \frac{1}{3}
+  \end{align}
+
+\end{table}
