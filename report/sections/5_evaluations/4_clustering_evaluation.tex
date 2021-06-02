@@ -1,0 +1,60 @@
+\subsection{Clustering evaluation metrics}
+
+To evaluate clustering, the metrics used are the BCubed~\cite{bcubed} family (called sometimes $B^3$, in this report).
+BCubed has shown to satisfy 4 following importants constraints when evaluating clusterings : \textit{Cluster Homogeneity} (different categories should be in the different clusters), \textit{Cluster Completness} (same categories should belong to the same cluster) and the \textit{Rag Bag constraint} (noisy/miscellaneous categories should be in the same cluster and not in 'healthy' clusters) and the \textit{Cluster size vs quantity constraints} (favorise large cluster)~\cite{bcubed}.
+These metrics are used in the clustering task at PAN @ CLEF~\cite{pan16}.
+
+\begin{definition}[Correctness~\cite{bcubed}]
+  The $BCubed$ metric family is based on the the following \textit{Correctness} principle.
+  Let L(e) and C(e) be the category and the cluster of an element e.
+  The Correctness is following the biconditional condition on the category and cluster equality (biconditional: $A \Longleftrightarrow B \equiv (A \land B) \lor (\neg A \land \neg B)$).
+  \begin{gather*}
+    Correctness(e, e') = \\
+    \begin{cases}
+      1, & if (L(e) = L(e')) \Longleftrightarrow (C(e) = C(e'))\\
+      0, & otherwise
+    \end{cases}
+  \end{gather*}
+  In other terms, the correctness has a value of one (100\% correct) if the two elements are in the both in the same cluster and has the same category OR both in a different cluster and a different category.
+\end{definition}
+
+\begin{definition}[$BCubed$ Precision~\cite{bcubed}]
+  The $BCubed$ Precision correspond to the average of correctness for all elements on the average of all element such that \textbf{their clusters are the same}.
+  \begin{equation}
+    B^3_{precision} = \text{Avg}_{e}[\text{Avg}_{e' C(e)=C(e')}[Correctness(e, e')]]
+  \end{equation}
+\end{definition}
+
+\begin{definition}[$BCubed$ Recall~\cite{bcubed}]
+  The $BCubed$ Recall correspond to the average of correctness for all elements on the average of all element such that \textbf{their categories are the same}.
+  \begin{equation}
+    B^3_{recall} = \text{Avg}_{e}[\text{Avg}_{e' L(e)=L(e')}[Correctness(e, e')]]
+  \end{equation}
+\end{definition}
+
+\begin{definition}[$BCubed F_1$ Score~\cite{bcubed}]
+  $BCubed F_1$ Score uses the harmonic mean between the $B^3_{precision}$ and $B^3_{recall}$.
+  \begin{equation}
+    B^3_{F_1} =
+    2 \cdot \frac{B^3_{precision} \cdot B^3_{recall}}
+    {B^3_{precision} + B^3_{recall}}
+  \end{equation}
+  The $F_\beta$ measures, not shown here, provide a parametric way to represent with a single value the two counterbalancing measures in this case, the $B^3_{F_1}$ is computed using the $F$ measures with $\beta = 1$ and the $B^3_{precision}$ and $B^3_{recall}$ scores.
+\end{definition}
+
+An additional metric introduced and used in this study is the Cluster difference.
+
+\begin{definition}[Cluster difference]
+  This metric aim to evaluate if the clustering found the right number of cluster.
+  The cluster difference is the number cluster found $p$ minus the actual number of cluster $k$.
+  \begin{equation}
+    Cluster_{diff} = p - k
+  \end{equation}
+  A positive value indicate an overestimation of the real number of cluster, a negative value indicate the underestimation.
+  Zero indicate that the right number of cluster was found.
+  This value can be normalized by the number of documents N, which correspond to the difference of the r ratios.
+  As stated in the PAN16 evaluation campaign paper, estimating correctly the r ratio tends to indicate a good clustering~\cite{pan16}.
+  \begin{equation}
+    r_{diff} = \frac{p}{N} - \frac{k}{N} = \frac{p - k}{N}
+  \end{equation}
+\end{definition}

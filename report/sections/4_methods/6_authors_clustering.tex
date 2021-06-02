@@ -45,8 +45,8 @@ This procedure is called Iterative Positive Silhouette (IPS) and was proposed in
 \subsubsection{Semi-supervised distance threshold selection using two Beta distributions}
 
 In Savoy (2014)'s \textit{Estimating the Probability of an Authorship Attribution} they modelized the distribution of the true and false links across the score obtained using a mixture of 2 beta distribution~\cite{savoy_probability}.
-Using these two beta distribution models, the position where the area under the curve for both models is maximized (same area under the cut for both models), correspond to the position where the true positive and true negatives are maximized, thus the statistical best possible location whereto separate the rank list.
-To find the position where both beta distribution have the same area under the curve, there might be analytical ways to solve this problematic using the analytic form of the beta distribution cumulative distribution function (CDF, probability, area under the curve) but was ignored for this study.
+Using these two beta distribution models, the position where the area under the curve for both models is maximized (same area under the cut for both models), correspond to the position where the true positive and true negatives are maximized, thus the statistical best possible location whereto separate the rank list when false positive and false negatives are to be minimized (standard non-weighted minimization errors).
+To find the position where both beta distribution have the same area under the curve, there might be analytical ways to solve this problematic using the beta distribution cumulative distribution function analytic form (CDF, probability, area under the curve) but was ignored for this study.
 Instead, the position is found using a dichotomic search between 0 and 1 and evaluate CDF for the two beta distribution until to converge to the same value.
 
 Figure~\ref{fig:links_score_density} show the density of true and false link as well as a beta distribution estimation for St-Jean (Regression fusion in \ref{fig:links_score_density_fusion_regression} and Z-Score fusion in \ref{fig:links_score_density_fusion_z_score}).

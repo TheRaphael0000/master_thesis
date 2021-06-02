@@ -1,63 +1,8 @@
-\subsection{Rank lists \label{sec:eval_rl}}
+\subsection{Individual rank lists strategies \label{sec:eval_rl}}
 
 In this section, the goal is to find the most adapted parameters for each rank list method proposed in Section~\ref{sec:methods}.
 After each experiment, the most convincing metrics are retained for the fusion step in Section~\ref{sec:eval_fusion}.
 The results of these experiments are summarized in Section~\ref{sec:annex_retained_text_representation} in annex.
-
-\subsubsection{Rank list evaluation metrics}
-\label{sec:rl_eval}
-
-In order to know the quality of a rank list, multiple rank list evaluation metrics are used and presented in this section.
-Definitions in this sections are adapted versions of the ones in Kocher and Savoy's \textit{Evaluation of text representation schemes and distance measures for authorship linking}~\cite{kocher_linking}.
-The presented metrics are well know in the authorship verification and the information retrieval field.
-
-\begin{definition}[Relevant link~\cite{kocher_linking}]
-  A relevant link is a link in the relevant set.
-  The relevant set is explain in Definition~\ref{def:relevant_set}.
-  \begin{equation}
-    relevant(l_i) =
-    \begin{cases}
-      1, & if\ l_i \in R \\
-      0, & otherwise
-    \end{cases}
-  \end{equation}
-\end{definition}
-
-\begin{definition}[Precision@k~\cite{kocher_linking}]
-  The precision@k is a function which take a positive integer k, with k < |L|
-  \begin{equation}
-    precision(k) = \frac{1}{k} \sum_{j=1}^{k} relevant(j)
-  \end{equation}
-\end{definition}
-
-\begin{definition}[Average Precision (AP)]
-  The mean over the precision@k each time a relevant link is retrieved.
-  \begin{equation}
-    AveragePrecision = \frac{1}{|R|} \sum_{j=1}^{|L|} precision(j) \cdot relevant(j)
-  \end{equation}
-  The average precision can be considered as an approximation of the area under the precision-recall curve.
-\end{definition}
-
-\begin{definition}[R-Precision~\cite{kocher_linking}]
-  The R-Precision (RPrec) is the precision in the rank list at rank |R| (Precision@r).
-  With R being the relevant set (Definition~\ref{def:relevant_set}).
-  \begin{equation}
-    RPrec = precision(|R|)
-  \end{equation}
-  The RPrec value is in the range $\left[0, 1\right]$.
-  With 0 mean every links in the first $|R|$-ranks are not in the relevant set.
-  And 1, every links in the first $|R|$-ranks are in the relevant set.
-\end{definition}
-
-\begin{definition}[High precision~\cite{kocher_linking}]
-  The high precision (HPrec) represent the maximal rank j in the rank list such that the precision is still 100\%.
-  \begin{equation}
-    HPrec = \max\{i \in \mathbf{N} | precision(i) = 1\}
-  \end{equation}
-  This value is in the range $\left[0, |R|\right]$.
-  $0$ means the first pair in the rank list is incorrect.
-  $|R|$ means every true links are ranked in the top part of the rank list.
-\end{definition}
 
 \subsubsection{Importance of the text size in stylometry}
 

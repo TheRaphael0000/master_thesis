@@ -151,31 +151,34 @@ Thus using a normalization can improve the performances.
   \begin{equation}
     Zscore(X) = \frac{X - \mu}{\sigma}
   \end{equation}
+  Zscore normalize X a list of numbers such that the resulting list have a 0 mean and a standard deviation of 1.
   When using the z-score normalization on MFW vectors, $\mu$ and $\sigma$ usually are vectors containing the mean and the standard deviation of each terms in the corpus.
 \end{definition}
 
 The Manhattan distance applied on a Z-score normalized MFW vector is also called Burrows's Delta~\cite{savoy_stylo}.
 In this study, the following distance metrics are always normalized using the Z-score normalization before hand : Manhattan, Euclidean and Cosine Distance, since they tends to produce better results when normalized.
 
-\begin{definition}[Normalization]
+\begin{definition}[Linear normalization]
   \label{def:normalization}
   \begin{equation}
-    Normalize(X) = \left[\left(X - Min(X)\right) / \left(Max(X) - Min(X)\right)\right]
+    Norm(X) = \frac{X - Min(X)}{Max(X) - Min(X)}
   \end{equation}
-  To linearly normalize any list of number X in the interval $[0, 1]$.
+  Normalize a list of numbers X in the interval $[0, 1]$.
 
   \begin{equation}
-    Normalize(X, a, b) = Normalize(X) * (b - a) + a, \textit{ With }b - a > 0
+    Norm_{ab}(X, a, b) = Norm(X) \cdot (b - a) + a
   \end{equation}
-  To linearly normalize any list of number X in the interval $[a, b]$.
+  Normalize a list of numbers X in the interval $[a, b]$, with $b > a$.
 \end{definition}
+
+Definition~\ref{def:normalization} show two simple ways to linearly normalize a list of numbers.
 
 \subsubsection{Smoothing}
 
 Relative term frequencies can be considered as a probability of occurrence by using the maximum likelihood principle.
 The main problem with this approach is that the probability of occurrence of frequent terms tend to be overhestimated and underestimate the probability of occurrence of low frequency terms.
 If for example, a term is not present in a document its relative term frequency is 0, but this should not mean that the probability of the author using this word is 0.
-The solution proposed is to use smoothing, such as the Lidstone smoothing presented in Definition~\ref{def:lidstone_smoothing}.
+The solution proposed is to use a smoothing technique such as the Lidstone smoothing presented in Definition~\ref{def:lidstone_smoothing}.
 Smoothing techniques can help distance functions based on probabilities, such as the Kullback-Leibler Divergence.~\cite{savoy_stylo}
 
 \begin{definition}[Lidstone smoothing~\cite{savoy_stylo}]

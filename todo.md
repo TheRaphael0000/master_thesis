@@ -1,5 +1,1 @@
-- lire le paper sur les combinaisons
-- faire plusieurs ranked list avec diffecrent matrics et combiner les résultats (voir papier)
-- mettre des vetaux sur les liens les moins bons -> set to dist to inf ?
-- parser les dataset utilsé à pan@clef 2016
-- utiliser aglomerative complete link pour avoir "un ground truth"
+

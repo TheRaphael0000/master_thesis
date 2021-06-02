@@ -1,82 +1,30 @@
 \subsection{Clustering}
 
-\subsubsection{Clustering evaluation metrics}
-
-To evaluate clustering, the metrics used are the BCubed~\cite{bcubed} family (called sometimes $B^3$, in this report).
-BCubed has shown to satisfy 4 following importants constraints when evaluating clusterings : \textit{Cluster Homogeneity} (different categories should be in the different clusters), \textit{Cluster Completness} (same categories should belong to the same cluster) and the \textit{Rag Bag constraint} (noisy/miscellaneous categories should be in the same cluster and not in 'healthy' clusters) and the \textit{Cluster size vs quantity constraints} (favorise large cluster)~\cite{bcubed}.
-These metrics are used in the clustering task at PAN @ CLEF~\cite{pan16}.
-
-\begin{definition}[Correctness~\cite{bcubed}]
-  The $BCubed$ metric family is based on the the following \textit{Correctness} principle.
-  Let L(e) and C(e) be the category and the cluster of an element e.
-  The Correctness is following the biconditional condition on the category and cluster equality (biconditional: $A \Longleftrightarrow B \equiv (A \land B) \lor (\neg A \land \neg B)$).
-  \begin{gather*}
-    Correctness(e, e') = \\
-    \begin{cases}
-      1, & if (L(e) = L(e')) \Longleftrightarrow (C(e) = C(e'))\\
-      0, & otherwise
-    \end{cases}
-  \end{gather*}
-  In other terms, the correctness has a value of one (100\% correct) if the two elements are in the both in the same cluster and has the same category OR both in a different cluster and a different category.
-\end{definition}
-
-\begin{definition}[$BCubed$ Precision~\cite{bcubed}]
-  The $BCubed$ Precision correspond to the average of correctness for all elements on the average of all element such that \textbf{their clusters are the same}.
-  \begin{equation}
-    B^3_{precision} = \text{Avg}_{e}[\text{Avg}_{e' C(e)=C(e')}[Correctness(e, e')]]
-  \end{equation}
-\end{definition}
-
-\begin{definition}[$BCubed$ Recall~\cite{bcubed}]
-  The $BCubed$ Recall correspond to the average of correctness for all elements on the average of all element such that \textbf{their categories are the same}.
-  \begin{equation}
-    B^3_{recall} = \text{Avg}_{e}[\text{Avg}_{e' L(e)=L(e')}[Correctness(e, e')]]
-  \end{equation}
-\end{definition}
-
-\begin{definition}[$BCubed F_1$ Score~\cite{bcubed}]
-  $BCubed F_1$ Score uses the harmonic mean between the $B^3_{precision}$ and $B^3_{recall}$.
-  \begin{equation}
-    B^3_{F_1} =
-    2 \cdot \frac{B^3_{precision} \cdot B^3_{recall}}
-    {B^3_{precision} + B^3_{recall}}
-  \end{equation}
-  The $F_\beta$ measures, not shown here, provide a parametric way to represent with a single value the two counterbalancing measures in this case, the $B^3_{F_1}$ is computed using the $F$ measures with $\beta = 1$ and the $B^3_{precision}$ and $B^3_{recall}$ scores.
-\end{definition}
-
-An additional metric introduced and used in this study is the Cluster difference.
-
-\begin{definition}[Cluster difference]
-  This metric aim to evaluate if the clustering found the right number of cluster.
-  The cluster difference is the number cluster found $p$ minus the actual number of cluster $k$.
-  \begin{equation}
-    Cluster_{diff} = p - k
-  \end{equation}
-  A positive value indicate an overestimation of the real number of cluster, a negative value indicate the underestimation.
-  Zero indicate that the right number of cluster was found.
-  This value can be normalized by the number of documents N, which correspond to the difference of the r ratios.
-  As stated in the PAN16 evaluation campaign paper, estimating correctly the r ratio tends to indicate a good clustering~\cite{pan16}.
-  \begin{equation}
-    r_{diff} = \frac{p}{N} - \frac{k}{N} = \frac{p - k}{N}
-  \end{equation}
-\end{definition}
-
 \subsubsection{Hierarchical clustering parameters}
 
-As explained in Section~\ref{sec:authors_clustering}, the hierarchical clustering decide clusters based on bottom-up approach and have two main parameters, the stopping criterion and the linkage criterion.
-In this experiment, the goal is two find the best criterion our dataset for both stopping procedures.
+As explained in Section~\ref{sec:authors_clustering}, the hierarchical clustering decide clusters based on a bottom-up approach and have two main parameters, the stopping procedure and the linkage criterion.
+The stopping procedure is either based on the number of clusters or a maximal distance.
+The linkage criterion can be : single, complete, average linkage.
+In this experiment, the goal is to understand each linkage criterion for both stopping procedures with our corpora.
+
 For the stopping procedure based on the number of cluster, used in the unsupervised clustering approach, the agglomerative clustering is stopped at the right number of cluster, this depends on the corpus.
 Then the $B^3_{F_1}$ score is computed for every corpus and linkage criterion.
-But for the distance threshold stop procedure, the right distance threshold is not known, so the idea is to stop the algorithm at each merging step, evaluate the solution using the $B^3_{F_1}$ score and only retain the best score for each dataset and criterion.
-Since the libraby used does not provide a simple way to stop at each merge, a trick was used to avoid re-implementing or modifing the algorithm, which concist to increase the distance threshold by a small value until the number of clusters found is the greater then number of authors.
-The $B^3_{F_1}$ score retained is the maximal reached during every steps.
-The step should be small enough to ensure that the algorithm is stopped at each merging at least.
-This method is high inefficiant and is only used to get the results needed for the choice in criterion.
-If the step is small enough, and not merging are missed, the value obtained is guaranteed to be the optimal clustering for this rank list.
+
+On the other hand, for the stop procedure distance threshold based, the right distance threshold is not known, so the idea is to stop the algorithm at each merging step, evaluate the solution using the $B^3_{F_1}$ score and only retain the distance threshold which has the $B^3_{F_1}$ best score for each dataset and criterion.
+Since the library used does not provide a simple way to stop at each merge, a trick was used to avoid re-implementing or modifying the algorithm, which consist of an increase of the distance threshold by a small value until the number of clusters found is greater than the number of authors.
+The step should be small enough to ensure that the algorithm is stopped at least at each merging.
+This method is high inefficient and is only used to get the results needed for the choice of criterion.
+If the step is small enough, and no merging are missed, the value obtained is guaranteed to be the optimal clustering for this rank list.
+The distance threshold that achieve the greatest $B^3_{F_1}$ score is kept for each linkage criterion / corpus.
 
 The results for both stopping procedure are presented in Table~\ref{tab:clustering_linkages}.
-On every corpus the average linkage criterion $B^3_{F_1}$ score is better or equal to the single and complete linkage score which results in  average to a better linkage criterion.
-The average linkage criterion is used for every subsequent experiments.
+The stopping procedure based on the number of cluster have in average worse scores than the one based on the distance threshold.
+This is due to the fact that multiple clustering with the same number of clusters can be obtained with the hierarchical clustering.
+The cluster-based stopping procedure stop at the first one, thus the best clustering is not always reached.
+On every corpus the average linkage criterion $B^3_{F_1}$ score is better or equal to the single and complete linkage score which results indicate that the average linkage criterion can give the best results.
+But has it can be observed in Table~\ref{tab:clustering_linkages_distance_thresholds}, the best distance threshold variate in magnitude depending on the linkage criterion.
+Using the complete linkage criterion require a lower distance threshold, single linkage a larger and average in between.
+So the choice of linkage criterion depend mostly on the distance threshold used.
 
 \begin{table}
   \centering
@@ -114,6 +62,23 @@ The average linkage criterion is used for every subsequent experiments.
     St-Jean   & 0.87 & 0.90 & 0.89 \\
     \midrule
     Mean      & 0.89 & 0.89 & 0.90 \\
+    \bottomrule
+  \end{tabular}
+
+  \subcaption{Z-Score distance thresholds for Table~\ref{tab:clustering_linkages_stop_distance_threshold}}
+  \label{tab:clustering_linkages_distance_thresholds}
+  \begin{tabular}{l c c c}
+    \toprule
+           & \multicolumn{3}{c}{Linkage criterion} \\
+    Corpus & Single & Complete & Average \\
+    \midrule
+    Oxquarry  & -1.27 & -0.19 & -0.88 \\
+    Brunet    & -1.53 & -0.83 & -1.04 \\
+    St-Jean A & -1.81 & -0.80 & -1.47 \\
+    St-Jean B & -1.86 & -0.77 & -1.33 \\
+    St-Jean   & -2.44 & -0.92 & -1.30 \\
+    \midrule
+    Mean      & -1.78 & -0.70 & -1.20 \\
     \bottomrule
   \end{tabular}
 \end{table}
