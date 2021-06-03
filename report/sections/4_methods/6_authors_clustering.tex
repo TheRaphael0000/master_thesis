@@ -96,34 +96,40 @@ This can be adjusted, for example if false negatives are more important to minim
 For the sake of simplicity, the probability threshold chosen is $0.5$.
 
 The distance threshold is chosen by linearly interpolating the probability threshold with its closest probability on the left and right sides to their scores.
-Table~\ref{tab:example_linear_interpolation} show an example of linear interpolation computation using a probability threshold of $0.5$.
+Example~\ref{ex:linear_interpolation} show an example of linear interpolation computation using a probability threshold of $0.5$.
 The logistic regression model can be re-used on any other rank lists produced with the same distance metrics.
 
-\begin{table}
+\begin{example}
   \centering
-  \caption{Example: Linear interpolation for Supervised distance threshold selection}
-  \label{tab:example_linear_interpolation}
+  \caption{Linear interpolation for Supervised distance threshold selection}
+  \label{ex:linear_interpolation}
 
-  \subcaption{Rank list with link probability and score}
-  \begin{tabular}{l r r}
-    \toprule
-    Rank & Probability & Score \\
-    \midrule
-    (...) & &\\
-    45th & 0.54 & 15 \\
-    46th & 0.52 & 13 \\
-    47th & 0.49 & 12 \\
-    48th & 0.48 & 10 \\
-    (...) & & \\
-    \bottomrule
-  \end{tabular}
+  \begin{subexample}{\linewidth}
+    \centering
+    \subcaption{Rank list with link probability and score}
+    \begin{tabular}{l r r}
+      \toprule
+      Rank & Probability & Score \\
+      \midrule
+      (...) & &\\
+      45th & 0.54 & 15 \\
+      46th & 0.52 & 13 \\
+      47th & 0.49 & 12 \\
+      48th & 0.48 & 10 \\
+      (...) & & \\
+      \bottomrule
+    \end{tabular}
+  \end{subexample}
 
   \vspace{0.5cm}
 
-  \subcaption{Linear interpolation}
-  \begin{align}
-      \alpha &= \frac{0.5 - 0.49}{0.52 - 0.49} = \frac{1}{3} \\
-      \textit{score}_{0.5} &= (13 - 12) \cdot \alpha + 12 = 12 + \frac{1}{3}
-  \end{align}
+  \begin{subexample}{\linewidth}
+    \centering
+    \subcaption{Linear interpolation}
+    \begin{align}
+        \alpha &= \frac{0.5 - 0.49}{0.52 - 0.49} = \frac{1}{3} \\
+        \textit{score}_{0.5} &= (13 - 12) \cdot \alpha + 12 = 12 + \frac{1}{3}
+    \end{align}
+  \end{subexample}
 
-\end{table}
+\end{example}

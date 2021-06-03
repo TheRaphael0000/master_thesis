@@ -12,9 +12,9 @@
 \usepackage[margin=0.7in]{geometry}
 \usepackage{graphicx}
 \usepackage{multirow}
+\usepackage{subcaption}
 \usepackage{newfloat}
 \usepackage[parfill]{parskip}
-\usepackage{subcaption}
 \usepackage{subfiles}
 \usepackage{tabularx}
 \usepackage{thmtools}
@@ -47,14 +47,11 @@
   {\\}% punctuation between head and body
   { }% space after theorem head; " " = normal interword space
   {\thmname{#1}\thmnumber{ #2}\textnormal{\thmnote{ (#3)}}}
-
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
 
-% \newfloat{example}{}{lop}
-% \floatname{example}{Example}
 \DeclareFloatingEnvironment[
-  fileext=loe,
+  fileext=lop,
   listname={List of Examples},
   name=Example
 ]{example}

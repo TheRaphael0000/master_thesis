@@ -21,20 +21,6 @@ The results of every fusion combinations using the proposed rank list and strate
 Statistiques for each metrics and fusion schemes are resumed Tables~\ref{tab:fusion_stats_A}/\ref{tab:fusion_stats_B}, it contains for each metric, the minimal value (min), the average and the standard deviation (Avg$\pm$Std), the maximal value, the argmin and argmax for the metrics (using ids of the rank list in Table~\ref{tab:9rl}).
 A sign test between the two strategies and the two fusion methods is presented in Table~\ref{tab:fusion_sign_test}.
 
-\begin{figure}
-  \centering
-  \caption{Evaluation of every combination of 4 rank list fusions using Z-Score and Regression}
-  \label{fig:fusions}
-
-  \subcaption{Testing on St-Jean A (training St-Jean B, for the Regression fusion)}
-  \label{fig:fusion_evaluation_A}
-  \includegraphics[width=\linewidth]{img/fusion_evaluation_A.png}
-
-  \subcaption{Testing on St-Jean B (training St-Jean A, for the Regression fusion)}
-  \label{fig:fusion_evaluation_B}
-  \includegraphics[width=\linewidth]{img/fusion_evaluation_B.png}
-\end{figure}
-
 \begin{table}
   \centering
   \caption{Fusion statistics on St-Jean A}
@@ -174,6 +160,20 @@ A sign test between the two strategies and the two fusion methods is presented i
     \bottomrule
   \end{tabular}
 \end{table}
+
+\begin{figure}
+  \centering
+  \caption{Evaluation of every combination of 4 rank list fusions using Z-Score and Regression}
+  \label{fig:fusions}
+
+  \subcaption{Testing on St-Jean A (training St-Jean B, for the Regression fusion)}
+  \label{fig:fusion_evaluation_A}
+  \includegraphics[width=\linewidth]{img/fusion_evaluation_A.png}
+
+  \subcaption{Testing on St-Jean B (training St-Jean A, for the Regression fusion)}
+  \label{fig:fusion_evaluation_B}
+  \includegraphics[width=\linewidth]{img/fusion_evaluation_B.png}
+\end{figure}
 
 \begin{table*}
   \centering

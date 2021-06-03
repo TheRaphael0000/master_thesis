@@ -1,8 +1,9 @@
 \subsection{Compression-based distances \label{sec:compression_based_distances}}
 
 This section covers another method to compute distances between documents based on the compression.
-The main idea is to compress two documents A, B, compress the string concatenation AB of A, B and compare their sizes after compression using one of the distance measure demonstrated below.
-Commonly a lossless compression algorithm is used, such as the Lempel-Ziv family (GZIP), block sorting family (BZip2), statistical family (PPM)~\cite{comparing_compression}.
+The main idea is to first compress two documents A, B then compress the string concatenation of A and B, denoted AB.
+Using the sizes after compression of A, B, AB and a compression distance measure it's possible to compute a distance between A and B.
+Commonly, for the compression, a lossless compression algorithm is used, one from the Lempel-Ziv family (GZIP), the block sorting family (BZip2) or the statistical family (PPM)~\cite{comparing_compression}.
 This technique is based on the fact that compression algorithms tries to lower the Shannon entropy of a document, thus when compressing a document with a large Shannon entropy the compressed document should have a larger size after compression than a document with a small Shannon entropy.
 When concatenating two documents with a lot in common, the entropy of the concatenated document should be lower than if the two documents are very different.
 This approach has the benefit to produce rank lists in a nearly parameterless manner, only a distance metric and compression algorithm is needed.
@@ -11,9 +12,10 @@ A main drawback with this technique is the fact that the results can not be prop
 In this study the lossless compression algorithm used are : GZip, BZip2, LZMA.
 These algorithm are already implemented in the Python standard library, the programming language used for this study~\cite{python_standard_library}.
 Each compression algorithm can be tweaked with different parameters, the default settings are used except for the compression level (trade-off compression time and compression size).
-By setting the compression level to the maximal setting, this ensure that the produced file will have the lowest possible Shannon entropy reachable with this algorithm, thus providing the best possible approximation of distance when used with the compression distances.
+By setting the compression level to the maximal setting, this ensure that the produced file will have the lowest possible Shannon entropy reachable with this algorithm, thus providing the best possible approximation of distance when used in conjunction with the compression distances.
+Definitions~\ref{def:compress1},~\ref{def:compress2} and \ref{def:compress3} are one a the few common compression distance measure from the litterature~\cite{comparing_compression}~\cite{savoy_stylo}.
 
-\begin{definition}[Conditional complexity of compression~\cite{savoy_stylo}~\cite{comparing_compression}]
+\begin{definition}[Conditional complexity of compression~\cite{comparing_compression}~\cite{savoy_stylo}\label{def:compress1}]
   The conditional complexity of compression of two documents A and B using the size after compression C is computed as follow:
   \begin{equation}
     CCC(A, B) = C(AB) - C(A)
@@ -22,7 +24,7 @@ By setting the compression level to the maximal setting, this ensure that the pr
   The next ones try to mitigate this problem.
 \end{definition}
 
-\begin{definition}[Normalized compression distance~\cite{savoy_stylo}~\cite{comparing_compression}]
+\begin{definition}[Normalized compression distance~\cite{comparing_compression}~\cite{savoy_stylo}\label{def:compress2}]
   The normalized compression distance of two documents A and B using the size after compression C is computed as follow:
   \begin{equation}
     NCD(A, B) = \frac{C(AB) - \min(C(A), C(B))}{\max(C(A), C(B))}
@@ -30,7 +32,7 @@ By setting the compression level to the maximal setting, this ensure that the pr
   This metric gives a value in the range $\left[0, 1+\epsilon\right]$, with $\epsilon$ being a small positive value created by the imperfection of compression algorithms.
 \end{definition}
 
-\begin{definition}[Compression-based cosine~\cite{savoy_stylo}~\cite{comparing_compression}]
+\begin{definition}[Compression-based cosine~\cite{comparing_compression}~\cite{savoy_stylo}\label{def:compress3}]
   The compression-based cosine of two documents A and B using the size after compression C is computed as follow:
   \begin{equation}
     CBC(A, B) = 1 - \frac{C(A) + C(B) - C(AB)}{\sqrt{C(A) \cdot C(B)}}
