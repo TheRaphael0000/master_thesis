@@ -2,9 +2,13 @@
 
 To find clusters of authors, a possible way is to use a hierarchical clustering algorithm on a rank list.
 In a rank list, at each rank the link indicate if the two documents should belong to the same cluster in order of certainty.
-The hardest task in this clustering scheme is to find where the list should be cut (also called \textit{threshold}).
-The cut should be made such that the number of true links above the cut is maximized and the number of false links under the cut is minimized.
-To find this cut, two approaches were explored : one using an unsupervised clustering evaluation technique which is totally unsupervised, another one using a linear model to learn to make this cut, but it requires a training corpus and a semi-supervised method which re-use a threshold based on the statistical best threshold on corpus training corpus.
+The hardest task with this clustering scheme is to find the position in the rank list where true link become less frequent than false link.
+In a clustering context, the optimal position is unknown since labels are not available, and should be the one that minimized the true links under the position and the false links above.
+In this study, this position will also be called the \textit{cut}.
+To find this cut, three approaches were explored : an unsupervised, a semi-supervised and a supervised.
+The unsupervised method can be used when only one corpus is available and do not have any labels.
+The semi-supervised learn based on a corpus with labels (training corpus) a rank list score where the cut should be for any other corpus (called testing corpus), this method does not consider the testing corpus for establishing the cut.
+Finally, the supervised approach, learn based on a corpus rank list with labels (training corpus) a model which can be used in conjunction with any other corpus rank list (testing corpus) generated in the same manner as the training corpus to find the optimal cut.
 
 \subsubsection{Agglomerative clustering}
 
@@ -15,6 +19,9 @@ Multiple linkage criteria are available : \textit{ward} (metric that aim to mini
 Ward linkage was discarded since the current implementation only allow euclidean distance for its computation.
 The merging procedure can be stopped either of the two following criteria : When a certain number of cluster is reached or when the minimal score for the next merge is above a certain value (distance threshold).
 In this study both stopping procedure are used, one in an unsupervised way and another one in a supervised way.
+
+The so called \textit{cut} can be associated to the distance threshold, but is not exactly the same thing.
+The distance threshold can still merge links under the cut, if for example using the single linkage criteria
 
 \subsubsection{Unsupervised clustering}
 

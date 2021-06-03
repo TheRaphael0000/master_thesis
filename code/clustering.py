@@ -18,6 +18,67 @@ from misc import fit_beta
 from misc import find_two_beta_same_area
 
 
+def agglomerative_clustering(rank_list, distance_threshold, linkage="average"):
+    distances_matrix = distances_matrix_from_rank_list(rank_list)
+    np.fill_diagonal(distances_matrix, np.inf)
+    w, _ = distances_matrix.shape
+    groups = [[i] for i in range(w)]
+    
+    n = np.inf
+    i = 0
+    
+    linkages = {
+        "single": np.min,
+        "complete": np.max,
+        "average": np.average
+    }
+    linkage_func = linkages[linkage]
+    
+    yield np.arange(0, w, dtype=int), -np.inf
+    
+    while n > 1:
+        fmatrix = distances_matrix.flatten()
+        p = np.argmin(fmatrix)
+        
+        _, ch = distances_matrix.shape
+        y = p // ch
+        x = p - ch * y
+        current_value = distances_matrix[y, x]
+        
+        if current_value > distance_threshold:
+            break
+
+        merge = [groups[x] + groups[y]]
+        del groups[x]
+        del groups[y]
+        groups += merge
+
+        row = np.array([distances_matrix[x, :], distances_matrix[y, :]])
+        col = np.array([distances_matrix[:, x], distances_matrix[:, y]])
+        row = linkage_func(row, axis=0)
+        col = linkage_func(col, axis=0)
+        col = np.delete(col, [x, y])
+        row = np.delete(row, [x, y])
+        
+        distances_matrix = np.delete(distances_matrix, [x, y], 0)
+        distances_matrix = np.delete(distances_matrix, [x, y], 1)
+        
+        distances_matrix = np.vstack((distances_matrix, row))
+        col = np.hstack((col, np.array([np.inf])))
+        distances_matrix = np.column_stack((distances_matrix, col))
+        
+        # create labels based on groups
+        labels = np.empty([w], dtype=int)
+        
+        for i, group in enumerate(groups):
+            for v in group:
+                labels[v] = i
+        
+        yield labels, current_value
+        
+        n = len(np.unique(labels))
+
+
 def dist_thresh_logistic_regression(rl_training, Y_training, rl_testing, prob_threshold=0.5):
     X_rl = features_from_rank_list(rl_training)
     Y_rl = labels_from_rank_list(rl_training, Y_training)
@@ -81,7 +142,6 @@ def clustering_at_dist_thresh(distance_threshold, rank_list, linkage="average"):
         "distance_threshold": distance_threshold
     }
     ac = AgglomerativeClustering(**args)
-    distances_matrix = distances_matrix_from_rank_list(rank_list)
     ac.fit(distances_matrix)
     labels = ac.labels_
     return labels
