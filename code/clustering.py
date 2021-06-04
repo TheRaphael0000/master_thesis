@@ -140,6 +140,47 @@ def clustering_at_dist_thresh(rank_list, linkage="average", distance_threshold=n
     return labels
 
 
+from sklearn.cluster import AgglomerativeClustering
+
+def unsupervised_clustering_old(rank_list, return_scores=False):
+    distances_matrix = distances_matrix_from_rank_list(rank_list)
+    silhouette_by_clusters = {}
+
+    ns = list(range(2, distances_matrix.shape[0]))
+
+    for n in ns:
+        args = {
+            "n_clusters": n,
+            "affinity": "precomputed",
+            "linkage": "average",
+        }
+        ac = AgglomerativeClustering(**args)
+        ac.fit(distances_matrix)
+
+        silhouettes = silhouette_samples(distances_matrix, ac.labels_, metric="precomputed")
+        score = np.median(silhouettes)
+
+        if score > 0:
+            silhouette_by_clusters[n] = (score, ac.labels_)
+        else:
+            break
+
+    # use the closest to 0 silhouette score
+    # in case the score never goes below 0
+    silhouette_by_scores = dict(silhouette_by_clusters.values())
+    minimal_score = min(np.abs(np.array(list(silhouette_by_scores.keys()))))
+    best_labels = silhouette_by_scores[minimal_score]
+
+    outputs = [best_labels]
+
+    if return_scores:
+        ns = silhouette_by_clusters.keys()
+        scores = [silhouette_by_clusters[n][0] for n in ns]
+        outputs += [(ns, scores)]
+
+    return tuple(outputs)
+
+
 def unsupervised_clustering(rank_list, linkage="average", ips_stop=0):
     ac = agglomerative_clustering(rank_list, linkage, np.inf)
     distances_matrix = distances_matrix_from_rank_list(rank_list)
@@ -147,24 +188,26 @@ def unsupervised_clustering(rank_list, linkage="average", ips_stop=0):
     labels, dts = zip(*(list(ac)))
     labels = labels[::-1][1:]
 
-    silhouette_scores = []
+    mss = []
     current_labels = []
+        
 
     for label in labels:
         nclusters = len(np.unique(label))
-        silhouettes = silhouette_samples(distances_matrix, label)
-        score = np.median(silhouettes)
-        print(nclusters, len(silhouettes), np.median(silhouettes), np.mean(silhouettes))
+        
+        ss = silhouette_samples(distances_matrix, label)
+        ms = np.median(ss)
+        print(nclusters, ms)
         current_labels.append(label)
-        silhouette_scores.append(score)
+        mss.append(ms)
 
-        if score <= ips_stop:
-            ns = [len(np.unique(cl)) for cl in current_labels]
-            return label, (ns, silhouette_scores)
+        if ms <= ips_stop:
+            n = [len(np.unique(cl)) for cl in current_labels]
+            return label, (n, mss)
 
 
 def clustering_at_every_n_clusters(rank_list, linkage="average"):
     ac = agglomerative_clustering(rank_list, linkage, np.inf)
     labels, dts = zip(*list(ac))
-    ns = [len(np.unique(label)) for label in labels]
-    return (ns, labels)
+    n = [len(np.unique(label)) for label in labels]
+    return (n, labels)
