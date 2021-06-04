@@ -5,6 +5,7 @@ In a rank list, at each rank the link indicate if the two documents should belon
 The hardest task with this clustering scheme is to find the position in the rank list where true link become less frequent than false link.
 In a clustering context, the optimal position is unknown since labels are not available, and should be the one that minimized the true links under the position and the false links above.
 In this study, this position will also be called the \textit{cut}.
+We define the true positive as true links above the cut, true negatives as false links under the cut, false positive as true links under the cut and false negatives as false links above the cut.
 To find this cut, three approaches were explored : an unsupervised, a semi-supervised and a supervised.
 The unsupervised method can be used when only one corpus is available and do not have any labels.
 The semi-supervised learn based on a corpus with labels (training corpus) a rank list score where the cut should be for any other corpus (called testing corpus), this method does not consider the testing corpus for establishing the cut.
@@ -12,21 +13,18 @@ Finally, the supervised approach, learn based on a corpus rank list with labels 
 
 \subsubsection{Agglomerative clustering}
 
-The scikit-learn package~\cite{sklearn} provide an implementation bottom-up implementation of the hierarchical clustering, which is usually called agglomerative clustering.
+The scikit-learn package~\cite{sklearn} provide an implementation bottom-up implementation of the hierarchical clustering, which is called agglomerative clustering.
 Using this approach, at the start of the algorithm, each document belong to a different cluster.
 Clusters are merged based on the scores in the rank list, each step the algorithm merge clusters using the minimal score based on the linkage criteria.
 Multiple linkage criteria are available : \textit{ward} (metric that aim to minimize the variance of the cluster merged), \textit{average-linkage} (use the average score of each link of the cluster merged), \textit{complete-linkage} (use the maximal score of the cluster merged), \textit{single-linkage} (use the minimal score of the cluster merged).
 Ward linkage was discarded since the current implementation only allow euclidean distance for its computation.
 The merging procedure can be stopped either of the two following criteria : When a certain number of cluster is reached or when the minimal score for the next merge is above a certain value (distance threshold).
-In this study both stopping procedure are used, one in an unsupervised way and another one in a supervised way.
-
-The so called \textit{cut} can be associated to the distance threshold, but is not exactly the same thing.
-The distance threshold can still merge links under the cut, if for example using the single linkage criteria
+The so called \textit{cut} can be associated to the distance threshold.
 
 \subsubsection{Unsupervised clustering}
 
-The idea is to run the agglomerative clustering on multiple time and stop at each number of clusters.
-This produce $N$ possible clusterings, each of those can be evaluated using the silhouette score.
+The idea is to run the agglomerative clustering at each number of clusters (at each merge).
+By discarding clustering with $N$ and clusters $1$, This produce $N - 2$ possible clusterings, each of those can be evaluated using the silhouette score.
 See definition~\ref{def:silhouette}.
 
 \begin{definition}[Silhouette score~\cite{sklearn}]
@@ -44,31 +42,36 @@ See definition~\ref{def:silhouette}.
   The value is ranged between -1 and 1, a large value indicate a good cohesion and good separation of the clusters (low intra-cluster distance, high nearest-cluster distance).
 \end{definition}
 
-When iterating over the number of clusters each times the median silhouette score for each cluster is computed.
-When this score is below 0, the last positive score clusters is kept.
+The idea to find the best clustering is to iterate over the number of clusters from $2$ to $N$, and computing median silhouette score for each sample.
+When the median silhouette score is below below 0, the clustering stop.
+The results are from the last clustering with a positive silhouette score.
 If the procedure does not reach a score below 0, the maximal is kept.
 This procedure is called Iterative Positive Silhouette (IPS) and was proposed in~\cite{automated_unsupervised}.
 
 \subsubsection{Semi-supervised distance threshold selection using two Beta distributions}
 
 In Savoy (2014)'s \textit{Estimating the Probability of an Authorship Attribution} they modelized the distribution of the true and false links across the score obtained using a mixture of 2 beta distribution~\cite{savoy_probability}.
-Using these two beta distribution models, the position where the area under the curve for both models is maximized (same area under the cut for both models), correspond to the position where the true positive and true negatives are maximized, thus the statistical best possible location whereto separate the rank list when false positive and false negatives are to be minimized (standard non-weighted minimization errors).
-To find the position where both beta distribution have the same area under the curve, there might be analytical ways to solve this problematic using the beta distribution cumulative distribution function analytic form (CDF, probability, area under the curve) but was ignored for this study.
-Instead, the equiprobable position is found using a dichotomic search between 0 and 1 and evaluate CDF for the two beta distribution until to converge to the same value (e.g. until the area difference is a small value such as $10^-15$).
+Using these two beta distribution models, the position where the area under the curve for both models is maximized (same area under the cut for both models), correspond to the position where the true positive and true negatives are maximized, thus the statistical best possible location whereto separate the rank list if we want to minimized the false positive and false negatives (non-weighted minimization errors).
+To find the position where both beta distribution have the same area under the curve, there might be analytical ways to solve this problematic using the \textit{beta distribution cumulative distribution function analytic form} (beta CDF, probability, area under the curve) but was ignored for this study.
+Instead, the equiprobable position is found using a binary search between 0 and 1 and evaluate the CDF for the two beta distribution until it converges to the same value (or until their difference is a small value such as $10^-15$).
 
 Figure~\ref{fig:links_score_density} show the density of true and false link as well as a beta distribution estimation for St-Jean (Regression fusion in \ref{fig:links_score_density_fusion_regression} and Z-Score fusion in \ref{fig:links_score_density_fusion_z_score}).
 For the metrics with a score outside the interval $[0, 1]$ (such as the Z-score fusion), the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization} to be able to estimate the beta distribution.
 
 The results obtained by the regression fusion are a probability of being a true link, so the two distribution are well separated and can be modelized by the two beta distributions.
-In the other hand, when using the z-score fusion is used, the score is more mixed, but can also be modelized using the two beta distributions.
+In the other hand, when using the z-score fusion, the scores are overlapping more, but can also be modelized using the two beta distributions.
 As explained in~\cite{savoy_probability} the beta distribution is better suited for authorship problem than the Gaussian distribution since it can grasp a large amount of distribution shapes with its parameters' flexibility.
-The vertical line indicate the equiprobable position where both beta distribution have the same probability of being a true link and false link (same area under the curve) using the dichotomic search.
+The vertical line indicate the equiprobable position where both beta distribution have the same probability of being a true link and false link (same area under the curve), found using the binary search.
 This point can be used as a decision point where the cut should be made in the rank list, this ensures that both false positives and false negatives are minimized.
-Since the authors of each document must be known to find the cut, the idea is here to find the cut location using corpus with known authors and re-use the same value for new corpora, thus turn this method supervised.
-But we consider this method as semi-supervised since the only \textit{learnt} parameter is a real number, the distance threshold, and this method do not consider any new corpus for this value computation.
+Since the authors of each document must be known to find the cut, the idea is here to find the cut location using corpus with known authors and re-use the same value for new corpora, thus turn this method into supervised.
+But we consider this method as semi-supervised since the only \textit{learnt} parameter is a fixed real number, the distance threshold, and this method do not consider any new corpus for this value computation.
 The linkage parameter for this method is the complete linkage, since the cut correspond to the position where the most extremes of the same categories, either true or false links meet.
 
-In the case of a weighted importance of the false positives over the false negatives, the position can be change such that the true link surface instead of corresponding to 50\% of the sum of both surface to for example 60\%.
+This technique can be adapted, in the case where the false positives does not have the same importance as false negatives.
+The position search criteria can be change such that instead of finding the position where both the true link and false link area correspond to 50\% of their sum (equiprobable case).
+It can be generalized such that the true link area represend $\alpha\%$ and the false link area to $1-\alpha\%$ with $\alpha \in \left[0,1\right]$.
+When $\alpha$ is greater than 0.5, more false positives will occure and less false negatives and when $\alpha$ is smaller than 0.5, more false positives and more false negatives.
+The same binary seach can be used for this computation, just the target need to be changed.
 
 \begin{figure}
   \caption{Links score distribution and beta distribution estimation for St-Jean}
@@ -103,6 +106,7 @@ This can be adjusted, for example if false negatives are more important to minim
 For the sake of simplicity, the probability threshold chosen is $0.5$.
 
 The distance threshold is chosen by linearly interpolating the probability threshold with its closest probability on the left and right sides to their scores.
+This ensure that the distance threshold will be at the right place for any new corpus.
 Example~\ref{ex:linear_interpolation} show an example of linear interpolation computation using a probability threshold of $0.5$.
 The logistic regression model can be re-used on any other rank lists produced with the same distance metrics.
 

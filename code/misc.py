@@ -57,12 +57,13 @@ def rank_list_from_distances_matrix(distances_matrix):
 def distances_matrix_from_rank_list(rank_list):
     """Create a distance matrix from a rank list"""
     indices = list(itertools.chain.from_iterable([i[0] for i in rank_list]))
-    max_ = max(indices) + 1
-    distances_matrix = np.zeros((max_, max_,))
+    w = len(np.unique(indices))
+#     print(w)
+    distances_matrix = np.full((w,w,), np.nan)
+#     distances_matrix = np.zeros((w, w,))
     for (a, b), dist in rank_list:
         distances_matrix[a, b] = dist
         distances_matrix[b, a] = dist
-#     np.fill_diagonal(distances_matrix, np.min(distances_matrix))
     return distances_matrix
 
 

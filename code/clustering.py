@@ -8,6 +8,7 @@ from scipy.stats import beta
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import precision_recall_fscore_support
 from sklearn.metrics import silhouette_samples
+from sklearn.metrics import silhouette_score
 from sklearn.metrics import davies_bouldin_score
 
 from misc import distances_matrix_from_rank_list
@@ -139,71 +140,30 @@ def clustering_at_dist_thresh(rank_list, linkage="average", distance_threshold=n
         pass
     return labels
 
-
-from sklearn.cluster import AgglomerativeClustering
-
-def unsupervised_clustering_old(rank_list, return_scores=False):
-    distances_matrix = distances_matrix_from_rank_list(rank_list)
-    silhouette_by_clusters = {}
-
-    ns = list(range(2, distances_matrix.shape[0]))
-
-    for n in ns:
-        args = {
-            "n_clusters": n,
-            "affinity": "precomputed",
-            "linkage": "average",
-        }
-        ac = AgglomerativeClustering(**args)
-        ac.fit(distances_matrix)
-
-        silhouettes = silhouette_samples(distances_matrix, ac.labels_, metric="precomputed")
-        score = np.median(silhouettes)
-
-        if score > 0:
-            silhouette_by_clusters[n] = (score, ac.labels_)
-        else:
-            break
-
-    # use the closest to 0 silhouette score
-    # in case the score never goes below 0
-    silhouette_by_scores = dict(silhouette_by_clusters.values())
-    minimal_score = min(np.abs(np.array(list(silhouette_by_scores.keys()))))
-    best_labels = silhouette_by_scores[minimal_score]
-
-    outputs = [best_labels]
-
-    if return_scores:
-        ns = silhouette_by_clusters.keys()
-        scores = [silhouette_by_clusters[n][0] for n in ns]
-        outputs += [(ns, scores)]
-
-    return tuple(outputs)
-
-
-def unsupervised_clustering(rank_list, linkage="average", ips_stop=0):
+def unsupervised_clustering(rank_list, linkage="average"):
     ac = agglomerative_clustering(rank_list, linkage, np.inf)
     distances_matrix = distances_matrix_from_rank_list(rank_list)
-
+    
+    # normalize the distance matrix for the silhouette computation
+    min_ = np.nanmin(distances_matrix)
+    max_ = np.nanmax(distances_matrix)
+    distances_matrix = (distances_matrix - min_)  / (max_ - min_)
+    np.fill_diagonal(distances_matrix, 0)
+    
     labels, dts = zip(*(list(ac)))
-    labels = labels[::-1][1:]
+    labels = labels[1:-1]
 
-    mss = []
-    current_labels = []
-        
+    sss = []
+    n = []
 
-    for label in labels:
-        nclusters = len(np.unique(label))
-        
-        ss = silhouette_samples(distances_matrix, label)
-        ms = np.median(ss)
-        print(nclusters, ms)
-        current_labels.append(label)
-        mss.append(ms)
-
-        if ms <= ips_stop:
-            n = [len(np.unique(cl)) for cl in current_labels]
-            return label, (n, mss)
+    for labels_ in labels:
+        ss = silhouette_score(distances_matrix, labels_, metric="precomputed")
+        sss.append(ss)
+        n.append(len(np.unique(labels_)))
+    
+    labels_ = labels[np.argmax(sss)]
+    
+    return labels_, (n, sss)
 
 
 def clustering_at_every_n_clusters(rank_list, linkage="average"):
