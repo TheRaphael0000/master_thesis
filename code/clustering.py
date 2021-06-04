@@ -5,7 +5,6 @@ import numpy as np
 from collections import defaultdict
 
 from scipy.stats import beta
-from sklearn.cluster import AgglomerativeClustering
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import precision_recall_fscore_support
 from sklearn.metrics import silhouette_samples
@@ -18,33 +17,33 @@ from misc import fit_beta
 from misc import find_two_beta_same_area
 
 
-def agglomerative_clustering(rank_list, distance_threshold, linkage="average"):
+def agglomerative_clustering(rank_list, linkage="average", distance_threshold=np.inf):
     distances_matrix = distances_matrix_from_rank_list(rank_list)
     np.fill_diagonal(distances_matrix, np.inf)
     w, _ = distances_matrix.shape
     groups = [[i] for i in range(w)]
-    
+
     n = np.inf
     i = 0
-    
+
     linkages = {
         "single": np.min,
         "complete": np.max,
         "average": np.average
     }
     linkage_func = linkages[linkage]
-    
+
     yield np.arange(0, w, dtype=int), -np.inf
-    
+
     while n > 1:
         fmatrix = distances_matrix.flatten()
         p = np.argmin(fmatrix)
-        
+
         _, ch = distances_matrix.shape
         y = p // ch
         x = p - ch * y
         current_value = distances_matrix[y, x]
-        
+
         if current_value > distance_threshold:
             break
 
@@ -59,23 +58,23 @@ def agglomerative_clustering(rank_list, distance_threshold, linkage="average"):
         col = linkage_func(col, axis=0)
         col = np.delete(col, [x, y])
         row = np.delete(row, [x, y])
-        
+
         distances_matrix = np.delete(distances_matrix, [x, y], 0)
         distances_matrix = np.delete(distances_matrix, [x, y], 1)
-        
+
         distances_matrix = np.vstack((distances_matrix, row))
         col = np.hstack((col, np.array([np.inf])))
         distances_matrix = np.column_stack((distances_matrix, col))
-        
+
         # create labels based on groups
         labels = np.empty([w], dtype=int)
-        
+
         for i, group in enumerate(groups):
             for v in group:
                 labels[v] = i
-        
+
         yield labels, current_value
-        
+
         n = len(np.unique(labels))
 
 
@@ -83,12 +82,12 @@ def dist_thresh_logistic_regression(rl_training, Y_training, rl_testing, prob_th
     X_rl = features_from_rank_list(rl_training)
     Y_rl = labels_from_rank_list(rl_training, Y_training)
     model = LogisticRegression(random_state=0).fit(X_rl, Y_rl)
-    
+
     # compute distance threshold
     X = features_from_rank_list(rl_testing)
     # fit the model
     probs = model.predict_proba(X)[:,1]
-        
+
     if np.sum(probs == prob_threshold) >= 1:
         # exact probability threshold
         pos = np.sum(probas >= prob_threshold)
@@ -113,7 +112,7 @@ def dist_thresh_two_beta(rl_training, Y_training):
     links = np.array(list(zip(*rl_training))[0])
     scores = np.array(list(zip(*rl_training))[1])
     labels = np.array([Y_training[a] == Y_training[b] for a, b in links])
-    
+
     # if it's not a probability normalize between 0 and 1
     normalize = False
     if np.max(scores) > 1 or np.min(scores) < 0:
@@ -124,75 +123,48 @@ def dist_thresh_two_beta(rl_training, Y_training):
 
     beta_true = fit_beta(scores[labels])
     beta_false = fit_beta(scores[~labels])
-        
+
     dt = find_two_beta_same_area(beta_true, beta_false)
-    
+
     # un-normalize
     if normalize:
         dt = dt * input_range + min_
-        
+
     return dt
 
 
-def clustering_at_dist_thresh(distance_threshold, rank_list, linkage="average"):
-    args = {
-        "n_clusters": None,
-        "affinity": "precomputed",
-        "linkage": linkage,
-        "distance_threshold": distance_threshold
-    }
-    ac = AgglomerativeClustering(**args)
-    ac.fit(distances_matrix)
-    labels = ac.labels_
+def clustering_at_dist_thresh(rank_list, linkage="average", distance_threshold=np.inf):
+    ac = agglomerative_clustering(rank_list, linkage, distance_threshold)
+    for labels, dt in ac:
+        pass
     return labels
 
 
-def unsupervised_clustering(rank_list, ips_stop=0, return_scores=False):
+def unsupervised_clustering(rank_list, linkage="average", ips_stop=0):
+    ac = agglomerative_clustering(rank_list, linkage, np.inf)
     distances_matrix = distances_matrix_from_rank_list(rank_list)
 
-    ns = list(range(2, distances_matrix.shape[0]))
+    labels, dts = zip(*(list(ac)))
+    labels = labels[::-1][1:]
+
     silhouette_scores = []
+    current_labels = []
 
-    labels = np.zeros((distances_matrix.shape[0],), dtype=int)
-
-    for n in ns:
-        args = {
-            "n_clusters": n,
-            "affinity": "precomputed",
-            "linkage": "average",
-        }
-        ac = AgglomerativeClustering(**args)
-        ac.fit(distances_matrix)
-
-        silhouettes = silhouette_samples(distances_matrix, ac.labels_)
+    for label in labels:
+        nclusters = len(np.unique(label))
+        silhouettes = silhouette_samples(distances_matrix, label)
         score = np.median(silhouettes)
-
-        if score <= ips_stop:
-            break
-
-        labels = ac.labels_
+        print(nclusters, len(silhouettes), np.median(silhouettes), np.mean(silhouettes))
+        current_labels.append(label)
         silhouette_scores.append(score)
 
-    if not return_scores:
-        return labels
-    
-    explored_ns = ns[:len(silhouette_scores)]
-    scores = (explored_ns, silhouette_scores)
-
-    return labels, scores
+        if score <= ips_stop:
+            ns = [len(np.unique(cl)) for cl in current_labels]
+            return label, (ns, silhouette_scores)
 
 
-def clustering_at_every_n_clusters(rank_list):
-    distances_matrix = distances_matrix_from_rank_list(rank_list)
-    labels_list = []
-    ns = list(range(2, distances_matrix.shape[0]))
-    for n in ns:
-        args = {
-            "n_clusters": n,
-            "affinity": "precomputed",
-            "linkage": "average",
-        }
-        ac = AgglomerativeClustering(**args)
-        ac.fit(distances_matrix)
-        labels_list.append(ac.labels_)
-    return (ns, labels_list)
+def clustering_at_every_n_clusters(rank_list, linkage="average"):
+    ac = agglomerative_clustering(rank_list, linkage, np.inf)
+    labels, dts = zip(*list(ac))
+    ns = [len(np.unique(label)) for label in labels]
+    return (ns, labels)
