@@ -19,17 +19,20 @@ Clusters are merged based on the scores in the rank list, each step the algorith
 Multiple linkage criteria are available : \textit{ward} (metric that aim to minimize the variance of the cluster merged), \textit{average-linkage} (use the average score of each link of the cluster merged), \textit{complete-linkage} (use the maximal score of the cluster merged), \textit{single-linkage} (use the minimal score of the cluster merged).
 Ward linkage was discarded since the current implementation only allow euclidean distance for its computation.
 The merging procedure can be stopped either of the two following criteria : When a certain number of cluster is reached or when the minimal score for the next merge is above a certain value (distance threshold).
+On of the main issue with this implementation is that, it does not provide a way to stop the algorithm at each merging step.
+The algorithm was re-implementated to allow this.
+
 The so called \textit{cut} can be associated to the distance threshold.
 
-\subsubsection{Unsupervised clustering}
+\subsubsection{Unsupervised clustering \label{sec:unsupervised_clustering}}
 
 The idea is to run the agglomerative clustering at each number of clusters (at each merge).
-By discarding clustering with $N$ and clusters $1$, This produce $N - 2$ possible clusterings, each of those can be evaluated using the silhouette score.
+By discarding clustering with $N$ and clusters $1$, This produce $N - 2$ possible clusterings, each of those can be evaluated using the mean silhouette score.
 See definition~\ref{def:silhouette}.
 
 \begin{definition}[Silhouette score~\cite{sklearn}]
   \label{def:silhouette}
-  The silhouette score is a unsupervised clustering metric which evaluate a clustering result by measureing the cohesion and separation of the clusters.
+  The silhouette score is an unsupervised clustering metric which evaluate a clustering result by measuring the cohesion and separation of the clusters.
   \begin{equation}
     \frac{b - a}{max(a, b)}
   \end{equation}
@@ -42,11 +45,9 @@ See definition~\ref{def:silhouette}.
   The value is ranged between -1 and 1, a large value indicate a good cohesion and good separation of the clusters (low intra-cluster distance, high nearest-cluster distance).
 \end{definition}
 
-The idea to find the best clustering is to iterate over the number of clusters from $2$ to $N$, and computing median silhouette score for each sample.
-When the median silhouette score is below below 0, the clustering stop.
-The results are from the last clustering with a positive silhouette score.
-If the procedure does not reach a score below 0, the maximal is kept.
-This procedure is called Iterative Positive Silhouette (IPS) and was proposed in~\cite{automated_unsupervised}.
+The idea to find the best clustering is to iterate over the number of clusters from $2$ to $N$, and computing mean silhouette score for each sample.
+The best clustering is the one which have the largest mean silhouette score.
+An alternative to this method is the Iterative Positive Silhouette (IPS) and was proposed in~\cite{automated_unsupervised}
 
 \subsubsection{Semi-supervised distance threshold selection using two Beta distributions}
 
@@ -94,10 +95,11 @@ To learn at which position in the rank list the cut should be, this third idea i
 To train the model, a sample is created for each link in a rank list.
 The links labels are either \textit{true} (1.0) when both document in the link are from the same author and \textit{false} (0.0) otherwise.
 The features used are : the log of the relative rank ($log(\frac{rank}{|L|})$ and the score of the link.
+Using these two features, the model can grasp the importance of the rank and the score of each link.
 Since the training is only based on the relative rank and the score at each rank, the trained model is language independent and size independent.
 But this model is metric dependent, since the score magnitude can variate depending on the distance function.
 
-In this study the model used is the logistic regression.
+In this study, the model used is the logistic regression.
 The advantage of using a regression model is that the output of the model will correspond to a probability of being a true link according to the model.
 To find the cut on the test datasets, the fitted model predict the probability of being a true link on every link in the new rank list.
 From these predictions a probability threshold must be chosen.
@@ -105,8 +107,9 @@ Having a probability threshold at $0.5$, minimize both false negatives and the f
 This can be adjusted, for example if false negatives are more important to minimize, a probability threshold at $0.6$ can be selected instead or $0.4$ if the false positive should be minimized.
 For the sake of simplicity, the probability threshold chosen is $0.5$.
 
-The distance threshold is chosen by linearly interpolating the probability threshold with its closest probability on the left and right sides to their scores.
-This ensure that the distance threshold will be at the right place for any new corpus.
+The distance threshold is chosen by linearly interpolating the probability threshold with its closest probability of the one above and the one below to their scores.
+This ensures that the distance threshold chosen is even correct between ranks for any new corpus.
+This is in particular useful when the training set is well separated (few links with probabilities around $0.5$) but the testing set is not.
 Example~\ref{ex:linear_interpolation} show an example of linear interpolation computation using a probability threshold of $0.5$.
 The logistic regression model can be re-used on any other rank lists produced with the same distance metrics.
 

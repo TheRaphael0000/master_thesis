@@ -3,177 +3,142 @@
 \subsubsection{Hierarchical clustering parameters}
 
 As explained in Section~\ref{sec:authors_clustering}, the hierarchical clustering decide clusters based on a bottom-up approach and have two main parameters, the stopping procedure and the linkage criterion.
-The stopping procedure is either based on the number of clusters or a maximal distance.
 The linkage criterion can be : single, complete, average linkage.
-In this experiment, the goal is to understand each linkage criterion for both stopping procedures with our corpora.
+Oxquarry, Brunet, St-Jean A, St-Jean B and St-Jean copora are used for this experiment.
+The goal is to understand how the linkage criterion behave in the following two best scenarios : when the right number of cluster is found ($r_{diff} = 0$) and the clustering with the best $B^3_{F_1}$.
 
-For the stopping procedure based on the number of cluster, used in the unsupervised clustering approach, the agglomerative clustering is stopped at the right number of cluster, this depends on the corpus.
-Then the $B^3_{F_1}$ score is computed for every corpus and linkage criterion.
+The custom implementation of the hierarchical clustering is used, at each merging step, the intermediary clustering is evaluated using the two metrics.
+The clustering resulting in the best $B^3_{F_1}$ is kept and the $r_{diff} = 0$.
+This procedure is repeated for each linkage criteria and corpus.
 
-On the other hand, for the stop procedure distance threshold based, the right distance threshold is not known, so the idea is to stop the algorithm at each merging step, evaluate the solution using the $B^3_{F_1}$ score and only retain the distance threshold which has the $B^3_{F_1}$ best score for each dataset and criterion.
-Since the library used does not provide a simple way to stop at each merge, a trick was used to avoid re-implementing or modifying the algorithm, which consist of an increase of the distance threshold by a small value until the number of clusters found is greater than the number of authors.
-The step should be small enough to ensure that the algorithm is stopped at least at each merging.
-This method is high inefficient and is only used to get the results needed for the choice of criterion.
-If the step is small enough, and no merging are missed, the value obtained is guaranteed to be the optimal clustering for this rank list.
-The distance threshold that achieve the greatest $B^3_{F_1}$ score is kept for each linkage criterion / corpus.
-
-The results for both stopping procedure are presented in Table~\ref{tab:clustering_linkages}.
-The stopping procedure based on the number of cluster have in average worse scores than the one based on the distance threshold.
-This is due to the fact that multiple clustering with the same number of clusters can be obtained with the hierarchical clustering.
-The cluster-based stopping procedure stop at the first one, thus the best clustering is not always reached.
-On every corpus the average linkage criterion $B^3_{F_1}$ score is better or equal to the single and complete linkage score which results indicate that the average linkage criterion can give the best results.
-But has it can be observed in Table~\ref{tab:clustering_linkages_distance_thresholds}, the best distance threshold variate in magnitude depending on the linkage criterion.
-Using the complete linkage criterion require a lower distance threshold, single linkage a larger and average in between.
-So the choice of linkage criterion depend mostly on the distance threshold used.
+The results for the two scenarios are presented in Table~\ref{tab:hierarchical_clustering}.
+These results can be considered as the upper bound for the two metrics ($B^3_{F_1}$ and $r_{diff}$) for the clustering case using the retained rank list on these corpora.
+Table~\ref{tab:hierarchical_clustering_rdiff_zero} represent the upper bound if the number of cluster is known for the hierarchical clustering with the retained rank lists and Table~\ref{tab:hierarchical_clustering_best_bcubed} the upper bound in case that the $B^3_{F_1}$ want to be maximized with the hierarchical clustering on the retained rank lists.
+The best linkage criterion depends on the corpus, but in average, the best $B^3_{F_1}$ is achieved with the average linkage criterion, a relative increase of around 2.5\% compared to the other criteria.
+Having a slightly greater number of cluster can produces in average a better $B^3_{F_1}$ score using the retained rank lists.
 
 \begin{table}
   \centering
-  \caption{$B^3_{F_1}$ over linkage criterion for every corpus}
-  \label{tab:clustering_linkages}
+  \caption{Hierarchical clustering $B^3_{F_1}$/ $r_{diff}$ on every linkage criterion and corpus}
+  \label{tab:hierarchical_clustering}
 
-  \subcaption{Using the number of cluster as stopping procedure}
-  \label{tab:clustering_linkages_stop_clusters}
+  \subcaption{Procedure stop at the right number of cluster ($r_{diff} = 0.00$)}
+  \label{tab:hierarchical_clustering_rdiff_zero}
   \begin{tabular}{l c c c}
     \toprule
            & \multicolumn{3}{c}{Linkage criterion} \\
-    Corpus & Single & Complete & Average \\
+    Corpus    & Single    & Average   & Complete \\
     \midrule
-    Oxquarry  & 0.81 & 0.81 & 0.82 \\
-    Brunet    & 0.81 & 0.79 & 0.81 \\
-    St-Jean A & 0.85 & 0.85 & 0.85 \\
-    St-Jean B & 0.96 & 0.97 & 0.97 \\
-    St-Jean   & 0.79 & 0.87 & 0.88 \\
+    Oxquarry  & 0.81/0.00 & 0.93/0.00 & 0.81/0.00 \\
+    Brunet    & 0.81/0.00 & 0.81/0.00 & 0.79/0.00 \\
+    St-Jean A & 0.85/0.00 & 0.85/0.00 & 0.85/0.00 \\
+    St-Jean B & 0.96/0.00 & 0.93/0.00 & 0.97/0.00 \\
+    St-Jean   & 0.79/0.00 & 0.88/0.00 & 0.87/0.00 \\
     \midrule
-    Mean      & 0.84 & 0.86 & 0.87 \\
+    Mean      & 0.84/0.00 & 0.88/0.00 & 0.86/0.00 \\
     \bottomrule
   \end{tabular}
 
   \vspace{0.5cm}
 
-  \subcaption{Using the distance threshold as stopping procedure}
-  \label{tab:clustering_linkages_stop_distance_threshold}
+  \subcaption{Best $B^3_{F_1}$ and its $r_{diff}$ across all hierarchical clustering stops}
+  \label{tab:hierarchical_clustering_best_bcubed}
   \begin{tabular}{l c c c}
     \toprule
            & \multicolumn{3}{c}{Linkage criterion} \\
-    Corpus & Single & Complete & Average \\
+    Corpus    & Single     & Average   & Complete \\
     \midrule
-    Oxquarry  & 0.89 & 0.87 & 0.89 \\
-    Brunet    & 0.84 & 0.85 & 0.86 \\
-    St-Jean A & 0.86 & 0.87 & 0.87 \\
-    St-Jean B & 0.98 & 0.97 & 0.99 \\
-    St-Jean   & 0.87 & 0.90 & 0.89 \\
+    Oxquarry  & 0.89/ 0.04 & 0.96/0.02 & 0.87/0.04 \\
+    Brunet    & 0.84/ 0.02 & 0.85/0.09 & 0.85/0.09 \\
+    St-Jean A & 0.86/-0.01 & 0.88/0.03 & 0.88/0.04 \\
+    St-Jean B & 0.98/ 0.02 & 0.98/0.02 & 0.97/0.00 \\
+    St-Jean   & 0.87/ 0.09 & 0.89/0.01 & 0.90/0.01 \\
     \midrule
-    Mean      & 0.89 & 0.89 & 0.90 \\
+    Mean      & 0.89/0.03 & 0.91/0.02 & 0.89/0.02 \\
     \bottomrule
   \end{tabular}
 
-  \vspace{0.5cm}
-
-  \subcaption{Z-Score distance thresholds for Table~\ref{tab:clustering_linkages_stop_distance_threshold}}
-  \label{tab:clustering_linkages_distance_thresholds}
-  \begin{tabular}{l c c c}
-    \toprule
-           & \multicolumn{3}{c}{Linkage criterion} \\
-    Corpus & Single & Complete & Average \\
-    \midrule
-    Oxquarry  & -1.27 & -0.19 & -0.88 \\
-    Brunet    & -1.53 & -0.83 & -1.04 \\
-    St-Jean A & -1.81 & -0.80 & -1.47 \\
-    St-Jean B & -1.86 & -0.77 & -1.33 \\
-    St-Jean   & -2.44 & -0.92 & -1.30 \\
-    \midrule
-    Mean      & -1.78 & -0.70 & -1.20 \\
-    \bottomrule
-  \end{tabular}
 \end{table}
 
 \subsubsection{Unsupervised clustering evaluation}
 
-For this experiment, the goal is to test the unsupervised cut method based on the IPS (Iterative positive silhouette) Procedure on the literature dataset.
-When applying the procedure, the number of clusters start at 2, each iteration the silhouette score is computed if it reaches a negative value the procedure stop otherwise the number of cluster is increased and the process is repeated.
+For this experiment, the goal is to test the unsupervised hierarchical clustering cut method based on the maximization of the mean silhouette score on the literature corpora.
+The right number of cluster is not known.
+When applying the procedure, the number of clusters start at 2 and end at the number of documents minus 1.
+The best clustering according to this method is the one that yield the greatest mean silhouette score, ref. Section~\ref{sec:unsupervised_clustering}.
 
 The rank list used for this experiment is the one generated using Z-score fusion with retained text representation (9 for St-Jean and 7 for Brunet and Oxquarry), see Section~\ref{sec:annex_retained_text_representation} in annex.
 
-When running the IPS procedure on the dataset, on Figures~\ref{fig:unsupervised_clustering} the silhouette score is indicated as each step and compared to the three BCubed metrics.
-For the sake of the experiment, the agglomerative clustering is also run up to a number of cluster equal to the number of documents (singleton clusters).
-The detailed score on the unsupervised clustering is presented in Table~\ref{tab:unsupervised_clustering_0}.
+The detailed $B^3_{F_1}$ and score on the unsupervised clustering is presented in Table~\ref{tab:unsupervised_clustering_0}.
+An example of the best case and worse case are presented Figures~\ref{fig:unsupervised_clustering}.
+The silhouette score is indicated as each step and compared to clustering evaluation metrics.
 
 Since the rank list used for the clustering is not perfect (every true links at the top), there is no number of cluster with a BCubed $F_1$ score of 1.0.
-The estimated number of cluster is on every dataset overestimated, since the average r-ratio difference is positive $0.21$ and the $B^3_{precision}$ is larger than the $B^3_{recall}$, which means that the median neareast-cluster distance is greater than the median intra-cluster distance even when dealing with the right number of clusters.
+The estimated number of cluster is on every dataset overestimated, since the average r-ratio difference is positive value ranging between $\left[0.16, 0.20\right]$ depending on the linkage criterion, which means that the mean neareast-cluster distance is greater than the mean intra-cluster distance even when dealing with the right number of clusters.
 This can be due to the fact that the rank list used for the clustering is not perfect (AP $\neq 1$).
 
-To mitigate this problem, an easy solution would be to the stop the procedure at for example : $0.1$ instead of $0$.
-When running the IPS with a stop at $0.1$ on the dataset, the obtained results are presented in Table~\ref{tab:unsupervised_clustering_01}.
-The average r-ratio difference drop to $0.13$, which result in a 38\% improvement when stopping the procedure at $0.1$ instead of $0$, this tweaking seem to improve the results, especially for the St-Jean A corpus, which have an relative $B^3_{F_1}$ increase of +24\%.
-No solid founding are used for tweaking this parameter.
-
-To further improve the results, instead of iterating on the number of clusters as proposed in the original paper~\cite{automated_unsupervised}, iterating over the distance threshold can improve the results, but increase the complexity.
+To mitigate this problem, an easy solution would be to use the labels produced by the clustering of a non-maximal value of the silhouette score on the left side of the maximal silhouette score.
+In this study, we introduce a parameter called $\alpha$. Alpha represents a percentage of value to subtract to the maximal mean silhouette score to obtain the new target (instead of the maximal value).
+The sign of the alpha indicate on the side of the maximal silhouette score the target should be.
+With $\alpha = 0$, this corresponds to the maximal mean silhouette score.
+With a negative $\alpha$ the left side is targeted and with a positive $\alpha$, the right side.
+By using for example $\alpha = -0.3$, we aim to correct this overshoot.
+Table~\ref{tab:unsupervised_clustering_03} show the results with this $\alpha$.
+With this correction technique, the average $B^3_{F_1}$ can be increase by ~11\% across all the corpora.
 
 \begin{table}
   \centering
-  \caption{Unsupervised clustering evaluation on the datasets}
+  \caption{Unsupervised clustering evaluation on every linkage criterion and corpus}
   \label{tab:unsupervised_clustering}
 
-  \subcaption{IPS Standard Procedure (stop at 0.0)}
+  \caption{$\alpha = 0$}
   \label{tab:unsupervised_clustering_0}
-  \begin{tabular}{l c c c c}
+  \begin{tabular}{l c c c}
     \toprule
-    &
-    $B^3_{F_1}$ &
-    $B^3_{precision}$  &
-    $B^3_{recall}$  &
-    $r_{diff}$ \\
+           & \multicolumn{3}{c}{Linkage criterion} \\
+    Corpus    & Single     & Average   & Complete \\
     \midrule
-    Oxquarry         & 0.73 & 1.00 & 0.58 & 0.23\\
-    Brunet           & 0.82 & 0.94 & 0.73 & 0.11\\
-    St-Jean A        & 0.64 & 1.00 & 0.47 & 0.22\\
-    St-Jean B        & 0.74 & 1.00 & 0.59 & 0.26\\
-    \textbf{Average} &
-    \textbf{0.73} &
-    \textbf{0.99} &
-    \textbf{0.59} &
-    \textbf{0.21} \\
+    Oxquarry  & 0.80/0.10 & 0.80/0.10 & 0.80/0.10 \\
+    Brunet    & 0.67/0.32 & 0.72/0.20 & 0.70/0.25 \\
+    St-Jean A & 0.57/0.30 & 0.57/0.29 & 0.60/0.25 \\
+    St-Jean B & 0.89/0.08 & 0.91/0.05 & 0.91/0.05 \\
+    St-Jean   & 0.70/0.21 & 0.74/0.15 & 0.71/0.17 \\
+    \midrule
+    Mean      & 0.72/0.20 & 0.75/0.16 & 0.74/0.16 \\
     \bottomrule
   \end{tabular}
 
-  \vspace{0.5cm}
-
-  \subcaption{IPS Procedure with stop at 0.1}
-  \label{tab:unsupervised_clustering_01}
-  \begin{tabular}{l c c c c}
+  \subcaption{$\alpha = -0.3$}
+  \label{tab:unsupervised_clustering_03}
+  \begin{tabular}{l c c c}
     \toprule
-    &
-    $B^3_{F_1}$ &
-    $B^3_{precision}$  &
-    $B^3_{recall}$  &
-    $r_{diff}$ \\
+           & \multicolumn{3}{c}{Linkage criterion} \\
+    Corpus    & Single     & Average   & Complete \\
     \midrule
-    Oxquarry         & 0.74 & 1.00 & 0.59 & 0.21\\
-    Brunet           & 0.82 & 0.82 & 0.82 & 0.05\\
-    St-Jean A        & 0.84 & 0.89 & 0.79 & 0.03\\
-    St-Jean B        & 0.77 & 1.00 & 0.62 & 0.21\\
-    \textbf{Average} &
-    \textbf{0.79} &
-    \textbf{0.93} &
-    \textbf{0.71} &
-    \textbf{0.13} \\
+    Oxquarry  & 0.81/0.00 & 0.93/ 0.00 & 0.84/ 0.02 \\
+    Brunet    & 0.81/0.00 & 0.79/ 0.02 & 0.79/ 0.05 \\
+    St-Jean A & 0.81/0.07 & 0.82/ 0.07 & 0.81/ 0.06 \\
+    St-Jean B & 0.83/0.05 & 0.82/-0.06 & 0.85/-0.06 \\
+    St-Jean   & 0.81/0.01 & 0.86/-0.03 & 0.84/-0.03 \\
+    \midrule
+    Mean      & 0.81/0.01 & 0.85/0.00 & 0.83/0.01 \\
     \bottomrule
   \end{tabular}
 \end{table}
 
 \begin{figure}
-  \caption{Unsupervised clustering example on Brunet and St-Jean B}
+  \caption{Unsupervised clustering example the worse (St-Jean A) and best (St-Jean B) clustering with the average linkage criterion}
   \label{fig:unsupervised_clustering}
 
-  \subcaption{Brunet}
-  \label{fig:unsupervised_clustering_brunet}
-  \includegraphics[width=\linewidth]{img/unsupervised_clustering_brunet.png}
+  \subcaption{St-Jean A}
+  \label{fig:unsupervised_clustering_st_jean_A_average}
+  \includegraphics[width=\linewidth]{img/unsupervised_clustering_st_jean_A_average.png}
 
   \vspace{0.5cm}
 
   \subcaption{St-Jean B}
-  \label{fig:unsupervised_clustering_st_jean_B}
-  \includegraphics[width=\linewidth]{img/unsupervised_clustering_st_jean_B.png}
+  \label{fig:unsupervised_clustering_st_jean_B_average}
+  \includegraphics[width=\linewidth]{img/unsupervised_clustering_st_jean_B_average.png}
 \end{figure}
 
 

@@ -9,10 +9,10 @@ The results of these experiments are summarized in Section~\ref{sec:annex_retain
 Previous studies have shown the importance of having documents of good quality and with at least 5000 tokens to have reliable results.
 Skilled authors can easily change their style to imitate others for small texts, but it becomes more difficult for larger texts~\cite{savoy_stylo}.
 
-For this study, an experiment on the St-Jean corpus is accomplish, in the order to show the importance of having large documents.
+For this study, an experiment on the St-Jean corpus is accomplished, in the order to show the importance of having large documents.
 To test this parameter, the number of token is artificially modified by considering only the $n$ first tokens for each text, with $n$ ranging between 9000 and 250 with steps of 250 tokens.
 Figure~\ref{img:degradation} shows the three metrics used (Average precision, RPrec, HPrec) over the number of tokens.
-Every metrics decrease over the text size, which indicate that it becomes harder to determinate documents pairs with the same author as the text size decrease.
+Every metric decrease over the text size, which indicate that it becomes harder to determinate documents pairs with the same author as the text size decrease.
 
 PAN16 corpus is a difficult corpus due to its small size, thus extracting reliable features for each text to estimate each style is also a difficult task.
 After multiple tests, the PAN @ CLEF 2016 corpus is not used further in this study due to its difficulty in finding reliable Stylometric clues.
@@ -33,16 +33,16 @@ For this kind of representation, previous studies have shown that using MFW (mos
 
 After creating the rank lists with the proposed distance measures (ref. Section~\ref{sec:fv_distances}) on the two representations for a MFW vector size ranging between 100 and 2000 with a step of 100, on the two datasets containing the lemmatize representation (Brunet and St-Jean), the two plots in Figure~\ref{fig:token_vs_lemma} show the average precision (AP) for the resulting rank lists.
 
-This representation seem to have good results with a MFW vector size of 500 for most of the metrics, this corroborate previous studies results.
+This representation seem to have good results with a MFW vector size of 500 for most of the metrics, this corroborates previous studies results.
 A few metrics, such as Manhattan distance, Tanimoto distance or Clark distance can give better results with slightly bigger vectors.
 In most cases, the token representation provide on both dataset a greater average precision compared to the lemma representation.
 An interesting example to be worth noticing concern the Manhattan distance, when using the token representation it tends to decrease the AP faster than the lemma representation as the MFW vector size increase.
 The euclidean distance seem to be the least appropriate distance measure for this task.
-The Clark distance have a really poor average precision when the MFW vector is too small but after reaching 500 it produces one of the best pay-off of the experiment.
+The Clark distance have a really poor average precision when the MFW vector is too small, but after reaching 500 it produces one of the best pay-off of the experiment.
 Using the most appropriate MFW-vector size for each distance metric, the choice using the right distance metric with these text representations, can increase the average precision by a factor of $13$ to $17$ \% depending on the dataset.
 Over all, the cosine distance seem to be one of the most appropriate choice when dealing with these datasets and text representations.
 
-For the next experiments dealing with this text representation, four distance mesures retained : Cosine distance, Clark, Manhattan and Tanimoto, with a MFW vector size of 750.
+For the next experiments dealing with this text representation, four distance measures retained : Cosine distance, Clark, Manhattan and Tanimoto, with a MFW vector size of 750.
 
 \begin{figure}
   \centering
@@ -63,24 +63,25 @@ For the next experiments dealing with this text representation, four distance me
 \subsubsection{MFW Letter $n$-grams}
 
 In this experiment the whole text is considered to create letters $n$-grams for the text representation, see Definition~\ref{def:letters_n_grams}.
-As for the other experiment the MFW approach is used to create the feature vector.
-To reduce the field the possible parameters, the experiment is splited in two parts :
+As for the other experiment, the MFW approach is used to create the feature vector.
+To reduce the field of the possible parameters, the experiment is split in two parts :
 The first part is to find the size of the $n$ parameter of the $n$-grams, and the number of MFW. The second is to compare the distance metrics with the previously found parameters.
+One of the main drawback with this approach is that some distance metrics can have better performance on highly dimensional vectors (large MFW vector) than others, and thus this methodology does not take into account this.
 
 \textbf{First Part}\\
 For the first part, the z-score normalized cosine distance measure is used to compare the vectors and create the rank list.
-The parameters used are: a varying MFW vector size ranging between 500 and 15000 with a step of 500 and a $n$ for the following values : $3, 4, 5, (2, 3), (3, 4), (4, 5)$, the tuples $(a, b)$ correspond to both $a$-grams and $b$-grams in the same text representation.
-The number of different $n$-grams is not clear, but it is assumed to be larger than the vocabulary of the texts, thus the importance of having larger vector when dealing with long texts such as the literature datasets.
+The parameters used are: a varying MFW vector size ranging between 500 and 15000 with a step of 500 and an $n$ for the following values : $3, 4, 5, (2, 3), (3, 4), (4, 5)$, the tuples $(a, b)$ correspond to both $a$-grams and $b$-grams in the same text representation.
+The number of different $n$-grams is not clear, but it is assumed to be larger than the vocabulary of the texts, thus the importance of having a larger vector when dealing with long texts such as the literature datasets.
 When considering letters $n$-grams the text representation increase size by a factor of approximately $t$, with $t$ being the average token length.
-The average token size for the literature dataset is displayed Table~\ref{tab:lit_datasets}, and is in average $\sim 4$.
-To avoid having too large text representation a possible idea is to remove the hapax legomena (tokens appearing only once in the corpus) before applying the $n$-grams algorithm.
+The average token size for the literature dataset is displayed Table~\ref{tab:lit_corpora}, and is in average $\sim 4$.
+To avoid having too large text representation, a possible idea is to remove the hapax legomena (tokens appearing only once in the corpus) before applying the $n$-grams algorithm.
 This pruning approach was explored in~\cite{kocher_linking} but was not used in this study.
 
 Figure~\ref{fig:letter_ngrams} show the results of the first part of the experiment on the Oxquarry dataset (\ref{fig:letter_ngrams_oxquarry}), Brunet (\ref{fig:letter_ngrams_brunet}) and St-Jean (\ref{fig:letter_ngrams_st_jean}).
-The trends seems to indicate that a lower $n$ value converge with lower MFW vector size but reach a maximal value faster.
+The trends seem to indicate that a lower $n$ value converge with lower MFW vector size but reach a maximal value faster.
 With $3$-grams, $\sim 3000-4000$-MFW give good results on both datasets with this distance metric.
-On the Brunet dataset, after reaching the maximal average precision at $\sim 4000$-MFW, a larger number of frequent words decrease the precision until reaching the maximal number of differant $3$-grams at $\sim 6500$-MFW, which is not the case on Oxquarry.
-On St-Jean, the $3$-grams and $(2,3)$-grams don't reach an high average precision with a low number of MFW like for the Brunet and Oxquarry.
+On the Brunet dataset, after reaching the maximal average precision at $\sim 4000$-MFW, a larger number of frequent words decrease the precision until reaching the maximal number of different $3$-grams at $\sim 6500$-MFW, which is not the case on Oxquarry.
+On St-Jean, the $3$-grams and $(2,3)$-grams do not reach a high average precision with a low number of MFW like for the Brunet and Oxquarry.
 $4$-grams also can be efficient but require a larger MFW vector, around $\sim 4000$-MFW give good result for both Brunet and St-Jean but on Oxquarry it requires around $\sim 8000$ to have similar results as the $3000$ $3$-grams.
 For the first part, the retained parameters for the $n$-grams text representation are the $3$-grams with $3000$-MFW and $4$-grams with $8000$-MFW.
 
@@ -113,14 +114,14 @@ Since the number of MFW and the size of the $n$-grams was optimized on the cosin
 
 For the $3$-grams, the following results can be observed:
 The cosine distance give the best results.
-Though two distances metrics can compete with the cosine distance on certain datasets with the $3$-grams approach, namely the Manhattan distance and the Clark distance.
+Though, two distances metrics can compete with the cosine distance on certain datasets with the $3$-grams approach, namely the Manhattan distance and the Clark distance.
 A worth noticing results, is the euclidean distance, which have polarized results: on Oxquarry the average precision is $0.72$ and on St-Jean only $0.47$.
 Using the right distance measure can have a relative increase up to $36$\%, when comparing the worse distance metric to the best of each dataset.
 
 For the $4$-grams approach, as for the $3$-grams the cosine is the best measure with this configuration.
 The Manhattan distance and the Clark distance also are the second choice.
-The euclidean have the same behavior as for $3$-grams on the dataset.
-For this configuration of $4$-grams with $8000$-MFW, using the right distance measure is less impactful than the $3$-grams approach but still can have a relative increase in  performance of $28$\% when changing from the worse distance metric to the best, with these datasets.
+The euclidean have the same behaviour as for $3$-grams on the dataset.
+For this configuration of $4$-grams with $8000$-MFW, using the right distance measure is less impactful than the $3$-grams approach but still can have a relative increase in performance of $28$\% when changing from the worse distance metric to the best, with these datasets.
 
 \begin{table}
   \centering
@@ -171,26 +172,33 @@ In this experiment, the goal is to create 3 types of text representations of wor
   The first representation is the N-first letter of each word tokens which correspond generally to the meaning of a word.
   If the word token is smaller than N, the whole word is used.
   \item
-  Extract also the N-last letter of each word tokens which in this case correspond to the role of the word in a sentence.
-  As for the previous representation, if the word is smaller than N, the whole is used instead.
+  Extract also the N-last letter of each word tokens, which in this case correspond to the role of the word in a sentence.
+  As for the previous representation, if the word is smaller than N, the whole word is used instead.
   \item
   The in-word $n$-grams (See Definition~\ref{def:words_n_grams}), this special type of n-grams consider only $n$-grams within a word.
   This excludes every overlapping word when considering the Letters $n$-grams algorithm.
-  This decision is made for this experiment such that interwords style information can't be learned and have a fair comparison of these 3 texts representations.
+  This decision is made for this experiment such that inter-words informations can not be learned and have a fair comparison of these 3 texts representations.
 \end{enumerate}
 
 The first approach can be related to the lemma approach, the second to the POS approach and the third to a hybrid version between the letters $n$-grams and the word token text representations.
-The two first representations have the same number of words as the token text representation.
-The third representation is smaller than the Letters $n$-grams text representation.
-The two first representation are subsets of the third method.
+The two first representations have the same number of words as the token text representation and are a subsets of the third method.
+The third representation is a subset of the Letters $n$-grams text representation.
 
-For this experiment the only distance measure used is the z-normalized cosine distance and, for the evaluation metric only the average precision.
+For this experiment the only distance measure used is the z-normalized cosine distance and, for the evaluation metric, only the average precision.
 The number of MFW variate for this experiment between 200 and 4000 with a step of 100.
-Figure~\ref{fig:first_last_letters_ngrams_brunet} shows the results for the Brunet dataset and Figure~\ref{fig:first_last_letters_ngrams_oxquarry} for the Oxquarry dataset.
+Figure~\ref{fig:first_last_letters_ngrams} shows the results for this experiment on the three datasets (Oxquarry, Brunet, St-Jean).
+
+In the three dataset, the 3-last letters and 3-first letters gives a lower average precision and quickly converge to an equilibrium value at around 1500 MFW.
+5-letters representations tend to produce better results than 3-letters and 4-letters representation as the MFW increase.
+In the Oxquarry corpus, word 4-grams and word 5-grams give an outstanding ~95.0\% in average precision, but is not as efficient for the Brunet dataset.
+For the Brunet dataset, the 5-first letters can a good results compared to other text representations with small MFW vector size.
+And for St-Jean, the 5-first letters with a small MFW vector size giv the best results.
+No clear best configuration can be extracted with these results since the results are mixed across datasets, thus for this experiment, no text representation / distance measure are retained for the fusion.
 
 \begin{figure}
   \centering
   \caption{Average precision over the MFW in the rank list generated using the z-score normalized cosine distance}
+  \label{fig:first_last_letters_ngrams}
 
   \subcaption{Oxquarry}
   \label{fig:first_last_letters_ngrams_oxquarry}
@@ -201,30 +209,43 @@ Figure~\ref{fig:first_last_letters_ngrams_brunet} shows the results for the Brun
   \subcaption{Brunet}
   \label{fig:first_last_letters_ngrams_brunet}
   \includegraphics[width=\linewidth]{img/first_last_letters_ngrams_brunet.png}
+
+  \vspace{0.5cm}
+
+  \subcaption{St-Jean}
+  \label{fig:first_last_letters_ngrams_st_jean}
+  \includegraphics[width=\linewidth]{img/first_last_letters_ngrams_st_jean.png}
 \end{figure}
-
-In both dataset, the 3-last letters and 3-first letters gives a lower average precision and quickly converge to an equilibrium value at around 1500 MFW.
-5-letters representations tend to produce better results than 3-letters and 4-letters representation as the MFW increase.
-In the Oxquarry corpus, word 4-grams and word 5-grams give the best results with an average precision of ~95.0\%, but is not as efficient for the Brunet dataset.
-For the Brunet dataset, the 5-first letters can a good results compared to other text representations with small MFW vector size.
-
-For this experiment, no metrics was retained for the fusion, since the results are mixed.
 
 \subsubsection{MFW POS $n$-grams}
 
-For this experiment short combination of POS are used to detect the style of the author.
-POS $1$-grams are not test (equivalent of the POS frequency) since previous studies showed that POS $1$-grams tends to produce worse results then POS $2$/$3$/$4$-grams~\cite{kocher_linking}.
+For this experiment, short combination of POS are used to detect the style of the author.
+POS $1$-grams are discarded from the experiment (equivalent of the POS frequency) since previous studies showed that POS $1$-grams tends to produce worse results then POS $2$/$3$/$4$-grams~\cite{kocher_linking}.
 The St-Jean dataset have for every word a POS tag, by using these POS tags and combining them using Definition~\ref{def:letters_n_grams} to create $n$-grams/w-shingling, a new text representation is obtained.
 This representation can be related to the author style sentence structure.
 As for previous methods, the rank list is computed by scoring every document pairs, using the feature vector created with the MFW POS $n$-grams.
 The experiment is split in two parts, the first aim to select the most convincing size of POS $n$-grams and the size of the feature vector.
-The second is to compare the differant distance metrics.
+The second is to compare the different distance metrics.
+Keep in mind, as for the previous experiment in two parts, this experimentation methodology ignore the strength and weakness of distance measure with regard to the dimensionality of the vectors.
 
 \textbf{First Part}\\
 In this experiment, only $2$-grams, $3$-grams, $4$-grams and the combination of the $2$-grams and $3$-grams denoted: $(2, 3)$-grams is used.
 The distance metric used for this part is the smoothed z-score normalized cosine distance.
 For this representation no clear MFW vector size is advised (in this case POS $n$-grams are considered as words in the MFW definition), the size used is between 200 and 2000 with a step of 100.
 Figure~\ref{fig:pos_ngrams} show the average precision on the rank list produced by using POS $n$-grams over the number of MFW.
+
+The two following information can be intuitively observed on this plot:
+\begin{itemize}
+  \item
+  A more complex POS $n$-grams require more MFW to archive its maximal effectiveness.
+  In the St-Jean corpus, a total of 26 different POS are used to describe every words in the corpus.
+  Which correspond to $26^2 = 676$ possible unique POS $2$-grams sequences, to $26^3 = 17'576$ POS $3$-grams and $26^4 = 456'976$ POS $4$-grams, thus $2$-grams converges and not $3$/$4$-grams.
+  \item
+  Like other methods, if the MFW ceiling is too high, an overfitting to less important words is possible, thus reducing the average precision.
+  In Figure~\ref{fig:pos_ngrams} the POS 2-grams clearly have a drop in average precision after $\sim 250$-MFW.
+\end{itemize}
+
+Using the smoothed z-score cosine distance, the most appropriate configuration for the POS $n$-grams text representation on St-Jean seem to be $250$-MFW POS $2$-grams and $1000$-MFW POS $3$-grams.
 
 \begin{figure}
   \centering
@@ -233,22 +254,15 @@ Figure~\ref{fig:pos_ngrams} show the average precision on the rank list produced
   \includegraphics[width=\linewidth]{img/pos_ngrams.png}
 \end{figure}
 
-The two following information can be intuitively observed on this plot:
-\begin{itemize}
-  \item
-  A more complex POS $n$-grams require more MFW to archive its maximal effectiveness.
-  In the St-Jean corpus, a total of 26 different POS are used to describe every words in the corpus.
-  Which correspond to $26^2 = 676$ possible unique POS sequences, to $26^3 = 17'576$ POS $3$-grams and $26^4 = 456'976$ POS $4$-grams, thus $2$-grams converges and not $3$/$4$-grams.
-  \item
-  Like other methods, if the MFW ceiling is too high, an overfitting to less important words is possible, thus reducing the average precision.
-  In Figure~\ref{fig:pos_ngrams} the POS 2-grams clearly have a drop in average precision after $\sim 250$-MFW.
-\end{itemize}
-
-Using the smoothed z-score cosine distance, the most appropriate configuration for the POS $n$-grams text representation on St-Jean seem to be $250$-MFW POS $2$-grams and $1000$-MFW POS $3$-grams.
-
 \textbf{Second Part}\\
 In this second part, the goal is to find the most appropriate distance metric for the POS $n$-grams text representation, with the configuration retained in the first part.
 After running with these parameters on every proposed distance metrics, Table~\ref{tab:pos_ngrams} shows a resume of the experiment.
+
+When considering POS $n$-grams as text representation on the St-Jean dataset, over all the best distance metrics are Manhattan, Matusita, Cosine distance.
+The Clark distance, give overall the worse results, even though in other text representation, this metric was giving the best results.
+Using an optimized distance metric can increase the average precision by up to $36$\% in average with this dataset and this text representation.
+
+The retained configurations using the POS $n$-grams text representation is the $250$-MFW POS $2$-grams using the smoothed z-scored Cosine Distance and $1000$-MFW POS $3$-grams using the smoothed z-scored Manhattan distance.
 
 \begin{table}
   \centering
@@ -256,6 +270,7 @@ After running with these parameters on every proposed distance metrics, Table~\r
   \label{tab:pos_ngrams}
   \begin{tabular}{l c c c}
     \toprule
+                    & \multicolumn{2}{c}{$n$-grams/$n$-MFW} \\
     Distance metric & $2$/$250$ & $3$/$1000$ \\
     \midrule
     Manhattan & 0.70 & \textbf{0.75} \\
@@ -270,12 +285,6 @@ After running with these parameters on every proposed distance metrics, Table~\r
   \end{tabular}
 \end{table}
 
-When considering POS $n$-grams as text representation on the St-Jean dataset, over all the best distance metrics are Manhattan, Matusita, Cosine distance.
-The Clark distance, give overall the worse results, even though in other text representation, this metric was giving the best results.
-Using an optimized distance metric can increase the average precision by up to $36$\% in average with this dataset and this text representation.
-
-The retained configurations using the POS $n$-grams text representation is the $250$-MFW POS $2$-grams using the smoothed z-scored Cosine Distance and $1000$-MFW POS $3$-grams using the smoothed z-scored Manhattan distance.
-
 \subsubsection{Every vocabulary tokens in the feature vectors}
 
 This experiment aim to show the importance of limiting the words used when creating the vector representing the document.
@@ -283,19 +292,20 @@ Previously the MFW methods was proposed to limit the words used to the most freq
 to have better rank lists.
 Three approach are compared, the first use the whole corpus vocabulary to create the feature vector, denoted \textit{every token}.
 In the second, every token appearing more than once are used to create the vector, denoted \textit{without hapax legomena}.
-And for the last the vector contain the 750 most frequent words, denoted \textit{750-MFW}.
-The eight proposed distance measures are evaluated for the three approach using the average precision metric on the three literature corpuses.
-To under more easily the results for the three approach, the every token approach is used as a baseline from where the average precision gain is computed.
+And for the last, the vector contain the 750 most frequent words, denoted \textit{750-MFW}.
+The eight proposed distance measures are evaluated for the three approach using the average precision metric on the three literature corpora.
+To understand more easily the results for the three approach, the \textit{every token} approach is used as a baseline from where the average precision gain is computed.
 
-Table~\ref{tab:baseline_every_token} show the average precision baseline using every token.
-Table~\ref{tab:gain_without_hapax_legomena} and Table~\ref{tab:gain_750_mfw} show the gain for the without hapax legomena and 750-MFW approach respectively.
+Table~\ref{tab:baseline_every_token} show the average precision baseline using the \textit{every token} approach.
+Table~\ref{tab:gain_without_hapax_legomena} and Table~\ref{tab:gain_750_mfw} show the gain over the baseline for the \textit{without hapax legomena} approach and \textit{750-MFW} approach respectively.
 
-When looking at the baseline : the Manhattan, Euclidean and Clark distance measure have a terrible average precision all are below 0.3 in average.
+When looking at the baseline : the Manhattan, Euclidean and Clark distance measure have a terrible average precision, all are below 0.3 in average.
 The other metric have average to good results which range from 0.58 for the KLD to 0.79 with the Cosine distance.
-The cosine distance with every token reach a 0.91 average precision for the Oxquarry corpus.
-When removing hapax legomena, for most metrics the gain in average precision is limited, except for the Clark distance where the average precision rise from 0.3 to 0.5.
+The cosine distance with \textit{every token} reach a 0.91 average precision for the Oxquarry corpus.
+When removing hapax legomena, for most distance metrics the gain in average precision is limited, except for the Clark distance where the mean average precision rise from 0.3 to 0.5.
 After limiting to the 750-MFW, the Manhattan, Euclidean and Clark distance, the ones that had terrible results for the baseline increase their average precision by around 48\% which correspond to an average precision of 0.71, 0.63 and 0.78 respectively, which makes them in the same range as the other metrics in the baseline.
 Across every metric and dataset, removing hapax legomena increase the average precision in average by 0.04, and limiting to the 750-MFW by 0.21.
+This clearly indicate the importance of limiting the size of the vector.
 
 From this experiment, each distance metric can be placed in one of the two following categories : the ones sensible to noisy vectors, the ones not sensible.
 In the first category are : Manhattan, Clark and Euclidean, in the second : Cosine, Matusita and Tanimoto.
@@ -306,7 +316,7 @@ Further, test are required to classify these distance metrics.
   \centering
   \caption{Rank lists average precision depending on the number of token used}
 
-  \subcaption{Baseline every token}
+  \subcaption{Baseline: \textit{every token}}
   \label{tab:baseline_every_token}
   \begin{tabular}{l r r r|r}
     \toprule
@@ -327,7 +337,7 @@ Further, test are required to classify these distance metrics.
 
   \vspace{0.5cm}
 
-  \subcaption{Gain without hapax legomena}
+  \subcaption{Gain \textit{without hapax legomena} over baseline}
   \label{tab:gain_without_hapax_legomena}
   \begin{tabular}{l r r r|r}
     \toprule
@@ -348,7 +358,7 @@ Further, test are required to classify these distance metrics.
 
   \vspace{0.5cm}
 
-  \subcaption{Gain 750-MFW}
+  \subcaption{Gain \textit{750-MFW} over baseline}
   \label{tab:gain_750_mfw}
   \begin{tabular}{l r r r|r}
     \toprule
@@ -372,22 +382,23 @@ Further, test are required to classify these distance metrics.
 
 This experiment try to compare the three proposed compression algorithm (GZip, BZip2, LZMA) for the compression based distance ranking.
 For each algorithm and for each document, the size after compression is computed, as well as the concatenation of every document pairs.
-Using these sizes and the NCD or CBC distance metrics (ref. Section~\ref{sec:compression_based_distances}, the rank list is evaluated.
-This experiment is run on the three datasets three times to have a better approximation of the run time.
+Using these sizes and the NCD or CBC distance metrics (ref. Section~\ref{sec:compression_based_distances}), the rank list is evaluated.
+This experiment is run on the three corpora three times to have a better approximation of the run time.
 The results in terms of efficiency of the resulting rank list are shown in Table~\ref{tab:compression_evaluation_results}.
-The average time of the three runs are in Table~\ref{tab:compression_evaluation_times} when run on a Intel(R) Core(TM) i7-5820K CPU @ 3.30GHz.
+The average time of the three runs are in Table~\ref{tab:compression_evaluation_times} when run on an Intel(R) Core(TM) i7-5820K CPU @ 3.30GHz.
 
 GZip seem to be giving the worse results on every dataset with an average AP of $\sim -0.20$ in compared to LZMA and BZip2.
-LZMA give the best results on every dataset tested, but BZip2 have close results.
+LZMA gives the best results on every dataset tested, but BZip2 have close results.
 The cosine-based compression distance (CBC) tend to give better results over the normalized compression distance (NCD).
 In terms of time complexity BZip2 is the fastest algorithm of the 3 proposed, LZMA is $\sim ~5-6$ times slower than BZip2, and GZip slower than BZip2 by around $\sim 5-20$\%.
 No significant time differences is recorded between the NCD and CBC distance measures, since the greatest complexity reside in the compression algorithm.
 Even though LZMA algorithm give the best results, the configuration retained for the compression based distance is the BZip2 with the Cosine based compression distance, since it gives relative good results in a short amount of time.
 Previous study show that the distance measure choice was more impactful than the choice of the compression algorithm in the regarding the quality of the results~\cite{comparing_compression}.
-Our results tend to indicate the opposite, ref~\ref{tab:compression_evaluation_results}.
-The distance measures does not impact a lot our results, but the compression algorithm does.
+Our results tend to indicate the opposite, ref. Table~\ref{tab:compression_evaluation_results}.
+The distance measures does not impact a lot the quality of the results, but the compression algorithm does.
+This difference may be cause by the difference of compression algorithm used.
 
-For this text representation the retained configuration is the BZip2 algorithm with the CBC distance measure.
+For this text representation, the retained configuration is the BZip2 algorithm with the CBC distance measure.
 The Bzip2 was selected even though LZMA give slightly better results, due to the huge difference in run time.
 
 \begin{table}
@@ -482,11 +493,11 @@ The Bzip2 was selected even though LZMA give slightly better results, due to the
   \end{tabular}
 \end{table}
 
-\subsubsection{Retained rank lists}
+\subsubsection{Summary of the retained individual rank lists}
 
 For the next experiments, medium to high quality rank list are required.
 The previous experiments tried to find some good rank list produced across different text representation.
-The retained text representation are presented in Table~\ref{tab:9rl}.
+The retained text representations are presented in Table~\ref{tab:9rl}.
 Four of them are using the MFW tokens, two MFW tokens n-grams, one the compression and two the MFW POS n-grams.
 The complete evaluation of the rank list produced on these text representation for the three literary corpora are presented in Section~\ref{sec:annex_retained_text_representation} in annex.
 

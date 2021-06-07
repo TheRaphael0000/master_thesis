@@ -140,7 +140,7 @@ def clustering_at_dist_thresh(rank_list, linkage="average", distance_threshold=n
         pass
     return labels
 
-def unsupervised_clustering(rank_list, linkage="average"):
+def unsupervised_clustering(rank_list, linkage="average", alpha=0):
     ac = agglomerative_clustering(rank_list, linkage, np.inf)
     distances_matrix = distances_matrix_from_rank_list(rank_list)
     
@@ -151,7 +151,7 @@ def unsupervised_clustering(rank_list, linkage="average"):
     np.fill_diagonal(distances_matrix, 0)
     
     labels, dts = zip(*(list(ac)))
-    labels = labels[1:-1]
+    labels = labels[1:-1][::-1]
 
     sss = []
     n = []
@@ -161,7 +161,24 @@ def unsupervised_clustering(rank_list, linkage="average"):
         sss.append(ss)
         n.append(len(np.unique(labels_)))
     
-    labels_ = labels[np.argmax(sss)]
+    max_i = np.argmax(sss)
+    
+    left_side, right_side = labels[:max_i], labels[max_i+1:]
+    left_scores, right_scores = sss[:max_i], sss[max_i+1:]
+    max_score = sss[max_i]
+    
+    target = max_score - np.abs(alpha) * max_score
+    
+    if alpha < 0:        
+        scores = np.abs(target - left_scores)
+        target_i = np.argmin(scores)
+        labels_ = labels[target_i]
+    elif alpha > 0:
+        scores = np.abs(target - right_scores)
+        target_i = np.argmin(scores)
+        labels_ = labels[target_i + max_i + 1]
+    else:
+        labels_ = labels[max_i]
     
     return labels_, (n, sss)
 
