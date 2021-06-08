@@ -225,7 +225,7 @@ The Z-score fusion give the best results overall.
 
 \begin{table*}
   \centering
-  \caption{Rank list fusion sign test. \textit{The star (*) indicate a Binomial test p-value smaller than 5\%}}
+  \caption{Rank list fusion sign test. \textit{The star (*) indicate a Binomial test p-value smaller than 5\%}, S-Mean: Single-Mean, S-Max: Single-Max}
   \label{tab:fusion_sign_test}
 
   \subcaption{Testing St-Jean A (training St-Jean B, for the Regression fusion)}
@@ -233,10 +233,10 @@ The Z-score fusion give the best results overall.
   \begin{tabular}{l c c c c}
     \toprule
     Metric
-    & Z-Score/T/Single-Mean
-    & Z-Score/T/Single-Max
-    & Regression/T/Single-Mean
-    & Regression/T/Single-Max\\
+    & Z-Score/Tie/S-Mean
+    & Z-Score/Tie/S-Max
+    & Regression/Tie/S-Mean
+    & Regression/Tie/S-Max\\
     \midrule
     AP    & *126/0/0 & *125/0/1 & *85/0/41 & 58/0/68 \\
     RPrec & *126/0/0 & *124/1/1 & 66/1/59  & 38/7/81* \\
@@ -251,10 +251,10 @@ The Z-score fusion give the best results overall.
   \begin{tabular}{l c c c c}
     \toprule
     Metric
-    & Z-Score/T/Single-Mean
-    & Z-Score/T/Single-Max
-    & Regression/T/Single-Mean
-    & Regression/T/Single-Max \\
+    & Z-Score/Tie/S-Mean
+    & Z-Score/Tie/S-Max
+    & Regression/Tie/S-Mean
+    & Regression/Tie/S-Max \\
     \midrule
     AP    & *126/0/0 & *125/0/1  & *116/0/10 & *87/0/39 \\
     RPrec & *126/0/0 & *123/2/1  & *103/1/22 & *72/11/43 \\
