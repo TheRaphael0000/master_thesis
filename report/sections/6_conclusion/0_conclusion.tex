@@ -1,3 +1,23 @@
 \section{Conclusion \label{sec:conclusion}}
 
-{\color{red} Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.}
+This study is focus on rank lists' fusions and its effectiveness is showcased by solving the authorship clustering task.
+Oxquarry (English), Brunet (French), St-Jean (French) are three corpora containing for each document excepts of literature novels.
+Nine different techniques to produce individual rank lists are cherry-picked for the fusion step.
+These techniques are mostly based on the relative frequency of the most frequent words in each document, but also using compression techniques.
+
+Two rank list fusion method are used, one use the Z-Score normalization and the other one convert the rank list scores into probabilities using multiple logistic regression.
+The Z-Score fusion technique show a significant improvement of the results when compared to the best rank list used for the fusion.
+Whereas the logistic regression fusion procedure give slightly worse results but still shown a significant stabilization of the results, the rank list produced by this type of fusion give a rank list quality equivalent to the average quality of the rank list used.
+Two veto-based techniques are explored to further improve the quality of the fused rank list.
+No real improvement is found using the proposed veto strategy.
+
+Once the intermediate representations of the corpora, namely the rank lists, are created with the fusions, they are used to solve the authorship clustering task, which aim to create clusters containing document with the same author.
+The clustering model use for this task is the hierarchical clustering, with this model a cut in the rank list which discriminate the same authors documents to different authors documents is required.
+Three solutions are proposed to find the cut, one which is fully Unsupervised, no corpus with labels is required and is based on the Silhouette Score.
+A second method called Semi-Supervised which require a corpus with labels to calibrate the system but only output a single value which is used to perform the cut for any subsequent corpus.
+The last technique to perform the cut is Supervised and is based on a Logistic model trained using a corpus with known labels, for any subsequent corpus this model can be used given a new rank list to find the most appropriate cut.
+The three clustering methods give good results close to the best clustering achievable with for rank lists used.
+By adding a parameter to the Unsupervised clustering and tweaking it, this model gives the best clustering results across the three corpora.
+
+To further motivate the strength of the rank lists' fusions, we showed a correlation between the variety of the rank lists and the improvements provided when fusing rank lists.
+We showed that by using rank lists produced along different text representations for the fusion increase more the quality of resulting rank list than for fusion using the same text representation but with different distance measure.

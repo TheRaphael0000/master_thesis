@@ -54,7 +54,7 @@ An alternative to this method is the Iterative Positive Silhouette (IPS) and was
 In Savoy (2014)'s \textit{Estimating the Probability of an Authorship Attribution} they modelized the distribution of the true and false links across the score obtained using a mixture of 2 beta distribution~\cite{savoy_probability}.
 Using these two beta distribution models, the position where the area under the curve for both models is maximized (same area under the cut for both models), correspond to the position where the true positive and true negatives are maximized, thus the statistical best possible location whereto separate the rank list if we want to minimized the false positive and false negatives (non-weighted minimization errors).
 To find the position where both beta distribution have the same area under the curve, there might be analytical ways to solve this problematic using the \textit{beta distribution cumulative distribution function analytic form} (beta CDF, probability, area under the curve) but was ignored for this study.
-Instead, the equiprobable position is found using a binary search between 0 and 1 and evaluate the CDF for the two beta distribution until it converges to the same value (or until their difference is a small value such as $10^-15$).
+Instead, the equiprobable position is found using a binary search between 0 and 1 and evaluate the CDF for the two beta distribution until it converges to the same value (or until their difference is a small value such as $10^{-15}$).
 
 Figure~\ref{fig:links_score_density} show the density of true and false link as well as a beta distribution estimation for St-Jean (Regression fusion in \ref{fig:links_score_density_fusion_regression} and Z-Score fusion in \ref{fig:links_score_density_fusion_z_score}).
 For the metrics with a score outside the interval $[0, 1]$ (such as the Z-score fusion), the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization} to be able to estimate the beta distribution.
@@ -70,7 +70,7 @@ The linkage parameter for this method is the complete linkage, since the cut cor
 
 This technique can be adapted, in the case where the false positives does not have the same importance as false negatives.
 The position search criteria can be change such that instead of finding the position where both the true link and false link area correspond to 50\% of their sum (equiprobable case).
-It can be generalized such that the true link area represend $\alpha\%$ and the false link area to $1-\alpha\%$ with $\alpha \in \left[0,1\right]$.
+It can be generalized such that the true link area represend $\alpha$ and the false link area to $1-\alpha$ with $\alpha \in \left[0,1\right]$.
 When $\alpha$ is greater than 0.5, more false positives will occure and less false negatives and when $\alpha$ is smaller than 0.5, more false positives and more false negatives.
 The same binary seach can be used for this computation, just the target need to be changed.
 
