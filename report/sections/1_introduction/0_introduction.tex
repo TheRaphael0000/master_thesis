@@ -2,16 +2,23 @@
 
 \section{Introduction \label{sec:introduction}}
 
-In a world where the information starts to propagate really fast through social networks, forums or blogs and allow anonymous communication or pseudonymity communications, cyber-criminals have risen on the Internet~\cite{automated_unsupervised}~\cite{kocher_pan16}.
+In a world where the information starts to propagate really fast through social networks, forums or blogs and allow anonymous communication or pseudonymous communications, cyber-criminals have risen on the Internet~\cite{automated_unsupervised}~\cite{kocher_pan16}.
 A wide range of crimes are available for attackers which can goes from a credit card theft to the Denial of Service (DoS) attack of a country infrastructure.
-Some fake news, phishing e-mails can be detected using network based systems to identify the authors of such crimes, but when these systems are not enough to correctly discriminate the falsity to truth.
-When committing cyber-crimes, cyber-criminals can ensure their anonymity and hide their traces by using techniques such as IP masking through proxies, DNSflux which consist into changing randomly DNS (Domain Name System) entries, spoofing email-sending address, using a fake account (for example a fake Facebook account), stealing an identity (for example the email account of an important politician), distributed attacks (botnets).
-Due to the increase of criminal using these techniques, new systems able to detect authors based solely on the text are needed~\cite{attribution_in_cyberspace}~\cite{automated_unsupervised}~\cite{unine_pan20_fake_news}.
+Some fake news spreading or phishing by e-mails attempts can be detected using network based systems.
+Depending on the quality of the attack, these systems can be insuffisant to correctly discriminate between real e-mails and news to false ones and find the author(s) of the attack.
+While committing cyber-crimes, cyber-criminals can ensure their anonymity and hide their traces by using techniques such as IP masking through proxies, DNSflux which consist into changing randomly DNS (Domain Name System) entries, spoofing email-sending address, using a fake account (for example a fake Facebook account), stealing an identity (for example the email account of an important politician), use distributed attacks (botnets) and more~\cite{attribution_in_cyberspace}.
+Due to the increase of criminal using these techniques, new systems able to detect authors based solely on the text are needed~\cite{automated_unsupervised}~\cite{unine_pan20_fake_news}.
 
-The field of stylometry consists in the authorship analysis, which aim to estimate the author based only on the text content.
+The field of stylometry consists of analyse the style of a written text.
+This can be used to estimate text authorships based only on the text content.
 These techniques can be used for journalists, law courts, cybersecurity and forensic investigators to give authorship clues for their work when dealing with for example ransom notes~\cite{pan16_clustering_site}.
 
-A problem when dealing with these Internet crimes is a lack of real world labelled datasets, since the labels for this type of data can not be determinate accurately due to the anonymity that provide the Internet, thus the need in developing unsupervised techniques which can deal with new data fully anonymized~\cite{automated_unsupervised}.
+Another problem when dealing with for example Internet crimes is a lack of real world labelled datasets, since the labels for this type of data can not be determinate accurately due to the anonymity that provide the Internet.
+Developing automatic and unsupervised authorship techniques is required to solve these problems~\cite{automated_unsupervised}.
+A typical unsupervised authorship problem is to find in a large corpus of texts which are written by the same author.
+This problem is called authorship clustering.
+An example where the authorship clustering can be useful is to be able to regroup text written by anonymous writers.
+The writing anonymity can be due to: its need for cyber-criminals, terrorist organizations or due to the lost of the identity of the author for old texts.
 For this study, stylometric and authorship techniques are applied to the authorship clustering problem.
 
 \subsection{Research questions}
@@ -20,15 +27,15 @@ The two main research questions for this study are:
 
 \begin{itemize}
   \item Using the principle of combination of evidence can the rank lists' fusion improve the quality of authorship rank lists ?
-  \item Can we obtain a good authorship clustering using rank lists obtained by fusion ?
+  \item Can a good authorship clustering be obtained using rank lists obtained by fusion ?
 \end{itemize}
 
 By answering the first question, this provides a simple framework that can be used in multiple fields using rank lists such as the information retrieval, recommender systems, authorship attribution, authorship clustering and most classification problems based on complete graphs.
-With the second question, we aim to evaluate a possible use case for the rank list fusion by realizing a authorship clustering task with the obtained rank lists.
+With the second question, we aim to evaluate a possible use case for the rank list fusion by realizing an authorship clustering task with the obtained rank lists.
 
 \subsection{Contributions}
 
-In this study, the following contributions are made to the scientific community:
+In this study, the following contributions are made to the computer science computational linguistic scientific community:
 
 \begin{enumerate}
   \item An evaluation of most frequent words frequency feature extraction strategy using : tokens, n-grams, POS n-grams text representation and multiple distance metrics.
@@ -36,7 +43,7 @@ In this study, the following contributions are made to the scientific community:
   \item A methodology to create robust rank lists for authorship attribution and authorship clustering, using combination of evidence based on rank lists fusions.
   \item An brief evaluation of the mean Silhouette score maximization for unsupervised authorship hierarchical clustering as well as an optimization proposition for authorship clustering.
   \item A proposition and evaluation of a semi-supervised authorship clustering model based on an authorship attribution modelling using a mixture of two beta distribution and hierarchical clustering.
-  \item A proposition and evaluation of a supervised authorship clustering model based hierarchical clustering and logistic regression.
+  \item A proposition and evaluation of a supervised authorship clustering model based on hierarchical clustering and the logistic regression.
 \end{enumerate}
 
 \subsection{Overview}

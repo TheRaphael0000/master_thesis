@@ -1,17 +1,17 @@
 \subsection{Definitions \label{sec:basic_notions}}
 
 This section contain basic notions commonly used in the authorship attribution, verification and clustering.
-Aswell as basic metric to evaluate simple properties in a corpus.
+Aswell as basic metric to evaluate simple properties of a corpus.
 
-\begin{definition}[Document]
-  A document $X_i$ is a ordered list of token.
+\begin{definition}[Document / Text]
+  A document or a text $X_i$ is a ordered list of token.
   A token is a non-empty string.
 
   Example:
   \begin{equation}
     X_i = ("\text{the}", "\text{quick}", "\text{brown}", "\text{fox}", "\text{.}")
   \end{equation}
-  To obtain tokens from a long string containing a non-tokenized document, a tokenizer i needed.
+  To obtain tokens from a long string containing a non-tokenized document, a tokenizer is needed.
   A document correspond to a sample without feature selection in the data science field.
 \end{definition}
 
@@ -22,8 +22,8 @@ Aswell as basic metric to evaluate simple properties in a corpus.
   \begin{equation}
     Y_j = "\text{Zola}"
   \end{equation}
-  Since this study is related to clustering, authors are also called clusters.
-  Authors are the ground truth labels for the clustering task.
+  Since this study is related to authorship clustering, predicated authors are called clusters.
+  The authors are the ground truth labels for the clustering task.
 \end{definition}
 
 \begin{definition}[Corpus]
@@ -37,7 +37,7 @@ Aswell as basic metric to evaluate simple properties in a corpus.
     Y = (Y_1, Y_2, Y_3, Y_{...}, Y_k) \\
     k = |Y|
   \end{gather}
-  A corpus is also called a dataset in most data science problems.
+  A corpus is also called a dataset for most data science problems.
 \end{definition}
 
 \begin{definition}[Text Authorship]
@@ -63,8 +63,8 @@ Aswell as basic metric to evaluate simple properties in a corpus.
   \begin{equation}
     R = \{(X_a, X_b)\ |\ \left( f(X_a) = f(X_b) \right) \land \left(X_a \neq X_b \right) \forall (X_a, X_b)\}
   \end{equation}
-  The non-relevant set $R$ contain every \textit{false links}.
-  All links are contained in $L$, the union of the relevant and non-relevant set.
+  The non-relevant set $\bar{R}$ contain every \textit{false links}.
+  All links are contained in $L$, the union of the relevant set $R$ and non-relevant set $\bar{R}$.
   \begin{equation}
     \bar{R} = \{(X_a, X_b)\ |\ \left( f(X_a) \neq f(X_b) \right) \land \left(X_a \neq X_b \right) \forall (X_a, X_b)\}
   \end{equation}
@@ -73,7 +73,7 @@ Aswell as basic metric to evaluate simple properties in a corpus.
     L = \bar{R} \cup R \\
     |L| = \frac{N * (N-1)}{2}
   \end{gather}
-  The authorship clustering task aim to estimate these sets.
+  The authorship clustering problem aim to estimate these sets.
 \end{definition}
 
 \begin{definition}[r ratio~\cite{pan16}]
