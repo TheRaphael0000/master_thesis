@@ -9,6 +9,8 @@
   \label{tab:pan_corpus}
 
   \subcaption{Training set}
+
+  \resizebox{\linewidth}{!}{
   \begin{tabular}{l c c c c c c c c c}
     \toprule
     \textbf{Name} &
@@ -42,8 +44,13 @@
       18 & gr & 40 & 55 & 0.727 & 19 & 1485 & 0.013 & 707.0 & 4.298 \\
     \bottomrule
   \end{tabular}
+  }
+
+  \vspace{0.5cm}
 
   \subcaption{Testing set}
+
+  \resizebox{\linewidth}{!}{
   \begin{tabular}{l c c c c c c c c c}
     \toprule
     \textbf{Name} &
@@ -77,13 +84,16 @@
       18 & gr & 37 & 70 & 0.529 & 44 & 2415 & 0.018 & 672.0 & 4.262 \\
     \bottomrule
   \end{tabular}
+  }
 \end{table}
 
 \twocolumn
 \begin{table}[H]
+  \small
   \centering
   \caption{Excerpts from the Oxquarry corpus}
   \label{tbl:oxquarry_corpus}
+
   \begin{tabular}{l l l}
     \toprule
     \textbf{Id} &
@@ -147,9 +157,11 @@
 \end{table}
 
 \begin{table}[H]
+  \small
   \centering
   \caption{Excerpts from the Brunet corpus}
   \label{tbl:brunet_corpus}
+
   \begin{tabular}{l l l}
     \toprule
     \textbf{Id} &
@@ -206,266 +218,218 @@
 
 \onecolumn
 
-\begin{table}[H]
-  \centering
-  \caption{Excerpts from the St-Jean Serie A (0-50) corpus}
-  \label{tbl:st_jean_corpus_1}
-  \begin{tabular}{l l l l}
-    \toprule
-    \textbf{Id} &
-    \textbf{Author} &
-    \textbf{Title} &
-    \textbf{Date} \\
-    \midrule
-    1 & Balzac Honoré de & La cousine Bette & 1846 \\
-    2 & Chateaubriand François-René de & Atala & 1801 \\
-    3 & Dumas Alexandre & Le comte de Monte Cristo & 1845 \\
-    4 & Flaubert Gustave & Bouvard et Pécuchet & 1881 \\
-    5 & Gautier Théophile & Avatar & 1856 \\
-    6 & Goncourt Edmond et Jules de & Madame Gervaisais & 1869 \\
-    7 & Hugo Victor & Les Misérables & 1862 \\
-    8 & Huysmans Joris-Karl & A rebours & 1887 \\
-    9 & Lamartine (Alphonse de) & Graziella & 1852 \\
-    10 & Maupassant Guy de & Bel-Ami & 1885 \\
-    11 & Musset Alfred de & La Confession d’un enfant du siècle & 1836 \\
-    12 & Nerval Gérard de & Aurélia & 1855 \\
-    13 & Sand George & La Petite Fadette & 1851 \\
-    14 & Stendhal (Henri Beyle) & La Chartreuse de Parme & 1839 \\
-    15 & Verne Jules & De la terre à la lune & 1865 \\
-    16 & Vigny Alfred de & Cinq-Mars & 1826 \\
-    17 & Zola Emile & L'Argent & 1891 \\
-    18 & Balzac Honoré de & La cousine Bette & 1846 \\
-    19 & Chateaubriand François-René de & Atala & 1801 \\
-    20 & Dumas Alexandre & Le comte de Monte Cristo & 1845 \\
-    21 & Flaubert Gustave & Bouvard et Pécuchet & 1881 \\
-    22 & Gautier Théophile & Avatar & 1856 \\
-    23 & Goncourt Edmond et Jules de & Madame Gervaisais & 1869 \\
-    24 & Hugo Victor & Les Misérables. & 1862 \\
-    25 & Huysmans Joris-Karl & A rebours & 1887 \\
-    26 & Lamartine (Alphonse de) & Graziella & 1849 \\
-    27 & Maupassant Guy de & Bel-Ami & 1885 \\
-    28 & Musset Alfred de & La Confession d’un enfant du siècle & 1836 \\
-    29 & Nerval Gérard de & Aurélia & 1855 \\
-    30 & Sand George & La Petite Fadette & 1851 \\
-    31 & Stendhal (Henri Beyle) & La Chartreuse de Parme & 1839 \\
-    32 & Verne Jules & De la terre à la lune & 1865 \\
-    33 & Vigny Alfred de- Cinq-Mars & Vigny Alfred de- Cinq-Mars & 1826 \\
-    34 & Zola Emile & L'Argent & 1891 \\
-    35 & Balzac Honoré de & La cousine Bette & 1846 \\
-    36 & Chateaubriand François-René de & René & 1802 \\
-    37 & Dumas Alexandre & Le comte de Monte Cristo & 1845 \\
-    38 & Flaubert Gustave & Madame Bovary & 1857 \\
-    39 & Gautier Théophile & Jettatura & 1856 \\
-    40 & Goncourt Edmond et Jules de & Germinie Lacerteux & 1864 \\
-    41 & Hugo Victor & Les Misérables. & 1862 \\
-    42 & Lamartine (Alphonse de) & Graziella & 1852 \\
-    43 & Maupassant (Guy de) & Notre coeur & 1890 \\
-    44 & Musset Alfred de & La Confession d’un enfant du siècle & 1836 \\
-    45 & Sand George & Indiana & 1832 \\
-    46 & Stendhal (Henri Beyle) & La Chartreuse de Parme & 1839 \\
-    47 & Verne Jules & Le tour du monde en quatre-vingt jours & 1872 \\
-    48 & Vigny Alfred de & Cinq-Mars & 1826 \\
-    49 & Zola Émile & L’Assommoir & 1879 \\
-    50 & Balzac Honoré de & Histoire de la grandeur et de la décadence de César Birotteau & 1837 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-
-\begin{table}[H]
-  \centering
-  \caption{Excerpts from the St-Jean Serie A (51-100) corpus}
-  \label{tbl:st_jean_corpus_2}
-  \begin{tabular}{l l l l}
-    \toprule
-    \textbf{Id} &
-    \textbf{Author} &
-    \textbf{Title} &
-    \textbf{Date} \\
-    \midrule
-    51 & Dumas Alexandre & Les trois mousquetaires & 1844 \\
-    52 & Flaubert Gustave & Madame Bovary : moeurs de province & 1857 \\
-    53 & Gautier Théophile & Jettatura & 1856 \\
-    54 & Goncourt Edmond et Jules de & Germinie Lacerteux & 1864 \\
-    55 & Hugo Victor & Notre Dame de Paris & 1831 \\
-    56 & Maupassant (Guy de) & Notre coeur & 1890 \\
-    57 & Sand George & Indiana & 1832 \\
-    58 & Stendhal (Henri Beyle) & Le Rouge et le Noir & 1830 \\
-    59 & Verne Jules & Le tour du monde en quatre-vingt jours & 1872 \\
-    60 & Zola Émile & L’Assommoir & 1879 \\
-    61 & Balzac Honoré de & Histoire de la grandeur et de la décadence de César Birotteau & 1837 \\
-    62 & Dumas Alexandre & Les trois mousquetaires & 1844 \\
-    63 & Flaubert Gustave & Madame Bovary & 1857 \\
-    64 & Gautier Théophile & Spirite & 1865 \\
-    65 & Goncourt Edmond et Jules de & Germinie Lacerteux & 1864 \\
-    66 & Hugo Victor & Notre Dame de Paris & 1831 \\
-    67 & Maupassant Guy de & Fort comme la mort & 1889 \\
-    68 & Sand George & La mare au diable & 1846 \\
-    69 & Stendhal (Henri Beyle) & Le Rouge et le Noir - & 1830 \\
-    70 & Vigny Alfred de & Servitude et grandeur militaires & 1835 \\
-    71 & Zola Emile & La bête humaine & 1890 \\
-    72 & Balzac Honoré de & Le Colonel Chabert & 1832 \\
-    73 & Dumas Alexandre & Les trois mousquetaires & 1844 \\
-    74 & Flaubert Gustave & Un coeur simple & 1877 \\
-    75 & Hugo Victor & Notre Dame de Paris & 1831 \\
-    76 & Flaubert Gustave & L'Education Sentimentale & 1869 \\
-    77 & Maupassant Guy de & Fort comme la mort & 1889 \\
-    78 & Sand George & La mare au diable & 1846 \\
-    79 & Vigny Alfred de & Servitude et grandeur militaires & 1835 \\
-    80 & Zola Emile & La bête humaine & 1890 \\
-    81 & Balzac Honoré de & Le Colonel Chabert & 1832 \\
-    82 & Flaubert Gustave & L'Education Sentimentale & 1869 \\
-    83 & Maupassant Guy de & Mont Oriol & 1886 \\
-    84 & Zola Émile & La Fortune des Rougon & 1871 \\
-    85 & Balzac (Honoré de) & Le père Goriot & 1835 \\
-    86 & Flaubert Gustave & Trois contes & 1877 \\
-    87 & Maupassant Guy de & Mont Oriol & 1886 \\
-    88 & Zola Émile & La Fortune des Rougon & 1871 \\
-    89 & Balzac Honoré de & Eugénie Grandet & 1833 \\
-    90 & Flaubert Gustave & Salammbô & 1862 \\
-    91 & Maupassant Guy de & Mont Oriol & 1886 \\
-    92 & Zola Emile & Germinal & 1885 \\
-    93 & Balzac Honoré de & Eugénie Grandet & 1833 \\
-    94 & Flaubert Gustave & Salammbô & 1862 \\
-    95 & Balzac Honoré de & Le père Goriot & 1835 \\
-    96 & Maupassant Guy de & Une vie & 1883 \\
-    97 & Balzac Honoré de -La Maison Nucingen & Balzac Honoré de -La Maison Nucingen & 1838 \\
-    98 & Zola Emile & Germinal & 1885 \\
-    99 & Stendhal (Henri Beyle) & Le Rouge et le Noir & 1830 \\
-    100 & Balzac Honoré de & La Maison Nucingen & 1838 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{table}[H]
-  \centering
-  \caption{Excerpts from the St-Jean Serie B (101-150) corpus}
-  \label{tbl:st_jean_corpus_3}
-  \begin{tabular}{l l l l}
-    \toprule
-    \textbf{Id} &
-    \textbf{Author} &
-    \textbf{Title} &
-    \textbf{Date} \\
-    \midrule
-    101 & Barbey d'Aurevilly Jules & Le chevallier des Touches & 1864 \\
-    102 & Bourget Paul & Une idylle tragique & 1896 \\
-    103 & Daudet Alphonse & Le Petit Chose & 1868 \\
-    104 & Dumas Alexandre & Le Vicomte de Bragelonne & 1847 \\
-    105 & Staël-Holstein Anne-Louise (Madame de) & Delphine & 1803 \\
-    106 & Erckmann Emile et Chatrian Alexandre & Histoire d’un conscrit de 1813 & 1864 \\
-    107 & France Anatole & Le crime de Sylvestre Bonnard & 1881 \\
-    108 & Fromentin Eugène & Dominique & 1862 \\
-    109 & Hugo Victor & Les Misérables. & 1862 \\
-    110 & Huysmans Joris-Karl & Marthe histoire d’une fille & 1876 \\
-    111 & Lamartine Alphonse de & Geneviève & 1851 \\
-    112 & Loti Pierre & Pêcheur d’Islande & 1886 \\
-    113 & Nerval Gérard de & Les Illuminés & 1852 \\
-    114 & Proust Marcel & Les plaisirs et les jours & 1896 \\
-    115 & Régnier Henri de & Les Rencontres de Monsieur de Bréot & 1901 \\
-    116 & Sand Georges & La petite Fadette & 1832 \\
-    117 & Sainte-Beuve Charles-Augustin & Volupté & 1834 \\
-    118 & Sue Eugène & Les Mystères de Paris & 1842 \\
-    119 & Barbey d'Aurevilly Jules & Le chevallier des Touches & 1864 \\
-    120 & Bourget Paul & Une idylle tragique & 1896 \\
-    121 & Daudet Alphonse & Le Petit Chose & 1868 \\
-    122 & Dumas Alexandre & Le Vicomte de Bragelonne & 1847 \\
-    123 & Staël-Holstein Anne-Louise (Madame de) & Delphine & 1803 \\
-    124 & Erckmann Emile et Chatrian Alexandre & Histoire d’un conscrit de 1813 & 1864 \\
-    125 & France Anatole & Le crime de Sylvestre Bonnard & 1881 \\
-    126 & Fromentin Eugène & Dominique & 1862 \\
-    127 & Hugo Victor & Les Misérable & 1862 \\
-    128 & Huysmans Joris-Karl & Marthe histoire d’une fille & 1876 \\
-    129 & Lamartine Alphonse de & Geneviève & 1851 \\
-    130 & Loti Pierre & Pêcheur d’Islande & 1886 \\
-    131 & Nerval Gérard de & Les Illuminés & 1852 \\
-    132 & Proust Marcel & Les plaisirs et les jours & 1896 \\
-    133 & Régnier Henri de & Les Rencontres de Monsieur de Bréot & 1901 \\
-    134 & Sand George & Indiana & 1832 \\
-    135 & Sainte-Beuve Charles-Augustin & Volupté & 1834 \\
-    136 & Sue Eugène & Les Mystères de Paris & 1842 \\
-    137 & Barbey d'Aurevilly Jules & Le chevallier des Touches & 1864 \\
-    138 & Bourget Paul & Une idylle tragique & 1896 \\
-    139 & Daudet Alphonse & Le Petit Chose & 1868 \\
-    140 & Dumas Alexandre & Le Vicomte de Bragelonne & 1847 \\
-    141 & Staël-Holstein Anne-Louise (Madame de) & Delphine & 1803 \\
-    142 & Erckmann Emile et Chatrian Alexandre & Histoire d’un conscrit de 1813 & 1864 \\
-    143 & France Anatole & Le crime de Sylvestre Bonnard & 1881 \\
-    144 & Fromentin Eugène & Dominique & 1862 \\
-    145 & Lamartine Alphonse de & Geneviève & 1851 \\
-    146 & Loti Pierre & Pêcheur d’Islande & 1886 \\
-    147 & Nerval Gérard de & Les Illuminés & 1852 \\
-    148 & Proust Marcel & Les plaisirs et les jours & 1896 \\
-    149 & Régnier Henri de & Les Rencontres de Monsieur de Bréot & 1901 \\
-    150 & Sand George & La Petite Fadette & 1851 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-\begin{table}[H]
-  \centering
-  \caption{Excerpts from the St-Jean Serie B (151-200) corpus}
-  \label{tbl:st_jean_corpus_4}
-  \begin{tabular}{l l l l}
-    \toprule
-    \textbf{Id} &
-    \textbf{Author} &
-    \textbf{Title} &
-    \textbf{Date} \\
-    \midrule
-    151 & Sainte-Beuve Charles-Augustin & Volupté & 1834 \\
-    152 & Sue Eugène & Les Mystères de Paris & 1842 \\
-    153 & Barbey d'Aurevilly Jules & Le chevallier des Touches & 1864 \\
-    154 & Bourget Paul & Une idylle tragique & 1896 \\
-    155 & Daudet Alphonse & Le Petit Chose & 1868 \\
-    156 & Dumas Alexandre & Le Vicomte de Bragelonne & 1847 \\
-    157 & Staël-Holstein Anne-Louise (Madame de) & Delphine & 1803 \\
-    158 & Erckmann Emile et Chatrian Alexandre & Histoire d’un conscrit de 1813 & 1864 \\
-    159 & France Anatole & Le crime de Sylvestre Bonnard & 1881 \\
-    160 & Fromentin Eugène & Dominique & 1862 \\
-    161 & Lamartine Alphonse de & Geneviève & 1851 \\
-    162 & Loti Pierre & Pêcheur d’Islande & 1886 \\
-    163 & Régnier Henri de & Les Rencontres de Monsieur de Bréot & 1901 \\
-    164 & Sand George & Indiana & 1832 \\
-    165 & Sainte-Beuve Charles-Augustin & Volupté & 1834 \\
-    166 & Sue Eugène & Les Mystères de Paris & 1842 \\
-    167 & Barbey d'Aurevilly Jules & Les Diabolique & 1874 \\
-    168 & Bourget Paul & Une idylle tragique & 1896 \\
-    169 & Daudet Alphonse & Le Petit Chose & 1868 \\
-    170 & France Anatole & La Rôtisserie de la reine Pédauque & 1893 \\
-    171 & Fromentin Eugène & Dominique & 1862 \\
-    172 & Loti Pierre & Pêcheur d’Islande & 1886 \\
-    173 & Régnier Henri de & La Double Maîtresse & 1900 \\
-    174 & Sue Eugène & Les Mystères de Paris & 1842 \\
-    175 & Barbey d'Aurevilly Jules & Les Diabolique & 1874 \\
-    176 & Bourget Paul & Une idylle tragique & 1896 \\
-    177 & Daudet Alphonse & Le Petit Chose & 1868 \\
-    178 & France Anatole & La Rôtisserie de la reine Pédauque & 1893 \\
-    179 & Loti Pierre & Madame Chrysanthème & 1899 \\
-    180 & Régnier Henri de & La Double Maîtresse & 1900 \\
-    181 & Sainte-Beuve Charles-Augustin & Volupté & 1834 \\
-    182 & Sue Eugène & Les Mystères de Paris & 1842 \\
-    183 & Staël-Holstein Anne-Louise (Madame de) & Delphine & 1803 \\
-    184 & Barbey d'Aurevilly Jules & Les Diaboliques & 1874 \\
-    185 & Vallès Jules & L'Enfant & 1879 \\
-    186 & France Anatole & La Rôtisserie de la reine Pédauque & 1893 \\
-    187 & Loti Pierre & Madame Chrysanthème & 1899 \\
-    188 & Régnier Henri de & La Double Maîtresse & 1900 \\
-    189 & Sainte-Beuve Charles-Augustin & Volupté & 1834 \\
-    190 & Sue Eugène & Les Mystères de Paris & 1842 \\
-    191 & Staël-Holstein Anne-Louise (Madame de) & Delphine & 1803 \\
-    192 & Barbey d'Aurevilly Jules & Les Diaboliques & 1874 \\
-    193 & Vallès Jules & L'Enfant & 1879 \\
-    194 & Régnier Henri de & La Double Maîtresse & 1900 \\
-    195 & Sue Eugène & Les Mystères de Paris & 1842 \\
-    196 & France Anatole & La Rôtisserie de la reine Pédauque & 1893 \\
-    197 & Vallès Jules & L'Enfant & 1879 \\
-    198 & Sue Eugène & Les Mystères de Paris & 1842 \\
-    199 & Vallès Jules & L'Enfant & 1879 \\
-    200 & Sue Eugène & Les Mystères de Paris & 1842 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+\begin{longtable}{l l l l}
+  \caption{Excerpts from the St-Jean Serie A (1-100) and St-Jean Serie B (101-200) \label{tbl:st_jean_corpus}} \\
+  \endfirsthead
+  \toprule
+  \textbf{Id} &
+  \textbf{Author} &
+  \textbf{Title} &
+  \textbf{Date} \\
+  \midrule
+  1 & Balzac Honoré de & La cousine Bette & 1846 \\
+  2 & Chateaubriand François-René de & Atala & 1801 \\
+  3 & Dumas Alexandre & Le comte de Monte Cristo & 1845 \\
+  4 & Flaubert Gustave & Bouvard et Pécuchet & 1881 \\
+  5 & Gautier Théophile & Avatar & 1856 \\
+  6 & Goncourt Edmond et Jules de & Madame Gervaisais & 1869 \\
+  7 & Hugo Victor & Les Misérables & 1862 \\
+  8 & Huysmans Joris-Karl & A rebours & 1887 \\
+  9 & Lamartine (Alphonse de) & Graziella & 1852 \\
+  10 & Maupassant Guy de & Bel-Ami & 1885 \\
+  11 & Musset Alfred de & La Confession d’un enfant du siècle & 1836 \\
+  12 & Nerval Gérard de & Aurélia & 1855 \\
+  13 & Sand George & La Petite Fadette & 1851 \\
+  14 & Stendhal (Henri Beyle) & La Chartreuse de Parme & 1839 \\
+  15 & Verne Jules & De la terre à la lune & 1865 \\
+  16 & Vigny Alfred de & Cinq-Mars & 1826 \\
+  17 & Zola Emile & L'Argent & 1891 \\
+  18 & Balzac Honoré de & La cousine Bette & 1846 \\
+  19 & Chateaubriand François-René de & Atala & 1801 \\
+  20 & Dumas Alexandre & Le comte de Monte Cristo & 1845 \\
+  21 & Flaubert Gustave & Bouvard et Pécuchet & 1881 \\
+  22 & Gautier Théophile & Avatar & 1856 \\
+  23 & Goncourt Edmond et Jules de & Madame Gervaisais & 1869 \\
+  24 & Hugo Victor & Les Misérables. & 1862 \\
+  25 & Huysmans Joris-Karl & A rebours & 1887 \\
+  26 & Lamartine (Alphonse de) & Graziella & 1849 \\
+  27 & Maupassant Guy de & Bel-Ami & 1885 \\
+  28 & Musset Alfred de & La Confession d’un enfant du siècle & 1836 \\
+  29 & Nerval Gérard de & Aurélia & 1855 \\
+  30 & Sand George & La Petite Fadette & 1851 \\
+  31 & Stendhal (Henri Beyle) & La Chartreuse de Parme & 1839 \\
+  32 & Verne Jules & De la terre à la lune & 1865 \\
+  33 & Vigny Alfred de- Cinq-Mars & Vigny Alfred de- Cinq-Mars & 1826 \\
+  34 & Zola Emile & L'Argent & 1891 \\
+  35 & Balzac Honoré de & La cousine Bette & 1846 \\
+  36 & Chateaubriand François-René de & René & 1802 \\
+  37 & Dumas Alexandre & Le comte de Monte Cristo & 1845 \\
+  38 & Flaubert Gustave & Madame Bovary & 1857 \\
+  39 & Gautier Théophile & Jettatura & 1856 \\
+  40 & Goncourt Edmond et Jules de & Germinie Lacerteux & 1864 \\
+  41 & Hugo Victor & Les Misérables. & 1862 \\
+  42 & Lamartine (Alphonse de) & Graziella & 1852 \\
+  43 & Maupassant (Guy de) & Notre coeur & 1890 \\
+  44 & Musset Alfred de & La Confession d’un enfant du siècle & 1836 \\
+  45 & Sand George & Indiana & 1832 \\
+  46 & Stendhal (Henri Beyle) & La Chartreuse de Parme & 1839 \\
+  47 & Verne Jules & Le tour du monde en quatre-vingt jours & 1872 \\
+  48 & Vigny Alfred de & Cinq-Mars & 1826 \\
+  49 & Zola Émile & L’Assommoir & 1879 \\
+  50 & Balzac Honoré de & César Birotteau & 1837 \\
+  51 & Dumas Alexandre & Les trois mousquetaires & 1844 \\
+  52 & Flaubert Gustave & Madame Bovary : moeurs de province & 1857 \\
+  53 & Gautier Théophile & Jettatura & 1856 \\
+  54 & Goncourt Edmond et Jules de & Germinie Lacerteux & 1864 \\
+  55 & Hugo Victor & Notre Dame de Paris & 1831 \\
+  56 & Maupassant (Guy de) & Notre coeur & 1890 \\
+  57 & Sand George & Indiana & 1832 \\
+  58 & Stendhal (Henri Beyle) & Le Rouge et le Noir & 1830 \\
+  59 & Verne Jules & Le tour du monde en quatre-vingt jours & 1872 \\
+  60 & Zola Émile & L’Assommoir & 1879 \\
+  61 & Balzac Honoré de & César Birotteau & 1837 \\
+  62 & Dumas Alexandre & Les trois mousquetaires & 1844 \\
+  63 & Flaubert Gustave & Madame Bovary & 1857 \\
+  64 & Gautier Théophile & Spirite & 1865 \\
+  65 & Goncourt Edmond et Jules de & Germinie Lacerteux & 1864 \\
+  66 & Hugo Victor & Notre Dame de Paris & 1831 \\
+  67 & Maupassant Guy de & Fort comme la mort & 1889 \\
+  68 & Sand George & La mare au diable & 1846 \\
+  69 & Stendhal (Henri Beyle) & Le Rouge et le Noir - & 1830 \\
+  70 & Vigny Alfred de & Servitude et grandeur militaires & 1835 \\
+  71 & Zola Emile & La bête humaine & 1890 \\
+  72 & Balzac Honoré de & Le Colonel Chabert & 1832 \\
+  73 & Dumas Alexandre & Les trois mousquetaires & 1844 \\
+  74 & Flaubert Gustave & Un coeur simple & 1877 \\
+  75 & Hugo Victor & Notre Dame de Paris & 1831 \\
+  76 & Flaubert Gustave & L'Education Sentimentale & 1869 \\
+  77 & Maupassant Guy de & Fort comme la mort & 1889 \\
+  78 & Sand George & La mare au diable & 1846 \\
+  79 & Vigny Alfred de & Servitude et grandeur militaires & 1835 \\
+  80 & Zola Emile & La bête humaine & 1890 \\
+  81 & Balzac Honoré de & Le Colonel Chabert & 1832 \\
+  82 & Flaubert Gustave & L'Education Sentimentale & 1869 \\
+  83 & Maupassant Guy de & Mont Oriol & 1886 \\
+  84 & Zola Émile & La Fortune des Rougon & 1871 \\
+  85 & Balzac (Honoré de) & Le père Goriot & 1835 \\
+  86 & Flaubert Gustave & Trois contes & 1877 \\
+  87 & Maupassant Guy de & Mont Oriol & 1886 \\
+  88 & Zola Émile & La Fortune des Rougon & 1871 \\
+  89 & Balzac Honoré de & Eugénie Grandet & 1833 \\
+  90 & Flaubert Gustave & Salammbô & 1862 \\
+  91 & Maupassant Guy de & Mont Oriol & 1886 \\
+  92 & Zola Emile & Germinal & 1885 \\
+  93 & Balzac Honoré de & Eugénie Grandet & 1833 \\
+  94 & Flaubert Gustave & Salammbô & 1862 \\
+  95 & Balzac Honoré de & Le père Goriot & 1835 \\
+  96 & Maupassant Guy de & Une vie & 1883 \\
+  97 & Balzac Honoré de -La Maison Nucingen & Balzac Honoré de -La Maison Nucingen & 1838 \\
+  98 & Zola Emile & Germinal & 1885 \\
+  99 & Stendhal (Henri Beyle) & Le Rouge et le Noir & 1830 \\
+  100 & Balzac Honoré de & La Maison Nucingen & 1838 \\
+  \midrule
+  101 & Barbey d'Aurevilly Jules & Le chevallier des Touches & 1864 \\
+  102 & Bourget Paul & Une idylle tragique & 1896 \\
+  103 & Daudet Alphonse & Le Petit Chose & 1868 \\
+  104 & Dumas Alexandre & Le Vicomte de Bragelonne & 1847 \\
+  105 & Staël-Holstein Anne-Louise (Madame de) & Delphine & 1803 \\
+  106 & Erckmann Emile et Chatrian Alexandre & Histoire d’un conscrit de 1813 & 1864 \\
+  107 & France Anatole & Le crime de Sylvestre Bonnard & 1881 \\
+  108 & Fromentin Eugène & Dominique & 1862 \\
+  109 & Hugo Victor & Les Misérables. & 1862 \\
+  110 & Huysmans Joris-Karl & Marthe histoire d’une fille & 1876 \\
+  111 & Lamartine Alphonse de & Geneviève & 1851 \\
+  112 & Loti Pierre & Pêcheur d’Islande & 1886 \\
+  113 & Nerval Gérard de & Les Illuminés & 1852 \\
+  114 & Proust Marcel & Les plaisirs et les jours & 1896 \\
+  115 & Régnier Henri de & Les Rencontres de Monsieur de Bréot & 1901 \\
+  116 & Sand Georges & La petite Fadette & 1832 \\
+  117 & Sainte-Beuve Charles-Augustin & Volupté & 1834 \\
+  118 & Sue Eugène & Les Mystères de Paris & 1842 \\
+  119 & Barbey d'Aurevilly Jules & Le chevallier des Touches & 1864 \\
+  120 & Bourget Paul & Une idylle tragique & 1896 \\
+  121 & Daudet Alphonse & Le Petit Chose & 1868 \\
+  122 & Dumas Alexandre & Le Vicomte de Bragelonne & 1847 \\
+  123 & Staël-Holstein Anne-Louise (Madame de) & Delphine & 1803 \\
+  124 & Erckmann Emile et Chatrian Alexandre & Histoire d’un conscrit de 1813 & 1864 \\
+  125 & France Anatole & Le crime de Sylvestre Bonnard & 1881 \\
+  126 & Fromentin Eugène & Dominique & 1862 \\
+  127 & Hugo Victor & Les Misérable & 1862 \\
+  128 & Huysmans Joris-Karl & Marthe histoire d’une fille & 1876 \\
+  129 & Lamartine Alphonse de & Geneviève & 1851 \\
+  130 & Loti Pierre & Pêcheur d’Islande & 1886 \\
+  131 & Nerval Gérard de & Les Illuminés & 1852 \\
+  132 & Proust Marcel & Les plaisirs et les jours & 1896 \\
+  133 & Régnier Henri de & Les Rencontres de Monsieur de Bréot & 1901 \\
+  134 & Sand George & Indiana & 1832 \\
+  135 & Sainte-Beuve Charles-Augustin & Volupté & 1834 \\
+  136 & Sue Eugène & Les Mystères de Paris & 1842 \\
+  137 & Barbey d'Aurevilly Jules & Le chevallier des Touches & 1864 \\
+  138 & Bourget Paul & Une idylle tragique & 1896 \\
+  139 & Daudet Alphonse & Le Petit Chose & 1868 \\
+  140 & Dumas Alexandre & Le Vicomte de Bragelonne & 1847 \\
+  141 & Staël-Holstein Anne-Louise (Madame de) & Delphine & 1803 \\
+  142 & Erckmann Emile et Chatrian Alexandre & Histoire d’un conscrit de 1813 & 1864 \\
+  143 & France Anatole & Le crime de Sylvestre Bonnard & 1881 \\
+  144 & Fromentin Eugène & Dominique & 1862 \\
+  145 & Lamartine Alphonse de & Geneviève & 1851 \\
+  146 & Loti Pierre & Pêcheur d’Islande & 1886 \\
+  147 & Nerval Gérard de & Les Illuminés & 1852 \\
+  148 & Proust Marcel & Les plaisirs et les jours & 1896 \\
+  149 & Régnier Henri de & Les Rencontres de Monsieur de Bréot & 1901 \\
+  150 & Sand George & La Petite Fadette & 1851 \\
+  151 & Sainte-Beuve Charles-Augustin & Volupté & 1834 \\
+  152 & Sue Eugène & Les Mystères de Paris & 1842 \\
+  153 & Barbey d'Aurevilly Jules & Le chevallier des Touches & 1864 \\
+  154 & Bourget Paul & Une idylle tragique & 1896 \\
+  155 & Daudet Alphonse & Le Petit Chose & 1868 \\
+  156 & Dumas Alexandre & Le Vicomte de Bragelonne & 1847 \\
+  157 & Staël-Holstein Anne-Louise (Madame de) & Delphine & 1803 \\
+  158 & Erckmann Emile et Chatrian Alexandre & Histoire d’un conscrit de 1813 & 1864 \\
+  159 & France Anatole & Le crime de Sylvestre Bonnard & 1881 \\
+  160 & Fromentin Eugène & Dominique & 1862 \\
+  161 & Lamartine Alphonse de & Geneviève & 1851 \\
+  162 & Loti Pierre & Pêcheur d’Islande & 1886 \\
+  163 & Régnier Henri de & Les Rencontres de Monsieur de Bréot & 1901 \\
+  164 & Sand George & Indiana & 1832 \\
+  165 & Sainte-Beuve Charles-Augustin & Volupté & 1834 \\
+  166 & Sue Eugène & Les Mystères de Paris & 1842 \\
+  167 & Barbey d'Aurevilly Jules & Les Diabolique & 1874 \\
+  168 & Bourget Paul & Une idylle tragique & 1896 \\
+  169 & Daudet Alphonse & Le Petit Chose & 1868 \\
+  170 & France Anatole & La Rôtisserie de la reine Pédauque & 1893 \\
+  171 & Fromentin Eugène & Dominique & 1862 \\
+  172 & Loti Pierre & Pêcheur d’Islande & 1886 \\
+  173 & Régnier Henri de & La Double Maîtresse & 1900 \\
+  174 & Sue Eugène & Les Mystères de Paris & 1842 \\
+  175 & Barbey d'Aurevilly Jules & Les Diabolique & 1874 \\
+  176 & Bourget Paul & Une idylle tragique & 1896 \\
+  177 & Daudet Alphonse & Le Petit Chose & 1868 \\
+  178 & France Anatole & La Rôtisserie de la reine Pédauque & 1893 \\
+  179 & Loti Pierre & Madame Chrysanthème & 1899 \\
+  180 & Régnier Henri de & La Double Maîtresse & 1900 \\
+  181 & Sainte-Beuve Charles-Augustin & Volupté & 1834 \\
+  182 & Sue Eugène & Les Mystères de Paris & 1842 \\
+  183 & Staël-Holstein Anne-Louise (Madame de) & Delphine & 1803 \\
+  184 & Barbey d'Aurevilly Jules & Les Diaboliques & 1874 \\
+  185 & Vallès Jules & L'Enfant & 1879 \\
+  186 & France Anatole & La Rôtisserie de la reine Pédauque & 1893 \\
+  187 & Loti Pierre & Madame Chrysanthème & 1899 \\
+  188 & Régnier Henri de & La Double Maîtresse & 1900 \\
+  189 & Sainte-Beuve Charles-Augustin & Volupté & 1834 \\
+  190 & Sue Eugène & Les Mystères de Paris & 1842 \\
+  191 & Staël-Holstein Anne-Louise (Madame de) & Delphine & 1803 \\
+  192 & Barbey d'Aurevilly Jules & Les Diaboliques & 1874 \\
+  193 & Vallès Jules & L'Enfant & 1879 \\
+  194 & Régnier Henri de & La Double Maîtresse & 1900 \\
+  195 & Sue Eugène & Les Mystères de Paris & 1842 \\
+  196 & France Anatole & La Rôtisserie de la reine Pédauque & 1893 \\
+  197 & Vallès Jules & L'Enfant & 1879 \\
+  198 & Sue Eugène & Les Mystères de Paris & 1842 \\
+  199 & Vallès Jules & L'Enfant & 1879 \\
+  200 & Sue Eugène & Les Mystères de Paris & 1842 \\
+  \bottomrule
+\end{longtable}
 
 \newpage
 \subsection{Retained text representation evaluation}
@@ -494,6 +458,8 @@
     \textbf{z-score fusion} &  0.84 & 0.74 & 90 \\
     \bottomrule
   \end{tabular}
+
+  \vspace{0.5cm}
 
   \subcaption{Brunet}
   \begin{tabular}{c r r r}
@@ -543,6 +509,8 @@
     \bottomrule
   \end{tabular}
 
+  \vspace{0.5cm}
+
   \subcaption{St-Jean B}
   \label{tab:9rl_results_st_jean_B}
   \begin{tabular}{c r r r}
@@ -564,6 +532,8 @@
     \textbf{z-score fusion} & 0.96 & 0.90 & 200 \\
     \bottomrule
   \end{tabular}
+
+  \vspace{0.5cm}
 
   \subcaption{St-Jean A and B}
   \label{tab:9rl_results_st_jean_A_B}

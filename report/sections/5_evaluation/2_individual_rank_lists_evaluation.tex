@@ -21,7 +21,8 @@ For this study having standard and easier corpus is required in order to show th
 \begin{figure}
   \centering
   \includegraphics[width=\linewidth]{img/degradation.png}
-  \caption{St-Jean ranks list evaluation on AP, RPrec and HPrec over the text size. Rank list computed using 500 MFW and the zscored-normalized cosine distance}
+  \caption{St-Jean ranks list evaluation on AP, RPrec and HPrec over the text size.
+  Rank list computed using 500 MFW and the zscored-normalized cosine distance}
   \label{img:degradation}
 \end{figure}
 
@@ -65,7 +66,8 @@ For the next experiments dealing with this text representation, four distance me
 In this experiment the whole text is considered to create letters $n$-grams for the text representation, see Definition~\ref{def:letters_n_grams}.
 As for the other experiment, the MFW approach is used to create the feature vector.
 To reduce the field of the possible parameters, the experiment is split in two parts :
-The first part is to find the size of the $n$ parameter of the $n$-grams, and the number of MFW. The second is to compare the distance metrics with the previously found parameters.
+The first part is to find the size of the $n$ parameter of the $n$-grams, and the number of MFW.
+The second is to compare the distance metrics with the previously found parameters.
 One of the main drawback with this approach is that some distance metrics can have better performance on highly dimensional vectors (large MFW vector) than others, and thus this methodology does not take into account this.
 
 \textbf{First Part}\\

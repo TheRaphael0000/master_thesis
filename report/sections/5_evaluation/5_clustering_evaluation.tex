@@ -24,6 +24,7 @@ Having a slightly greater number of cluster can produces in average a better $B^
 
   \subcaption{Procedure stop at the right number of cluster ($r_{diff} = 0.00$)}
   \label{tab:hierarchical_clustering_rdiff_zero}
+  \resizebox{\linewidth}{!}{
   \begin{tabular}{l c c c}
     \toprule
            & \multicolumn{3}{c}{Linkage criterion} \\
@@ -37,11 +38,14 @@ Having a slightly greater number of cluster can produces in average a better $B^
     Absolute mean & 0.86/0.00 & 0.88/0.00 & 0.86/0.00 \\
     \bottomrule
   \end{tabular}
+  }
 
   \vspace{0.5cm}
 
   \subcaption{Best $B^3_{F_1}$ and its $r_{diff}$ across all hierarchical clustering stops}
   \label{tab:hierarchical_clustering_best_bcubed}
+
+  \resizebox{\linewidth}{!}{
   \begin{tabular}{l c c c}
     \toprule
            & \multicolumn{3}{c}{Linkage criterion} \\
@@ -55,6 +59,7 @@ Having a slightly greater number of cluster can produces in average a better $B^
     Absolute mean & 0.89/0.02 & 0.92/0.04 & 0.89/0.04 \\
     \bottomrule
   \end{tabular}
+  }
 
 \end{table}
 
@@ -95,6 +100,8 @@ The average linkage criterion give the best results for this clustering method, 
 
   \subcaption{Silhouette maximization ($\alpha = 0$)}
   \label{tab:unsupervised_clustering_0}
+
+  \resizebox{\linewidth}{!}{
   \begin{tabular}{l c c c}
     \toprule
            & \multicolumn{3}{c}{Linkage criterion} \\
@@ -108,11 +115,13 @@ The average linkage criterion give the best results for this clustering method, 
     Absolute mean & 0.73/0.20 & 0.75/0.16 & 0.75/0.16 \\
     \bottomrule
   \end{tabular}
+  }
 
   \vspace{0.5cm}
 
   \subcaption{$\alpha = -0.2$}
   \label{tab:unsupervised_clustering_alpha}
+  \resizebox{\linewidth}{!}{
   \begin{tabular}{l c c c}
     \toprule
            & \multicolumn{3}{c}{Linkage criterion} \\
@@ -126,6 +135,7 @@ The average linkage criterion give the best results for this clustering method, 
     Absolute mean & 0.84/0.05 & 0.87/0.07 & 0.84/0.08 \\
     \bottomrule
   \end{tabular}
+  }
 \end{table}
 
 \begin{figure}
@@ -351,7 +361,7 @@ Each method produces similar results, but the unsupervised tweak method give the
 When compared to the tweaked unsupervised method, the semi-supervised and supervised methods produce slightly worse results.
 The non-tweak unsupervised model give the worse results.
 If the upper bound, best $B^3_{F_1}$ is considered the best possible clustering for these ranks lists.
-The clustering models can be evaluated in terms of $B^3_{F_1}$ completion to the best $B^3_{F_1}$ upper bound (completion: $\frac{model score}{upper bound score}$).
+The clustering models can be evaluated in terms of $B^3_{F_1}$ completion to the best $B^3_{F_1}$ upper bound (completion: $\frac{score_{model}}{score_{upper bound}}$).
 This completion value should reflect the model clustering with a hypothetical perfect rank list, since the upper bound for a perfect rank list should be 1.00.
 The unsupervised have a 0.82 $B^3_{F_1}$ completion, the unsupervised tweaked 0.95, the semi-supervised 0.93 and the supervised 0.91.
 

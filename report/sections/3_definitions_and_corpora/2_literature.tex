@@ -20,7 +20,7 @@ It contains 200 excerpts from 68 French novels written by 30 different authors d
 St-Jean has a token, a lemma and a parts-of-speech representations.
 Words orthography are corrected and standardized for example: M., Mr., Monsieur, monsieur.
 Dates of publications of each excerpt are available for this corpus.
-A complete list of novel and authors can be found in Tables~\ref{tbl:st_jean_corpus_1}/\ref{tbl:st_jean_corpus_2}/\ref{tbl:st_jean_corpus_3}/\ref{tbl:st_jean_corpus_4} in annex.
+A complete list of novel and authors can be found in Table~\ref{tbl:st_jean_corpus} in annex.
 St-jean was created in such way that it can be spliced in two parts.
 One part contain the first 100 texts and the other one, the 100 following, which are called respectively \textit{St-Jean Serie A} and \textit{St-Jean Serie B}.
 Both parts approximately contain the same number of authors and the same number and documents per author.
@@ -29,6 +29,8 @@ Since this corpus have more documents than the other one, both whole and spliced
 \begin{table*}
   \caption{General information and statistics on the literary corpora}
   \label{tab:lit_corpora}
+
+  \resizebox{\linewidth}{!}{
   \begin{tabular}{l c c c c c c c c c}
     \toprule
     \textbf{Name} &
@@ -49,30 +51,5 @@ Since this corpus have more documents than the other one, both whole and spliced
     St-Jean B & FR & 19 & 100 & 0.19 & 258 & 4950 & 0.052 & 11513 & 3.907 \\
     \bottomrule
   \end{tabular}
+  }
 \end{table*}
-
-% \begin{table*}
-%   \centering
-%   \caption{General information and statistics on the literary corpora}
-%   \label{tab:lit_corpora}
-%   \begin{tabular}{l c c c c c c c c c}
-%     \toprule
-%     \textbf{Name} &
-%     \textbf{Lang.} &
-%     \textbf{Authors} &
-%     \textbf{Texts} &
-%     \textbf{r} &
-%     \textbf{True Links} &
-%     \textbf{Links} &
-%     \textbf{$tl_r$} &
-%     \textbf{Avg. \#Tokens} &
-%     \textbf{Avg. Token size} \\
-%     \midrule
-%     Oxquarry & EN & 9 & 52 & 0.173 & 160 & 1326 & 0.121 & 11650 & 3.819 \\
-%     Brunet & FR & 11 & 44 & 0.25 & 66 & 946 & 0.07 & 9778 & 4.013 \\
-%     St-Jean & FR & 30 & 200 & 0.15 & 670 & 19900 & 0.034 & 11533 & 3.928 \\
-%     St-Jean A & FR & 17 & 100 & 0.17 & 330 & 4950 & 0.067 & 11552 & 3.949 \\
-%     St-Jean B & FR & 19 & 100 & 0.19 & 258 & 4950 & 0.052 & 11513 & 3.907 \\
-%     \bottomrule
-%   \end{tabular}
-% \end{table*}

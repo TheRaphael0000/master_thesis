@@ -193,7 +193,8 @@ Assuming that the top rank are true links after the rank list fusion these link 
 The same reasoning can be applied for the bottom links by assuming them as false links.
 A weighting curve, here called soft-veto, can be design accordingly such that the score of top links are boosted, and bottom links score hindered.
 
-Using the reciprocal of the sigmoid function, such a curve can modelize. Equation~\ref{eq:sigmoid} and~\ref{eq:sigmoid_r}.
+Using the reciprocal of the sigmoid function, such a curve can modelize.
+Equation~\ref{eq:sigmoid} and~\ref{eq:sigmoid_r}.
 
 \begin{equation}
   \label{eq:sigmoid}
@@ -211,8 +212,12 @@ To break the symmetry for the curve, to be able to increase the conservation of 
 The solution proposed is to add a new parameter $r$, then take $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$.
 Breaking the symmetry with this technique creates a non-derivable point at $r$, but it's not a problem for the current use.
 Figure~\ref{fig:s_curve_r} shows the r parameter influance of a sigmoid with $c = 4$ and $r \in \left[0.1, 0.9\right]$.
-The $c$ parameter must be in the interval $\left]0, \infty\right[$, with a value close to $0$ the soft-veto have a weak effect and with a large value, for example 20, the soft veto has a strong effect on the top and bottom, see Figure~\ref{fig:s_curve_c}.
-The $r$ parameter must be in the interval $\left]0, 1\right[$, with a value close to $0$ the soft-veto have a strong effect on the top ranked links and with a large value a strong effect on the bottom ranked links, see Figure~\ref{fig:s_curve_r}.
+The $c$ parameter must be in the interval $\left]0, \infty\right[$.
+With a value close to $0$, the soft-veto have a weak effect.
+with a large value, for example 20, the soft veto has a strong effect on the top and bottom, see Figure~\ref{fig:s_curve_c}.
+The $r$ parameter must be in the interval $\left]0, 1\right[$.
+With a value close to $0$ the soft-veto have a strong effect on the top ranked links.
+With a large value a strong effect on the bottom ranked links, see Figure~\ref{fig:s_curve_r}.
 
 To apply the soft-veto, each score in the rank list is multiplied by the s-curve at the same rank.
 This soft-veto methodology aimed to be used on rank list before fusing, to have a more cleaved decision on the links positions.

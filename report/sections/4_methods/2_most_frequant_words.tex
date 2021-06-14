@@ -34,7 +34,8 @@ Example~\ref{ex:mfw_vector} show for the MFW vector computation.
 \end{example}
 
 No clear value of $n$ for the $n$-MFW is to choose over others, but depending on the documents' length a value between $50$ and $500$ tends to produce good results for the word token text representation~\cite{savoy_text_representation}.
-One of the main advantage of this reprentation is that once a distance is computed based on this vector. The results can be easily explained, since the feature vector is basicaly the proportion of the most frequent words in a document.
+One of the main advantage of this reprentation is that once a distance is computed based on this vector.
+The results can be easily explained, since the feature vector is basicaly the proportion of the most frequent words in a document.
 
 Instead of using directly the words to create the feature vector, another possibility is to use the lemma corresponding to each word, for example the sentence \textit{i saw two men with a saw} its lemmatized version is : \textit{i see two man with a saw} this requires advanced text preprocessing, but it can remove ambiguity.
 
@@ -42,12 +43,15 @@ Instead of considering every token as a word, another popular method is to creat
 To consider overlapping words, the whole document is synthesized into a long string by joining every token by an \textit{underscore} : $\_$, to remove visual ambiguity due to the nature of the space character.
 This technique can be further explored by combining for example two or more $n$-grams sizes together.
 $n$-grams can be really effective even though no clear meaning from each $n$-grams can be exploited at first sight.
-A simple explanation on why $n$-grams can be effective is by using $n$-grams of size 3 to 5 in most Germanic languages this can correspond to for example : the tense of the verbs (i.e. : \textit{ing\_}, \textit{ed\_}), some small common words (\textit{\_the\_}, \textit{\_and\_}, \textit{\_that}), or in French the adverbs (\textit{\_ment}) which can capture the style of an author.
+A simple explanation on why $n$-grams can be effective is by using $n$-grams of size 3 to 5 in most Germanic languages this can correspond to for example : the tense of the verbs (i.e. : \textit{"ing\_"}, \textit{"ed\_"}), some small common words (\textit{"\_the\_"}, \textit{"\_and\_"}, \textit{"\_that"}), or in French the adverbs (\textit{"\_ment"}) which can capture the style of an author.
 
 \begin{definition}[Letters $n$-grams]
   \label{def:letters_n_grams}
   A letter $n$-grams is a special type of tokenization which is constructed by creating a token of size $n$ for each substrings starting from the position $0$ to \textit{text\_size} $- n - 1$.
-  Example: Using 3-grams The string: \textit{"fox\_is\_brown"} is converted to: (\textit{"fox", "ox\_", "x\_i", "\_is", "is\_", "s\_b", "\_br", "bro", "row", "own"})
+
+  Example: \\
+  Using 3-grams the string: \textit{"fox\_is\_brown"} \\
+  is converted to: (\textit{"fox", "ox\_", "x\_i", "\_is", "is\_", "s\_b", "\_br", "bro", "row", "own"})
 \end{definition}
 
 An alternative version of the $n$-grams algorithm used here is defined in Definition~\ref{def:words_n_grams}.
@@ -59,7 +63,10 @@ The latter algorithm, is called in this study In-word $n$-grams (Definition~\ref
   \label{def:words_n_grams}
   In-word $n$-grams are created by applying the Letters $n$-grams algorithm on each token.
   When a token is smaller than $n$, the whole token is considered.
-  Example: Using words 3-grams on the following tokens: ["fox", "is", "brown"] is converted to: (\textit{"fox", "is", "bro", "row, "own"})
+
+  Example: \\
+  Using words 3-grams on the following tokens: ["fox", "is", "brown"] \\
+  is converted to: (\textit{"fox", "is", "bro", "row, "own"})
 \end{definition}
 
 Another possible stylistic aspect that can be detected from a text using the MFW approach is to consider the sentence constructions.
