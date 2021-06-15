@@ -1,13 +1,20 @@
 \subsection{Rank lists fusion}
 \label{sec:rank_lists_fusion}
 
-The idea of rank list fusion is to combine multiple rank lists in such way that the resulting rank list is more accurate modelization of the real rank list.
-The hypotetical best possible approximation of the real rank list in the case of authorship clustering is one such that  every true links (same authors document pairs) are at the top and every false links (different author document pairs) are at the bottom, therefore maximizing every metrics in Section~\ref{sec:rl_eval}.
+The idea of rank lists' fusion is to combine multiple rank lists in such a way that the resulting rank list produced is a more accurate modelling of a perfect rank list.
+This perfect rank list contain each true links (same author document pairs) are at the top and each false links (different author document pair) are at the bottom, therefore maximizing every metrics in Section~\ref{sec:rl_eval}.
 
 \subsubsection{Z-Score fusion}
 
-To merge scored rank list with differents order of magnitude, a simple and rather effective approach is to normalize every rank lists scores using the z-score (See Definition~\ref{def:z_score}) and then compute the merge rank list score for every link by taking the arithmetic mean of the same link score for every normalized rank lists.
+When merging rank list a problem arise: due to the difference of distance metric and/or text representation the scores used in the rank list are of different order of magnitude.
+
+To mitigate this problem, a simple and rather effective approach is to normalize the scores of each rank lists independently using the Z-Score (See Definition~\ref{def:z_score}).
+Then one can compute the resulting score of each link as the arithmetic mean of scores in every Z-Score normalized rank lists.
+The rank list can then be re-ordered by this new score.
+
 This method can provide good results, but lack of theoretical foundations.
+Additionally, this does not provide a framework which can handle both distance metrics and similarity metrics.
+
 Example~\ref{ex:z_score_fusion} show an example for the z-score score fusion computation using two simple rank lists.
 
 \begin{example}
@@ -30,7 +37,7 @@ Example~\ref{ex:z_score_fusion} show an example for the z-score score fusion com
 
   \vspace{0.5cm}
 
-  \textit{In this example, the scores does not satify the triangle inequality for the sake of simplicity.}
+  In this example, the scores does not satify the triangle inequality for the sake of simplicity.
 
   \vspace{0.5cm}
 
@@ -74,13 +81,16 @@ To do so the logistic regression is used.
 This method is similar to the one proposed in \textit{Le Calvé and Savoy (2000)}'s paper~\cite{le_calve_database_merging} and was used for merging rank list issued from information retrieval systems.
 
 The main idea here is to learn a logistic regression model for each combination of text representation and distance metrics (here denoted \textit{type of rank list}).
-From the rank list, a small feature vector for each link is created using : the log of the relative rank and the link score.
+From each distinct rank list, features for each link are created.
+We have selected the log of the relative rank and the link score.
+
 Since a probability of being a true link is desired, the target value for each link is either 1 for the true links or 0 when it's a false link.
+
 One model per type of rank list is trained, this model can provide for any new same type rank list, probabilities for each link being of being a true link.
 
 The probability framework can now be used on the rank list.
-To obtain the most reliable probability given multiple observations (different rank lists), the regression fusion concists in computing the expected value for each link's probability using these observations.
-In this case, the expected value is a simple average of the probabilities, since no weighting is used on the rank lists.
+To obtain the most reliable probability given multiple observations (different rank lists), the regression fusion consists in computing the expected value for each link's probability using these observations.
+In this case, the final value for sorting the rank list is an average of the probabilities, since no weighting is used on the rank lists.
 
 \subsubsection{Veto}
 

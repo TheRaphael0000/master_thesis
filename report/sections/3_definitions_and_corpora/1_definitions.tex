@@ -1,26 +1,26 @@
 \subsection{Definitions \label{sec:basic_notions}}
 
 This section contain basic notions commonly used in the authorship attribution, verification and clustering.
-Aswell as basic metric to evaluate simple properties of a corpus.
+Basic metrics to evaluate simple properties of a corpus.
 
 \begin{definition}[Document / Text]
-  A document or a text $X_i$ is a ordered list of token.
+  A document or a text $X$ is a ordered list of token.
   A token is a non-empty string.
 
   Example:
   \begin{equation}
-    X_i = ("\text{the}", "\text{quick}", "\text{brown}", "\text{fox}", "\text{.}")
+    X = ("\text{the}", "\text{quick}", "\text{brown}", "\text{fox}", "\text{.}")
   \end{equation}
   To obtain tokens from a long string containing a non-tokenized document, a tokenizer is needed.
   A document correspond to a sample without feature selection in the data science field.
 \end{definition}
 
 \begin{definition}[Author]
-  An author $Y_j$ is a string describing the author.
+  An author $Y$ is a string describing the author.
 
   Example:
   \begin{equation}
-    Y_j = "\text{Zola}"
+    Y = "\text{Zola}"
   \end{equation}
   Since this study is related to authorship clustering, predicated authors are called clusters.
   The authors are the ground truth labels for the clustering task.
@@ -40,7 +40,7 @@ Aswell as basic metric to evaluate simple properties of a corpus.
   A corpus is also called a dataset for most data science problems.
 \end{definition}
 
-\begin{definition}[Text Authorship]
+\begin{definition}[Authorship]
   The function $f$, is a surjective-only function which map every text $X_i$ to a single author $Y_j$
   \begin{equation}
     Y_j = f(X_i)
