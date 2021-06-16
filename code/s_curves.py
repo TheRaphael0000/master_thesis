@@ -8,7 +8,7 @@ from misc import normalize, sigmoid, sigmoid_r
 
 
 def soft_veto(rank_list, s_curve):
-    x, y = s_curve(len(rank_list))
+    y = s_curve(len(rank_list))
     updated_rank_list = []
     for i, (link, score) in enumerate(rank_list):
         if y[i] == np.inf:
@@ -30,10 +30,7 @@ def sigmoid_reciprocal(c=4, r=0.25):
         x1 = np.linspace(sigmoid(-c), sigmoid(0), n1, endpoint=False)
         x2 = np.linspace(sigmoid(0), 1 - sigmoid(-c), n2)
         y = np.array([sigmoid_r(xi) for xi in list(x1) + list(x2)])
-        x = np.array(range(n))
-        # normalize
-        x, y = normalize(x, 0, 1), normalize(y, -1, 1)
-        return x, y
+        return y
     return generator
 
 
@@ -46,7 +43,7 @@ def full_boost(top, bottom):
         y = np.ones((n,))
         y[:n1] = -np.inf
         y[n2:] = np.inf
-        return None, y
+        return y
     return generator
 
 if __name__ == '__main__':

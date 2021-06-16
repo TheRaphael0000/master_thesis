@@ -10,7 +10,7 @@ When merging rank list a problem arise: due to the difference of distance metric
 
 To mitigate this problem, a simple and rather effective approach is to normalize the scores of each rank lists independently using the Z-Score (See Definition~\ref{def:z_score}).
 Then one can compute the resulting score of each link as the arithmetic mean of scores in every Z-Score normalized rank lists.
-The rank list can then be re-ordered by this new score.
+The rank list can then be sorted by this new score.
 
 This method can provide good results, but lack of theoretical foundations.
 Additionally, this does not provide a framework which can handle both distance metrics and similarity metrics.
@@ -95,41 +95,53 @@ In this case, the final value for sorting the rank list is an average of the pro
 \subsubsection{Veto}
 
 The idea here is to provide a veto power for the rank lists, to try to improve the results.
-The following assumption is made: if a link have a low probability in a rank list before the fusion, this probably indicate a false link according to this rank list, thus having these links at the bottom of the rank list after the fusion can improve the results.
+The following assumption is made: if a link have a low probability in a rank list before the fusion.
+This probably indicate a false link, thus having this link at the bottom of the rank list after the fusion can improve the results.
 
-To fulfil the previously stated assumption, a possible way is to find every link in the ranks list before the fusion where the probability is under a certain threshold, and alter their probabilities (probability of being a true link) with $-\infty$.
+To fulfil the previously stated assumption, a possible way is to find every link in all rank lists before the fusion, where the probability is under a certain threshold.
+Then we can alter their probabilities (probability of being a true link) with $-\infty$.
 Every links below the probability threshold will have its final score also equal to $-\infty$ since the average with any number and $-\infty$ is always $-\infty$.
-When ordering the rank list, the links with a resulting $-\infty$ will subsequently be ranked at the bottom.
+When sorting the rank list, the links with a resulting $-\infty$ will subsequently be ranked at the bottom.
+This veto method is called $-\infty$-veto in this study.
 
-One problem arise with this solution, since multiple links can have a $-\infty$ probability, an order for these links is lost.
-The proposed solution is to set the probability of the affected links to one of these values instead : $0$, $-1$ or $-n$, with $n = \#(ranks lists for the fusion)$.
+Example~\ref{ex:veto_ninf} showcase an example when this method can provide better results than the standard fusion in Example~\ref{ex:noveto}.
+As you can see with the rank lists in the example, rank list 1 give a 0.20 probability for a link with ID = 4 of being a true link but rank list 3 give this link a 0.80 probability.
+The link with ID = 3 is ranked 3rd but with the veto the link is ranked 5th tie with link ID = 5.
+
+One problem arise with this solution, multiple links can have a $-\infty$ probability.
+The proposed solution is to set the probability of the affected links to one of these values instead : $0$, $-1$ or $-n$, with n equal to the number of rank lists to fuse.
 The greater, the value, the stronger the penality of the veto.
 The $-\infty$ method is the only real veto, in the first meaning of the veto definition, the other methods can be considered as a weighted veto.
 
-Example~\ref{ex:veto} showcase an example where this method can provide better results.
-As you can see with the rank lists in the example, rank list 1 give a 0.20 probability for link 4 of being a true link but rank list 3 give this link a 0.80 probability.
-Without the veto the link is ranked 3rd but with the veto the link is ranked 5th tie with link 5.
-The $-n$, method provide a why to avoid having tie and keep the strong impact of the $-\infty$ veto.
-By setting to $0$, $-1$ or $-n$ can lightens the veto effect and conserve an order in the bottom rank links.
+The $-n$, method provide a way to avoid having tie and keep the strong impact of the $-\infty$-veto when a lot of rank list are fused.
+By setting to $0$, $-1$ or $-n$ can lighten the veto effect and conserve an order in the bottom rank links.
+An example using the $0$-veto is presented in Example~\ref{ex:veto_0}.
+Here the link with ID = 4 is ranked 4th due to a lighter effect of this veto.
+Link with ID = 5 is still rank at the bottom.
 
 \begin{example}
   \centering
-  \caption{Veto fusion}
-  \label{ex:veto}
+  \caption{Fusion without veto}
+  \label{ex:noveto}
 
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{Rank lists probabilites}
-    \begin{tabular}{l l l}
+    \subcaption{Rank lists}
+    \begin{tabular}{c c|c c|c c}
       \toprule
-      Rank list 1 & Rank list 2 & Rank list 3 \\
+      \multicolumn{2}{c}{Rank list 1} &
+      \multicolumn{2}{c}{Rank list 2} &
+      \multicolumn{2}{c}{Rank list 3} \\
+      Link ID & Score &
+      Link ID & Score &
+      Link ID & Score \\
       \midrule
-      0 : 0.95    & 0 : 0.90    & 5 : 0.90 \\
-      1 : 0.75    & 3 : 0.70    & 4 : 0.80 \\
-      2 : 0.60    & 4 : 0.65    & 0 : 0.70 \\
-      3 : 0.50    & 1 : 0.50    & 1 : 0.60 \\
-      4 : 0.20    & 2 : 0.30    & 2 : 0.50 \\
-      5 : 0.10    & 5 : 0.10    & 3 : 0.40 \\
+      0 & 0.95 & 0 & 0.90 & 5 & 0.90 \\
+      1 & 0.75 & 3 & 0.70 & 4 & 0.80 \\
+      2 & 0.60 & 4 & 0.65 & 0 & 0.70 \\
+      3 & 0.50 & 1 & 0.50 & 1 & 0.60 \\
+      4 & 0.20 & 2 & 0.30 & 2 & 0.50 \\
+      5 & 0.10 & 5 & 0.10 & 3 & 0.40 \\
       \bottomrule
     \end{tabular}
   \end{subexample}
@@ -138,17 +150,45 @@ By setting to $0$, $-1$ or $-n$ can lightens the veto effect and conserve an ord
 
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{Rank list average link probability without veto}
+    \subcaption{Rank lists fusion}
     \begin{tabular}{l l l}
       \toprule
-      Rank & Link: Average \\
+      Rank & Link ID & Average \\
       \midrule
-      1st & 0 : $(0.95 + 0.90 + 0.70)/3 = 0.85$ \\
-      2nd & 1 : $(0.75 + 0.50 + 0.60)/3 = 0.62$ \\
-      3rd & 4 : $(0.20 + 0.65 + 0.80)/3 = 0.55$ \\
-      4th & 3 : $(0.50 + 0.70 + 0.40)/3 = 0.53$ \\
-      5th & 2 : $(0.60 + 0.30 + 0.50)/3 = 0.47$ \\
-      6th & 5 : $(0.10 + 0.10 + 0.90)/3 = 0.37$ \\
+      1st & 0 & $(0.95 + 0.90 + 0.70)/3 = 0.85$ \\
+      2nd & 1 & $(0.75 + 0.50 + 0.60)/3 = 0.62$ \\
+      3rd & 4 & $(0.20 + 0.65 + 0.80)/3 = 0.55$ \\
+      4th & 3 & $(0.50 + 0.70 + 0.40)/3 = 0.53$ \\
+      5th & 2 & $(0.60 + 0.30 + 0.50)/3 = 0.47$ \\
+      6th & 5 & $(0.10 + 0.10 + 0.90)/3 = 0.37$ \\
+      \bottomrule
+    \end{tabular}
+  \end{subexample}
+\end{example}
+
+\begin{example}
+  \centering
+  \caption{Fusion with $-\infty$-veto at 0.25}
+  \label{ex:veto_ninf}
+
+  \begin{subexample}{\linewidth}
+    \centering
+    \subcaption{Rank lists}
+    \begin{tabular}{c c|c c|c c}
+      \toprule
+      \multicolumn{2}{c}{Rank list 1} &
+      \multicolumn{2}{c}{Rank list 2} &
+      \multicolumn{2}{c}{Rank list 3} \\
+      Link ID & Score &
+      Link ID & Score &
+      Link ID & Score \\
+      \midrule
+      0 & 0.95 & 0 & 0.90 & 5 & 0.90 \\
+      1 & 0.75 & 3 & 0.70 & 4 & 0.80 \\
+      2 & 0.60 & 4 & 0.65 & 0 & 0.70 \\
+      3 & 0.50 & 1 & 0.50 & 1 & 0.60 \\
+      4 & -inf & 2 & 0.30 & 2 & 0.50 \\
+      5 & -inf & 5 & -inf & 3 & 0.40 \\
       \bottomrule
     \end{tabular}
   \end{subexample}
@@ -157,17 +197,45 @@ By setting to $0$, $-1$ or $-n$ can lightens the veto effect and conserve an ord
 
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{$-\infty$ veto with threshold at 0.25}
+    \subcaption{Rank list fusion}
     \begin{tabular}{l l l}
       \toprule
-      Rank list 1 & Rank list 2 & Rank list 3 \\
+      Rank & Link ID & Average \\
       \midrule
-      0 : 0.95    & 0 : 0.90    & 5 : 0.90 \\
-      1 : 0.75    & 3 : 0.70    & 4 : 0.80 \\
-      2 : 0.60    & 4 : 0.65    & 0 : 0.70 \\
-      3 : 0.50    & 1 : 0.50    & 1 : 0.60 \\
-      4 : -inf    & 2 : 0.30    & 2 : 0.50 \\
-      5 : -inf    & 5 : -inf    & 3 : 0.40 \\
+      1st & 0 & $(0.95 + 0.90 + 0.70)/3 = 0.85$ \\
+      2nd & 1 & $(0.75 + 0.50 + 0.60)/3 = 0.62$ \\
+      3rd & 3 & $(0.50 + 0.70 + 0.40)/3 = 0.53$ \\
+      4th & 2 & $(0.60 + 0.30 + 0.50)/3 = 0.47$ \\
+      5-6th & 4 & $(-\infty + 0.65 + 0.80)/3 = -\infty$ \\
+      5-6th & 5 & $(-\infty + -\infty + 0.90)/3 = -\infty$ \\
+      \bottomrule
+    \end{tabular}
+  \end{subexample}
+\end{example}
+
+\begin{example}
+  \centering
+  \caption{Fusion with $0$-veto at 0.25}
+  \label{ex:veto_0}
+
+  \begin{subexample}{\linewidth}
+    \centering
+    \subcaption{Rank lists}
+    \begin{tabular}{c c|c c|c c}
+      \toprule
+      \multicolumn{2}{c}{Rank list 1} &
+      \multicolumn{2}{c}{Rank list 2} &
+      \multicolumn{2}{c}{Rank list 3} \\
+      Link ID & Score &
+      Link ID & Score &
+      Link ID & Score \\
+      \midrule
+      0 & 0.95 & 0 & 0.90 & 5 & 0.90 \\
+      1 & 0.75 & 3 & 0.70 & 4 & 0.80 \\
+      2 & 0.60 & 4 & 0.65 & 0 & 0.70 \\
+      3 & 0.50 & 1 & 0.50 & 1 & 0.60 \\
+      4 & 0.00 & 2 & 0.30 & 2 & 0.50 \\
+      5 & 0.00 & 5 & 0.00 & 3 & 0.40 \\
       \bottomrule
     \end{tabular}
   \end{subexample}
@@ -176,17 +244,17 @@ By setting to $0$, $-1$ or $-n$ can lightens the veto effect and conserve an ord
 
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{Rank list average link probability and $-1$ veto}
+    \subcaption{Rank lists fusion}
     \begin{tabular}{l l l}
       \toprule
-      Rank & Link: Average \\
+      Rank & Link ID & Average \\
       \midrule
-      1st & 0 : $(0.95 + 0.90 + 0.70)/3 = 0.85$ \\
-      2nd & 1 : $(0.75 + 0.50 + 0.60)/3 = 0.62$ \\
-      3rd & 3 : $(0.50 + 0.70 + 0.40)/3 = 0.53$ \\
-      4th & 2 : $(0.60 + 0.30 + 0.50)/3 = 0.47$ \\
-      5-6th & 4 : $(-inf + 0.65 + 0.80)/3 = -inf$ \\
-      5-6th & 5 : $(-inf + -inf + 0.90)/3 = -inf$ \\
+      1st & 0 & $(0.95 + 0.90 + 0.70)/3 = 0.85$ \\
+      2nd & 1 & $(0.75 + 0.50 + 0.60)/3 = 0.62$ \\
+      3rd & 3 & $(0.50 + 0.70 + 0.40)/3 = 0.53$ \\
+      4th & 4 & $(0.00 + 0.65 + 0.80)/3 = 0.48$ \\
+      5th & 2 & $(0.60 + 0.30 + 0.50)/3 = 0.47$ \\
+      6th & 5 & $(0.00 + 0.00 + 0.90)/3 = 0.30$ \\
       \bottomrule
     \end{tabular}
   \end{subexample}
@@ -194,12 +262,12 @@ By setting to $0$, $-1$ or $-n$ can lightens the veto effect and conserve an ord
 
 \subsubsection{Soft-veto using S-Curve}
 
-As an extension to the veto method, an additional desired constraint is to favour top ranked link and as well as penalizing bottom ranked links like the veto method when fusing rank lists.
-This constraint can be easily explained by observing the distance over the rank graph of the rank list.
-Figure~\ref{fig:distance_over_rank} clearly show us the top ranked links and bottom ranked links have a sharper difference in distance than in than the middle section.
+As an extension to the veto method, an additional desired constraint is to favour top ranked link and as well as penalizing bottom ranked links.
+This constraint can be easily explained by observing the distribution of the distances according to the rank.
+Figure~\ref{fig:distance_over_rank} clearly show us the top ranks and bottom ranks have a sharper difference in distance than in than the middle section.
 
-Top ranked links correspond to similar documents and bottom links correspond to negatively correlated documents.
-Assuming that the top rank are true links after the rank list fusion these link should also be top rank.
+Top ranks correspond to documents with the same author and bottom links correspond documents with different authors.
+Assuming that the top ranks are true links after the rank list fusion these links should also appear top rank.
 The same reasoning can be applied for the bottom links by assuming them as false links.
 A weighting curve, here called soft-veto, can be design accordingly such that the score of top links are boosted, and bottom links score hindered.
 
@@ -215,27 +283,32 @@ Equation~\ref{eq:sigmoid} and~\ref{eq:sigmoid_r}.
   S^{-1}(x) = -\ln{\frac{x-1}{x}}
 \end{equation}
 
-The steepness of the curve can be adjusted by changing the start and the end of the interval and then normalizing the values between -1 and 1.
-Figure~\ref{fig:s_curve_c} shows the $S^-1(x)$ function normalized between -1 and 1 for the intervals between $\lim\limits_{c \rightarrow 0} \left[S(c), S(c)\right]$ and $\left[S(-20), S(+20)\right]$.
-A greater interval size increases the steepness which correspond to an increase of the rank conservation of the top and bottom ranked links and decreasing the rank conservation of the middle ranked links, this corresponds to geometrical zoom in and out of the curve.
-To break the symmetry for the curve, to be able to increase the conservation of the top rank while decreasing the conservation of the bottom ranked.
-The solution proposed is to add a new parameter $r$, then take $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$.
-Breaking the symmetry with this technique creates a non-derivable point at $r$, but it's not a problem for the current use.
-Figure~\ref{fig:s_curve_r} shows the r parameter influance of a sigmoid with $c = 4$ and $r \in \left[0.1, 0.9\right]$.
+Since the reciprocal of the sigmoid function is continuous and the number of links in a rank list is discrete, the idea is to sample values in this curve at regular intervals.
+Controlling the steepness of this curve can influance the strength of the veto.
+To control the steepness a parameter called $c$ is introduced.
+$c$ correspond to a position on the x-axis of the sigmoid function.
+The sampling of the sigmoid reciprocal is done in the interval $\left[S(c), S(c)\right]$.
+A large interval gives a greater steepness and a small interval a less steep curve.
+$c$ can not be equal to 0 otherwise the interval is a single number (often called degenerate interval).
 The $c$ parameter must be in the interval $\left]0, \infty\right[$.
 With a value close to $0$, the soft-veto have a weak effect.
 with a large value, for example 20, the soft veto has a strong effect on the top and bottom, see Figure~\ref{fig:s_curve_c}.
+
+To break the symmetry of the curve and to be able to increase the conservation of the top rank while decreasing the conservation of the bottom ranked.
+The solution proposed is to have $r \cdot N$ samples for the left side of the curve $\left[S(-c), S(0)\right]$
+and $(1-r) \cdot N$ samples for the right side of the curve $\left[S(0), S(c)\right]$.
+Figure~\ref{fig:s_curve_r} shows the r parameter influance of a sigmoid with $c = 4$ and $r \in \left[0.1, 0.9\right]$.
 The $r$ parameter must be in the interval $\left]0, 1\right[$.
 With a value close to $0$ the soft-veto have a strong effect on the top ranked links.
 With a large value a strong effect on the bottom ranked links, see Figure~\ref{fig:s_curve_r}.
 
 To apply the soft-veto, each score in the rank list is multiplied by the s-curve at the same rank.
 This soft-veto methodology aimed to be used on rank list before fusing, to have a more cleaved decision on the links positions.
-This stragegy can be use on any type of scoring method (z-score scores or probabilites).
+This stragegy can be use on any type of scoring method (similarity, distances, z-score scores or probabilites).
 
 \begin{figure}
   \centering
-  \caption{Distance over rank in the rank list using the smoothed Manhattan distance, 500 MFW tokens on the Brunet dataset}
+  \caption{Distance values over rank in the rank list using the smoothed Manhattan distance, 500 MFW tokens on the Brunet dataset}
   \label{fig:distance_over_rank}
   \includegraphics[width=\linewidth]{img/distance_over_rank.png}
 \end{figure}
@@ -245,13 +318,13 @@ This stragegy can be use on any type of scoring method (z-score scores or probab
   \caption{S-Curves parameters}
   \label{fig:s_curve_params}
 
-  \subcaption{$S^-1(x)$, sampled in $\left[S(-c), S(+c)\right]$ and normalized between -1 and 1}
+  \subcaption{$S^-1(x)$, 500 samples (for a rank list with 500 links) in $\left[S(-c), S(+c)\right]$}
   \label{fig:s_curve_c}
   \includegraphics[width=\linewidth]{img/s_curve_c.png}
 
   \vspace{0.5cm}
 
-  \subcaption{Sampling $S^-1(x)$ with $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$}
+  \subcaption{500 sample of $S^-1(x)$ with $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$}
   \label{fig:s_curve_r}
   \includegraphics[width=\linewidth]{img/s_curve_r.png}
 

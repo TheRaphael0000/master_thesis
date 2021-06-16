@@ -1,52 +1,154 @@
 \subsection{Authors Clustering \label{sec:authors_clustering}}
 
 To find clusters of authors, a possible way is to use a hierarchical clustering algorithm on a rank list.
-In a rank list, at each rank the link indicate if the two documents should belong to the same cluster in order of certainty.
+In such a list, we can establish a link between the two documents appearing on the same rank.
+This link should indicate the two documents should belong to the same cluster in order of certainty.
+
 The hardest task with this clustering scheme is to find the position in the rank list where true link become less frequent than false link.
-In a clustering context, the optimal position is unknown since labels are not available, and should be the one that minimized the true links under the position and the false links above.
-In this study, this position will also be called the \textit{cut}.
-We define the true positive as true links above the cut, true negatives as false links under the cut, false positive as true links under the cut and false negatives as false links above the cut.
+In a clustering context, the optimal position is unknown since the true labels are not available, and should be the one that minimized the true links under the position and the false links above.
+
+In this study, finding this position will also be refered as finding the \textit{cut}.
+We define the true positive as true links above the cut, true negatives as false links under the cut.
+In addition false positive as true links under the cut and false negatives as false links above the cut.
+
 To find this cut, three approaches were explored : an unsupervised, a semi-supervised and a supervised.
-The unsupervised method can be used when only one corpus is available and do not have any labels.
-The semi-supervised learn based on a corpus with labels (training corpus) a rank list score where the cut should be for any other corpus (called testing corpus), this method does not consider the testing corpus for establishing the cut.
+The unsupervised method can be used when only one corpus is available and no learning procedures can be applied.
+The semi-supervised learn based on a corpus with labels (training corpus) a rank list score where the cut should be for any other corpus (called testing corpus).
 Finally, the supervised approach, learn based on a corpus rank list with labels (training corpus) a model which can be used in conjunction with any other corpus rank list (testing corpus) generated in the same manner as the training corpus to find the optimal cut.
 
 \subsubsection{Agglomerative clustering}
 
 The scikit-learn package~\cite{sklearn} provide an implementation bottom-up implementation of the hierarchical clustering, which is called agglomerative clustering.
-Using this approach, at the start of the algorithm, each document belong to a different cluster.
-Clusters are merged based on the scores in the rank list, each step the algorithm merge clusters using the minimal score based on the linkage criteria.
-Multiple linkage criteria are available : \textit{ward} (metric that aim to minimize the variance of the cluster merged), \textit{average-linkage} (use the average score of each link of the cluster merged), \textit{complete-linkage} (use the maximal score of the cluster merged), \textit{single-linkage} (use the minimal score of the cluster merged).
-Ward linkage was discarded since the current implementation only allow euclidean distance for its computation.
+
+The agglomerative clustering follow this procedure:
+\begin{enumerate}
+  \item The rank list used is converted into a 2D matrix with each link representing a element of the matrix.
+  \item At the begining, each document is considered as single document cluster.
+  \item The link (element) with the lowest score in the matrix is used to merge the next clusters.
+  \item The matrix is updated following a linkage criteria.
+  \item Point 3 and 4 can be repeated until a single cluster is remaining.
+\end{enumerate}
+
+Multiple linkage criteria are available : \textit{Ward} (metric that aim to minimize the variance of the cluster merged), \textit{average-linkage} (use the average score of each link of the cluster merged), \textit{complete-linkage} (use the maximal score of the cluster merged), \textit{single-linkage} (use the minimal score of the cluster merged).
+Example~\ref{ex:agglomerative_clustering} show an example for the merging procedures and the linkage criteria.
+
+Ward linkage was discarded since the current implementation only allow Euclidian distance for its computation.
 The merging procedure can be stopped either of the two following criteria : When a certain number of cluster is reached or when the minimal score for the next merge is above a certain value (distance threshold).
-On of the main issue with this implementation is that, it does not provide a way to stop the algorithm at each merging step.
+
+One of the main issue with this implementation is that, it does not provide a way to stop the algorithm at each merging step.
 The algorithm was re-implementated to allow this.
 
 The so called \textit{cut} can be associated to the distance threshold.
 
+\begin{example}
+  \small
+  \centering
+  \caption{Agglomerative clustering}
+  \label{ex:agglomerative_clustering}
+
+  \begin{subexample}{\linewidth}
+    \centering
+    \subcaption{Initial clusters and their distances}
+    \begin{tabular}{c|c c c c}
+      \toprule
+        & A & B & C & D \\
+      \midrule
+      A & - & \textbf{1} & $2$ & $3$ \\
+      B & - & - & $8$ & $7$\\
+      C & - & - & - & $6$ \\
+      D & - & - & - & - \\
+      \bottomrule
+    \end{tabular}
+  \end{subexample}
+
+  \vspace{0.2cm}
+  The link with the smallest distance is A-B with a distance of 1.
+  At the next step the clusters A and B are merged into the cluster called AB.
+
+  \vspace{0.5cm}
+
+  \begin{subexample}{\linewidth}
+    \centering
+    \subcaption{First merge using single-linkage}
+    \begin{tabular}{c|c c c}
+      \toprule
+        & AB & C & D \\
+      \midrule
+      AB & - & $\text{min} \left[2, 8 \right] = 2$ & $\text{min} \left[3, 7 \right] = 3$ \\
+      C  & - & - & $6$ \\
+      D  & - & - & - \\
+      \bottomrule
+    \end{tabular}
+  \end{subexample}
+
+  \vspace{0.2cm}
+  Next step will merge AB and C.
+
+  \vspace{0.5cm}
+
+  \begin{subexample}{\linewidth}
+    \centering
+    \subcaption{First merge using average-linkage}
+    \begin{tabular}{c|c c c}
+      \toprule
+        & AB & C & D \\
+      \midrule
+      AB & - & $\text{avg} \left[2, 8 \right] = 5$ & $\text{avg} \left[3, 7 \right] = 4$ \\
+      C  & - & - & $6$ \\
+      D  & - & - & - \\
+      \bottomrule
+    \end{tabular}
+  \end{subexample}
+
+  \vspace{0.2cm}
+  Next step will merge AB and D.
+
+  \vspace{0.5cm}
+
+  \begin{subexample}{\linewidth}
+    \centering
+    \subcaption{First merge using complete-linkage}
+    \begin{tabular}{c|c c c}
+      \toprule
+        & AB & C & D \\
+      \midrule
+      AB & - & $\text{max} \left[2, 8 \right] = 8$ & $\text{max} \left[3, 7 \right] = 7$ \\
+      C  & - & - & 6 \\
+      D  & - & - & - \\
+      \bottomrule
+    \end{tabular}
+  \end{subexample}
+
+  \vspace{0.2cm}
+  Next step will merge C and D.
+\end{example}
+
 \subsubsection{Unsupervised clustering \label{sec:unsupervised_clustering}}
 
 The idea is to run the agglomerative clustering at each number of clusters (at each merge).
-By discarding clustering with $N$ and clusters $1$, This produce $N - 2$ possible clusterings, each of those can be evaluated using the mean silhouette score.
+By discarding clustering with $N$ and clusters $1$, This produce $N - 2$ possible clusterings, each of those can be evaluated using the mean Silhouette score.
 See definition~\ref{def:silhouette}.
 
-\begin{definition}[Silhouette score~\cite{sklearn}]
+\begin{definition}[Mean Silhouette score~\cite{sklearn}~\cite{wiki_silhouette}]
   \label{def:silhouette}
-  The silhouette score is an unsupervised clustering metric which evaluate a clustering result by measuring the cohesion and separation of the clusters.
+  The mean Silhouette score is an unsupervised clustering metric which evaluate a clustering result by measuring the cohesion and separation of the clusters.
   \begin{equation}
-    \frac{b - a}{max(a, b)}
+    s = \frac{1}{|C|} \sum_{i = 0}^{|C|} \frac{b(i) - a(i)}{max(a(i), b(i))}
   \end{equation}
   \begin{equation*}
     \begin{split}
-      a&: \text{intra-cluster distance}\\
-      b&: \text{nearest-cluster distance}
+      a(i)&: \text{mean intra-cluster distance} \\
+      a(i)& = \frac{1}{|C_i| - 1} \sum_{j \in C_i, i\neq j} d(i, j) \\
+      b(i)&: \text{mean nearest-cluster distance} \\
+      b(i)& = \min_{k\neq i} \frac{1}{|C_k|} \sum_{j \in C_k} d(i, j) \\
     \end{split}
   \end{equation*}
+  With $C$ the set of clusters, $C_i$ the i-th cluster, $d(i, j)$ the distance between the document i and j.
   The value is ranged between -1 and 1, a large value indicate a good cohesion and good separation of the clusters (low intra-cluster distance, high nearest-cluster distance).
 \end{definition}
 
-The idea to find the best clustering is to iterate over the number of clusters from $2$ to $N$, and computing mean silhouette score for each sample.
-The best clustering is the one which have the largest mean silhouette score.
+The idea is to apply the hierarchical clustering at each possible number of clusters (from $N - 1$ to $2$), and compute the mean Silhouette score for each sample.
+The best clustering is the one which have the largest mean Silhouette score.
 An alternative to this method is the Iterative Positive Silhouette (IPS) and was proposed in~\cite{automated_unsupervised}
 
 \subsubsection{Semi-supervised distance threshold selection using two Beta distributions}
