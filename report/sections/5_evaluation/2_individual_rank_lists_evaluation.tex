@@ -1,6 +1,6 @@
 \subsection{Individual rank lists evaluation \label{sec:eval_rl}}
 
-In this section, the goal is to find the most adapted parameters for each rank list method proposed in Section~\ref{sec:methods}.
+In this section, the goal is to find the most adapted parameters for each rank list method proposed in Chapter~\ref{sec:methods}.
 After each experiment, the most convincing metrics are retained for the fusion step in Section~\ref{sec:eval_fusion}.
 The results of these experiments are summarized in Section~\ref{sec:annex_retained_text_representation} in annex.
 
@@ -9,7 +9,7 @@ The results of these experiments are summarized in Section~\ref{sec:annex_retain
 Previous studies have shown the importance of having documents of good quality and with at least 5000 tokens to have reliable results.
 Skilled authors can easily change their style to imitate others for small texts, but it becomes more difficult for larger texts~\cite{savoy_stylo}.
 
-For this study, an experiment on the St-Jean corpus is accomplished, in the order to show the importance of having large documents.
+For this study, an experiment on the St-Jean corpus is accomplished, to show the importance of having large documents.
 To test this parameter, the number of token is artificially modified by considering only the $n$ first tokens for each text, with $n$ ranging between 9000 and 250 with steps of 250 tokens.
 Figure~\ref{img:degradation} shows the three metrics used (Average precision, RPrec, HPrec) over the number of tokens.
 Every metric decrease over the text size, which indicate that it becomes harder to determinate documents pairs with the same author as the text size decrease.
@@ -22,23 +22,25 @@ For this study having standard and easier corpus is required in order to show th
   \centering
   \includegraphics[width=\linewidth]{img/degradation.png}
   \caption{St-Jean ranks list evaluation on AP, RPrec and HPrec over the text size.
-  Rank list computed using 500 MFW and the zscored-normalized cosine distance}
+  Rank list computed using 500 MFW and the Z-Score normalized cosine distance}
   \label{img:degradation}
 \end{figure}
 
 \subsubsection{MFW Token and Lemma}
 \label{sec:mfw_token_lemma}
 
-Here the goal is to compare two similar text representations, which are the token representation, words as they appear in the novels, and the lemmatize representation, for example \textit{il voit} (he sees) will be lemmatized to \textit{il voir} (he see).
+Here the goal is to compare two similar text representations, which are the token representation and the lemmatize representation.
+For example \textit{il voit} (he sees) will be lemmatized to \textit{il voir} (he see).
 For this kind of representation, previous studies have shown that using MFW (most frequent words) vector size of around 500 tends to produce better outcomes~\cite{savoy_text_representation}.
 
 After creating the rank lists with the proposed distance measures (ref. Section~\ref{sec:fv_distances}) on the two representations for a MFW vector size ranging between 100 and 2000 with a step of 100, on the two datasets containing the lemmatize representation (Brunet and St-Jean), the two plots in Figure~\ref{fig:token_vs_lemma} show the average precision (AP) for the resulting rank lists.
 
 This representation seem to have good results with a MFW vector size of 500 for most of the metrics, this corroborates previous studies results.
+
 A few metrics, such as Manhattan distance, Tanimoto distance or Clark distance can give better results with slightly bigger vectors.
 In most cases, the token representation provide on both dataset a greater average precision compared to the lemma representation.
 An interesting example to be worth noticing concern the Manhattan distance, when using the token representation it tends to decrease the AP faster than the lemma representation as the MFW vector size increase.
-The euclidean distance seem to be the least appropriate distance measure for this task.
+The Euclidean distance seems to be the least appropriate distance measure for this task.
 The Clark distance have a really poor average precision when the MFW vector is too small, but after reaching 500 it produces one of the best pay-off of the experiment.
 Using the most appropriate MFW-vector size for each distance metric, the choice using the right distance metric with these text representations, can increase the average precision by a factor of $13$ to $17$ \% depending on the dataset.
 Over all, the cosine distance seem to be one of the most appropriate choice when dealing with these datasets and text representations.
@@ -192,7 +194,7 @@ Figure~\ref{fig:first_last_letters_ngrams} shows the results for this experiment
 
 In the three dataset, the 3-last letters and 3-first letters gives a lower average precision and quickly converge to an equilibrium value at around 1500 MFW.
 5-letters representations tend to produce better results than 3-letters and 4-letters representation as the MFW increase.
-In the Oxquarry corpus, word 4-grams and word 5-grams give an outstanding ~95.0\% in average precision, but is not as efficient for the Brunet dataset.
+In the Oxquarry corpus, in-word $4$-grams and in-word $5$-grams give an outstanding ~95.0\% in average precision, but is not as efficient for the Brunet dataset.
 For the Brunet dataset, the 5-first letters can a good results compared to other text representations with small MFW vector size.
 And for St-Jean, the 5-first letters with a small MFW vector size giv the best results.
 No clear best configuration can be extracted with these results since the results are mixed across datasets, thus for this experiment, no text representation / distance measure are retained for the fusion.
@@ -301,11 +303,11 @@ To understand more easily the results for the three approach, the \textit{every 
 Table~\ref{tab:baseline_every_token} show the average precision baseline using the \textit{every token} approach.
 Table~\ref{tab:gain_without_hapax_legomena} and Table~\ref{tab:gain_750_mfw} show the gain over the baseline for the \textit{without hapax legomena} approach and \textit{750-MFW} approach respectively.
 
-When looking at the baseline : the Manhattan, Euclidean and Clark distance measure have a terrible average precision, all are below 0.3 in average.
+When looking at the baseline : the Manhattan, Euclidean and Clark distance measure have a poor average precision, all are below 0.3 in average.
 The other metric have average to good results which range from 0.58 for the KLD to 0.79 with the Cosine distance.
 The cosine distance with \textit{every token} reach a 0.91 average precision for the Oxquarry corpus.
 When removing hapax legomena, for most distance metrics the gain in average precision is limited, except for the Clark distance where the mean average precision rise from 0.3 to 0.5.
-After limiting to the 750-MFW, the Manhattan, Euclidean and Clark distance, the ones that had terrible results for the baseline increase their average precision by around 48\% which correspond to an average precision of 0.71, 0.63 and 0.78 respectively, which makes them in the same range as the other metrics in the baseline.
+After limiting to the 750-MFW, the Manhattan, Euclidean and Clark distance, the ones that had poor results for the baseline increase their average precision by around 48\% which correspond to an average precision of 0.71, 0.63 and 0.78 respectively, which makes them in the same range as the other metrics in the baseline.
 Across every metric and dataset, removing hapax legomena increase the average precision in average by 0.04, and limiting to the 750-MFW by 0.21.
 This clearly indicate the importance of limiting the size of the vector.
 
@@ -389,8 +391,9 @@ This experiment is run on the three corpora three times to have a better approxi
 The results in terms of efficiency of the resulting rank list are shown in Table~\ref{tab:compression_evaluation_results}.
 The average time of the three runs are in Table~\ref{tab:compression_evaluation_times} when run on an Intel(R) Core(TM) i7-5820K CPU @ 3.30GHz.
 
-GZip seem to be giving the worse results on every dataset with an average AP of $\sim -0.20$ in compared to LZMA and BZip2.
+GZip seem to be giving the worse results on every dataset with an absolute average AP of $\sim -0.20$ in compared to LZMA and BZip2.
 LZMA gives the best results on every dataset tested, but BZip2 have close results.
+
 The cosine-based compression distance (CBC) tend to give better results over the normalized compression distance (NCD).
 In terms of time complexity BZip2 is the fastest algorithm of the 3 proposed, LZMA is $\sim ~5-6$ times slower than BZip2, and GZip slower than BZip2 by around $\sim 5-20$\%.
 No significant time differences is recorded between the NCD and CBC distance measures, since the greatest complexity reside in the compression algorithm.
