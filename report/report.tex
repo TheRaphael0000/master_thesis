@@ -58,36 +58,11 @@
 ]{example}
 \DeclareCaptionSubType{example}
 
-\begin{document}
-\pagenumbering{roman}
-\setcounter{page}{-1}
-
 \date{Mars-August, 2021}
 \author{Raphaël Margueron}
 
-\onecolumn
-\subfile{sections/0_preambule/0_preambule}
+\begin{document}
 
-\twocolumn
-\pagenumbering{arabic}
-\subfile{sections/1_introduction/0_introduction}
-\subfile{sections/2_state_of_the_art/0_state_of_the_art}
-\subfile{sections/3_definitions_and_corpora/0_definitions_and_corpora}
-\subfile{sections/4_methods/0_methods}
-\subfile{sections/5_evaluation/0_evaluation}
-\subfile{sections/6_conclusion/0_conclusion}
-
-\onecolumn
-\pagenumbering{Roman}
-\renewcommand{\thesubsection}{\Alph{subsection}}
-\renewcommand{\thetable}{\Alph{table}}
-\renewcommand{\thefigure}{\Alph{figure}}
-\setcounter{subsection}{0}
-\setcounter{table}{0}
-\setcounter{figure}{0}
-
-\subfile{sections/references}
-\clearpage
-\subfile{sections/annex}
+\subfile{sections/sections.tex}
 
 \end{document}
