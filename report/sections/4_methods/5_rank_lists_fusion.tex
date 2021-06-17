@@ -15,7 +15,7 @@ The rank list can then be sorted by this new score.
 This method can provide good results, but lack of theoretical foundations.
 Additionally, this does not provide a framework which can handle both distance metrics and similarity metrics.
 
-Example~\ref{ex:z_score_fusion} show an example for the z-score score fusion computation using two simple rank lists.
+Example~\ref{ex:z_score_fusion} show an example for the Z-Score fusion computation using two simple rank lists.
 
 \begin{example}
   \caption{Z-Score fusion of two rank lists}
@@ -304,7 +304,7 @@ With a large value a strong effect on the bottom ranked links, see Figure~\ref{f
 
 To apply the soft-veto, each score in the rank list is multiplied by the s-curve at the same rank.
 This soft-veto methodology aimed to be used on rank list before fusing, to have a more cleaved decision on the links positions.
-This stragegy can be use on any type of scoring method (similarity, distances, z-score scores or probabilites).
+This stragegy can be use on any type of scoring method (similarity, distances, Z-Score scores or probabilites).
 
 \begin{figure}
   \centering

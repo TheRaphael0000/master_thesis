@@ -3,7 +3,7 @@
 \subsubsection{Rank list fusion evaluation \label{sec:eval_fusion}}
 
 In this experiment, the goal to understand if fusing rank lists can create better rank lists.
-The methodology used, is to create $n$ rank lists and fuse them for every $r$ rank lists combinations ($C^n_r$) for the two fusing methods proposed, z-score fusion and regression fusion.
+The methodology used, is to create $n$ isolated rank lists and fuse them for every $r$ rank lists combinations ($C^n_r$) for the two fusing methods proposed, Z-Score fusion and regression fusion.
 
 The rank list used are the ones obtained by using the 9 retained rank list methods ($n=9$), see Table~\ref{tab:9rl}.
 They represent the best configuration retained for each text representation.
@@ -11,9 +11,11 @@ The $r$ value is selected to $4$, since it represents the number of different te
 The number of possible fusion combinations with $n=9$ and $r=4$ is $C^{9}_{4} = 126$.
 For these 126 fusions, the three following metrics are computed: Average Precision (AP), R-Precision (RPrec) and High Precision (HPrec).
 
-To be able to compare the rank list produced by both the Z-Score fusions and the Regression fusion to the non-fused rank lists (one to many), two evaluation strategies are used.
+To be able to compare the rank list produced by both the Z-Score fusions and the regression fusion to the non-fused rank lists (one to many), two evaluation strategies are used.
 One called \textit{Single-Max} which represent the best metrics for each rank list in the fusion and another one called \textit{Single-Mean} which is represented by the mean of each rank list metrics in the fusion.
+
 An example for these two comparison strategy is presented in Example~\ref{ex:single_mean_single_max}.
+
 If the Single-Max evaluation strategy is over-come by a rank list produced by a fusion it means that the resulting rank list give results even better than every individual rank lists used for this fusion, this represents the best case where the fusion actually improve the results.
 For the Single-Mean, if it is over come it means that the obtained rank list have better results than the average results of the rank list, thus when using the system \textit{in the blind} (when the rank list can't be evaluated, with new data for example), fusing is a good approach since it can give stability.
 
@@ -25,12 +27,12 @@ Using these distance metrics on St-jean, the sign test tends to indicate that th
 The three evaluations metrics are high correlated (especially average precision and R-Precision), the average precision is used as a foundation for the analysis.
 The Z-Score fusion, produce for every metrics better results than both Single-Mean and Single-Max, the average precision is increase in average by $\sim 10$\% compared to the average of the average precision (Single-Mean) of the rank list used, and by ~6\% in average when considering the maximal average precision (Single-Max).
 In the other hand, the Regression fusion, have an average increase of $\sim 3$\% in average precision for the Single-Mean and have a decrease of ~1\% when comparing to the Single-Max.
-The standard deviation of the regression fusion is greater than the z-score fusion, this indicates a slightly greater instability in the results.
+The standard deviation of the regression fusion is greater than the Z-Score fusion, this indicates a slightly greater instability in the results.
 A general observation of the Tables~\ref{tab:fusion_stats_A} and \ref{tab:fusion_stats_B} and Figure~\ref{fig:fusions}, show that the HPrec tends to be the least easy metric to increase when using the fusion.
 The results of fusing multiple rank lists when using regression fusion strategy tends to indicate that the resulting rank list has in average an equivant quality as the best rank list used for the fusion with some slight decreases.
 This can be further confirmed by looking at Table~\ref{tab:fusion_B}, which shows in the column Regression/T/Single-Max more ties and in Figure~\ref{fig:fusions} where most Regression score and Single rank list score some overlap.
 No particular set of rank list tends to give the best results in every case when fusing with the two strategies, every rank list is present in the argmax, but with the Z-Score fusion, the best results are obtained with rank lists using different text representations.
-The Z-score fusion give the best results overall.
+The Z-Score fusion give the best results overall.
 
 \begin{example}
   \centering
@@ -53,6 +55,11 @@ The Z-score fusion give the best results overall.
     Single-Max & $0.9 - 0.8 = 0.1$ \\
     \bottomrule
   \end{tabular}
+
+  \vspace{0.2cm}
+
+  In this example the fused rank list have a gain in average precision with the metric Single-Max.
+  This indicate that fusing these rank list produce an even better result than any individual rank list.
 \end{example}
 
 \begin{figure}
@@ -322,7 +329,7 @@ This strategy may be appliable on harder corpus such as the PAN 16 corpus.
 \subsubsection{Soft-veto evaluation}
 
 To evaluate the performance of the soft veto strategy, the idea is to compute the average precision gain obtained when using the soft-veto over the simple fusion without it.
-The gain is computed by subtracting the average precision of the z-score fusion without the soft-veto to the average precision of the z-score fusion with the soft-veto.
+The gain is computed by subtracting the average precision of the Z-Score fusion without the soft-veto to the average precision of the Z-Score fusion with the soft-veto.
 The soft-veto has two parameters : $c$ and $r$, to be able to find the best parameters the grid search approach is used.
 Since the $c$ parameter must be in the interval $\left]0, \infty\right[$ and the $r$ parameter must be in the interval $\left]0, \infty\right[$, the grid is constructed from the Cartesian product of the following two sets.
 $c = \left\{0 + \epsilon, 1, 2, 3, ..., 19, 20\right\}$, with $\epsilon$ a small value (for example $10^{-6}$) and $r = \left\{0.10, 0.14, 0.18, 0.22, ..., 0.86, 0.90\right\}$.
@@ -351,7 +358,7 @@ The Kendall coefficient is ranged between -1 and 1, with 1 being an identical co
 If our assumption is correct, the average precision gain obtained by fusing two rank lists should be negatively correlated to the rank list Kendall correlation coefficient.
 A large gain, when the rank lists are different, thus a low rank list correlation coefficient, and vice versa.
 
-The fusion strategy used here is the z-score fusion, since this strategy is parameterless and obtained satisfying results during previous experiments.
+The fusion strategy used here is the Z-Score fusion, since this strategy is parameterless and obtained satisfying results during previous experiments.
 As for previous experiments dealing with fusion, the gain in average precision when comparing a set of rank list to a fused rank list can be established in the two following ways : \textit{Single-Mean} and \textit{Single-Max}.
 Single-Mean represent the rank lists mean average precision and Single-Max the rank list maximal average precision.
 Example~\ref{ex:single_mean_single_max} contain a small example with two rank lists for the Single-Mean and Single-Max methods to compute the average precision gain.

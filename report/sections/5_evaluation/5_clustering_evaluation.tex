@@ -70,7 +70,7 @@ The right number of cluster is not known.
 When applying the procedure, the number of clusters start at 2 and end at the number of documents minus 1.
 The best clustering according to this method is the one that yield the greatest mean silhouette score, ref. Section~\ref{sec:unsupervised_clustering}.
 
-The rank list used for this experiment is the one generated using Z-score fusion with retained text representation (9 for St-Jean and 7 for Brunet and Oxquarry), see Section~\ref{sec:annex_retained_text_representation} in annex.
+The rank list used for this experiment is the one generated using Z-Score fusion with retained text representation (9 for St-Jean and 7 for Brunet and Oxquarry), see Section~\ref{sec:annex_retained_text_representation} in annex.
 
 The detailed $B^3_{F_1}$ and score on the unsupervised clustering is presented in Table~\ref{tab:unsupervised_clustering_alpha}.
 An example of the best case and worse case are presented Figures~\ref{fig:unsupervised_clustering}.
@@ -157,11 +157,11 @@ The average linkage criterion give the best results for this clustering method, 
 \subsubsection{Semi-supervised clustering evaluation}
 
 To evaluate the semi-supervised clustering approach, every corpus were used.
-First a rank list for each corpus is computed using a z-score fusion using the retained rank list, see Section~\ref{sec:annex_retained_text_representation} in annex.
+First a rank list for each corpus is computed using a Z-Score fusion using the retained rank list, see Section~\ref{sec:annex_retained_text_representation} in annex.
 For each rank list, the distance threshold is computed, using the two beta approach, this corresponds to the training phase.
 Then for every distance threshold and rank list pair, the clustering is evaluated using the $B^3$ family and the $r_{diff}$.
 
-The distance thresholds found for the z-score fusion rank lists for each corpus are in Table~\ref{tab:semi_supervised_clustering_thresholds}
+The distance thresholds found for the Z-Score fusion rank lists for each corpus are in Table~\ref{tab:semi_supervised_clustering_thresholds}
 The complete evaluation using Oxquarry, Brunet, St-Jean A and B, is presented in Table~\ref{tab:semi_supervised_clustering_train_test}.
 The average values obtained for each metric is presented in Table~\ref{tab:semi_supervised_clustering_average}.
 
@@ -169,7 +169,7 @@ The following conclusions can be drawn with these results:
 \begin{itemize}
   \item
   A rather wide range of distance threshold is found depending on the corpus.
-  It corresponds to the interval $\left[-0.42, -0.96\right]$ which is 14\% of the interval containing every z-scores for these datasets ($\left[-4.79, 2.63\right]$).
+  It corresponds to the interval $\left[-0.42, -0.96\right]$ which is 14\% of the interval containing every Z-Scores for these datasets ($\left[-4.79, 2.63\right]$).
   \item
   The average r-ratio is positive, which indicate that this method tends to overestimate the number of clusters, but is really close to find the right number of clusters.
   \item
@@ -183,7 +183,7 @@ The following conclusions can be drawn with these results:
 
 \begin{table}
   \centering
-  \caption{Distance threshold found with the two beta distribution on every corpora when using the z-score fusion of the retained rank lists}
+  \caption{Distance threshold found with the two beta distribution on every corpora when using the Z-Score fusion of the retained rank lists}
   \label{tab:semi_supervised_clustering_thresholds}
 
   \begin{tabular}{l r}
@@ -203,7 +203,7 @@ The following conclusions can be drawn with these results:
   \caption{Semi-supervised clustering evaluation}
   \label{tab:semi_supervised_clustering}
 
-  \subcaption{Every possible distance threshold (DT) and retained z-score rank list pairs. Metrics in order : $B^{3}_{F_1}$ / $B^{3}_{precision}$ / $B^{3}_{recall}$ / $r_{diff}$}
+  \subcaption{Every possible distance threshold (DT) and retained Z-Score rank list pairs. Metrics in order : $B^{3}_{F_1}$ / $B^{3}_{precision}$ / $B^{3}_{recall}$ / $r_{diff}$}
   \label{tab:semi_supervised_clustering_train_test}
   \begin{tabular}{l l| c c c c}
     \toprule
@@ -265,7 +265,7 @@ The following conclusions can be drawn with these results:
 \subsubsection{Supervised clustering evaluation}
 
 To evaluate the supervised clustering approach, every dataset were used.
-First a rank list for each dataset is computed using a z-score fusion using the retained rank list, see Section~\ref{sec:annex_retained_text_representation} in annex.
+First a rank list for each dataset is computed using a Z-Score fusion using the retained rank list, see Section~\ref{sec:annex_retained_text_representation} in annex.
 Then every pair of rank list is used to create a training/testing evaluation.
 In other words, a model to create cuts is trained on every dataset and tested on all the datasets.
 

@@ -161,10 +161,10 @@ To find the position where both beta distribution have the same area under the c
 Instead, the equiprobable position is found using a binary search between 0 and 1 and evaluate the CDF for the two beta distribution until it converges to the same value (or until their difference is a small value, such as $10^{-15}$).
 
 Figure~\ref{fig:links_score_density} show the density of true and false link as well as a beta distribution estimation for St-Jean (Regression fusion in \ref{fig:links_score_density_fusion_regression} and Z-Score fusion in \ref{fig:links_score_density_fusion_z_score}).
-For the metrics with a score outside the interval $[0, 1]$ (such as the Z-score fusion), the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization} to be able to estimate the beta distribution.
+For the metrics with a score outside the interval $[0, 1]$ (such as the Z-Score fusion), the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization} to be able to estimate the beta distribution.
 
 The results obtained by the regression fusion (ref.~\ref{sec:regression_fusion}) are a probability of being a true link, so the two distribution are well separated and can be modelized by the two beta distributions.
-In the other hand, when using the z-score fusion, the scores are overlapping more, but can also be modelized using the two beta distributions.
+In the other hand, when using the Z-Score fusion, the scores are overlapping more, but can also be modelized using the two beta distributions.
 As explained in~\cite{savoy_probability} the beta distribution is better suited for authorship problem than the Gaussian distribution since it can grasp a large amount of distribution shapes with its parameters' flexibility.
 The vertical line indicate the equiprobable position where both beta distribution have the same probability of being a true link and false link (same area under the curve), found using the binary search.
 This point can be used as a decision point where the cut should be made in the rank list, this ensures that both false positives and false negatives are minimized.
