@@ -1,0 +1,31 @@
+\subsection{MF Letters $n$-grams}
+
+Instead of considering every token as a word, another popular method is to create a "word" from a short sequences of letters called letters $n$-grams using Definition~\ref{def:letters_n_grams}.
+To consider overlapping words, the whole document is synthesized into a long string by joining every token by an \textit{underscore} : $\_$, to remove visual ambiguity due to the nature of the space character.
+This technique can be further explored by combining for example two or more $n$-grams sizes together.
+$n$-grams can be really effective even though no clear meaning from each $n$-grams can be exploited at first sight.
+A simple explanation on why $n$-grams can be effective is by using $n$-grams of size 3 to 5 in most Germanic languages this can correspond to for example : the tense of the verbs (i.e. : \textit{"ing\_"}, \textit{"ed\_"}), some small common words (\textit{"\_the\_"}, \textit{"\_and\_"}, \textit{"\_that"}), or in French the adverbs (\textit{"\_ment"}) which can capture the style of an author.
+
+\begin{definition}[Letters $n$-grams]
+  \label{def:letters_n_grams}
+  A letter $n$-grams is a tokenization which is constructed by creating a token of size $n$ for each substrings starting from the position $0$ to \textit{text\_size} $- n - 1$.
+
+  Example: \\
+  Using 3-grams the string: \textit{"fox\_is\_brown"} \\
+  is converted to: (\textit{"fox", "ox\_", "x\_i", "\_is", "is\_", "s\_b", "\_br", "bro", "row", "own"})
+\end{definition}
+
+An alternative version of the $n$-grams algorithm used here is defined in Definition~\ref{def:words_n_grams}.
+This algorithm considers each token as a string to apply the letters $n$-grams algorithm to.
+To differentiate it from the classical $n$-grams algorithm.
+The latter algorithm, is called in this study In-word $n$-grams (Definition~\ref{def:words_n_grams}) and the other one is called letters $n$-grams (Definition~\ref{def:letters_n_grams}).
+
+\begin{definition}[In-words $n$-grams]
+  \label{def:words_n_grams}
+  In-word $n$-grams are created by applying the letters $n$-grams algorithm on each token.
+  When a token is smaller than $n$, the whole token is considered.
+
+  Example: \\
+  Using words 3-grams on the following tokens: ["fox", "is", "brown"] \\
+  is converted to: (\textit{"fox", "is", "bro", "row, "own"})
+\end{definition}

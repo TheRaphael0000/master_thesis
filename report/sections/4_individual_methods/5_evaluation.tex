@@ -33,7 +33,7 @@ Here the goal is to compare two similar text representations, which are the toke
 For example \textit{il voit} (he sees) will be lemmatized to \textit{il voir} (he see).
 For this kind of representation, previous studies have shown that using MFW (most frequent words) vector size of around 500 tends to produce better outcomes~\cite{savoy_text_representation}.
 
-After creating the rank lists with the proposed distance measures (ref. Section~\ref{sec:fv_distances}) on the two representations for a MFW vector size ranging between 100 and 2000 with a step of 100, on the two datasets containing the lemmatize representation (Brunet and St-Jean), the two plots in Figure~\ref{fig:token_vs_lemma} show the average precision (AP) for the resulting rank lists.
+After creating the rank lists with the proposed distance measures (ref. Section~\ref{sec:vectors_distances}) on the two representations for a MFW vector size ranging between 100 and 2000 with a step of 100, on the two datasets containing the lemmatize representation (Brunet and St-Jean), the two plots in Figure~\ref{fig:token_vs_lemma} show the average precision (AP) for the resulting rank lists.
 
 This representation seem to have good results with a MFW vector size of 500 for most of the metrics, this corroborates previous studies results.
 
@@ -116,7 +116,7 @@ For the first part, the retained parameters for the $n$-grams text representatio
 
 \textbf{Second Part}\\
 As stated earlier, in the second part the objective it to compare the distance metrics with the $3$-grams/$3000$-MFW and $4$-grams/$8000$-MFW.
-The distance metrics used are the ones presented in Section~\ref{sec:fv_distances}.
+The distance metrics used are the ones presented in Section~\ref{sec:vectors_distances}.
 The results for this experiment are in Table~\ref{tab:letter_ngrams}.
 Since the number of MFW and the size of the $n$-grams was optimized on the Cosine distance, the results may be biased.
 

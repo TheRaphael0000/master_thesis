@@ -1,0 +1,9 @@
+\subsection{MF POS short sequences}
+
+Another possible stylistic aspect that can be detected from a text using the MFW approach is to consider the sentence constructions.
+This can be solved by creating short sequences ($n$-grams) of POS tags.
+In this case, each POS is considered as a character in the letters $n$-grams in definition, this type of $n$-grams is also known as w-shingling.
+For example, the sentence : \textit{"The cat eat a fish"} has the following POS tag \textit{"Article Noun Verb Article Noun"} which correspond to the following 3-grams of POS : \textit{"Article Noun Verb"} / \textit{"Noun Verb Article"} / \textit{"Verb Article Noun"}.
+In practice the POS is more detailed, for example instead of just considering \textit{eat} as a verb, a more detailed POS can be the verb and its tense \textit{Verb-SimplePresent}, the same goes for the other type of POS.
+
+When using features vectors based on the MFW method, once each document is represented as a feature vector they can be compared using metric in Section~\ref{sec:vectors_distances}.
