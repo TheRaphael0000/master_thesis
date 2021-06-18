@@ -1,8 +1,8 @@
 \subsection{Most frequent approach (MF)}
 
-The first method used to represent and compare the documents is called: Most frequent (MF), and try to compare documents by creating feature vectors containing frequencies of the most common items in a corpus representation.
+The first method used to represent and compare the documents is called: Most frequent (MF), and try to compare documents by creating feature vectors containing frequencies of the most common items in a text representation.
 This approach is a generalized approach of the most frequent word approach (MFW), which consider each word as an item.
-In this study, multiple corpus representation are explored in this study.
+In this study, multiple text representation are explored, such as tokens, lemma, n-grams and short sequences of POS.
 
 By only considering the most frequent items this ensures that no all the details of the document will be conserved but rather the most important in the document.
 The vector will thus contain the style of the document rather than the topic of the document.
@@ -47,7 +47,7 @@ Example~\ref{ex:mf_vector} show for the MF item vector computation.
 
 \subsubsection{Normalization}
 
-Applying a normalization could improve the performances of the distance metrics presented in Section~\ref{sec:vectors_distances}.
+Applying a normalization can improve the performances of the distance metrics presented in Section~\ref{sec:vectors_distances}.
 The Z-Score normalization is one of them, see Definition~\ref{def:z_score}.
 
 In this study, the following distance metrics are always normalized using the Z-Score normalization : Manhattan, Euclidean and Cosine Distance, since they tends to produce better results when normalized.

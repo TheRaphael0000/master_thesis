@@ -1,7 +1,243 @@
 \subsection{MF Tokens and Lemmas}
 
-No clear value of $n$ for the $n$-MF is to choose over others, but depending on the documents' length a value between $50$ and $500$ tends to produce good results for the word token text representation~\cite{savoy_text_representation}.
+This section aim to evaluate the vector representation using the most frequent (MF) tokens and lemmas.
+
+\subsubsection{Method}
+
+No clear $n$ value for the $n$-MF is to choose over others.
+Depending on the documents' length, previous studies have shown that using $n$ value between $50$ and $500$ tends to produce good results for the token text representation~\cite{savoy_text_representation}.
+
 One of the main advantage of this representation is that once a distance is computed based on this vector.
-The results can be easily explained, since the feature vector is basically the proportion of the most frequent words in a document.
+The results can be easily explained.
+The feature vector is basically the proportion of the most frequent words in a document.
 
 Instead of using directly the words to create the feature vector, another possibility is to use the lemma corresponding to each word, for example the sentence \textit{i saw two men with a saw} its lemmatized version is : \textit{i see two man with a saw} this requires advanced text preprocessing, but it can remove ambiguity.
+
+\subsubsection{Evaluation}
+
+Here the goal is to compare two similar text representations, which are the token representation and the lemmatize representation.
+
+After creating the rank lists with the proposed distance measures (ref. Section~\ref{sec:vectors_distances}) on the two representations for a $n$-MF vector, with $n$ ranging between 250 and 2000 with a step of 250.
+The corpora used for this experiment is St-Jean since contains the lemma text representation and is a large corpus.
+The two plots in Figure~\ref{fig:token_vs_lemma} show the average precision (AP) for the resulting rank lists over $n$.
+Table~\ref{tab:tokens_lemmas} in annex show the values for this graph.
+
+This representation seem to have good results with a $n=500$ for most of the metrics, this corroborates previous studies results.
+
+A few metrics, such as Manhattan distance, Tanimoto distance or Clark distance can give better results with slightly bigger vectors (750 or 1000 MF tokens/lemma).
+For most distance metrics, the token representation provide on both dataset a greater average precision compared to the lemma representation.
+
+An interesting example to be worth noticing concern the Manhattan distance.
+The AP when using the token representation tends to decrease faster than the AP for the lemma representation as $n$ increase.
+
+The Euclidean distance seems to be the least appropriate distance measure for this task.
+The Clark distance have a really poor average precision when the MF tokens vector is too small, but after reaching 500 it produces one of the best pay-off of the experiment.
+
+Using the most appropriate MF tokens-vector size for each distance metric, the choice using the right distance metric with these text representations, can increase the average precision by a factor of $13$ to $17$ \% depending on the dataset.
+Over all, the Cosine distance seem to be one of the most appropriate choice when dealing with these datasets and text representations.
+
+The retained distance metrics and $n$-MF for these text representations are:
+\begin{itemize}
+  \item 750-MF tokens with Cosine distance.
+  \item 750-MF tokens with Clark
+  \item 750-MF tokens with Manhattan
+  \item 750-MF tokens with Tanimoto
+\end{itemize}
+
+\begin{figure}
+  \centering
+  \caption{Tokens and Lemmas representation over number of MF tokens using different distances metrics}
+  \label{fig:tokens_lemmas}
+
+  \subcaption{Tokens}
+  \label{fig:tokens}
+  \includegraphics[width=0.9\linewidth]{img/mf_tokens.png}
+
+  \vspace{0.5cm}
+
+  \subcaption{Lemmas}
+  \label{fig:lemmas}
+  \includegraphics[width=0.9\linewidth]{img/mf_lemmas.png}
+\end{figure}
+
+\subsubsection{Importance of the text size in stylometry}
+
+Previous studies have shown the importance of having documents of good quality and with at least 5000 tokens to have reliable results.
+Skilled authors can easily change their style to imitate others for small texts, but it becomes more difficult for larger texts~\cite{savoy_stylo}.
+
+For this study, an experiment on the St-Jean corpus is accomplished, to show the importance of having large documents.
+To test this parameter, the number of token is artificially modified by considering only the $n$ first tokens for each text, with $n$ ranging between 9000 and 250 with steps of 250 tokens.
+Figure~\ref{img:degradation} shows the three metrics used (Average precision, RPrec, HPrec) over the number of tokens.
+Every metric decrease over the text size, which indicate that it becomes harder to determinate documents pairs with the same author as the text size decrease.
+
+PAN16 corpus is a difficult corpus due to its small size, thus extracting reliable features for each text to estimate each style is also a difficult task.
+After multiple tests, the PAN @ CLEF 2016 corpus is not used further in this study due to its difficulty in finding reliable Stylometric clues.
+For this study having standard and easier corpus is required in order to show the proposed methods.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=\linewidth]{img/degradation.png}
+  \caption{St-Jean ranks list evaluation on AP, RPrec and HPrec over the text size.
+  Rank list computed using 500 MFW and the Z-Score normalized Cosine distance}
+  \label{img:degradation}
+\end{figure}
+
+\subsubsection{Every vocabulary tokens in the feature vectors}
+
+Previously the MF (most frequent) method was proposed to limit the words used to only the most frequents in the vocabulary of a corpus.
+This experiment aim to show the importance of limiting the words used when creating the vector representing the document.
+Three approach are compared, the first use the whole corpus vocabulary to create the feature vector, denoted \textit{every token}.
+In the second, every token appearing more than once are used to create the vector, denoted \textit{without hapax legomena}.
+And for the last, the vector contain the 750 most frequent words, denoted \textit{750-MFW}.
+
+The eight proposed distance measures are evaluated for the three approach using the average precision metric on the three literature corpora.
+To understand more easily the results for the three approach, the \textit{every token} approach is used as a baseline from where the average precision gain is computed.
+
+Table~\ref{tab:baseline_every_token} show the average precision baseline using the \textit{every token} approach.
+Table~\ref{tab:gain_without_hapax_legomena} and Table~\ref{tab:gain_750_mfw} show the gain over the baseline for the \textit{without hapax legomena} approach and \textit{750-MFW} approach respectively.
+
+When looking at the baseline : the Manhattan, Euclidean and Clark distance measure have a poor average precision, all are below 0.3 in average.
+The other metric have average to good results which range from 0.58 for the KLD to 0.79 with the Cosine distance.
+The Cosine distance with \textit{every token} reach a 0.91 average precision for the Oxquarry corpus.
+When removing hapax legomena, for most distance metrics the gain in average precision is limited, except for the Clark distance where the mean average precision rise from 0.3 to 0.5.
+After limiting to the 750-MFW, the Manhattan, Euclidean and Clark distance, the ones that had poor results for the baseline increase their average precision by around 48\% which correspond to an average precision of 0.71, 0.63 and 0.78 respectively, which makes them in the same range as the other metrics in the baseline.
+Across every metric and dataset, removing hapax legomena increase the average precision in average by 0.04, and limiting to the 750-MFW by 0.21.
+This clearly indicate the importance of limiting the size of the vector.
+
+From this experiment, each distance metric can be placed in one of the two following categories : the ones sensible to noisy vectors, the ones not sensible.
+In the first category are : Manhattan, Clark and Euclidean, in the second : Cosine, Matusita and Tanimoto.
+As for KLD and JD, they are nor in the first nor the second since both of them had a small gain in regard to the Oxquarry corpus but larger gain for the St-Jean dataset.
+Further, test are required to classify these distance metrics.
+
+\begin{table}
+  \centering
+  \caption{Rank lists average precision depending on the number of token used}
+
+  \subcaption{Baseline: \textit{every token}}
+  \label{tab:baseline_every_token}
+  \begin{tabular}{l r r r|r}
+    \toprule
+    Metric & Oxquarry & Brunet & St-Jean & Mean \\
+    \midrule
+    Manhattan & 0.27 & 0.21 & 0.17 & 0.22 \\
+    Tanimoto  & 0.63 & 0.65 & 0.70 & 0.66 \\
+    Euclidean & 0.19 & 0.19 & 0.08 & 0.15 \\
+    Matusita  & 0.61 & 0.63 & 0.62 & 0.62 \\
+    Clark     & 0.40 & 0.28 & 0.21 & 0.30 \\
+    Cosine    & 0.91 & 0.73 & 0.73 & 0.79 \\
+    KLD       & 0.58 & 0.59 & 0.56 & 0.58 \\
+    JD        & 0.59 & 0.63 & 0.59 & 0.60 \\
+    \midrule
+    Mean      & 0.52 & 0.49 & 0.46 & 0.49 \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5cm}
+
+  \subcaption{Gain \textit{without hapax legomena} over baseline}
+  \label{tab:gain_without_hapax_legomena}
+  \begin{tabular}{l r r r|r}
+    \toprule
+    Metric & Oxquarry & Brunet & St-Jean & Mean \\
+    \midrule
+    Manhattan & +0.10 & +0.05 & +0.02 & +0.06 \\
+    Tanimoto  & -0.00 & +0.01 & +0.00 & +0.01 \\
+    Euclidean & +0.11 & +0.01 & +0.00 & +0.04 \\
+    Matusita  & -0.01 & +0.01 & -0.01 & -0.00 \\
+    Clark     & +0.19 & +0.16 & +0.25 & +0.20 \\
+    Cosine    &  0.02 & -0.02 & -0.02 & -0.01 \\
+    KLD       & -0.02 & +0.02 & -0.01 & -0.00 \\
+    JD        & -0.01 & +0.01 & -0.02 & -0.01 \\
+    \midrule
+    Mean      & +0.05 & +0.03 & +0.03 & +0.04 \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5cm}
+
+  \subcaption{Gain \textit{750-MFW} over baseline}
+  \label{tab:gain_750_mfw}
+  \begin{tabular}{l r r r|r}
+    \toprule
+    Metric & Oxquarry & Brunet & St-Jean & Mean \\
+    \midrule
+    Manhattan & +0.40 & +0.47 & +0.59 & +0.49 \\
+    Tanimoto  & +0.00 & +0.03 & +0.05 & +0.03 \\
+    Euclidean & +0.43 & +0.45 & +0.57 & +0.48 \\
+    Matusita  & +0.02 & +0.05 & +0.12 & +0.06 \\
+    Clark     & +0.49 & +0.44 & +0.53 & +0.48 \\
+    Cosine    & -0.02 & -0.02 & +0.06 & +0.01 \\
+    KLD       & +0.02 & +0.07 & +0.12 & +0.07 \\
+    JD        & +0.02 & +0.04 & +0.12 & +0.06 \\
+    \midrule
+    Mean      & +0.17 & +0.19 & +0.27 & +0.21 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsubsection{Frequent errors with the MF tokens}
+\label{sec:frequent_errors}
+
+For this experiment, the goal is to try to understand the errors in the system, in this case the false links (document pairs with different authors) highly ranked on different rank lists.
+The rank list quality is high based on the text representation and the distance function, but mostly on the first.
+The previous statement can be deduced by the following reasoning : For example when using the $n$-MFW method, if two documents feature vector are closely related (nearly identical), no matter the distance function they should have a low distance, since every distance function should give a distance of 0 when computing the distance between two identical vectors.
+We believe some errors in the system are due to documents having close feature vectors values even though they are not from the same authors.
+To motivate this statement, the following experiment is realized.
+
+The four token-based retained rank list from the St-Jean corpus are used, see Table~\ref{tab:9rl_results_st_jean_A_B} in annex.
+These four rank lists are using the same text representation, in this case the relative frequency of the $750$-MFW tokens as feature vector, only the distance function used to create the rank list is different.
+For this experiment we define frequent errors as : \textit{Links often appearing in the top 20 false links for all four rank lists (for example in the top 20 false link of 3 out of the 4 rank lists)}.
+The goal is to compare the feature vector of the two documents for some specific link, in our case the following were chosen : Frequent errors, ranked first in a rank list (most similar vectors, according to the distance function), ranked last in a rank list (the least similar vectors) and Ranked HPrec-th in a rank list.
+The rank list used for the comparison is the one with the best average precision, in this case the one using Manhattan distance, with an average precision of 0.78.
+To perform a comparison, a visualization of the feature vector is done using a bar plot.
+In this case, the visualization is based on the $750$-MFW tokens representation, since the rank lists were created using this vector size.
+To be able to understand more easily this vector, the values have been sorted by the mean relative frequencies and use a logarithmic scale.
+When a large proportion of the vectors overlap, it indicates a high similarity between the MFW vectors.
+Both document style are close when their feature vector are closely related.
+Visually when most of the surface overlap, the distance function will give a low value, and with a correct distance measure this link should be ranked high in the rank list.
+
+Figures~\ref{fig:mfw_vector_error} show the feature vector of two frequent errors document pairs (document 48 from Vigny / document 62 from Dumas and document 10 from Maupassant / document 52 from Flaubert), these link appear in the top 20 false links of 3 out 4 rank lists.
+The frequent errors vector pairs presented in Figure~\ref{fig:mfw_vector_error} can be visually compared to actual true links and actual false links, to have a better understanding of this problematic.
+For example, the most similar true link (ranked 1 using Manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (documents 30 and 116 from Sand) or the HPrec-th (last continuous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (documents 184 and 192 from Barbey), both of these links show a large proportion of overlapping surface, like for the frequent errors vectors.
+A counter example would be the least similar false link (ranked last using Manhattan distance) which represent a negatively correlated document pair, Figure~\ref{fig:mfw_vector_last_rl} showcase this link (document 183 from Stael / document 194 from Regnier).
+As expected, most of this figure surface is non-overlapping.
+
+When two vectors are relatively close together, determining that two texts are from a different author can not clearly be established using only one type of representation, no matter the distance metric applied.
+Thus, this experiment motivate the need of having multiple text representation to obtain more robust solutions to be able to discriminate between true and false links for these frequent errors.
+
+\begin{figure}
+  \centering
+  \caption{Example of 750-MFW relative frequency vectors for the two documents in a reccurant false link in the top 20 false links}
+  \label{fig:mfw_vector_error}
+
+  \subcaption{First example}
+  \label{fig:mfw_vector_error_0}
+  \includegraphics[width=\linewidth]{img/mfw_vector_error_0.png}
+
+  \vspace{0.5cm}
+
+  \subcaption{Second example}
+  \label{fig:mfw_vector_error_1}
+  \includegraphics[width=\linewidth]{img/mfw_vector_error_1.png}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \caption{750-MFW relative frequency for the two documents ranked $X$ in the rank list using the token representation on St-Jean}
+
+  \subcaption{$X$ = First}
+  \label{fig:mfw_vector_first_rl}
+  \includegraphics[width=\linewidth]{img/mfw_vector_first_rl.png}
+
+  \vspace{0.5cm}
+
+  \subcaption{$X$ = HPrec-th}
+  \label{fig:mfw_vector_first_last_rl}
+  \includegraphics[width=\linewidth]{img/mfw_vector_first_last_rl.png}
+
+  \vspace{0.5cm}
+
+  \subcaption{$X$ = Last}
+  \label{fig:mfw_vector_last_rl}
+  \includegraphics[width=\linewidth]{img/mfw_vector_last_rl.png}
+\end{figure}

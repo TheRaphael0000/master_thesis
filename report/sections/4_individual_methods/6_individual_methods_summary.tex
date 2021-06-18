@@ -1,6 +1,35 @@
-\subsection{Results analysis}
+\subsubsection{Individual methods summary (retained rank lists)}
 
-This section aim to understand : the errors of the system to try to solve them and to inspect the results to improve them.
+For the next experiments, medium to high quality rank list are required.
+The previous experiments tried to find some good rank list produced across different text representation.
+The retained text representations are presented in Table~\ref{tab:9rl}.
+Four of them are using the MFW tokens, two MFW tokens n-grams, one the compression and two the MFW POS n-grams.
+The complete evaluation of the rank list produced on these text representation for the three literary corpora are presented in Section~\ref{sec:annex_retained_text_representation} in annex.
+
+\begin{table*}
+  \centering
+  \caption{Retained text representation, text representation with a star (*) are only used for the St-Jean dataset}
+  \label{tab:9rl}
+  \begin{tabular}{c l l c}
+    \toprule
+    Id &
+    Text representation &
+    Distance measure &
+    Z-Score \\
+    \midrule
+    0 & $750$-MFW tokens & Cosine Distance & x\\
+    1 & $750$-MFW tokens & Clark & \\
+    2 & $750$-MFW tokens & Manhattan & x\\
+    3 & $750$-MFW tokens & Tanimoto & \\
+    4 & $3000$-MFW tokens $3$-grams & Cosine distance & x\\
+    5 & $8000$-MFW tokens $4$-grams & Cosine distance & x\\
+    6 & BZip2 compression & CBC distance & \\
+    *7 & $250$-MFW POS $2$-grams & Cosine distance & x\\
+    *8 & $1000$-MFW POS $3$-grams & Manhattan distance & x\\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
 
 \subsubsection{Distances' matrix visualization}
 
@@ -36,72 +65,7 @@ The main suspects for this observation is probably due to some high frequency te
   \includegraphics{img/distance_matrix_oxquarry_tanimoto.png}
 \end{figure}
 
-\subsubsection{Frequent errors with the MFW methods}
-\label{sec:frequent_errors}
 
-For this experiment, the goal is to try to understand the errors in the system, in this case the false links (document pairs with different authors) highly ranked on different rank lists.
-The rank list quality is high based on the text representation and the distance function, but mostly on the first.
-The previous statement can be deduced by the following reasoning : For example when using the $n$-MFW method, if two documents feature vector are closely related (nearly identical), no matter the distance function they should have a low distance, since every distance function should give a distance of 0 when computing the distance between two identical vectors.
-We believe some errors in the system are due to documents having close feature vectors values even though they are not from the same authors.
-To motivate this statement, the following experiment is realized.
-
-The four token-based retained rank list from the St-Jean corpus are used, see Table~\ref{tab:9rl_results_st_jean_A_B} in annex.
-These four rank lists are using the same text representation, in this case the relative frequency of the $750$-MFW tokens as feature vector, only the distance function used to create the rank list is different.
-For this experiment we define frequent errors as : \textit{Links often appearing in the top 20 false links for all four rank lists (for example in the top 20 false link of 3 out of the 4 rank lists)}.
-The goal is to compare the feature vector of the two documents for some specific link, in our case the following were chosen : Frequent errors, ranked first in a rank list (most similar vectors, according to the distance function), ranked last in a rank list (the least similar vectors) and Ranked HPrec-th in a rank list.
-The rank list used for the comparison is the one with the best average precision, in this case the one using Manhattan distance, with an average precision of 0.78.
-To perform a comparison, a visualization of the feature vector is done using a bar plot.
-In this case, the visualization is based on the $750$-MFW tokens representation, since the rank lists were created using this vector size.
-To be able to understand more easily this vector, the values have been sorted by the mean relative frequencies and use a logarithmic scale.
-When a large proportion of the vectors overlap, it indicates a high similarity between the MFW vectors.
-Both document style are close when their feature vector are closely related.
-Visually when most of the surface overlap, the distance function will give a low value, and with a correct distance measure this link should be ranked high in the rank list.
-
-Figures~\ref{fig:mfw_vector_error} show the feature vector of two frequent errors document pairs (document 48 from Vigny / document 62 from Dumas and document 10 from Maupassant / document 52 from Flaubert), these link appear in the top 20 false links of 3 out 4 rank lists.
-The frequent errors vector pairs presented in Figure~\ref{fig:mfw_vector_error} can be visually compared to actual true links and actual false links, to have a better understanding of this problematic.
-For example, the most similar true link (ranked 1 using Manhattan distance) in Figure~\ref{fig:mfw_vector_first_rl} (documents 30 and 116 from Sand) or the HPrec-th (last continuous correct pair from the top of the list) in Figure~\ref{fig:mfw_vector_first_last_rl} (documents 184 and 192 from Barbey), both of these links show a large proportion of overlapping surface, like for the frequent errors vectors.
-A counter example would be the least similar false link (ranked last using Manhattan distance) which represent a negatively correlated document pair, Figure~\ref{fig:mfw_vector_last_rl} showcase this link (document 183 from Stael / document 194 from Regnier).
-As expected, most of this figure surface is non-overlapping.
-
-When two vectors are relatively close together, determining that two texts are from a different author can not clearly be established using only one type of representation, no matter the distance metric applied.
-Thus, this experiment motivate the need of having multiple text representation to obtain more robust solutions to be able to discriminate between true and false links for these frequent errors.
-
-\begin{figure}
-  \centering
-  \caption{Example of 750-MFW relative frequency vectors for the two documents in a reccurant false link in the top 20 false links}
-  \label{fig:mfw_vector_error}
-
-  \subcaption{First example}
-  \label{fig:mfw_vector_error_0}
-  \includegraphics[width=\linewidth]{img/mfw_vector_error_0.png}
-
-  \vspace{0.5cm}
-
-  \subcaption{Second example}
-  \label{fig:mfw_vector_error_1}
-  \includegraphics[width=\linewidth]{img/mfw_vector_error_1.png}
-\end{figure}
-
-\begin{figure}
-  \centering
-  \caption{750-MFW relative frequency for the two documents ranked $X$ in the rank list using the token representation on St-Jean}
-
-  \subcaption{$X$ = First}
-  \label{fig:mfw_vector_first_rl}
-  \includegraphics[width=\linewidth]{img/mfw_vector_first_rl.png}
-
-  \vspace{0.5cm}
-
-  \subcaption{$X$ = HPrec-th}
-  \label{fig:mfw_vector_first_last_rl}
-  \includegraphics[width=\linewidth]{img/mfw_vector_first_last_rl.png}
-
-  \vspace{0.5cm}
-
-  \subcaption{$X$ = Last}
-  \label{fig:mfw_vector_last_rl}
-  \includegraphics[width=\linewidth]{img/mfw_vector_last_rl.png}
-\end{figure}
 
 \subsubsection{Publication date differences analysis}
 
@@ -110,7 +74,7 @@ These shared words might be related to the era the book was written in.
 The following experiment try to investigate on this by analysing the difference in publication date for the most incorrect document pairs in the rank lists (false links ranked high in the rank list).
 
 In the St-Jean corpus publication paper, the publication dates of each excerpts are available~\cite{st_jean}.
-First the publication date distribution of the corpus must be understood, to further continue the experiment.
+First the publication date distribution of the corpus must be understood to further continue the experiment.
 Figure~\ref{fig:dates_distribution} show the distribution of the publication date in the St-Jean corpus.
 The corpus mainly focus on the two last thirds of the XIX century, only a few books are published between 1800 and 1830.
 The date difference distribution for each pair of documents can be computed, Figure~\ref{fig:dates_differences_true_false} shows the date difference distribution for the true and false links.
