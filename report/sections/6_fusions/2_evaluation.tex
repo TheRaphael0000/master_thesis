@@ -34,34 +34,6 @@ This can be further confirmed by looking at Table~\ref{tab:fusion_B}, which show
 No particular set of rank list tends to give the best results in every case when fusing with the two strategies, every rank list is present in the argmax, but with the Z-Score fusion, the best results are obtained with rank lists using different text representations.
 The Z-Score fusion give the best results overall.
 
-\begin{example}
-  \centering
-  \caption{Single-Mean, Single-Max average precision and gain}
-  \label{ex:single_mean_single_max}
-  \begin{tabular}{l r}
-    \toprule
-    \textbf{Rank list} & \textbf{Average precision} \\
-    \midrule
-    Rank list A & $0.8$ \\
-    Rank list B & $0.6$ \\
-    Rank list fusion A-B & $0.9$ \\
-    \midrule
-    \textbf{Strategy} & \textbf{Average precision} \\
-    Single-Mean & $(0.8 + 0.6) / 2 = 0.7$ \\
-    Single-Max & $\max(0.8, 0.6) = 0.8$ \\
-    \midrule
-    \textbf{Strategy} & \textbf{Average precision gain} \\
-    Single-Mean & $0.9 - 0.7 = 0.2$ \\
-    Single-Max & $0.9 - 0.8 = 0.1$ \\
-    \bottomrule
-  \end{tabular}
-
-  \vspace{0.2cm}
-
-  In this example the fused rank list have a gain in average precision with the metric Single-Max.
-  This indicate that fusing these rank list produce an even better result than any individual rank list.
-\end{example}
-
 \begin{figure}
   \centering
   \caption{Evaluation of every combination of 4 rank list fusions using Z-Score and Regression}
@@ -100,6 +72,7 @@ The Z-Score fusion give the best results overall.
     \bottomrule
   \end{tabular}
   }
+
   \vspace{0.5cm}
 
   \subcaption{Single-Max}
@@ -119,6 +92,7 @@ The Z-Score fusion give the best results overall.
     \bottomrule
   \end{tabular}
   }
+
   \vspace{0.5cm}
 
   \subcaption{Z-Score}
@@ -257,7 +231,7 @@ The Z-Score fusion give the best results overall.
     & Z-Score/Tie/S-Mean
     & Z-Score/Tie/S-Max
     & Regression/Tie/S-Mean
-    & Regression/Tie/S-Max\\
+    & Regression/Tie/S-Max \\
     \midrule
     AP    & *126/0/0 & *125/0/1 & *85/0/41 & 58/0/68 \\
     RPrec & *126/0/0 & *124/1/1 & 66/1/59  & 38/7/81* \\

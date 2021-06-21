@@ -30,15 +30,15 @@ The complete evaluation of the rank list produced on these text representation f
   \end{tabular}
 \end{table*}
 
-
 \subsubsection{Distances' matrix visualization}
 
-When computing the rank lists, each link have its distance calculated and can be represented in a matrix for the non-commutative distances functions and in a symmetric matrix for the commutative distances functions.
-In this matrix each document represent a row and a column and the elements of the matrix to a link.
-To visually represent the distances' matrix, each element of the matrix is mapped to a pixel in an 2D image.
+The distances' matrix created from rank list can be visualized.
+To represent the distances' matrix, each element of the matrix is mapped to a pixel in an 2D image.
 The element value in the matrix is mapped to the pixel brightness, the low values are in light colours and high values in dark colours.
+
 A good distance matrix should have each same author documents pair with a low distances (light colour in the image) and different authors documents pairs with a high distance (dark colour in the image).
 The greater the contrast between the true links (same author documents) and the false links (different authors documents) is, the better the text representation is, since the related rank list will have a greater average precision.
+
 When the documents are sorted alphabetically by their authors and if the distances' matrix can represent correctly the author style, same authors documents have generally a low distance, this creates light colour squares in the diagonal.
 The square size is related to the number of document written by this author.
 The diagonal is the lightest colour (white), since the distance between two same documents is always 0, with respect to the identity of indiscernible axiom of the distance functions.
@@ -46,7 +46,9 @@ The diagonal is the lightest colour (white), since the distance between two same
 The distance matrix for the best retained representation (the highest average precision) and the worse retained text representation (the lowest average precision) is visually presented in Figure~\ref{fig:distances_matrix_oxquarry} for Oxquarry.
 Respectively the Clark distance on the $750$-MFW which gives an average precision of $0.89$, and the Tanimito distance on the $750$-MFW gives an $0.63$ average precision.
 The diagonal is white in both images and light colour square in the diagonal can clearly be observed on both distance matrix visualizations, even thought some are slightly tainted.
+
 Clark has overall a good distances matrix, except some document pairs from Conrad, Hardy and Orczy which have darker colours, these are ranked below some false links in the rank list.
+
 For Tanimoto, firstly one can observe these stripes, which are due to the max function in its computation, which create a more cleaved decision in the score value.
 The main suspects for this observation is probably due to some high frequency term only used in some excerpts, thus when normalizing by the sum of maxima in the Tanimoto computation, document with these high relative frequency create these stripes.
 
@@ -54,18 +56,16 @@ The main suspects for this observation is probably due to some high frequency te
   \caption{Distance matrix visualization Oxquarry}
   \label{fig:distances_matrix_oxquarry}
 
-  \caption{Best retained text representation for Oxquarry ($750$-MFW tokens with Clark)}
+  \caption{Best retained text representation for Oxquarry ($750$-MF tokens with Clark)}
   \label{fig:distance_matrix_oxquarry_clark}
   \includegraphics{img/distance_matrix_oxquarry_clark.png}
 
   \vspace{0.5cm}
 
-  \caption{Worse retained text representation for Oxquarry ($750$-MFW tokens with Tanimoto)}
+  \caption{Worse retained text representation for Oxquarry ($750$-MF tokens with Tanimoto)}
   \label{fig:distance_matrix_oxquarry_tanimoto}
   \includegraphics{img/distance_matrix_oxquarry_tanimoto.png}
 \end{figure}
-
-
 
 \subsubsection{Publication date differences analysis}
 
