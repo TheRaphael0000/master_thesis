@@ -1,22 +1,22 @@
 \subsection{Authorship clustering evaluation metrics}
 
-To evaluate clustering, the metrics used are the BCubed~\cite{bcubed} family (called sometimes $B^3$, in this report).
-BCubed has shown to satisfy the four following importants constraints when evaluating clusterings~\cite{bcubed}~:
+To evaluate clustering, the metrics used are the BCubed~\cite{bcubed} family (sometimes called $B^3$, in this report).
+BCubed has shown to satisfy the four following important constraints when evaluating clusterings~\cite{bcubed}~:
 
 \begin{enumerate}
-  \item \textit{Cluster Homogeneity} (different categories should be in the different clusters)
-  \item \textit{Cluster Completness} (same categories should belong to the same cluster)
-  \item \textit{Rag Bag constraint} (noisy / miscellaneous categories should be in the same cluster and not in \textit{healthy} clusters)
-  \item \textit{Cluster size vs quantity constraints} (favorise large cluster)
+  \item \textit{Cluster Homogeneity} (different authors should be in the different clusters)
+  \item \textit{Cluster Completeness} (same authors should belong to the same cluster)
+  \item \textit{Rag Bag constraint} (noisy / miscellaneous authors should be in the same cluster and not in \textit{healthy} clusters)
+  \item \textit{Cluster size vs quantity constraints} (favour large cluster)
 \end{enumerate}
 
 These metrics are used in the clustering task at PAN @ CLEF~\cite{pan16}.
-In addition to the BCubed family, this study introduce a simple metric for evaluating the clustering which is called the Cluster difference.
+In addition to the BCubed family, this study introduce a simple metric for evaluating the clustering, which is called the Cluster difference.
 
 \begin{definition}[Correctness~\cite{bcubed}]
-  The $BCubed$ metric family is based on the the following \textit{Correctness} principle.
-  Let L(e) and C(e) be the category and the cluster of an element e.
-  The Correctness is following the biconditional condition on the category and cluster equality (biconditional: $A \Longleftrightarrow B \equiv (A \land B) \lor (\neg A \land \neg B)$).
+  The $BCubed$ metric family is based on the following \textit{Correctness} principle.
+  Let L(e) and C(e) be the author and the cluster of an element e.
+  The Correctness is following the biconditional condition on the author and cluster equality (biconditional: $A \Longleftrightarrow B \equiv (A \land B) \lor (\neg A \land \neg B)$).
   \begin{gather*}
     Correctness(e, e') = \\
     \begin{cases}
@@ -24,7 +24,7 @@ In addition to the BCubed family, this study introduce a simple metric for evalu
       0, & otherwise
     \end{cases}
   \end{gather*}
-  In other terms, the correctness has a value of 1 (100\% correct) if the two elements are in the both in the same cluster and has the same category OR both in a different cluster and a different category.
+  In other terms, the correctness has a value of 1 (100\% correct) if the two elements are in the both in the same cluster and has the same author OR both in a different cluster and a different author.
 \end{definition}
 
 \begin{definition}[$BCubed$ Precision~\cite{bcubed}]
@@ -35,7 +35,7 @@ In addition to the BCubed family, this study introduce a simple metric for evalu
 \end{definition}
 
 \begin{definition}[$BCubed$ Recall~\cite{bcubed}]
-  The $BCubed$ Recall correspond to the average of correctness for all elements on the average of all element such that \textbf{their categories are the same}.
+  The $BCubed$ Recall correspond to the average of correctness for all elements on the average of all element such that \textbf{their authors are the same}.
   \begin{equation}
     B^3_{recall} = \text{Avg}_{e}[\text{Avg}_{e' L(e)=L(e')}[Correctness(e, e')]]
   \end{equation}
@@ -53,7 +53,7 @@ In addition to the BCubed family, this study introduce a simple metric for evalu
 
 \begin{definition}[Cluster difference]
   This metric aim to evaluate if the clustering found the right number of cluster.
-  The cluster difference is the number cluster found $p$ minus the actual number of cluster $k$.
+  The cluster difference is the number of cluster found $p$ minus the actual number of cluster $k$ (number of distinct authors in the corpus).
   \begin{equation}
     Cluster_{diff} = p - k
   \end{equation}

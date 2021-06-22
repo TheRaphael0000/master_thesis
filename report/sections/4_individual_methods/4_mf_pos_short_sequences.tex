@@ -5,10 +5,10 @@ Another possible stylistic aspect that can be detected is to consider the senten
 \subsubsection{Method}
 
 This can be solved by creating a short POS sequences text representation.
-Used in conjonction with the MF method, this can produce feature vetors which can be used to compare documents.
+Used in conjunction with the MF method, this can produce feature vetors which can be used to compare documents.
 
-These short sequences are created using the same principal used for the $n$-grams.
-From a list of POS, each POS is considered as a letters when applying the $n$-grams algorithm.
+These short sequences are created using the same principle as for the $n$-grams.
+From a list of POS, each POS is considered as a letter when applying the $n$-grams algorithm.
 This type of $n$-grams is also known as w-shingling.
 
 For example, the sentence : \textit{"The cat eat a fish"} has the following POS tag \textit{"Article Noun Verb Article Noun"} which correspond to the following short POS sequences of size 3 : \textit{"Article Noun Verb"} / \textit{"Noun Verb Article"} / \textit{"Verb Article Noun"}.
@@ -18,13 +18,13 @@ In practice the POS is more detailed, for example instead of just considering \t
 For the sake of simplicity, in this study, a POS short sequence of size $n$ is written $n$-POS.
 
 The MF method can be applied to the $n$-POS text representation to turn each document into a feature vector.
-Than they can be compared using distance metrics to find distance between documents.
+Then they can be compared using distance metrics to find distance between documents.
 
 \subsubsection{Evaluation}
 
 For this experiment, $n$-POS are used to detect the style of the author.
 
-$1$-POS are discarded from the experiment (equivalent of the POS frequency) since previous studies showed that $1$-POS tends to produce worse results then with larger $n$~\cite{kocher_linking}.
+$1$-POS are discarded from the experiment (equivalent of the POS frequency) since previous studies showed that $1$-POS tends to produce worse results than with larger $n$~\cite{kocher_linking}.
 
 To lower the computational cost, this evaluation is split in two parts, the first aim to select the most convincing size of $n$-POS and the best fitting $n$-MF.
 The second is to compare the different distance metrics.
@@ -41,18 +41,18 @@ Figure~\ref{fig:n_pos} show the average precision on the rank list produced by u
 The two following information can be intuitively observed on this plot:
 \begin{itemize}
   \item
-  The $(2, 3)$-POS have similar resutls to the $3$-POS method.
+  The $(2, 3)$-POS have similar results to the $3$-POS method.
   Due to its larger text representation, the $(2, 3)$-POS can already be discarded.
   \item
   A larger / more complex $n$-POS require a larger $n$-MF to achieve its maximal effectiveness.
-  In the St-Jean corpus, a total of 26 different POS are used to describe every words in the corpus.
+  In the St-Jean corpus, a total of 26 different POS are used to describe every word in the corpus.
   Which correspond to $26^2 = 676$ possible unique $2$-POS, to $26^3 = 17,576$ $3$-POS and $26^4 = 456,976$ $4$-POS, thus $2$-POS converges and not $3$/$4$-POS.
   \item
   Like other methods, if the $n$-MF is too large, an overfitting to less important items is possible, thus reducing the average precision.
   In Figure~\ref{fig:n_pos} the $2$-POS clearly have a drop in average precision after $\sim 250$-MF.
 \end{itemize}
 
-Using the smoothed Z-Score Cosine distance, the most appropriate configuration for the $n$-POS text representation on St-Jean is $2$-POS with $250$-MF and $3$-POS with $1000$-MF .
+Using the smoothed Z-Score Cosine distance, the most appropriate configuration for the $n$-POS text representation on St-Jean is $2$-POS with $250$-MF and $3$-POS with $1000$-MF.
 
 \begin{figure}
   \centering

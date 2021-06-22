@@ -67,18 +67,6 @@ def distances_matrix_from_rank_list(rank_list):
     return distances_matrix
 
 
-# def distances_matrix_from_rank_list(rank_list):
-#     """Create a distance matrix from a rank list"""
-#     indices = list(itertools.chain.from_iterable([i[0] for i in rank_list]))
-#     max_ = max(indices) + 1
-#     distances_matrix = np.empty((max_, max_,))
-#     distances_matrix[:] = min([d for l, d in rank_list])
-#     for (a, b), dist in rank_list:
-#         distances_matrix[a, b] = dist
-#         distances_matrix[b, a] = dist
-#     return distances_matrix
-
-
 def features_from_rank_list(rank_list):
     return [[np.log((i + 1) / len(rank_list)), score]
             for i, (link, score) in enumerate(rank_list)]

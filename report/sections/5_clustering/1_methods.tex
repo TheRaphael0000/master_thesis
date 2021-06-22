@@ -1,20 +1,22 @@
 \subsection{Authorship clustering methods \label{sec:authorship_clustering_methods}}
 
 To find clusters of authors, a possible way is to use a hierarchical clustering algorithm on a rank list.
-In such a list, we can establish a link between the two documents appearing on the same rank.
-This link should indicate the two documents should belong to the same cluster in order of certainty.
+The rank list indicate if the two documents should belong to the same cluster by order of certainty.
+The hierarchical clustering regroup documents following this order.
 
 The hardest task with this clustering scheme is to find the position in the rank list where true link become less frequent than false link.
-In a clustering context, the optimal position is unknown since the true labels are not available, and should be the one that minimized the true links under the position and the false links above.
+In a the clustering context, the optimal position is unknown since the true labels are not available.
+The position should minimized the true links under it and the false links above it.
 
 In this study, finding this position will also be refered as finding the \textit{cut}.
 We define the true positive as true links above the cut, true negatives as false links under the cut.
-In addition false positive as true links under the cut and false negatives as false links above the cut.
+In addition false positive are true links under the cut and false negatives are false links above the cut.
 
-To find this cut, three approaches were explored : an unsupervised, a semi-supervised and a supervised.
+To find this cut, three approaches are explored : an unsupervised, a semi-supervised and a supervised.
 The unsupervised method can be used when only one corpus is available and no learning procedures can be applied.
 The semi-supervised learn based on a corpus with labels (training corpus) a rank list score where the cut should be for any other corpus (called testing corpus).
-Finally, the supervised approach, learn based on a corpus rank list with labels (training corpus) a model which can be used in conjunction with any other corpus rank list (testing corpus) generated in the same manner as the training corpus to find the optimal cut.
+Finally, the supervised approach, learn based on a rank from a corpus with labels (training corpus) a model.
+The model can find the optimal cut for a rank list from a new corpus (called testing corpus) generated using the same metrics as ones used for training.
 
 \subsubsection{Agglomerative clustering}
 
@@ -22,8 +24,8 @@ The scikit-learn package~\cite{sklearn} provide an implementation bottom-up impl
 
 The agglomerative clustering follow this procedure:
 \begin{enumerate}
-  \item The rank list used is converted into a 2D matrix with each link representing a element of the matrix.
-  \item At the begining, each document is considered as single document cluster.
+  \item The rank list used is converted into a 2D distances' matrix with each link representing a element of the matrix (ref. ~\label{sec:distances_matrix}).
+  \item At the begining, each document is considered as a single document cluster.
   \item The link (element) with the lowest score in the matrix is used to merge the next clusters.
   \item The matrix is updated following a linkage criteria.
   \item Point 3 and 4 can be repeated until a single cluster is remaining.
@@ -33,12 +35,18 @@ Multiple linkage criteria are available : \textit{Ward} (metric that aim to mini
 Example~\ref{ex:agglomerative_clustering} show an example for the merging procedures and the linkage criteria.
 
 Ward linkage was discarded since the current implementation only allow Euclidian distance for its computation.
-The merging procedure can be stopped either of the two following criteria : When a certain number of cluster is reached or when the minimal score for the next merge is above a certain value (distance threshold).
-
-One of the main issue with this implementation is that, it does not provide a way to stop the algorithm at each merging step.
-The algorithm was re-implementated to allow this.
+The merging procedure can be stopped either of the two following criteria : When a certain number of cluster is reached or when the minimal score for the next merge is above a certain value.
+This value is called the distance threshold.
 
 The so called \textit{cut} can be associated to the distance threshold.
+The cut is a position in the rank list and the distance threshold is the score which can seperate the rank list.
+
+There is one of the main issue with the scikit-learn implementation.
+It does not provide a way to access the current cluster at each merging step.
+A possible workaround is to run the algorithm multiple time.
+Each time the algorithm is stopped at a different number of cluster.
+This workaround introduce an overhead of $O\frac{n * (n - 1)}{2} = O(n^2)$, with $n$ equal to the number of documents.
+The agglomerative clustering algorithm was re-implementated to allow access to the clusters at each steps and avoid this overhead.
 
 \begin{example}
   \small
@@ -63,7 +71,7 @@ The so called \textit{cut} can be associated to the distance threshold.
 
   \vspace{0.2cm}
   The link with the smallest distance is A-B with a distance of 1.
-  At the next step the clusters A and B are merged into the cluster called AB.
+  At the next step the clusters A and B are merged into a cluster called AB.
 
   \vspace{0.5cm}
 
@@ -125,8 +133,8 @@ The so called \textit{cut} can be associated to the distance threshold.
 
 \subsubsection{Unsupervised clustering \label{sec:unsupervised_clustering}}
 
-The idea is to run the agglomerative clustering at each number of clusters (at each merge).
-By discarding clustering with $N$ and clusters $1$, This produce $N - 2$ possible clusterings, each of those can be evaluated using the mean Silhouette score.
+The idea is to run the agglomerative clustering at each number of clusters (at each merge step).
+When discarding clustering with $N$ and clusters $1$, this produce $N - 2$ possible clusterings, each of those can be evaluated using the mean Silhouette score.
 See definition~\ref{def:silhouette}.
 
 \begin{definition}[Mean Silhouette score~\cite{sklearn}~\cite{wiki_silhouette}]
@@ -147,21 +155,23 @@ See definition~\ref{def:silhouette}.
   The value is ranged between -1 and 1, a large value indicate a good cohesion and good separation of the clusters (low intra-cluster distance, high nearest-cluster distance).
 \end{definition}
 
-The idea is to apply the hierarchical clustering at each possible number of clusters (from $N - 1$ to $2$), and compute the mean Silhouette score for each sample.
+The idea is to apply the hierarchical clustering at each possible number of clusters (from $N - 1$ to $2$), and compute the mean Silhouette score.
 The best clustering is the one which have the largest mean Silhouette score.
-An alternative to this method is the Iterative Positive Silhouette (IPS) and was proposed in~\cite{automated_unsupervised}
+An alternative to this method is the Iterative Positive Silhouette (IPS) and was proposed in Layton, Watters, Dazeley (2011)~\cite{automated_unsupervised}.
 
 \subsubsection{Semi-supervised distance threshold selection using two Beta distributions}
 
 In Savoy (2014)'s \textit{Estimating the Probability of an Authorship Attribution} they modelized the distribution of the true and false links across the score obtained using a mixture of 2 beta distribution~\cite{savoy_probability}.
 Using these two beta distribution models, the position where the area under the curve for both models is maximized (same area under the cut for both models), correspond to the position where the true positive and true negatives are maximized.
 Thus, the statistical best possible location whereto separate the rank list if we want to minimize the false positive and false negatives (non-weighted minimization errors).
+The idea is to reuse this position for any new rank lists.
 
 To find the position where both beta distribution have the same area under the curve, there might be analytical ways to solve this problematic using the \textit{beta distribution cumulative distribution function analytic form} (beta CDF, probability, area under the curve) but was ignored for this study.
-Instead, the equiprobable position is found using a binary search between 0 and 1 and evaluate the CDF for the two beta distribution until it converges to the same value (or until their difference is a small value, such as $10^{-15}$).
+Instead, the equiprobable position is found using a binary search between 0 and 1.
+At each step the CDF for the two beta distribution is evaluated until it converges to the same value (or until their difference is a small value, such as $10^{-15}$).
 
 Figure~\ref{fig:links_score_density} show the density of true and false link as well as a beta distribution estimation for St-Jean (Regression fusion in \ref{fig:links_score_density_fusion_regression} and Z-Score fusion in \ref{fig:links_score_density_fusion_z_score}).
-For the metrics with a score outside the interval $[0, 1]$ (such as the Z-Score fusion), the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization} to be able to estimate the beta distribution.
+For the metrics with a score outside the interval $[0, 1]$ (such as the Z-Score fusion), the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization} to be able to modelize the beta distribution.
 
 The results obtained by the regression fusion (ref.~\ref{sec:regression_fusion}) are a probability of being a true link, so the two distribution are well separated and can be modelized by the two beta distributions.
 In the other hand, when using the Z-Score fusion, the scores are overlapping more, but can also be modelized using the two beta distributions.
@@ -196,7 +206,8 @@ The same binary search can be used for this computation, just the target need to
 
 \subsubsection{Supervised distance threshold selection using Logistic Regression}
 
-To learn at which position in the rank list the cut should be, this third idea is to fit a linear model on samples created from the rank list.
+To learn at which position in the rank list the cut should be, this third idea is to fit a linear regression model on samples created from the rank list.
+The model must be linear since only one cut should seperate the true links and the false links.
 To train the model, a sample is created for each link in a rank list.
 The links labels are either \textit{true} (1.0) when both document in the link are from the same author and \textit{false} (0.0) otherwise.
 

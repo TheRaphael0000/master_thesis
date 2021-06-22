@@ -1,9 +1,10 @@
 \subsubsection{Individual methods summary (retained rank lists)}
 
 For the next experiments, medium to high quality rank list are required.
-The previous experiments tried to find some good rank list produced across different text representation.
-The retained text representations are presented in Table~\ref{tab:9rl}.
-Four of them are using the $n$-MF tokens, two $n$-MF tokens $n$-grams, one the compression and two the $n$-POS with $n$-MF.
+The previous experiments aim to find methods that can produce good rank list across different text representation.
+The retained methods are presented in Table~\ref{tab:9rl}.
+Four of them are using the $n$-MF tokens, two $n$-MF tokens $n$-grams, one compression techniques and two the $n$-POS with $n$-MF.
+
 The complete evaluation of the rank list produced on these text representation for the three literary corpora are presented in Section~\ref{sec:annex_retained_text_representation} in annex.
 
 \begin{table*}
@@ -28,30 +29,37 @@ The complete evaluation of the rank list produced on these text representation f
     *8 & $1000$-MF $3$-POS & Manhattan distance & x\\
     \bottomrule
   \end{tabular}
+
+  \vspace{0.2cm}
   \textit{Note: text representations with a star (*) are only used for the St-Jean dataset}
 \end{table*}
 
 \subsubsection{Distances' matrix visualization}
 
-The distances' matrix created from rank list can be visualized.
-To represent the distances' matrix, each element of the matrix is mapped to a pixel in an 2D image.
+From a rank list, it is possible to create a distances' matrix (ref~\ref{sec:distances_matrix}).
+Distances' matrices created from rank list can be visualized.
+To represent distances' matrices, each element of the matrix is mapped to a pixel in an 2D image.
 The element value in the matrix is mapped to the pixel brightness, the low values are in light colours and high values in dark colours.
 
 A good distance matrix should have each same author documents pair with a low distances (light colour in the image) and different authors documents pairs with a high distance (dark colour in the image).
-The greater the contrast between the true links (same author documents) and the false links (different authors documents) is, the better the text representation is, since the related rank list will have a greater average precision.
+The greater the contrast between the true links (same author documents) and the false links is (different authors documents), the better the text representation is, since the related rank list will have a greater average precision.
 
-When the documents are sorted alphabetically by their authors and if the distances' matrix can represent correctly the author style, same authors documents have generally a low distance, this creates light colour squares in the diagonal.
+Authors in the matrix are sorted alphabetically.
+If the distances' matrix can represent correctly the author style, same authors documents have generally a low distance.
+This creates light colour squares in the diagonal.
 The square size is related to the number of document written by this author.
 The diagonal is the lightest colour (white), since the distance between two same documents is always 0, with respect to the identity of indiscernible axiom of the distance functions.
 
-The distance matrix for the best retained representation (the highest average precision) and the worse retained text representation (the lowest average precision) is visually presented in Figure~\ref{fig:distances_matrix_oxquarry} for Oxquarry.
+The distance matrix for the best retained representation (the highest AP) and the worse retained text representation (the lowest AP) is visually presented in Figure~\ref{fig:distances_matrix_oxquarry} for Oxquarry.
 Respectively the Clark distance on the $750$-MF which gives an average precision of $0.89$, and the Tanimito distance on the $750$-MF gives an $0.63$ average precision.
-The diagonal is white in both images and light colour square in the diagonal can clearly be observed on both distance matrix visualizations, even thought some are slightly tainted.
+The diagonal is white in both images.
+Light colour square in the diagonal can clearly be observed on both distance matrix visualizations.
+Thought some are slightly tainted.
 
-Clark has overall a good distances matrix, except some document pairs from Conrad, Hardy and Orczy which have darker colours, these are ranked below some false links in the rank list.
+Clark has overall a good distances matrix, except some document pairs from \textit{Conrad}, \textit{Hardy} and \textit{Orczy} which have darker colours, these are ranked below some false links in the rank list.
 
 For Tanimoto, firstly one can observe these stripes, which are due to the max function in its computation, which create a more cleaved decision in the score value.
-The main suspects for this observation is probably due to some high frequency term only used in some excerpts, thus when normalizing by the sum of maxima in the Tanimoto computation, document with these high relative frequency create these stripes.
+The main suspects for this observation is due to some high frequency term only used in some excerpts, thus when normalizing by the sum of maxima in the Tanimoto computation, document with these high relative frequency create these stripes.
 
 \begin{figure}
   \caption{Distance matrix visualization Oxquarry}
@@ -70,34 +78,44 @@ The main suspects for this observation is probably due to some high frequency te
 
 \subsubsection{Publication date differences analysis}
 
-When dealing with false links ranked high in the rank list, as the previous experiment showed, some excerpt use similar words.
+When dealing with false links ranked high in the rank list, as the previous experiment showed, some excerpt use similar words (ref.~\ref{sec:frequent_errors}).
 These shared words might be related to the era the book was written in.
-The following experiment try to investigate on this by analysing the difference in publication date for the most incorrect document pairs in the rank lists (false links ranked high in the rank list).
+The following experiment tries to investigate on this assumption.
+By analysing the difference in publication date for the most incorrect document pairs in the rank lists (false links ranked high in the rank list) this assumption can be verified.
 
-In the St-Jean corpus publication paper, the publication dates of each excerpts are available~\cite{st_jean}.
-First the publication date distribution of the corpus must be understood to further continue the experiment.
+In the St-Jean corpus publication paper, the publication dates of each excerpt are available~\cite{st_jean}.
+First, the publication date distribution of the corpus must be understood to further continue the experiment.
 Figure~\ref{fig:dates_distribution} show the distribution of the publication date in the St-Jean corpus.
 The corpus mainly focus on the two last thirds of the XIX century, only a few books are published between 1800 and 1830.
-The date difference distribution for each pair of documents can be computed, Figure~\ref{fig:dates_differences_true_false} shows the date difference distribution for the true and false links.
-The union of both of them represent every possible document pairs (the whole rank list), in this Figure the bars are stacked to represent every link.
-Table~\ref{tab:date_differences} show statistics on the distributions.
-True links have a low mean date difference of 5.11 years with a standard deviation of 7.05.
-The low mean can be explained by the fact that most authors in St-Jean have excerpts from the same book and the authors publish their books during their career, which is limited to their active years (life span minus early stages and old age for most authors).
-In fact, 281 of the 670 ($\sim 42\%$) true links were published the same year and 453 out of 670 ($\sim 68\%$) true links have a publication date difference below or equal to 5 years.
-For St-Jean the largest date difference from the same author (correspond to the longest career) is 31 years, which correspond to the two following books  from Victor Hugo : \textit{Notre Dame de Paris} (The Hunchback of Notre-Dame), in 1831 and \textit{Les Misérables}, in 1862.
-The average date difference for the false links is 28.24 years with a standard deviation of 20.73 years.
-The overall average (both true and false links) is at 29.04 years with a standard deviation of 20.58.
 
-The previous statistics can be compared to the ones in Figure~\ref{fig:dates_differences_r_false} which show the date difference density on the top-r false links (top-670 in case of St-Jean) on a rank list with 85\% average precision (Z-Score fusion of the retained text representations, Table~\ref{tab:9rl_results_st_jean_A_B}).
+The date difference distribution for each pair of documents can be computed, Figure~\ref{fig:dates_differences_true_false} shows the date difference distribution for the true and false links.
+The union of both of them represent every possible document pairs (the whole rank list), in this figure the bars are stacked to represent every link.
+Table~\ref{tab:date_differences} show statistics on the distributions.
+
+True links have a low mean date difference of 5.11 years with a standard deviation of 7.05 years.
+The low mean can be explained by the fact that most authors in the St-Jean corpus have excerpts from the same book and the authors publish their books during their career, which is limited to their active years (life span minus early stages and old age for most authors).
+In fact, 281 of the 670 ($\sim 42\%$) true links were published the same year.
+453 out of 670 ($\sim 68\%$) true links have a publication date difference below or equal to 5 years.
+For St-Jean the largest date difference from the same author (correspond to the longest career) is 31 years, which correspond to the two following books from Victor Hugo : \textit{Notre Dame de Paris} (The Hunchback of Notre-Dame), in 1831 and \textit{Les Misérables}, in 1862.
+The average date difference for the false links is 28.24 years, with a standard deviation of 20.73 years.
+The overall average (both true and false links) is at 29.04 years with a standard deviation of 20.58 years.
+
+The previous statistics can be compared to the ones in Figure~\ref{fig:dates_differences_r_false}.
+This figure shows the date difference density on the top-r false links (top-670 in case of St-Jean) on a rank list with 85\% average precision (Z-Score fusion of the retained text representations, Table~\ref{tab:9rl_results_st_jean_A_B}, ref. Chapter~\ref{sec:fusion}).
+
 Two interesting information can be extracted here.
-First the mean is lower by 7.75 years (29.04 - 21.29) compared to every false links and have a narrow standard deviation distribution.
+Firstly, the mean is lower by 7.75 years (29.04 - 21.29) compared to every false links and have a narrow standard deviation distribution.
 Having a lower mean in this case indicate that more mistakes are made for document pairs with a lower date difference then for the ones with a large date difference, which can lead to the following conclusion : distinguishing between a false link and a true link for documents pair with low date difference is harder.
-Secondly, we can observe a drop after 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ years are harder to discriminate between a true link and a false link than links outside this interval.
-This 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France~\cite{generations}, authors birth country in this corpus.
-Each new generation tend to use its own vocabulary, and thus it can be harder to discriminate the author of text belonging to the same generation, if we assume that the authors write their books at around the same age.
+Secondly, we can observe a drop after 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ years are harder to discriminate between a true link and a false link than ones outside this interval.
+
+The 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France~\cite{generations}, authors birth country for this corpus.
+Each new generation tends to use its own vocabulary, and thus it can be harder to discriminate the author of text belonging to the same generation, if we assume that the authors write their books at around the same age.
 In the other hand, having different vocabulary can indicate a different time period and is often used to detect document forgery~\cite{savoy_stylo}.
+
 The small spike between 60 and 65 in the top-r false link is due to the matching of most excerpts from \textit{Volupté} (excerpts 117, 135, 151, 165, 181, 189) written by Charles Sainte-Beuve in 1834 and \textit{Les plaisirs et les jours} (excerpts 114, 132, 148) written by Marcel Proust in 1896.
-Out of the 18 possible false link for these excerpts, 12 are in the top-r false link, which indicate that the styles used in these excerpts are close and can't discriminate the authors correctly even though the books were published with 62 years interval.
+Out of the 18 possible false link for these excerpts, 12 are in the top-r false link.
+This indicate that the styles used in these excerpts are close.
+We can't discriminate the authors correctly even though the books were published with 62 years interval.
 
 \begin{figure}
   \centering
