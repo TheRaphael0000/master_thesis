@@ -11,7 +11,7 @@ This technique is based on the fact that compression algorithms tries to lower t
 When concatenating two documents that share many terms, the entropy of the concatenated document should be lower than if the two documents present distinct vocabulary.
 
 This approach has the benefit to produce rank lists in a nearly parameterless manner, only a distance metric and compression algorithm is needed.
-A main drawback with this technique is the fact that the results can not be properly explained compared to MFW method.
+A main drawback with this technique is the fact that the results can not be properly explained compared to MF method.
 
 In this study the lossless compression algorithm used are : GZip, BZip2, LZMA.
 These algorithms are already implemented in the Python standard library, the programming language used for this study~\cite{python_standard_library}.

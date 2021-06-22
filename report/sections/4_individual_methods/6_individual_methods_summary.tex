@@ -3,12 +3,12 @@
 For the next experiments, medium to high quality rank list are required.
 The previous experiments tried to find some good rank list produced across different text representation.
 The retained text representations are presented in Table~\ref{tab:9rl}.
-Four of them are using the MFW tokens, two MFW tokens n-grams, one the compression and two the MFW POS n-grams.
+Four of them are using the $n$-MF tokens, two $n$-MF tokens $n$-grams, one the compression and two the $n$-POS with $n$-MF.
 The complete evaluation of the rank list produced on these text representation for the three literary corpora are presented in Section~\ref{sec:annex_retained_text_representation} in annex.
 
 \begin{table*}
   \centering
-  \caption{Retained text representation, text representation with a star (*) are only used for the St-Jean dataset}
+  \caption{Retained text representation}
   \label{tab:9rl}
   \begin{tabular}{c l l c}
     \toprule
@@ -17,17 +17,18 @@ The complete evaluation of the rank list produced on these text representation f
     Distance measure &
     Z-Score \\
     \midrule
-    0 & $750$-MFW tokens & Cosine Distance & x\\
-    1 & $750$-MFW tokens & Clark & \\
-    2 & $750$-MFW tokens & Manhattan & x\\
-    3 & $750$-MFW tokens & Tanimoto & \\
-    4 & $3000$-MFW tokens $3$-grams & Cosine distance & x\\
-    5 & $8000$-MFW tokens $4$-grams & Cosine distance & x\\
+    0 & $750$-MF tokens & Cosine Distance & x\\
+    1 & $750$-MF tokens & Clark & \\
+    2 & $750$-MF tokens & Manhattan & x\\
+    3 & $750$-MF tokens & Tanimoto & \\
+    4 & $3000$-MF tokens $3$-grams & Cosine distance & x\\
+    5 & $8000$-MF tokens $4$-grams & Cosine distance & x\\
     6 & BZip2 compression & CBC distance & \\
-    *7 & $250$-MFW POS $2$-grams & Cosine distance & x\\
-    *8 & $1000$-MFW POS $3$-grams & Manhattan distance & x\\
+    *7 & $250$-MF $2$-POS & Cosine distance & x\\
+    *8 & $1000$-MF $3$-POS & Manhattan distance & x\\
     \bottomrule
   \end{tabular}
+  \textit{Note: text representations with a star (*) are only used for the St-Jean dataset}
 \end{table*}
 
 \subsubsection{Distances' matrix visualization}
@@ -44,7 +45,7 @@ The square size is related to the number of document written by this author.
 The diagonal is the lightest colour (white), since the distance between two same documents is always 0, with respect to the identity of indiscernible axiom of the distance functions.
 
 The distance matrix for the best retained representation (the highest average precision) and the worse retained text representation (the lowest average precision) is visually presented in Figure~\ref{fig:distances_matrix_oxquarry} for Oxquarry.
-Respectively the Clark distance on the $750$-MFW which gives an average precision of $0.89$, and the Tanimito distance on the $750$-MFW gives an $0.63$ average precision.
+Respectively the Clark distance on the $750$-MF which gives an average precision of $0.89$, and the Tanimito distance on the $750$-MF gives an $0.63$ average precision.
 The diagonal is white in both images and light colour square in the diagonal can clearly be observed on both distance matrix visualizations, even thought some are slightly tainted.
 
 Clark has overall a good distances matrix, except some document pairs from Conrad, Hardy and Orczy which have darker colours, these are ranked below some false links in the rank list.

@@ -1,11 +1,14 @@
-\subsection{MF Letters $n$-grams \label{sec:letters_n_grams}}
+\subsection{MF Substrings \label{sec:substrings}}
 
-Instead of considering tokens or lemmas for the MF method, another strategy is to create a short sequences of letters called letters $n$-grams using Definition~\ref{def:letters_n_grams}.
+Instead of considering tokens or lemmas for the MF method, another strategy is to create a short sequences of letters called substrings.
+
+\subsubsection{Letters $n$-grams}
+
+letters $n$-grams using Definition~\ref{def:letters_n_grams}.
 To consider overlapping words, the whole document is synthesized into a long string by joining every token with an \textit{underscore} : "$\_$".
 The underscore is used to remove visual ambiguity due to the nature of the space character.
 
-\begin{definition}[Letters $n$-grams]
-  \label{def:letters_n_grams}
+\begin{definition}[Letters $n$-grams \label{def:letters_n_grams}]
   A letter $n$-grams is a tokenization which is constructed by creating a token of size $n$ for each substrings starting from the position $0$ to \textit{text\_size} $- n - 1$.
 
   Example: \\*
@@ -27,23 +30,55 @@ To avoid having too large text representation, a possible idea is to remove the 
 This method can also be generalized to remove words appearing less than $x$ times.
 This pruning approach was explored in Kocher and Savoy~\cite{kocher_linking} but was not used in this study.
 
+\subsubsection{In-word $n$-grams}
+
 An alternative version of the $n$-grams algorithm used here is defined in Definition~\ref{def:words_n_grams}.
 
-\begin{definition}[In-words $n$-grams]
-  \label{def:words_n_grams}
+\begin{definition}[In-words $n$-grams \label{def:words_n_grams}]
   In-word $n$-grams are created by applying the letters $n$-grams algorithm on each token.
   When a token is smaller than $n$, the whole token is considered.
 
-  Example: \\
+  Example: \\*
   Using words 3-grams on the following tokens: ["fox", "is", "brown"] \\
   is converted to: (\textit{"fox", "is", "bro", "row, "own"})
 \end{definition}
 
-This algorithm considers each token as a string to apply the letters $n$-grams algorithm to.
 In this study, to differentiate it from the classical $n$-grams algorithm.
 The latter algorithm, is called \textit{In-word $n$-grams} (Definition~\ref{def:words_n_grams}) and the other one is called \textit{letters $n$-grams} (Definition~\ref{def:letters_n_grams}).
 
-\subsubsection{Evaluation}
+This algorithm considers each token as a string to apply the letters $n$-grams algorithm to.
+In-word $n$-grams are an hybrid version between the letters $n$-grams and the word token text representations.
+This method yield a subset of the letters $n$-grams algorithm when the tokens are bigger than $n$.
+
+\subsubsection{$n$-First / $n$-Last}
+
+Two other similar approach to the $n$-grams are to consider only the $n$ first letters of each token or the $n$-Last letters of each token.
+Definition~\ref{def:n_first} and Definition~\ref{def:n_last} explain and propose an example.
+These methods are subsets of the in-word $n$-grams.
+These methods have the same number of items as token representation.
+
+\begin{definition}[$n$-First \label{def:n_first}]
+  The $n$-First algorithm create for every tokens a new string which a substring from the first character to the $n$-th.
+  If the token token is smaller than $n$, the whole token is used.
+
+  Example: \\
+  Using $3$-First on the following tokens: ["fox", "is", "brown"] \\
+  is converted to: (\textit{"fox", "is", "bro"})
+\end{definition}
+
+The $n$-First correspond generally to the meaning of a word and can be related to the lemma approach.
+
+\begin{definition}[$n$-Last]
+  \label{def:n_last}
+  The $n$-Last algorithm create for every tokens a new string which a substring from the last minus $n$ character to the last.
+  If the token token is smaller than $n$, the whole token is used.
+
+  Example: \\
+  Using $3$-Last on the following tokens: ["fox", "is", "brown"] \\
+  is converted to: (\textit{"fox", "is", "own"})
+\end{definition}
+
+\subsubsection{MF Letters $n$-grams evaluation}
 
 To evaluate the $n$-grams with the MF approach another methodology is used.
 Since the $n$-grams create an additional parameter, the field of possible parameter increase.
@@ -55,7 +90,7 @@ One of the main drawback with this methodology is that some distance metrics can
 Or some $n$-grams size have better results depending on the distance metric.
 The current methodology does not take into account this.
 
-\subsubsection{Evaluation first part}
+\textbf{First part}
 
 For the first part, the Z-Score normalized cosine distance measure is used to compare the vectors and create the rank list.
 The parameters used are:
@@ -102,7 +137,7 @@ For the first part, the retained parameters for the $n$-grams text representatio
   \includegraphics[width=\linewidth]{img/letter_ngrams_st_jean.png}
 \end{figure}
 
-\subsubsection{Evaluation second part}
+\textbf{Second part}
 
 As stated earlier, in the second part the objective it to compare the distance metrics with the $3$-grams/$3000$-MF and $4$-grams/$8000$-MF.
 The distance metrics used are the ones presented in Section~\ref{sec:vectors_distances}.
@@ -160,36 +195,23 @@ For this configuration of $4$-grams with $8000$-MF, using the right distance mea
   \end{tabular}
 \end{table}
 
-\subsubsection{MF First letters, last letters, word $n$-grams of tokens}
+\subsubsection{MF In-word $n$-grams / $n$-First / $n$-Last evaluation}
 
-In this experiment, the goal is to create 3 types of text representations of word substrings and compare them.
+In this experiment, the goal is to compare the three following substring text representations : In-word $n$-grams, $n$-First and $n$-Last.
 
-\begin{enumerate}
-  \item
-  The first representation is the $n$-first letter of each word tokens which correspond generally to the meaning of a word.
-  If the word token is smaller than N, the whole word is used.
-  \item
-  Extract also the $n$-last letter of each word tokens, which in this case correspond to the role of the word in a sentence.
-  As for the previous representation, if the word is smaller than N, the whole word is used instead.
-  \item
-  The in-word $n$-grams (See Definition~\ref{def:words_n_grams}), this special type of n-grams consider only $n$-grams within a word.
-  This excludes every overlapping word when considering the Letters $n$-grams algorithm.
-  This decision is made for this experiment such that inter-words informations can not be learned and have a fair comparison of these 3 texts representations.
-\end{enumerate}
+Only the Z-Score normalized Cosine distance used and is evaluated using the average precision.
+For this experiment, the number of $n$-MF variate between 200 and 4000 with a step of 100.
+The $n$ for the In-word $n$-grams, $n$-First and $n$-Last variate between 3 and 5.
 
-The first approach can be related to the lemma approach, the second to the POS approach and the third to a hybrid version between the letters $n$-grams and the word token text representations.
-The two first representations have the same number of words as the token text representation and are a subsets of the third method.
-The third representation is a subset of the Letters $n$-grams text representation.
+Figure~\ref{fig:first_last_letters_ngrams} shows the average precision for this experiment on the three datasets (Oxquarry, Brunet, St-Jean).
 
-For this experiment the only distance measure used is the Z-Score normalized Cosine distance and, for the evaluation metric, only the average precision.
-The number of MF variate for this experiment between 200 and 4000 with a step of 100.
-Figure~\ref{fig:first_last_letters_ngrams} shows the results for this experiment on the three datasets (Oxquarry, Brunet, St-Jean).
+In the three dataset, the $3$-Last and $3$-First gives a lower average precision and quickly converge to an equilibrium value at around $1500$-MF.
+For the three methods, when $n = 5$, it tends to produce better results than $n = 3$ or $n = 4$ as the $n$-MF increase.
+In the Oxquarry corpus, in-word $4$-grams and in-word $5$-grams give an outstanding $\sim 95.0\%$ in average precision.
+But this method is not as effective for the Brunet dataset.
+For the Brunet dataset, the $5$-First can a good results compared to other text representations with small MF vector size.
+And for St-Jean, the $5$-First with a small MF vector size give the best results.
 
-In the three dataset, the 3-last letters and 3-first letters gives a lower average precision and quickly converge to an equilibrium value at around 1500 MF.
-5-letters representations tend to produce better results than 3-letters and 4-letters representation as the MF increase.
-In the Oxquarry corpus, in-word $4$-grams and in-word $5$-grams give an outstanding ~95.0\% in average precision, but is not as efficient for the Brunet dataset.
-For the Brunet dataset, the 5-first letters can a good results compared to other text representations with small MF vector size.
-And for St-Jean, the 5-first letters with a small MF vector size giv the best results.
 No clear best configuration can be extracted with these results since the results are mixed across datasets, thus for this experiment, no text representation / distance measure are retained for the fusion.
 
 \begin{figure}
