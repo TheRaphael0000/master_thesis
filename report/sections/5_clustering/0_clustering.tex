@@ -1,7 +1,22 @@
 \section{Authorship clustering \label{sec:clustering}}
 
+In this chapter authorship clustering methods will be presented and evaluated.
 
+Authorship clustering aim to regroup documents into clusters.
+The best achievable clustering have every same author document in the same cluster and every different author document in a different cluster.
 
-\subfile{1_methods}
-\subfile{2_evaluation_metrics}
-\subfile{3_evaluation}
+For the clustering part, multiple methods are investigated and proposed:
+\begin{itemize}
+  \item
+  A full unsupervised clustering, by minimizing intercluster distances and maximizing nearest cluster distance.
+  \item
+  A semi-supervised clustering technique using previously computed values as a decision point.
+  \item
+  A supervised clustering technique which takes clues from previous corpora analysis to lead the clustering.
+\end{itemize}
+
+\subfile{1_hierarchical_clustering}
+\subfile{2_unsupervised_clustering}
+\subfile{3_semi_supervised_clustering}
+\subfile{4_supervised_clustering}
+\subfile{5_clustering_summary}

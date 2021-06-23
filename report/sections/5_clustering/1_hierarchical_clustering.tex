@@ -1,0 +1,203 @@
+\subsection{Hierarchical clustering \label{sec:authorship_clustering_methods}}
+
+To find clusters of authors, a possible way is to use a hierarchical clustering algorithm on a rank list.
+The rank list indicate if the two documents should belong to the same cluster by order of certainty.
+The hierarchical clustering regroup documents following this order.
+
+The hardest task with this clustering scheme is to find the position in the rank list where true link become less frequent than false link.
+In a the clustering context, the optimal position is unknown since the true labels are not available.
+The position should minimized the true links under it and the false links above it.
+
+In this study, finding this position will also be refered as finding the \textit{cut}.
+We define the true positive as true links above the cut, true negatives as false links under the cut.
+In addition false positive are true links under the cut and false negatives are false links above the cut.
+
+To find this cut, three approaches are explored : an unsupervised, a semi-supervised and a supervised.
+
+The unsupervised method can be used when only one corpus is available and no learning procedures can be applied.
+
+The semi-supervised learn based on a corpus with labels (training corpus) a rank list score where the cut should be for any other corpus (called testing corpus).
+
+Finally, the supervised approach, learn based on a rank from a corpus with labels (training corpus) a model.
+The model can find the optimal cut for a rank list from a new corpus (called testing corpus) generated using the same metrics as ones used for training.
+
+\subsubsection{Hierarchical clustering aglorithm and implementation}
+
+The scikit-learn package~\cite{sklearn} provide an implementation bottom-up implementation of the hierarchical clustering, which is called agglomerative clustering.
+
+The agglomerative clustering follow this procedure:
+\begin{enumerate}
+  \item The rank list used is converted into a 2D distances' matrix with each link representing a element of the matrix (ref. ~\label{sec:distances_matrix}).
+  \item At the begining, each document is considered as a single document cluster.
+  \item The link (element) with the lowest score in the matrix is used to merge the next clusters.
+  \item The matrix is updated following a linkage criteria.
+  \item 3. and 4. can be repeated until a single cluster remain.
+\end{enumerate}
+
+Multiple linkage criteria are available : \textit{Ward} (metric that aim to minimize the variance of the cluster merged), \textit{average-linkage} (use the average score of each link of the cluster merged), \textit{complete-linkage} (use the cluster merged maximal score), \textit{single-linkage} (use the cluster merged minimal score).
+Example~\ref{ex:agglomerative_clustering} show an example for the merging procedures and the linkage criteria.
+
+Ward linkage was discarded since the current implementation only allow Euclidian distance for its computation.
+The merging procedure can be stopped either of the two following criteria : When a certain cluster number is reached or when the minimal score for the next merge is above a certain value.
+This value is called the distance threshold.
+
+The so called cut can be associated to the distance threshold.
+The cut is a position in the rank list and the distance threshold is the score which can help to seperate the rank list.
+
+There is one main flaw with the scikit-learn implementation.
+It does not provide a way to access the current cluster at each merging step.
+A possible workaround is to run the algorithm multiple time.
+Each time the algorithm is stopped at a different cluster number.
+This workaround introduce an overhead of $O\frac{n * (n - 1)}{2} = O(n^2)$, with $n$ equal to the number of documents.
+
+The agglomerative clustering algorithm was re-implementated to allow access to the clusters at each steps and avoid this overhead.
+The implementation profit of the generator functions that Python offers.
+
+\begin{example}
+  \small
+  \centering
+  \caption{Agglomerative clustering}
+  \label{ex:agglomerative_clustering}
+
+  \begin{subexample}{\linewidth}
+    \centering
+    \subcaption{Initial clusters and their distances}
+    \begin{tabular}{c|c c c c}
+      \toprule
+        & A & B & C & D \\
+      \midrule
+      A & - & \textbf{1} & $2$ & $3$ \\
+      B & - & - & $8$ & $7$\\
+      C & - & - & - & $6$ \\
+      D & - & - & - & - \\
+      \bottomrule
+    \end{tabular}
+  \end{subexample}
+
+  \vspace{0.2cm}
+  The link with the smallest distance is A-B with a distance of 1.
+  At the next step the clusters A and B are merged into a cluster called AB.
+
+  \vspace{0.5cm}
+
+  \begin{subexample}{\linewidth}
+    \centering
+    \subcaption{First merge using single-linkage}
+    \begin{tabular}{c|c c c}
+      \toprule
+        & AB & C & D \\
+      \midrule
+      AB & - & $\text{min} \left[2, 8 \right] = 2$ & $\text{min} \left[3, 7 \right] = 3$ \\
+      C  & - & - & $6$ \\
+      D  & - & - & - \\
+      \bottomrule
+    \end{tabular}
+  \end{subexample}
+
+  \vspace{0.2cm}
+  Next step will merge AB and C.
+
+  \vspace{0.5cm}
+
+  \begin{subexample}{\linewidth}
+    \centering
+    \subcaption{First merge using average-linkage}
+    \begin{tabular}{c|c c c}
+      \toprule
+        & AB & C & D \\
+      \midrule
+      AB & - & $\text{avg} \left[2, 8 \right] = 5$ & $\text{avg} \left[3, 7 \right] = 4$ \\
+      C  & - & - & $6$ \\
+      D  & - & - & - \\
+      \bottomrule
+    \end{tabular}
+  \end{subexample}
+
+  \vspace{0.2cm}
+  Next step will merge AB and D.
+
+  \vspace{0.5cm}
+
+  \begin{subexample}{\linewidth}
+    \centering
+    \subcaption{First merge using complete-linkage}
+    \begin{tabular}{c|c c c}
+      \toprule
+        & AB & C & D \\
+      \midrule
+      AB & - & $\text{max} \left[2, 8 \right] = 8$ & $\text{max} \left[3, 7 \right] = 7$ \\
+      C  & - & - & 6 \\
+      D  & - & - & - \\
+      \bottomrule
+    \end{tabular}
+  \end{subexample}
+
+  \vspace{0.2cm}
+  Next step will merge C and D.
+\end{example}
+
+
+\subsubsection{Hierarchical clustering parameters and upper bounds\label{sec:hierarchical_clustering}}
+
+As explained in Section~\ref{sec:authors_clustering}, the hierarchical clustering decide clusters based on a bottom-up approach and have two main parameters, the stopping procedure and the linkage criterion.
+The linkage criterion can be : single, complete, average linkage.
+Oxquarry, Brunet, St-Jean A, St-Jean B and St-Jean copora are used for this experiment.
+The goal is to understand how the linkage criterion behave in the following two best scenarios : when the right number of cluster is found ($r_{diff} = 0$) and the clustering with the best $B^3_{F_1}$.
+
+The custom implementation of the hierarchical clustering is used, at each merging step, the intermediary clustering is evaluated using the two metrics.
+The clustering resulting in the best $B^3_{F_1}$ is kept and the $r_{diff} = 0$.
+This procedure is repeated for each linkage criteria and corpus.
+
+The results for the two scenarios are presented in Table~\ref{tab:hierarchical_clustering}, the mean of the absolute value is given for each criterion, the absolute value is to avoid having positives and negatives $r_{diff}$ cancelling.
+
+These results can be considered as the upper bound for the two metrics ($B^3_{F_1}$ and $r_{diff}$) for the clustering case using the retained rank list on these corpora.
+Table~\ref{tab:hierarchical_clustering_rdiff_zero} represent the upper bound if the number of cluster is known for the hierarchical clustering with the retained rank lists and Table~\ref{tab:hierarchical_clustering_best_bcubed} the upper bound in case that the $B^3_{F_1}$ want to be maximized with the hierarchical clustering on the retained rank lists.
+
+The best linkage criterion depends on the corpus, but in average, the best $B^3_{F_1}$ is achieved with the average linkage criterion, a relative increase of around 2.5\% compared to the other criteria.
+Having a slightly greater number of cluster can produces in average a better $B^3_{F_1}$ score using the retained rank lists.
+
+\begin{table}
+  \centering
+  \caption{Hierarchical clustering $B^3_{F_1}$/ $r_{diff}$ on every linkage criterion and corpus}
+  \label{tab:hierarchical_clustering}
+
+  \subcaption{Procedure stop at the right number of cluster ($r_{diff} = 0.00$)}
+  \label{tab:hierarchical_clustering_rdiff_zero}
+  \resizebox{\linewidth}{!}{
+  \begin{tabular}{l c c c}
+    \toprule
+           & \multicolumn{3}{c}{Linkage criterion} \\
+    Corpus    & Single    & Average   & Complete \\
+    \midrule
+    Oxquarry  & 0.81/0.00 & 0.93/0.00 & 0.81/0.00 \\
+    Brunet    & 0.81/0.00 & 0.81/0.00 & 0.79/0.00 \\
+    St-Jean A & 0.85/0.00 & 0.85/0.00 & 0.85/0.00 \\
+    St-Jean B & 0.96/0.00 & 0.93/0.00 & 0.97/0.00 \\
+    \midrule
+    Absolute mean & 0.86/0.00 & 0.88/0.00 & 0.86/0.00 \\
+    \bottomrule
+  \end{tabular}
+  }
+
+  \vspace{0.5cm}
+
+  \subcaption{Best $B^3_{F_1}$ and its $r_{diff}$ across all hierarchical clustering stops}
+  \label{tab:hierarchical_clustering_best_bcubed}
+
+  \resizebox{\linewidth}{!}{
+  \begin{tabular}{l c c c}
+    \toprule
+           & \multicolumn{3}{c}{Linkage criterion} \\
+    Corpus    & Single     & Average   & Complete \\
+    \midrule
+    Oxquarry  & 0.89/ 0.04 & 0.96/0.02 & 0.87/0.04 \\
+    Brunet    & 0.84/ 0.02 & 0.85/0.09 & 0.85/0.09 \\
+    St-Jean A & 0.86/-0.01 & 0.88/0.03 & 0.88/0.04 \\
+    St-Jean B & 0.98/ 0.02 & 0.98/0.02 & 0.97/0.00 \\
+    \midrule
+    Absolute mean & 0.89/0.02 & 0.92/0.04 & 0.89/0.04 \\
+    \bottomrule
+  \end{tabular}
+  }
+
+\end{table}

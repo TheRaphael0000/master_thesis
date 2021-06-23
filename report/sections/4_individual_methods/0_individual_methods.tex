@@ -1,11 +1,17 @@
 \section{Individual rank lists methods}
 
 In this chapter, the goal is to find individual methods which yield good rank list for the authorship verification task.
-Two main types of rank list are created, one using the most frequent (MF) approach and another one using compression based techniques.
 
-For the most frequent approach, three texts representations are explored.
+The method adopted was to compare document using the authorship linkings strategies presented in \textit{Evaluation of text representation schemes and distance measures for authorship linking}~\cite{kocher_verification}.
+The strategy used in this paper is based on the most frequent (MF) approach.
+This method aim to compare the simlarity of documents by considering reccurent stylistic textual patterns.
+Text patterns can be for example from either reccurant words, short sequences of characters (known as n-grams) or Part-Of-Speech (POS).
 
-For each method, the parameter that give the best results over the three corpora are retained and summerized at the end of this chapter.
+Another possible method is to compare similarities between document with compression techniques.
+This method is also slightly explored in this study.
+
+For each method, the parameters that give the best results over the three corpora are retained and summerized at the end of this chapter.
+The main objective is to have the most reliable authorship linking rank list possible for the next chapters.
 
 \subfile{1_most_frequant_approach}
 \subfile{2_mf_tokens_lemmas}
