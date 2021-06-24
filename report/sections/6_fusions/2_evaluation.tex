@@ -1,6 +1,6 @@
-\subsection{Fusion methods evaluation}
+\subsection{Evaluation}
 
-\subsubsection{Rank list fusions evaluation \label{sec:eval_fusion}}
+\subsubsection{Rank List Fusions Evaluation \label{sec:eval_fusion}}
 
 In this experiment, the goal to understand if fusing rank lists can create better rank lists.
 The methodology used, is to create $n$ isolated rank lists and fuse them for every $r$ rank lists combinations ($C^n_r$) for the two fusing methods proposed, Z-Score fusion and regression fusion.
@@ -259,7 +259,7 @@ The Z-Score fusion give the best results overall.
 
 \end{table*}
 
-\subsubsection{Veto evaluation}
+\subsubsection{Veto Evaluation}
 
 In this experiment, the goal is to understand if the veto method can improve the average precision on the fused rank lists when using the regression fusion method.
 To do so, the St-Jean retained rank list are used (ref. Table~\ref{tab:9rl_results_st_jean} in annex).
@@ -300,7 +300,7 @@ This strategy may be appliable on harder corpus such as the PAN 16 corpus.
   \end{tabular}
 \end{table}
 
-\subsubsection{Soft-veto evaluation}
+\subsubsection{Soft-veto Evaluation}
 
 To evaluate the performance of the soft veto strategy, the idea is to compute the average precision gain obtained when using the soft-veto over the simple fusion without it.
 The gain is computed by subtracting the average precision of the Z-Score fusion without the soft-veto to the average precision of the Z-Score fusion with the soft-veto.

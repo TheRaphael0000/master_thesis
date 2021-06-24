@@ -1,11 +1,11 @@
-\subsection{Most frequent approach (MF)}
+\subsection{Most Frequent Approach}
 
 The first method used to represent and compare the documents is called: Most frequent (MF), and try to compare documents by creating feature vectors containing frequencies of the most common items in a text representation.
 A text representation can be for example words in the text or a new representation generated from the text.
 This method is a generalized approach of the most frequent words technique (MFWs), which consider words as items.
 
-By only considering the most frequent items this ensures that no all the details of the document will be conserved but rather the most important in the document.
-This asumptions is experimented in this study, in Section~\ref{sec:influance_mf_restriction}.
+By only considering the most frequent items, this ensures that no all the document details will be synthesised in the vector but rather the most important in the document.
+This asumptions is experimented in this study in Section~\ref{sec:influance_mf_restriction}.
 
 Previous studies have shown the importance of having documents of good quality and with at least 5000 tokens to have reliable results.
 Skilled authors can easily change their style to imitate others for small texts, but it becomes more difficult for larger texts~\cite{savoy_stylo}.
@@ -21,7 +21,7 @@ For example, if a corpus contains novels of multiple genres (e.g. Comedy, Sci-fi
 With the right $n$ all the specific items of each genre will be discarded since their frequency should be lower than the non topic related items which are contained in every document.
 The frequencies of these items should reflect the style of the author.
 
-In this study, multiple text representation are explored, such as tokens/lemmas (Section~\ref{sec:tokens_lemmas}), letters n-grams (Section~\ref{sec:letters_n_grams}) and short sequences of POS (Section~\ref{sec:pos_short_sequences}).
+In this study, multiple text representation are explored, such as tokens/lemmas (Section~\ref{sec:tokens_lemmas}), substrings (Section~\ref{sec:substrings}) and short sequences of POS (Section~\ref{sec:pos_short_sequences}).
 
 Example~\ref{ex:mf_vector} show a computation of the MF items vector, using words as items.
 
@@ -41,6 +41,7 @@ Example~\ref{ex:mf_vector} show a computation of the MF items vector, using word
   \subcaption{Vector}
     Suppose that the $5$-MF tokens for this text's \textbf{corpus} are "\textit{the, was, i, she, he}".
 
+    \vspace{0.2cm}
     \centering
     \begin{tabular}{l c c c c c}
       \toprule

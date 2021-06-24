@@ -1,21 +1,66 @@
 \subsection{Clustering}
 
-todo
+\subsubsection{Definition and Examples}
 
-\subsubsection{Clustering definition and examples}
+The clustering aim to group items such that the most similar items are in the same group.
+These groups of clusters are called clusters.
 
-todo
+Example~\ref{ex:clustering} show the clustering task for 2D points.
 
-\subsubsection{Clustering evaluation metrics}
+For the case of authorship clustering, finding the authorship function can be useful (Definition~\ref{def:authorship} in Section~\ref{sec:definitions}).
+But this task can be hard since the real author (ground truth labels) are generally not available.
+Without example, finding the authorship function is not possible.
 
-To evaluate clustering, the metrics used are the BCubed~\cite{bcubed} family (sometimes called $B^3$, in this report).
+For the authorship clustering, we only aim to group similar texts instead of finding the actual authors.
+This task can be solved by finding the relevant set (Definition~\ref{def:relevant_set} in Section~\ref{sec:definitions}) which is much easier when no ground truth labels are available.
+
+A simple method to find clusters from the relevant set is:
+Consider each pair of documents in the relevant set as: \textit{in the same cluster}.
+With transitivity, the clusters can be created.
+
+One main issue arise with this method.
+If the relevant set is not perfect (a pair of documents with different authors is in the relevant set), the two authors will be in the same cluster.
+Noisy relevant set can quickly be considered as a single cluster with this method.
+
+Chapter~\ref{sec:clustering} will introduce and evaluate methods using rank lists to create the clusters instead of the relevant set.
+
+\begin{example}
+    \centering
+    \caption{Clustering with 2D points}
+    \label{ex:clustering}
+
+    \begin{subexample}{\linewidth}
+      \centering
+      \subcaption{Unlabeled data}
+      \includegraphics[width=0.9\linewidth]{img/clustering_example_1.png}
+    \end{subexample}
+
+    \vspace{0.5cm}
+
+    \begin{subexample}{\linewidth}
+      \centering
+      \subcaption{A possible good clustering result}
+      \includegraphics[width=0.9\linewidth]{img/clustering_example_2.png}
+    \end{subexample}
+\end{example}
+
+\subsubsection{Clustering Evaluation Metrics}
+
+The methods introduced in this chapter are to evaluate and compare clustering models.
+Therefore, the ground truth labels are required.
+The metrics used are the BCubed~\cite{bcubed} family (also called $B^3$, in this report).
+
 BCubed has shown to satisfy the four following important constraints when evaluating clusterings~\cite{bcubed}~:
 
 \begin{enumerate}
-  \item \textit{Cluster Homogeneity} (different authors should be in the different clusters)
-  \item \textit{Cluster Completeness} (same authors should belong to the same cluster)
-  \item \textit{Rag Bag constraint} (noisy / miscellaneous authors should be in the same cluster and not in \textit{healthy} clusters)
-  \item \textit{Cluster size vs quantity constraints} (favour large cluster)
+  \item
+  \textit{Cluster Homogeneity} (different authors should be in the different clusters)
+  \item
+  \textit{Cluster Completeness} (same authors should belong to the same cluster)
+  \item
+  \textit{Rag Bag constraint} (noisy / miscellaneous authors should be in the same cluster and not in \textit{healthy} clusters)
+  \item
+  \textit{Cluster size vs quantity constraints} (favour large cluster)
 \end{enumerate}
 
 These metrics are used in the clustering task at PAN @ CLEF~\cite{pan16}.

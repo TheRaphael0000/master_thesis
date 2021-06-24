@@ -1,4 +1,4 @@
-\subsection{Definitions \label{sec:basic_notions}}
+\subsection{Definitions \label{sec:definitions}}
 
 This section contain basic notions commonly used in the authorship attribution, verification and clustering.
 Basic metrics to evaluate simple properties of a corpus.
@@ -40,7 +40,7 @@ Basic metrics to evaluate simple properties of a corpus.
   A corpus is also called a dataset for most data science problems.
 \end{definition}
 
-\begin{definition}[Authorship]
+\begin{definition}[Authorship \label{def:authorship}]
   The function $f$, is a surjective-only function which map every text $X_i$ to a single author $Y_j$
   \begin{equation}
     Y_j = f(X_i)
@@ -53,8 +53,6 @@ Basic metrics to evaluate simple properties of a corpus.
     N = \sum_{j}^k |\hat{Y}_j|
   \end{equation}
   In authorship verification, the goal is to find this $f$ function, which can estimate the author based on new document and previous documents from this author and documents from other authors.
-  For the clustering task, finding such function is also needed, with the exception that the exact author is not required.
-  Instead, only knowing that two document are from the same author is required, see Definition~\ref{def:relevant_set}.
 \end{definition}
 
 \begin{definition}[Relevant set\label{def:relevant_set}]
@@ -73,7 +71,6 @@ Basic metrics to evaluate simple properties of a corpus.
     L = \bar{R} \cup R \\
     |L| = \frac{N * (N-1)}{2}
   \end{gather}
-  The authorship clustering problem aim to estimate these sets.
 \end{definition}
 
 \begin{definition}[r ratio~\cite{pan16}]

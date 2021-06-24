@@ -4,11 +4,13 @@ Rank lists are used to order objects such that the most interesting object is at
 In information retrieval systems, rank lists are used to order the results from the most relevant to the user's query to the least relevant.
 For the authorship verification problem, the rank list can also be used.
 
-\subsubsection{Rank lists definition and example}
+\subsubsection{Definition and Example}
 
 \begin{definition}[Ranked list for authorship verification \label{def:rank_list}]
   \begin{equation}
-    L = (\left[(X_a, X_b): Score(X_a, X_b)\right] | X_a \neq X_b \forall (X_a, X_b))
+      \begin{split}
+        L = (\left[(X_a, X_b) : Score(X_a, X_b)\right] | X_a \neq X_b \forall (X_a, X_b))
+      \end{split}
   \end{equation}
   \begin{equation}
     |L| = \frac{N \cdot (N - 1)}{2}
@@ -89,7 +91,7 @@ Example~\ref{ex:rank_list} show the creation of a rank list using two-dimensiona
   \end{subexample}
 \end{example}
 
-\subsubsection{Rank lists evaluation metrics \label{sec:rl_eval}}
+\subsubsection{Evaluation Metrics \label{sec:rl_eval}}
 
 In order to know the quality of a rank list, multiple rank list evaluation metrics are used and presented in this section.
 Definitions in these sections are adapted versions of the ones from Kocher and Savoy~\cite{kocher_linking}.
@@ -144,7 +146,7 @@ Example~\ref{ex:rank_list_eval} show a example for each metric.
   The mean over the precision@k each time a relevant link is retrieved.
   The average precision can be considered as an approximation of the area under the precision-recall curve.
   \begin{equation}
-    AveragePrecision = \frac{1}{|R|} \sum_{j=1}^{|L|} precision(j) \cdot relevant(j)
+    AP = \frac{1}{|R|} \sum_{j=1}^{|L|} precision(j) \cdot relevant(j)
   \end{equation}
 \end{definition}
 
@@ -157,20 +159,25 @@ Example~\ref{ex:rank_list_eval} show a example for each metric.
   \begin{subexample}{\linewidth}
   \subcaption{Documents, authorship and rank list}
 
-  Suppose that a corpus contain 4 documents (documents id: 0, 1, 2, 3).
+  Suppose that a corpus contain 4 documents.
   Documents 0, 1 and 3 are written by the same author A.
   Document 2 is written by author B.
 
   The following relevant set $R$ and non-relevant set $\bar{R}$ can be computed using these informations.
-
-  $R = \{(0, 1), (0, 3), (1, 3) \}$
-
-  $\bar{R} = \{(0, 2), (1, 2), (2, 3) \}$
-
-  $|L| = |R| \cup |\bar{R}| = 6$
+  \begin{equation}
+    \begin{split}
+            R =& \{(0, 1), (0, 3), (1, 3) \} \\
+      \bar{R} =& \{(0, 2), (1, 2), (2, 3) \} \\
+          |L| =& |R| \cup |\bar{R}| = 6
+    \end{split}
+  \end{equation}
 
   Suppose the following rank list order for the pairs :
-  $((1, 3), (0, 1), (2, 3), (0, 3), (1, 2), (0, 2))$
+  \begin{equation}
+    \begin{split}
+      ((1, 3), (0, 1), (2, 3), (0, 3), (1, 2), (0, 2))
+    \end{split}
+  \end{equation}
   \end{subexample}
 
   \vspace{0.5cm}
@@ -221,18 +228,18 @@ Example~\ref{ex:rank_list_eval} show a example for each metric.
     \subcaption{Average Precision (AP)}
     \begin{equation}
       \begin{split}
-        AveragePrecision &= \frac{1}{|R|} \sum_{j=1}^{|L|} precision(j) \cdot relevant(j) \\
-                         &= \frac{1}{3} \sum_{j=1}^{6} precision(j) \cdot relevant(j) \\
-                         &= \frac{1}{3} ( 1.00 \cdot 1 + 1.00 \cdot 1 + 0.66 \cdot 0 \\
-                         &+ 0.75 \cdot 1 + 0.60 \cdot 0 + 0.50 \cdot 0) \\
-                         &= \frac{1}{3} (1.00 + 1.00 + 0.75) = 0.92 \\
+        AP &= \frac{1}{|R|} \sum_{j=1}^{|L|} precision(j) \cdot relevant(j) \\
+           &= \frac{1}{3} \sum_{j=1}^{6} precision(j) \cdot relevant(j) \\
+           &= \frac{1}{3} ( 1.00 \cdot 1 + 1.00 \cdot 1 + 0.66 \cdot 0 \\
+           &+ 0.75 \cdot 1 + 0.60 \cdot 0 + 0.50 \cdot 0) \\
+           &= \frac{1}{3} (1.00 + 1.00 + 0.75) = 0.92 \\
       \end{split}
     \end{equation}
   \end{subexample}
 
 \end{example}
 
-\subsubsection{Authorship rank lists relationship with distances' matrix \label{sec:distances_matrix}}
+\subsubsection{Rank Lists Relationship with Distances' Matrix \label{sec:distances_matrix}}
 
 When computing the rank lists, each link have its distance calculated and can be represented in a matrix.
 In this matrix each document represent a row and a column.
@@ -283,7 +290,7 @@ The transformation can be effectuated either from a rank list to a distances' ma
   \end{subexample}
 \end{example}
 
-\subsubsection{Results comparaisons \label{sec:results_comparaison}}
+\subsubsection{Results Comparaisons \label{sec:results_comparaison}}
 
 To be able to compare rank list results, the gain strategy is used.
 In this study, the gain is defined as the difference between two evaluations.

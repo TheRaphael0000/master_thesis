@@ -2,7 +2,7 @@
 
 This section aim to evaluate the vector representation using the most frequent (MF) tokens and lemmas.
 
-\subsubsection{Method}
+\subsubsection{MF Tokens and Lemmas Method}
 
 The MF method only have one parameter, $n$.
 $n$ is the number of most frequent items.
@@ -12,11 +12,11 @@ Depending on the documents' length, previous studies have shown that using $n$ v
 One of the main advantage of this representation is that they can be easily explained.
 The feature vector can be show to the user.
 It represents the proportion of the most frequent words in a document.
-If $n$ is too large to present to the user, a dimensionality reduction with, for example the principal component analysis (PCA) can be helpful.
+If $n$ is too large to present to the user, a dimensionality reduction with, for example the principal component analysis (PCA) can be helpful~\cite{savoy_stylo}.
 
 Instead of using directly the words to create the feature vector, another possibility is to use the lemma corresponding to each word, for example the sentence \textit{i saw two men with a saw} its lemmatized version is : \textit{i see two man with a saw} this requires advanced text preprocessing, but it can remove ambiguity.
 
-\subsubsection{Evaluation}
+\subsubsection{MF Tokens and Lemmas evaluation}
 
 Here the goal is to compare two similar text representations, which are the token representation and the lemmatize representation.
 Rank list using these representation are created and evaluated.
@@ -25,7 +25,7 @@ The corpora used for this experiment is St-Jean since contains the lemma text re
 The proposed methodology is to create rank lists of every proposed distance measures (ref. Section~\ref{sec:vectors_distances}) for the two text representations.
 The value of $n$ is also explored between 250 and 2000 with a step of 250.
 
-The two plots in Figure~\ref{fig:token_vs_lemma} show the average precision (AP) for the resulting rank lists over $n$ for each distance measure.
+The two plots in Figure~\ref{fig:tokens_lemmas} show the average precision (AP) for the resulting rank lists over $n$ for each distance measure.
 Table~\ref{tab:tokens_lemmas} in annex show the values for this graph.
 
 This representation seem to have good results with an $n=500$ for most of the metrics, this corroborates previous studies results.
@@ -70,7 +70,7 @@ Only the tokens' representation is kept since it is obtainable more easily and n
   \includegraphics[width=0.9\linewidth]{img/mf_lemmas.png}
 \end{figure}
 
-\subsubsection{Importance of the text size in stylometry \label{sec:importance_of_text_size}}
+\subsubsection{Text Size\label{sec:importance_of_text_size}}
 
 For this study, an experiment on the St-Jean corpus is accomplished, to show the importance of having large documents.
 To test this, the number of token is artificially modified by considering only the $t$ first tokens of each text.
@@ -94,7 +94,7 @@ For this study having standard and easier corpus is required in order to show th
   \includegraphics[width=\linewidth]{img/degradation.png}
 \end{figure}
 
-\subsubsection{Influance of the most frequent items restriction \label{sec:influance_mf_restriction}}
+\subsubsection{Most Frequent Items Restriction \label{sec:influance_mf_restriction}}
 
 Previously the MF method was proposed to limit the items used to only the most frequents in the vocabulary of a corpus.
 This experiment aim to show the importance of limiting the items used when creating the vector representing the document.
@@ -188,7 +188,7 @@ Further, test are required to classify these distance metrics.
   \end{tabular}
 \end{table}
 
-\subsubsection{Frequent errors with the MF tokens \label{sec:frequent_errors}}
+\subsubsection{Frequent Errors \label{sec:frequent_errors}}
 
 For this experiment, the goal is to try to understand the errors in the system, in this case the false links (document pairs with different authors) highly ranked on different rank lists.
 The rank list quality is high based on the text representation and the distance function, but mostly on the first.

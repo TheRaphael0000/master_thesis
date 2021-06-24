@@ -2,9 +2,9 @@
 
 Instead of considering tokens or lemmas for the MF method, another strategy is to create a short sequences of letters called substrings.
 
-\subsubsection{Letters $n$-grams}
+\subsubsection{MF Letters $n$-grams}
 
-letters $n$-grams using Definition~\ref{def:letters_n_grams}.
+Letters $n$-grams is one possible substring method using Definition~\ref{def:letters_n_grams}.
 To consider overlapping words, the whole document is synthesized into a long string by joining every token with an \textit{underscore} : "$\_$".
 The underscore is used to remove visual ambiguity due to the nature of the space character.
 
@@ -21,7 +21,7 @@ In this study, the following notation is used : $(a, b)$-grams.
 This correspond to both $a$-grams and $b$-grams in the same text representation.
 
 $n$-grams can be really effective, even though no clear meaning can be exploited at first sight.
-A simple explanation on why $n$-grams can be effective is by using $n$-grams of size 3 to 5 in most Germanic languages this can correspond to for example : the tense of the verbs (i.e. : \textit{"ing\_"}, \textit{"ed\_"}), some small common words (\textit{"\_the\_"}, \textit{"\_and\_"}, \textit{"\_that"}), or in French the adverbs (\textit{"\_ment"}) which can capture the style of an author.
+A simple explanation on why $n$-grams can be effective is by using $n$-grams of size 3 to 5 in most Germanic languages this can correspond to for example : the tense of the verbs (i.e. : \textit{"ing\_"}, \textit{"ed\_"}), some small common words (\textit{"\_the\_"}, \textit{"\_and\_"}, \textit{"\_that"}), or in French the adverbs (\textit{"\_ment"}) which can capture the style of an author~\cite{ngrams_authorship}.
 
 When considering letters $n$-grams the text representation increases approximately by a factor of $t$ compared to the token representation.
 $t$ is the average token length.
@@ -30,7 +30,7 @@ To avoid having too large text representation, a possible idea is to remove the 
 This method can also be generalized to remove words appearing less than $x$ times.
 This pruning approach was explored in Kocher and Savoy~\cite{kocher_linking} but was not used in this study.
 
-\subsubsection{In-word $n$-grams}
+\subsubsection{MF In-word $n$-grams}
 
 An alternative version of the $n$-grams algorithm used here is defined in Definition~\ref{def:words_n_grams}.
 
@@ -50,7 +50,7 @@ This algorithm considers each token as a string to apply the letters $n$-grams a
 In-word $n$-grams are an hybrid version between the letters $n$-grams and the word token text representations.
 This method yield a subset of the letters $n$-grams algorithm when the tokens are bigger than $n$.
 
-\subsubsection{$n$-First / $n$-Last}
+\subsubsection{MF $n$-First / $n$-Last}
 
 Two other similar approach to the $n$-grams are to consider only the $n$ first letters of each token or the $n$-Last letters of each token.
 Definition~\ref{def:n_first} and Definition~\ref{def:n_last} explain and propose an example.
@@ -78,7 +78,7 @@ The $n$-First correspond generally to the meaning of a word and can be related t
   is converted to: (\textit{"fox", "is", "own"})
 \end{definition}
 
-\subsubsection{MF Letters $n$-grams evaluation}
+\subsubsection{MF Letters $n$-grams Evaluation}
 
 To evaluate the $n$-grams with the MF approach another methodology is used.
 Since the $n$-grams create an additional parameter, the field of possible parameter increase.
@@ -195,7 +195,7 @@ For this configuration of $4$-grams with $8000$-MF, using the right distance mea
   \end{tabular}
 \end{table}
 
-\subsubsection{MF In-word $n$-grams / $n$-First / $n$-Last evaluation}
+\subsubsection{MF In-word $n$-grams / $n$-First / $n$-Last Evaluation}
 
 In this experiment, the goal is to compare the three following substring text representations : In-word $n$-grams, $n$-First and $n$-Last.
 

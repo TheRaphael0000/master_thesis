@@ -1,4 +1,4 @@
-\subsection{Hierarchical clustering \label{sec:authorship_clustering_methods}}
+\subsection{Hierarchical Clustering \label{sec:authorship_clustering_methods}}
 
 To find clusters of authors, a possible way is to use a hierarchical clustering algorithm on a rank list.
 The rank list indicate if the two documents should belong to the same cluster by order of certainty.
@@ -21,13 +21,13 @@ The semi-supervised learn based on a corpus with labels (training corpus) a rank
 Finally, the supervised approach, learn based on a rank from a corpus with labels (training corpus) a model.
 The model can find the optimal cut for a rank list from a new corpus (called testing corpus) generated using the same metrics as ones used for training.
 
-\subsubsection{Hierarchical clustering aglorithm and implementation}
+\subsubsection{Algorithm and Implementation \label{sec:algorithm_and_implementation}}
 
 The scikit-learn package~\cite{sklearn} provide an implementation bottom-up implementation of the hierarchical clustering, which is called agglomerative clustering.
 
 The agglomerative clustering follow this procedure:
 \begin{enumerate}
-  \item The rank list used is converted into a 2D distances' matrix with each link representing a element of the matrix (ref. ~\label{sec:distances_matrix}).
+  \item The rank list used is converted into a 2D distances' matrix with each link representing a element of the matrix (ref. Section~\ref{sec:distances_matrix}).
   \item At the begining, each document is considered as a single document cluster.
   \item The link (element) with the lowest score in the matrix is used to merge the next clusters.
   \item The matrix is updated following a linkage criteria.
@@ -137,9 +137,9 @@ The implementation profit of the generator functions that Python offers.
 \end{example}
 
 
-\subsubsection{Hierarchical clustering parameters and upper bounds\label{sec:hierarchical_clustering}}
+\subsubsection{Parameters\label{sec:hierarchical_clustering}}
 
-As explained in Section~\ref{sec:authors_clustering}, the hierarchical clustering decide clusters based on a bottom-up approach and have two main parameters, the stopping procedure and the linkage criterion.
+As explained in Section~\ref{sec:algorithm_and_implementation}, the hierarchical clustering decide clusters based on a bottom-up approach and have two main parameters, the stopping procedure and the linkage criterion.
 The linkage criterion can be : single, complete, average linkage.
 Oxquarry, Brunet, St-Jean A, St-Jean B and St-Jean copora are used for this experiment.
 The goal is to understand how the linkage criterion behave in the following two best scenarios : when the right number of cluster is found ($r_{diff} = 0$) and the clustering with the best $B^3_{F_1}$.

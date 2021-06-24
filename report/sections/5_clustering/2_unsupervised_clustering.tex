@@ -1,6 +1,6 @@
-\subsection{Unsupervised clustering \label{sec:unsupervised_clustering}}
+\subsection{Unsupervised Clustering \label{sec:unsupervised_clustering}}
 
-\subsubsection{Unsupervised clustering method}
+\subsubsection{Method}
 
 The idea is to unsupervisely evaluate the agglomerative clustering at each number of clusters (at each merge step).
 When discarding clustering with $N$ and clusters $1$, this produce $N - 2$ possible clusterings, each of those are evaluated using the mean Silhouette score.
@@ -12,14 +12,14 @@ See Definition~\ref{def:silhouette}.
   \begin{equation}
     s = \frac{1}{|C|} \sum_{i = 0}^{|C|} \frac{b(i) - a(i)}{max(a(i), b(i))}
   \end{equation}
-  \begin{equation*}
+  \begin{equation}
     \begin{split}
       a(i)&: \text{mean intra-cluster distance} \\
       a(i)& = \frac{1}{|C_i| - 1} \sum_{j \in C_i, i\neq j} d(i, j) \\
       b(i)&: \text{mean nearest-cluster distance} \\
       b(i)& = \min_{k\neq i} \frac{1}{|C_k|} \sum_{j \in C_k} d(i, j) \\
     \end{split}
-  \end{equation*}
+  \end{equation}
   With $C$ the set of clusters, $C_i$ the i-th cluster, $d(i, j)$ the distance between the document i and j.
   $d(i, j)$ are pre-computed and used for the rank list.
   The value is ranged between -1 and 1, a large value indicate a good cohesion and good separation of the clusters (low intra-cluster distance, high nearest-cluster distance).
@@ -29,7 +29,7 @@ The idea is to apply the hierarchical clustering at each possible number of clus
 The best clustering is the one which have the largest mean Silhouette score.
 An alternative to this method is the Iterative Positive Silhouette (IPS) and was proposed in Layton, Watters, Dazeley (2011)~\cite{automated_unsupervised}.
 
-\subsubsection{Unsupervised clustering evaluation}
+\subsubsection{Evaluation}
 
 For this experiment, the goal is to test the unsupervised hierarchical clustering cut method based on the maximization of the mean silhouette score on the literature corpora.
 The right number of cluster is not known.

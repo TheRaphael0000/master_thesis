@@ -1,4 +1,4 @@
-\subsection{Vectors distances \label{sec:vectors_distances}}
+\subsection{Vectors Distances \label{sec:vectors_distances}}
 
 To be able to compare vectors, different metrics can be used depending on the usage.
 Usually two types of metrics for vector comparison can be used: Vector similarities and vector distances.
@@ -15,16 +15,16 @@ Definitions~\ref{def:manhattan} to~\ref{def:jeffrey_divergence} are one of the f
 
   Let $A$ and $B$ be two same size vectors.
 
-  \begin{equation*}
+  \begin{equation}
     \begin{aligned}
       A &= \left[-2, 3, -5, 7, -11, 13 \right] \\
       B &= \left[1, 2, 4, 8, 16, 32 \right]
     \end{aligned}
-  \end{equation*}
+  \end{equation}
 
   The manhattan distance is computed as follow:
 
-  \begin{equation*}
+  \begin{equation}
     \begin{aligned}
       dist_{Manhattan}(A, B) =& |-2 - 1| + |3 - 2| + |-5 - 4| \\
                              +& |7 - 8| + |-11 - 16| + |13 - 32| \\
@@ -32,7 +32,7 @@ Definitions~\ref{def:manhattan} to~\ref{def:jeffrey_divergence} are one of the f
                              +& |-1| + |-27| + |-19| \\
                              =& 60
     \end{aligned}
-  \end{equation*}
+  \end{equation}
 \end{definition}
 
 \begin{definition}[Tanimoto distance]

@@ -1,10 +1,10 @@
-\subsection{Fusions methods \label{sec:rank_lists_fusion}}
+\subsection{Methods \label{sec:rank_lists_fusion}}
 
 
 The idea of rank lists' fusion is to combine multiple rank lists in such a way that the resulting rank list produced is a more accurate modelling of a perfect rank list.
 This perfect rank list contain each true links (same author document pairs) are at the top and each false links (different author document pair) are at the bottom, therefore maximizing every metrics in Section~\ref{sec:rl_eval}.
 
-\subsubsection{Z-Score fusion}
+\subsubsection{Z-Score Fusion}
 
 When merging rank list a problem arise: due to the difference of distance metric and/or text representation the scores used in the rank list are of different order of magnitude.
 
@@ -73,7 +73,7 @@ Example~\ref{ex:z_score_fusion} show an example for the Z-Score fusion computati
 
 \end{example}
 
-\subsubsection{Regression fusion \label{sec:regression_fusion}}
+\subsubsection{Regression Fusion \label{sec:regression_fusion}}
 
 Each rank list is ordered by a score, this score depends on distance measure used, thus the order of magnitude across rank list can different if they are generated with different distance measures.
 To avoid this problem, the second solution is to translate the scores into a probability of being a true link.
@@ -318,13 +318,13 @@ This stragegy can be use on any type of scoring method (similarity, distances, Z
   \caption{S-Curves parameters}
   \label{fig:s_curve_params}
 
-  \subcaption{$S^-1(x)$, 500 samples (for a rank list with 500 links) in $\left[S(-c), S(+c)\right]$}
+  \subcaption{$S^-1(x)$, 1000 samples (for a rank list with 1000 links) in $\left[S(-c), S(+c)\right]$}
   \label{fig:s_curve_c}
   \includegraphics[width=\linewidth]{img/s_curve_c.png}
 
   \vspace{0.5cm}
 
-  \subcaption{500 sample of $S^-1(x)$ with $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$}
+  \subcaption{1000 sample of $S^-1(x)$ with $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$}
   \label{fig:s_curve_r}
   \includegraphics[width=\linewidth]{img/s_curve_r.png}
 
