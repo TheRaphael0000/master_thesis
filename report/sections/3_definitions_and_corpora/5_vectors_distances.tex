@@ -6,63 +6,64 @@ The first yield a large value when the two vectors are closely related and the s
 Definitions~\ref{def:manhattan} to~\ref{def:jeffrey_divergence} are one of the few most common $L^1$/$L^2$/$cosine$ based distances.
 
 \begin{definition}[Manhattan distance\label{def:manhattan}]
-  \begin{equation}
+  \begin{gather*}
     dist_{Manhattan}(A, B) = \sum_{i=1}^{m} |a_i - a_i|
-  \end{equation}
+  \end{gather*}
   The Manhattan is a $L^1$ based distance measure.
 
   Example:
 
   Let $A$ and $B$ be two same size vectors.
 
-  \begin{equation}
+  \begin{gather*}
     \begin{aligned}
       A &= \left[-2, 3, -5, 7, -11, 13 \right] \\
       B &= \left[1, 2, 4, 8, 16, 32 \right]
     \end{aligned}
-  \end{equation}
+  \end{gather*}
 
   The manhattan distance is computed as follow:
 
-  \begin{equation}
+  \begin{gather*}
     \begin{aligned}
-      dist_{Manhattan}(A, B) =& |-2 - 1| + |3 - 2| + |-5 - 4| \\
-                             +& |7 - 8| + |-11 - 16| + |13 - 32| \\
+      dist_{Manhattan}(A, B) =& |-2 - 1| + |3 - 2| \\
+                             +& |-5 - 4| + |7 - 8| \\
+                             +& |-11 - 16| + |13 - 32| \\
                              =& |-3| + |1| + |-9| \\
                              +& |-1| + |-27| + |-19| \\
                              =& 60
     \end{aligned}
-  \end{equation}
+  \end{gather*}
 \end{definition}
 
 \begin{definition}[Tanimoto distance]
-  \begin{equation}
+  \begin{gather*}
     dist_{Tanimoto}(A, B) = \frac{dist_{Manhattan}(A, B)}{\sum_{i=1}^{m} max(a_i, b_i)}
-  \end{equation}
+  \end{gather*}
   Tanimoto distance is a $L^1$ based, it's a component-wise normalized version of the Manhattan distance.
 \end{definition}
 
 \begin{definition}[Euclidean distance]
-  \begin{equation}
+  \begin{gather*}
     dist_{Euclidian}(A, B) = \sqrt{\sum_{i=1}^{m}(a_i - b_i)^2}
-  \end{equation}
+  \end{gather*}
   $L^2$ based distance.
 \end{definition}
 
 \begin{definition}[Matusita distance]
-  \begin{equation}
+  \begin{gather*}
     \begin{split}
       dist_{Matusita}(A, B) &= dist_{Euclidian}(A', B') \\
       \text{with }A' &= \sqrt{A}\text{ and }B' = \sqrt{B}
     \end{split}
-  \end{equation}
+  \end{gather*}
   $L^2$ based distance, using the square root of the input vectors with the Euclidean distance.
 \end{definition}
 
 \begin{definition}[Clark distance~\cite{kocher_verification}]
-  \begin{equation}
+  \begin{gather*}
     dist_{Clark}(A, B) = \sqrt{\sum_{i=1}^{m}\left(\frac{|a_i - b_i|}{a_i + b_i}\right)^2}
-  \end{equation}
+  \end{gather*}
   $L^2$ based distance.
 \end{definition}
 
@@ -71,35 +72,35 @@ Definitions~\ref{def:manhattan} to~\ref{def:jeffrey_divergence} are one of the f
   The cosine distance is an inner product based distance.
   The inner product is defined as:
 
-  \begin{equation}
+  \begin{gather*}
     \langle A, B \rangle = \sum_{i=1}^{n} a_i b_i = a_1 b_1 + a_2 b_2 + \cdots + a_n b_n
-  \end{equation}
+  \end{gather*}
 
   To compute the Cosine distance, first the cosine similarity must be computed.
-  \begin{equation}
+  \begin{gather*}
     sim_{Cosine}(A, B) = \frac{\langle A, B \rangle}{\sqrt{\langle A , A \rangle}\sqrt{\langle B, B \rangle}}
-  \end{equation}
+  \end{gather*}
   The cosine similarity is ranged between -1 and 1.
   With 1 being exactly the same, -1 the total opposite and 0 orthogonal.
-  \begin{equation}
+  \begin{gather*}
     dist_{Cosine}(A, B) = 1 - sim_{Cosine}(A, B)
-  \end{equation}
-  \begin{equation}
+  \end{gather*}
+  \begin{gather*}
     dist_{Angular\_cosine}(A, B) = \frac{cos^{-1}\left( sim_{Cosine}(A, B) \right)}{\pi}
-  \end{equation}
+  \end{gather*}
   These measures are Inner product based.
 \end{definition}
 
 \begin{definition}[Kullback-Leibler divergence]
-  \begin{equation}
+  \begin{gather*}
     dist_{kld}(A, B) = \sum_{i=1}^{m} a_i \cdot \log(\frac{a_i}{b_i})
-  \end{equation}
+  \end{gather*}
   Kullback-Leibler divergence use the principle of relative entropy.
 \end{definition}
 
 \begin{definition}[Jeffrey divergence~\cite{kocher_verification}\label{def:jeffrey_divergence}]
-  \begin{equation}
+  \begin{gather*}
     dist_{j\_divergence}(A, B) = \sum_{i=1}^{m} (a_i - b_i) \cdot \log(\frac{a_i}{b_i})
-  \end{equation}
+  \end{gather*}
   It represents the difference between two probability distribution.
 \end{definition}

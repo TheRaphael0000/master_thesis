@@ -44,7 +44,7 @@ Chapter~\ref{sec:clustering} will introduce and evaluate methods using rank list
     \end{subexample}
 \end{example}
 
-\subsubsection{Clustering Evaluation Metrics}
+\subsubsection{Clustering Evaluation Metrics \label{sec:clustering_evaluation_meterics}}
 
 The methods introduced in this chapter are to evaluate and compare clustering models.
 Therefore, the ground truth labels are required.
@@ -82,42 +82,42 @@ In addition to the BCubed family, this study introduce a simple metric for evalu
 
 \begin{definition}[$BCubed$ Precision~\cite{bcubed}]
   The $BCubed$ Precision correspond to the average of correctness for all elements on the average of all element such that \textbf{their clusters are the same}.
-  \begin{equation}
+  \begin{gather*}
     B^3_{precision} = \text{Avg}_{e}[\text{Avg}_{e' C(e)=C(e')}[Correctness(e, e')]]
-  \end{equation}
+  \end{gather*}
 \end{definition}
 
 \begin{definition}[$BCubed$ Recall~\cite{bcubed}]
   The $BCubed$ Recall correspond to the average of correctness for all elements on the average of all element such that \textbf{their authors are the same}.
-  \begin{equation}
+  \begin{gather*}
     B^3_{recall} = \text{Avg}_{e}[\text{Avg}_{e' L(e)=L(e')}[Correctness(e, e')]]
-  \end{equation}
+  \end{gather*}
 \end{definition}
 
 \begin{definition}[$BCubed F_1$ Score~\cite{bcubed}]
   $BCubed F_1$ Score uses the harmonic mean between the $B^3_{precision}$ and $B^3_{recall}$.
-  \begin{equation}
+  \begin{gather*}
     B^3_{F_1} =
     2 \cdot \frac{B^3_{precision} \cdot B^3_{recall}}
     {B^3_{precision} + B^3_{recall}}
-  \end{equation}
+  \end{gather*}
   The $F_\beta$ measures, not shown here, provide a parametric way to represent with a single value the two counterbalancing measures in this case, the $B^3_{F_1}$ is computed using the $F$ measures with $\beta = 1$ and the $B^3_{precision}$ and $B^3_{recall}$ scores.
 \end{definition}
 
 \begin{definition}[Cluster difference]
   This metric aim to evaluate if the clustering found the right number of cluster.
   The cluster difference is the number of cluster found $p$ minus the actual number of cluster $k$ (number of distinct authors in the corpus).
-  \begin{equation}
+  \begin{gather*}
     Cluster_{diff} = p - k
-  \end{equation}
+  \end{gather*}
   A positive value indicates an overestimation of the real number of cluster, a negative value indicate the underestimation.
   Zero indicate that the right number of cluster was found.
   This value can also be used to summarize if the $B^3_{recall}$ is greater or not than the $B^3_{precision}$.
   A positive Cluster diff should indicate a larger $B^3_{precision}$ than $B^3_{recall}$, and vice versa.
   This value can be normalized by the number of documents N, which correspond to the difference of the r ratios.
   This is useful when comparing corpora results with different number of clusters.
-  \begin{equation}
+  \begin{gather*}
     r_{diff} = \frac{p}{N} - \frac{k}{N} = \frac{p - k}{N}
-  \end{equation}
+  \end{gather*}
   As stated in the PAN16 evaluation campaign paper, estimating correctly the number of clusters and the r ratio is a first step to produce a good clustering~\cite{pan16}.
 \end{definition}

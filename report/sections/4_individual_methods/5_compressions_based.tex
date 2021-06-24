@@ -24,9 +24,9 @@ Definitions~\ref{def:compress1},~\ref{def:compress2} and \ref{def:compress3} are
 
 \begin{definition}[Conditional complexity of compression~\cite{comparing_compression}~\cite{savoy_stylo}\label{def:compress1}]
   The conditional complexity of compression of two documents A and B is computed as follows:
-  \begin{equation}
+  \begin{gather*}
     CCC(A, B) = C(AB) - C(A)
-  \end{equation}
+  \end{gather*}
   Where C(AB) is the size after compression of the concatenation of A and B, and C(A) the size after compression of A.
   This metrics is not easy to use since the order of magnitude is not bounded and can depend a lot on the text sizes.
   The next ones try to mitigate this problem.
@@ -34,18 +34,18 @@ Definitions~\ref{def:compress1},~\ref{def:compress2} and \ref{def:compress3} are
 
 \begin{definition}[Normalized compression distance~\cite{comparing_compression}~\cite{savoy_stylo}\label{def:compress2}]
   The normalized compression distance of two documents A and B as follows:
-  \begin{equation}
+  \begin{gather*}
     NCD(A, B) = \frac{C(AB) - \min(C(A), C(B))}{\max(C(A), C(B))}
-  \end{equation}
+  \end{gather*}
   Where C(AB) is the size after compression of the concatenation of A and B, C(A) the size after compression of A and C(B) the size after compression of B.
   This metric gives a value in the range $\left[0, 1+\epsilon\right]$, with $\epsilon$ being a small positive value created by the imperfection of compression algorithms.
 \end{definition}
 
 \begin{definition}[Compression-based cosine~\cite{comparing_compression}~\cite{savoy_stylo}\label{def:compress3}]
   The compression-based cosine of two documents A and B is computed as follows:
-  \begin{equation}
+  \begin{gather*}
     CBC(A, B) = 1 - \frac{C(A) + C(B) - C(AB)}{\sqrt{C(A) \cdot C(B)}}
-  \end{equation}
+  \end{gather*}
   Where C(AB) is the size after compression of the concatenation of A and B, C(A) the size after compression of A and C(B) the size after compression of B.
   This metric has the same properties as the cosine distance (Definition~\ref{def:cosine_dist}).
 \end{definition}

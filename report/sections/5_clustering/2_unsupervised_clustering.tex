@@ -9,17 +9,17 @@ See Definition~\ref{def:silhouette}.
 \begin{definition}[Mean Silhouette score~\cite{sklearn}~\cite{wiki_silhouette}]
   \label{def:silhouette}
   The mean Silhouette score is an unsupervised clustering metric which evaluate a clustering result by measuring the cohesion and separation of the clusters.
-  \begin{equation}
+  \begin{gather*}
     s = \frac{1}{|C|} \sum_{i = 0}^{|C|} \frac{b(i) - a(i)}{max(a(i), b(i))}
-  \end{equation}
-  \begin{equation}
+  \end{gather*}
+  \begin{gather*}
     \begin{split}
       a(i)&: \text{mean intra-cluster distance} \\
       a(i)& = \frac{1}{|C_i| - 1} \sum_{j \in C_i, i\neq j} d(i, j) \\
       b(i)&: \text{mean nearest-cluster distance} \\
       b(i)& = \min_{k\neq i} \frac{1}{|C_k|} \sum_{j \in C_k} d(i, j) \\
     \end{split}
-  \end{equation}
+  \end{gather*}
   With $C$ the set of clusters, $C_i$ the i-th cluster, $d(i, j)$ the distance between the document i and j.
   $d(i, j)$ are pre-computed and used for the rank list.
   The value is ranged between -1 and 1, a large value indicate a good cohesion and good separation of the clusters (low intra-cluster distance, high nearest-cluster distance).

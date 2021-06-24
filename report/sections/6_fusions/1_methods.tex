@@ -274,14 +274,14 @@ A weighting curve, here called soft-veto, can be design accordingly such that th
 Using the reciprocal of the sigmoid function, such a curve can modelize.
 Equation~\ref{eq:sigmoid} and~\ref{eq:sigmoid_r}.
 
-\begin{equation}
+\begin{gather*}
   \label{eq:sigmoid}
   S(x) = \frac{1}{1+e^{-x}}
-\end{equation}
-\begin{equation}
+\end{gather*}
+\begin{gather*}
   \label{eq:sigmoid_r}
   S^{-1}(x) = -\ln{\frac{x-1}{x}}
-\end{equation}
+\end{gather*}
 
 Since the reciprocal of the sigmoid function is continuous and the number of links in a rank list is discrete, the idea is to sample values in this curve at regular intervals.
 Controlling the steepness of this curve can influance the strength of the veto.

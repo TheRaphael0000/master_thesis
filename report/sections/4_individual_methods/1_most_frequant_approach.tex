@@ -1,6 +1,6 @@
 \subsection{Most Frequent Approach}
 
-The first method used to represent and compare the documents is called: Most frequent (MF), and try to compare documents by creating feature vectors containing frequencies of the most common items in a text representation.
+The first method used to represent and compare the documents is called: Most frequent (MF), and try to compare documents by creating feature vectors containing frequencies of the most common items in a text representation (TR).
 A text representation can be for example words in the text or a new representation generated from the text.
 This method is a generalized approach of the most frequent words technique (MFWs), which consider words as items.
 
@@ -65,22 +65,22 @@ Definition~\ref{def:normalization} show two ways to linearly normalize a vector.
 
 \begin{definition}[Z-Score normalization~\cite{savoy_stylo}]
   \label{def:z_score}
-  \begin{equation}
+  \begin{gather*}
     ZScore(X) = \frac{X - \mu}{\sigma}
-  \end{equation}
+  \end{gather*}
   Z-Score normalize a vector X, such that the resulting vector have a 0 mean and a standard deviation of 1.
   When using the Z-Score normalization on MF vectors, $\mu$ and $\sigma$ usually are vectors containing the mean and the standard deviation of each terms in the corpus.
 \end{definition}
 
 \begin{definition}[Linear normalization]
   \label{def:normalization}
-  \begin{equation}
+  \begin{gather*}
     Norm(X) = \frac{X - Min(X)}{Max(X) - Min(X)}
-  \end{equation}
+  \end{gather*}
   Normalize a list of numbers X in the interval $[0, 1]$.
-  \begin{equation}
+  \begin{gather*}
     Norm_{ab}(X, a, b) = Norm(X) \cdot (b - a) + a
-  \end{equation}
+  \end{gather*}
   Normalize a list of numbers X in the interval $[a, b]$, with $b > a$.
 \end{definition}
 
@@ -94,9 +94,9 @@ Smoothing techniques can help distance functions based on probabilities, such as
 
 \begin{definition}[Lidstone smoothing~\cite{savoy_stylo}]
   \label{def:lidstone_smoothing}
-  \begin{equation}
+  \begin{gather*}
     p(t_i, D_j) = \frac{tf_{i,j} + \lambda}{n + \lambda \cdot |V|}
-  \end{equation}
+  \end{gather*}
   With $t_i$ the i-th term, $D_j$ the j-th document, $tf_{i,j}$ the number of occurrences of the i-th term in $D_j$, $|V|$ the size of the vocabulary, $\lambda$ a small value ($\lambda = 1$, is a special case called Laplace smoothing), n the total number of items in the document $D_j$.
 \end{definition}
 

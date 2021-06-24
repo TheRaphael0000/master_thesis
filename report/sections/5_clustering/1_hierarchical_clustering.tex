@@ -50,7 +50,7 @@ A possible workaround is to run the algorithm multiple time.
 Each time the algorithm is stopped at a different cluster number.
 This workaround introduce an overhead of $O\frac{n * (n - 1)}{2} = O(n^2)$, with $n$ equal to the number of documents.
 
-The agglomerative clustering algorithm was re-implementated to allow access to the clusters at each steps and avoid this overhead.
+The agglomerative clustering algorithm was reimplementated to allow access to the clusters at each steps and avoid this overhead.
 The implementation profit of the generator functions that Python offers.
 
 \begin{example}
@@ -142,62 +142,99 @@ The implementation profit of the generator functions that Python offers.
 As explained in Section~\ref{sec:algorithm_and_implementation}, the hierarchical clustering decide clusters based on a bottom-up approach and have two main parameters, the stopping procedure and the linkage criterion.
 The linkage criterion can be : single, complete, average linkage.
 Oxquarry, Brunet, St-Jean A, St-Jean B and St-Jean copora are used for this experiment.
-The goal is to understand how the linkage criterion behave in the following two best scenarios : when the right number of cluster is found ($r_{diff} = 0$) and the clustering with the best $B^3_{F_1}$.
 
-The custom implementation of the hierarchical clustering is used, at each merging step, the intermediary clustering is evaluated using the two metrics.
-The clustering resulting in the best $B^3_{F_1}$ is kept and the $r_{diff} = 0$.
-This procedure is repeated for each linkage criteria and corpus.
+The goal is to understand how the linkage criterion behave for the best clustering achievable (best $B^3_{F_1}$)
 
-The results for the two scenarios are presented in Table~\ref{tab:hierarchical_clustering}, the mean of the absolute value is given for each criterion, the absolute value is to avoid having positives and negatives $r_{diff}$ cancelling.
+The custom implementation of the hierarchical clustering is used, at each merging step, the intermediary clustering is evaluated using the $B^3_{F_1}$.
+The clustering resulting in the best $B^3_{F_1}$ is kept.
+This procedure is repeated for each linkage criteria and corpus / text representation.
 
-These results can be considered as the upper bound for the two metrics ($B^3_{F_1}$ and $r_{diff}$) for the clustering case using the retained rank list on these corpora.
-Table~\ref{tab:hierarchical_clustering_rdiff_zero} represent the upper bound if the number of cluster is known for the hierarchical clustering with the retained rank lists and Table~\ref{tab:hierarchical_clustering_best_bcubed} the upper bound in case that the $B^3_{F_1}$ want to be maximized with the hierarchical clustering on the retained rank lists.
+The results are presented in Table~\ref{tab:hierarchical_clustering} and the mean for each corpus and linkage criterion.
 
-The best linkage criterion depends on the corpus, but in average, the best $B^3_{F_1}$ is achieved with the average linkage criterion, a relative increase of around 2.5\% compared to the other criteria.
-Having a slightly greater number of cluster can produces in average a better $B^3_{F_1}$ score using the retained rank lists.
+These results can be considered as the upper bound $B^3_{F_1}$ for the clustering case using the retained rank list on these corpora.
+
+The best linkage criterion depends on the corpus, but in average, the best $B^3_{F_1}$ is achieved with the average linkage criterion, a relative increase of 0.01 compared to the complete linkage and 0.05 compared to the single linkage.
+
+We assumed that the better the rank list are the better the clustering is.
+This assumption can be verified in Figure~\ref{fig:correlation_average_precision_b3f1}.
+We can clearly observe a linear relationship between the average precision and the $B^3_{F_1}$.
+The linear regression for the single linkage have a r-value of $1^{-11}$, $1^{-12}$ for the average linkage and $1^{-6}$ for the complete linkage.
+
+
 
 \begin{table}
   \centering
-  \caption{Hierarchical clustering $B^3_{F_1}$/ $r_{diff}$ on every linkage criterion and corpus}
+  \caption{Best $B^3_{F_1}$ with hierarchical clustering on every rank lists and linkage criterion}
   \label{tab:hierarchical_clustering}
 
-  \subcaption{Procedure stop at the right number of cluster ($r_{diff} = 0.00$)}
-  \label{tab:hierarchical_clustering_rdiff_zero}
   \resizebox{\linewidth}{!}{
-  \begin{tabular}{l c c c}
+  \begin{tabular}{l l c c c}
     \toprule
-           & \multicolumn{3}{c}{Linkage criterion} \\
-    Corpus    & Single    & Average   & Complete \\
+    \multicolumn{2}{c}{Rank list} & \multicolumn{3}{c}{Linkage criterion} \\
+    TR ID & Corpus & Single & Average & Complete \\
     \midrule
-    Oxquarry  & 0.81/0.00 & 0.93/0.00 & 0.81/0.00 \\
-    Brunet    & 0.81/0.00 & 0.81/0.00 & 0.79/0.00 \\
-    St-Jean A & 0.85/0.00 & 0.85/0.00 & 0.85/0.00 \\
-    St-Jean B & 0.96/0.00 & 0.93/0.00 & 0.97/0.00 \\
+    0 & Oxquarry & 0.95 & 1.00 & 0.90 \\
+    1 & Oxquarry & 0.93 & 0.93 & 0.82 \\
+    2 & Oxquarry & 0.67 & 0.74 & 0.80 \\
+    3 & Oxquarry & 0.77 & 0.77 & 0.84 \\
+    4 & Oxquarry & 0.87 & 0.91 & 0.84 \\
+    5 & Oxquarry & 0.88 & 0.89 & 0.84 \\
+    6 & Oxquarry & 0.86 & 0.83 & 0.80 \\
     \midrule
-    Absolute mean & 0.86/0.00 & 0.88/0.00 & 0.86/0.00 \\
+    \multicolumn{2}{l}{Oxquarry mean} & 0.85 & 0.87 & 0.84 \\
+    \midrule
+    0 & Brunet & 0.81 & 0.82 & 0.77 \\
+    1 & Brunet & 0.82 & 0.85 & 0.89 \\
+    2 & Brunet & 0.77 & 0.84 & 0.77 \\
+    3 & Brunet & 0.79 & 0.80 & 0.78 \\
+    4 & Brunet & 0.78 & 0.82 & 0.81 \\
+    5 & Brunet & 0.79 & 0.82 & 0.90 \\
+    6 & Brunet & 0.86 & 0.82 & 0.87 \\
+    \midrule
+    \multicolumn{2}{l}{Brunet mean} & 0.80 & 0.83 & 0.83 \\
+    \midrule
+    0 & St-Jean A & 0.82 & 0.89 & 0.91 \\
+    1 & St-Jean A & 0.77 & 0.84 & 0.88 \\
+    2 & St-Jean A & 0.78 & 0.87 & 0.91 \\
+    3 & St-Jean A & 0.80 & 0.82 & 0.83 \\
+    4 & St-Jean A & 0.68 & 0.86 & 0.89 \\
+    5 & St-Jean A & 0.74 & 0.88 & 0.91 \\
+    6 & St-Jean A & 0.76 & 0.88 & 0.87 \\
+    7 & St-Jean A & 0.69 & 0.83 & 0.77 \\
+    8 & St-Jean A & 0.81 & 0.84 & 0.82 \\
+    \midrule
+    \multicolumn{2}{l}{St-Jean A mean} & 0.76 & 0.86 & 0.86 \\
+    \midrule
+    0 & St-Jean B & 0.93 & 0.95 & 0.95 \\
+    1 & St-Jean B & 0.91 & 0.94 & 0.96 \\
+    2 & St-Jean B & 0.94 & 0.98 & 0.96 \\
+    3 & St-Jean B & 0.94 & 0.95 & 0.91 \\
+    4 & St-Jean B & 0.93 & 0.95 & 0.91 \\
+    5 & St-Jean B & 0.94 & 0.95 & 0.94 \\
+    6 & St-Jean B & 0.87 & 0.90 & 0.93 \\
+    7 & St-Jean B & 0.91 & 0.95 & 0.90 \\
+    8 & St-Jean B & 0.91 & 0.95 & 0.93 \\
+    \midrule
+    \multicolumn{2}{l}{St-Jean B mean} & 0.92 & 0.95 & 0.93 \\
+    \midrule
+    \multicolumn{2}{l}{Absolute mean} & 0.83 & 0.88 & 0.87 \\
     \bottomrule
   \end{tabular}
   }
 
-  \vspace{0.5cm}
+  \vspace{0.2cm}
 
-  \subcaption{Best $B^3_{F_1}$ and its $r_{diff}$ across all hierarchical clustering stops}
-  \label{tab:hierarchical_clustering_best_bcubed}
-
-  \resizebox{\linewidth}{!}{
-  \begin{tabular}{l c c c}
-    \toprule
-           & \multicolumn{3}{c}{Linkage criterion} \\
-    Corpus    & Single     & Average   & Complete \\
-    \midrule
-    Oxquarry  & 0.89/ 0.04 & 0.96/0.02 & 0.87/0.04 \\
-    Brunet    & 0.84/ 0.02 & 0.85/0.09 & 0.85/0.09 \\
-    St-Jean A & 0.86/-0.01 & 0.88/0.03 & 0.88/0.04 \\
-    St-Jean B & 0.98/ 0.02 & 0.98/0.02 & 0.97/0.00 \\
-    \midrule
-    Absolute mean & 0.89/0.02 & 0.92/0.04 & 0.89/0.04 \\
-    \bottomrule
-  \end{tabular}
-  }
-
+  \textit{TR: Text representation}
 \end{table}
+
+\begin{figure}
+  \caption{$B^3_{F_1}$ correlation with AP on each linkage criteria}
+  \label{fig:correlation_average_precision_b3f1}
+
+  \subcaption{Single Linkage}
+  \includegraphics[width=\linewidth]{img/correlation_average_precision_b3f1_0.png}
+  \subcaption{Average Linkage}
+  \includegraphics[width=\linewidth]{img/correlation_average_precision_b3f1_1.png}
+  \subcaption{Complete Linkage}
+  \includegraphics[width=\linewidth]{img/correlation_average_precision_b3f1_2.png}
+\end{figure}
