@@ -11,7 +11,7 @@ To find the position where both beta distribution have the same area under the c
 Instead, the equiprobable position is found using a binary search between 0 and 1.
 At each step the CDF for the two beta distribution is evaluated until it converges to the same value (or until their difference is a small value, such as $10^{-15}$).
 The binary search have a complexity of $O(\log n)$.
-With the an analytical solve, the complexity could drop to $O(1)$
+With an analytical solve, the complexity could drop to $O(1)$.
 
 As explained in~\cite{savoy_probability} the beta distribution is better suited for authorship problem than the Gaussian distribution since it can grasp a large amount of distribution shapes with its parameters' flexibility.
 
@@ -22,38 +22,23 @@ Thus, turn this method into supervised.
 We consider this method as semi-supervised since the only \textit{learnt} parameter is a fixed real number, the distance threshold, and this method do not consider any new corpus for this value computation.
 The linkage parameter for this method is the complete linkage, since the cut correspond to the position where the most extremes of the same categories, either true or false links meet.
 
+Figure~\ref{fig:links_score_density} show the distance density for true and false link as well as a beta distribution estimation for St-Jean B rank list generated with text representation 0 (ref. Section~\ref{sec:individual_methods_summary}).
+Notice that to be able to modelize the beta distribution, the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization}.
+
+The vertical line indicate the equiprobable position where both beta distribution have the same probability of being a true link and false link (same area under the curve), found using the binary search.
+This point can be used as a decision point where the cut should be made in the rank list, this ensures that both false positives and false negatives are minimized.
+
 This technique can be adapted, in the case where the false positives do not have the same importance as false negatives.
 The position search criteria can be change such that instead of finding the position where both the true link and false link area correspond to 50\% of their sum (equiprobable case).
 It can be generalized such that the true link area represent $\alpha$ and the false link area to $1-\alpha$ with $\alpha \in \left[0,1\right]$.
 When $\alpha$ is greater than 0.5, more false positives will occure and less false negatives and when $\alpha$ is smaller than 0.5, more false positives and more false negatives.
 The same binary search can be used for this computation, just the target need to be changed.
 
---
-
-Figure~\ref{fig:links_score_density} show the density of true and false link as well as a beta distribution estimation for St-Jean.
-For the metrics with a score outside the interval $[0, 1]$ (such as the Z-Score fusion), the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization} to be able to modelize the beta distribution.
-
-The vertical line indicate the equiprobable position where both beta distribution have the same probability of being a true link and false link (same area under the curve), found using the binary search.
-This point can be used as a decision point where the cut should be made in the rank list, this ensures that both false positives and false negatives are minimized.
-
-The results obtained by the regression fusion (ref.~\ref{sec:regression_fusion}) are a probability of being a true link, so the two distribution are well separated and can be modelized by the two beta distributions.
-In the other hand, when using the Z-Score fusion, the scores are overlapping more, but can also be modelized using the two beta distributions.
-
 \begin{figure}
-  \caption{Links score distribution and beta distribution estimation for St-Jean}
+  \caption{Links distances density and beta distribution estimation for St-Jean B with text representation 0}
   \label{fig:links_score_density}
-
-  \subcaption{Regression fusion (training Oxquarry)}
-  \label{fig:links_score_density_fusion_regression}
-  \includegraphics[width=\linewidth]{img/links_score_density_fusion_regression.png}
-
-  \vspace{0.5cm}
-
-  \subcaption{Z-Score fusion}
-  \label{fig:links_score_density_fusion_z_score}
-  \includegraphics[width=\linewidth]{img/links_score_density_fusion_z_score.png}
+  \includegraphics[width=\linewidth]{img/links_score_density.png}
 \end{figure}
-
 
 \subsubsection{Evaluation}
 

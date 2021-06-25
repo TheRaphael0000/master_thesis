@@ -17,6 +17,8 @@ from misc import labels_from_rank_list
 from misc import fit_beta
 from misc import find_two_beta_same_area
 
+from evaluate import evaluate_clustering
+
 
 def agglomerative_clustering(rank_list, linkage="average", distance_threshold=np.inf):
     distances_matrix = distances_matrix_from_rank_list(rank_list)
@@ -140,6 +142,7 @@ def clustering_at_dist_thresh(rank_list, linkage="average", distance_threshold=n
         pass
     return labels
 
+
 def unsupervised_clustering(rank_list, linkage="average", alpha=0):
     ac = agglomerative_clustering(rank_list, linkage, np.inf)
     distances_matrix = distances_matrix_from_rank_list(rank_list)
@@ -188,3 +191,16 @@ def clustering_at_every_n_clusters(rank_list, linkage="average"):
     labels, dts = zip(*list(ac))
     n = [len(np.unique(label)) for label in labels]
     return (n, labels)
+
+
+def best_clustering(rl, linkage, Y):
+    ac = agglomerative_clustering(rl, linkage, np.inf)
+
+    best = None
+
+    for labels, dt in ac:
+        m = evaluate_clustering(Y, labels)
+        if best is None or m[0] > best[0]:
+            best = m
+            
+    return best[0]
