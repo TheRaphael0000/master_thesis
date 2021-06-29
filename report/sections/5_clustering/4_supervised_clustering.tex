@@ -1,4 +1,4 @@
-\subsection{Supervised Clustering}
+\subsection{Supervised Clustering \label{sec:supervised_clustering}}
 
 \subsubsection{Method}
 
@@ -20,8 +20,8 @@ But this model is metric dependent, since the score magnitude can variate depend
 In this study, the model used is the logistic regression.
 The advantage of using a regression model is that the output of the model will correspond to a probability of being a true link according to the model.
 To find the cut on the test datasets, the fitted model predict the probability of being a true link on every link in the new rank list.
-From these predictions, a probability threshold must be chosen.
 
+From these predictions, a probability threshold must be chosen.
 For example, having a probability threshold at $0.5$, minimize both false negatives and the false positives.
 This can be adjusted, for example if false negatives are more important to minimize, a probability threshold at $0.6$ can be selected instead or $0.4$ if the false positive should be minimized.
 For the sake of simplicity, the probability threshold chosen is $0.5$.
@@ -68,91 +68,90 @@ The logistic regression model can be re-used on any other rank lists produced wi
 
 \subsubsection{Evaluation}
 
-To evaluate the supervised clustering approach, every dataset were used.
-First a rank list for each dataset is computed using a Z-Score fusion using the retained rank list, see Section~\ref{sec:annex_retained_text_representation} in annex.
-Then every pair of rank list is used to create a training/testing evaluation.
+
+To evaluate the supervised clustering approach: Oxquarry, Brunet, St-Jean A and B were used.
+The same approach as for the semi-supervised clustering is used.
+Each retained rank list for each corpus is computed, see Section~\ref{sec:annex_retained_text_representation} in annex.
+For each rank list pair, the distance threshold is computed, using the logistic regression approach.
+This step corresponds to the training phase.
+Then for every distance threshold and rank list pair, the clustering is evaluated using the $B^3_{F_1}$ and the $r_{diff}$.
+This correspond to the testing phase.
 In other words, a model to create cuts is trained on every dataset and tested on all the datasets.
 
-The model does not depend on the rank list size since only relative magnitudes are used.
-The BCubed metrics and the r ratio difference are computed during this experiment and are in presented in Table~\ref{tab:supervised_clustering_train_test}, for every pairs of dataset.
-The average values obtained for each metrics is presented in Table~\ref{tab:supervised_clustering_average}.
+To simplify the results the mean $B^3_{F_1}$ and $r_{diff}$ across all retained rank list is computed.
 
-Two conclusion can be drawn with these results:
+The model does not depend on the rank list size since only relative magnitudes are used.
+The BCubed metrics and the r ratio difference are computed during this experiment and are presented in Table~\ref{tab:supervised_clustering}, for every pairs of dataset.
+
+The following conclusions can be drawn with these results:
 \begin{itemize}
   \item
-  When testing the cut model, having a rank list of good quality tends to produce better clustering, no matter the quality of the rank list used for the training.
-  When testing the clustering model on St-Jean B (the corpus with the best rank list obtained, 0.96 AP), it obtains in average the best $B^3_{F_1}$ 0.93 for any training model.
-  The least performing rank list also have the least accurate results during the clustering task, Brunet with 0.76 AP have an average clustering $B^3_{F_1}$ of 0.80.
+  The best linkage criterion for this model is the average linkage with an $B^3_{F_1} = 0.80$.
   \item
-  Using the best rank list for training the cut model does not always give the best results.
-  An example to illustrate this observation, the St-Jean B dataset have the best rank list with an average precision of 0.96, but the best rank list for training the clustering model is Oxquarry with an average $r_{diff}$ of 0.02 and an average $B^3_{F_1}$ of 0.87.
-  In the other hand, St-Jean B have an average $r_{diff}$ of 0.09 and an average $B^3_{F_1}$ of 0.83.
-  With the corpora used, the Oxquarry rank list seem to be the best corpus to train this type of model and Brunet the least effective.
+  Some corpus such as the Oxquarry corpus have better rank list for training the clustering model even though their rank list have a worse average precision than other corpora.
+  This indicate that the training set does not require high quality rank list for training the clustering model.
+  \item
+  When testing the cut model, having a rank list of good quality tends to produce a better clustering, no matter the quality of the rank list used for the training.
+  When testing the clustering model on St-Jean B (the corpus with the best rank list is average), it obtains in average the best $B^3_{F_1} = 0.91$.
 \end{itemize}
 
-The conclusion to the two previous points is that having a good rank list is more important for testing than training.
+The conclusion to the previous points is that having a good rank list is more important for testing than training.
 No clear rank lists property was found which makes some of them better to train the model.
 
 \begin{table*}
   \centering
-  \caption{Supervised clustering evaluation}
+  \caption{Supervised clustering evaluation, Mean retained rank lists $B^{3}_{F_1}$/$r_{diff}$ for each corpus pair}
   \label{tab:supervised_clustering}
 
-  \subcaption{Every possible threshold and dataset pairs. Metrics in order : $B^{3}_{F_1}$ / $B^{3}_{precision}$ / $B^{3}_{recall}$ / $r_{diff}$}
-  \label{tab:supervised_clustering_train_test}
-  \begin{tabular}{l l| c c c c}
+  \subcaption{Single Linkage}
+  \begin{tabular}{l l| c c c c|c}
     \toprule
     \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing} \\
-    \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B \\
+    \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B & Mean \\
     \midrule
     \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
-    & Oxquarry
-    & 0.82/1.00/0.70/0.08
-    & 0.82/0.88/0.77/0.07
-    & 0.87/0.84/0.89/-0.02
-    & 0.95/0.92/0.98/-0.01
-    \\
-    & Brunet
-    & 0.80/1.00/0.67/0.10
-    & 0.75/0.94/0.62/0.18
-    & 0.82/0.96/0.72/0.07
-    & 0.91/1.00/0.83/0.05
-    \\
-    & St-Jean A
-    & 0.80/1.00/0.67/0.10
-    & 0.82/0.94/0.73/0.11
-    & 0.84/0.93/0.76/0.04
-    & 0.95/1.00/0.91/0.03
-    \\
-    & St-Jean B
-    & 0.80/1.00/0.67/0.10
-    & 0.76/0.94/0.64/0.16
-    & 0.83/0.93/0.74/0.05
-    & 0.95/1.00/0.91/0.03
-    \\
+    & Oxquarry  & 0.58/0.09 & 0.59/0.09 & 0.29/0.14 & 0.22/0.16 & 0.42/0.12 \\
+    & Brunet    & 0.77/0.17 & 0.78/0.09 & 0.58/0.10 & 0.83/0.03 & 0.74/0.10 \\
+    & St-Jean A & 0.79/0.14 & 0.77/0.06 & 0.50/0.09 & 0.69/0.07 & 0.69/0.09 \\
+    & St-Jean B & 0.78/0.15 & 0.78/0.08 & 0.53/0.08 & 0.74/0.05 & 0.71/0.09 \\
+    \midrule
+    & Mean      & 0.73/0.14 & 0.73/0.08 & 0.48/0.10 & 0.62/0.08 & 0.64/0.10 \\
     \bottomrule
   \end{tabular}
 
   \vspace{0.5cm}
 
-  \subcaption{Metrics averages}
-  \label{tab:supervised_clustering_average}
-  \begin{tabular}{l c c c c}
+  \subcaption{Average Linkage}
+  \begin{tabular}{l l| c c c c|c}
     \toprule
-    & $B^{3}_{F_1}$
-    & $B^{3}_{precision}$
-    & $B^{3}_{recall}$
-    & $r_{diff}$ \\
+    \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing} \\
+    \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B & Mean \\
     \midrule
-    Testing on Oxquarry     & 0.81 & 1.00 & 0.68 & 0.09 \\
-    Testing on Brunet       & 0.79 & 0.92 & 0.69 & 0.13 \\
-    Testing on St-Jean A    & 0.85 & 0.92 & 0.78 & 0.04 \\
-    Testing on St-Jean B    & 0.94 & 0.98 & 0.91 & 0.03 \\
-    Training on Oxquarry    & 0.86 & 0.91 & 0.84 & 0.04 \\
-    Training on Brunet      & 0.82 & 0.97 & 0.71 & 0.10 \\
-    Training on St-Jean A   & 0.85 & 0.97 & 0.77 & 0.07 \\
-    Training on St-Jean B   & 0.84 & 0.97 & 0.74 & 0.08 \\
-    \textbf{Global absolute mean} & \textbf{0.84} & \textbf{0.95} & \textbf{0.76} & \textbf{0.07} \\
+    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
+    & Oxquarry  & 0.83/0.11 & 0.80/0.11 & 0.83/0.04 & 0.91/0.01 & 0.84/0.07 \\
+    & Brunet    & 0.72/0.22 & 0.75/0.20 & 0.73/0.15 & 0.89/0.07 & 0.77/0.16 \\
+    & St-Jean A & 0.73/0.21 & 0.76/0.17 & 0.76/0.13 & 0.92/0.05 & 0.79/0.14 \\
+    & St-Jean B & 0.72/0.21 & 0.75/0.19 & 0.75/0.13 & 0.92/0.05 & 0.79/0.15 \\
+    \midrule
+    & Mean      & 0.75 0.19 & 0.76 0.17 & 0.77 0.11 & 0.91 0.05 & 0.80/0.13 \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5cm}
+
+  \subcaption{Complete Linkage}
+  \begin{tabular}{l l| c c c c|c}
+    \toprule
+    \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing} \\
+    \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B & Mean \\
+    \midrule
+    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
+    & Oxquarry  & 0.76/0.15 & 0.79/0.16 & 0.72/0.14 & 0.91/0.04 & 0.79/0.12 \\
+    & Brunet    & 0.63/0.30 & 0.71/0.24 & 0.65/0.21 & 0.82/0.13 & 0.71/0.22 \\
+    & St-Jean A & 0.66/0.27 & 0.73/0.23 & 0.67/0.19 & 0.85/0.10 & 0.73/0.20 \\
+    & St-Jean B & 0.64/0.29 & 0.73/0.23 & 0.67/0.20 & 0.84/0.10 & 0.72/0.20 \\
+    \midrule
+    & Mean      & 0.67/0.25 & 0.74/0.22 & 0.68/0.19 & 0.86/0.09 & 0.74/0.19 \\
     \bottomrule
   \end{tabular}
 \end{table*}

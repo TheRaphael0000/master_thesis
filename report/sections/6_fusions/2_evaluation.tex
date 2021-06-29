@@ -13,14 +13,13 @@ For these 126 fusions, the three following metrics are computed: Average Precisi
 
 To be able to compare the rank list produced by both the Z-Score fusions and the regression fusion to the non-fused rank lists (one to many), two evaluation strategies are used.
 One called \textit{Single-Max} which represent the best metrics for each rank list in the fusion and another one called \textit{Single-Mean} which is represented by the mean of each rank list metrics in the fusion.
-
-An example for these two comparison strategy is presented in Example~\ref{ex:single_mean_single_max}.
+More informations on these two comparaison strategy and an example are presented in Section~\ref{sec:results_comparaison}.
 
 If the Single-Max evaluation strategy is over-come by a rank list produced by a fusion it means that the resulting rank list give results even better than every individual rank lists used for this fusion, this represents the best case where the fusion actually improve the results.
-For the Single-Mean, if it is over come it means that the obtained rank list have better results than the average results of the rank list, thus when using the system \textit{in the blind} (when the rank list can't be evaluated, with new data for example), fusing is a good approach since it can give stability.
+For the Single-Mean, if it is over come it means that the obtained rank list have better results than the average results of the rank list, thus when using the system \textit{in the blind} (when the rank list can't be evaluated, with real world data for example), fusing is a good approach since it can give stability.
 
 The results of every fusion combinations using the proposed rank list and strategies are graphically presented in Figure~\ref{fig:fusions}.
-Statistics for each metric and fusion schemes are resumed Tables~\ref{tab:fusion_stats_A}/\ref{tab:fusion_stats_B}, it contains for each metric, the minimal value (min), the average and the standard deviation (Avg$\pm$Std), the maximal value, the argmin and argmax for the metrics (using ids of the rank list see Table~\ref{tab:9rl}).
+Statistics for each metric and fusion schemes are resumed Tables~\ref{tab:fusion_stats_A}/\ref{tab:fusion_stats_B}, it contains for each metric, the minimal value (min), the average and the standard deviation (Avg$\pm$Std), the maximal value, the argmin and argmax for the metrics (using ids of the rank list see Table~\ref{tab:9rl} in Section~\ref{sec:individual_methods_summary}).
 A sign test between the two strategies and the two fusion methods is presented in Table~\ref{tab:fusion_sign_test}.
 
 Using these distance metrics on St-jean, the sign test tends to indicate that the fusion increase the overall quality of the rank list.

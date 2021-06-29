@@ -1,18 +1,17 @@
 \subsection{Methods \label{sec:rank_lists_fusion}}
 
-
 The idea of rank lists' fusion is to combine multiple rank lists in such a way that the resulting rank list produced is a more accurate modelling of a perfect rank list.
-This perfect rank list contain each true links (same author document pairs) are at the top and each false links (different author document pair) are at the bottom, therefore maximizing every metrics in Section~\ref{sec:rl_eval}.
+This perfect rank list contain every true links (same author document pairs) at the top and every false links (different author document pair) at the bottom, therefore maximizing every metrics in Section~\ref{sec:rl_eval}.
 
 \subsubsection{Z-Score Fusion}
 
 When merging rank list a problem arise: due to the difference of distance metric and/or text representation the scores used in the rank list are of different order of magnitude.
 
-To mitigate this problem, a simple and rather effective approach is to normalize the scores of each rank lists independently using the Z-Score (See Definition~\ref{def:z_score}).
+To mitigate this problem, a simple and rather effective approach is to normalize the scores of each rank lists independently using the Z-Score (See Definition~\ref{def:z_score} in Section~\ref{sec:normalization}).
 Then one can compute the resulting score of each link as the arithmetic mean of scores in every Z-Score normalized rank lists.
 The rank list can then be sorted by this new score.
 
-This method can provide good results, but lack of theoretical foundations.
+This method can provide good results, but lack theoretical foundations.
 Additionally, this does not provide a framework which can handle both distance metrics and similarity metrics.
 
 Example~\ref{ex:z_score_fusion} show an example for the Z-Score fusion computation using two simple rank lists.
@@ -26,7 +25,7 @@ Example~\ref{ex:z_score_fusion} show an example for the Z-Score fusion computati
     \subcaption{Rank list A (Mean = 50, Std = 40.82)}
     \begin{tabular}{c l r r}
       \toprule
-      Rank & Link name & Score & Z-Score \\
+      Rank & Link & Score & Z-Score \\
       \midrule
       1st & (0, 2) & $0$ & $-1.22$ \\
       2nd & (1, 2) & $50$ & $0$ \\
@@ -46,7 +45,7 @@ Example~\ref{ex:z_score_fusion} show an example for the Z-Score fusion computati
     \subcaption{Rank list B (Mean = 0.33, Std = 0.17)}
     \begin{tabular}{c l r r}
       \toprule
-      Rank & Link name & Score & Z-Score \\
+      Rank & Link & Score & Z-Score \\
       \midrule
       1st & (0, 2) & $0.1$ & $-1.37$ \\
       2nd & (0, 1) & $0.4$ & $0.39$ \\
@@ -62,7 +61,7 @@ Example~\ref{ex:z_score_fusion} show an example for the Z-Score fusion computati
     \subcaption{Z-Score fusion}
     \begin{tabular}{c l r}
       \toprule
-      Rank & Link name & Average Z-Score \\
+      Rank & Link & Average Z-Score \\
       \midrule
       1st & (0, 2) & $(-1.22 + (-1.37)) / 2$ = $-1.30$ \\
       2nd & (1, 2) & $(0 + 0.98) / 2$ = $0.49$ \\
@@ -75,6 +74,8 @@ Example~\ref{ex:z_score_fusion} show an example for the Z-Score fusion computati
 
 \subsubsection{Regression Fusion \label{sec:regression_fusion}}
 
+This second fusion method is based on logistic regression and is called regression fusion in this study.
+
 Each rank list is ordered by a score, this score depends on distance measure used, thus the order of magnitude across rank list can different if they are generated with different distance measures.
 To avoid this problem, the second solution is to translate the scores into a probability of being a true link.
 To do so the logistic regression is used.
@@ -83,8 +84,8 @@ This method is similar to the one proposed in \textit{Le Calvé and Savoy (2000)
 The main idea here is to learn a logistic regression model for each combination of text representation and distance metrics (here denoted \textit{type of rank list}).
 From each distinct rank list, features for each link are created.
 We have selected the log of the relative rank and the link score.
-
 Since a probability of being a true link is desired, the target value for each link is either 1 for the true links or 0 when it's a false link.
+This feature construction is the same as the one used for the supervised clustering method (ref. Section~\ref{sec:supervised_clustering}).
 
 One model per type of rank list is trained, this model can provide for any new same type rank list, probabilities for each link being of being a true link.
 

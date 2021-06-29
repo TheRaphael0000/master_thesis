@@ -42,108 +42,86 @@ The same binary search can be used for this computation, just the target need to
 
 \subsubsection{Evaluation}
 
-To evaluate the semi-supervised clustering approach, every corpus were used.
-First a rank list for each corpus is computed using a Z-Score fusion using the retained rank list, see Section~\ref{sec:annex_retained_text_representation} in annex.
-For each rank list, the distance threshold is computed, using the two beta approach, this corresponds to the training phase.
-Then for every distance threshold and rank list pair, the clustering is evaluated using the $B^3$ family and the $r_{diff}$.
+To evaluate the semi-supervised clustering approach: Oxquarry, Brunet, St-Jean A and B were used.
+Each retained rank list for each corpus is computed, see Section~\ref{sec:annex_retained_text_representation} in annex.
+For each rank list, the distance threshold is computed, using the two beta approach.
+This step corresponds to the training phase.
+Then for every distance threshold and rank list pair, the clustering is evaluated using the $B^3_{F_1}$ and the $r_{diff}$.
+This correspond to the testing phase.
 
-The distance thresholds found for the Z-Score fusion rank lists for each corpus are in Table~\ref{tab:semi_supervised_clustering_thresholds}
-The complete evaluation using Oxquarry, Brunet, St-Jean A and B, is presented in Table~\ref{tab:semi_supervised_clustering_train_test}.
-The average values obtained for each metric is presented in Table~\ref{tab:semi_supervised_clustering_average}.
+To simplify the results the mean $B^3_{F_1}$ and $r_{diff}$ across all retained rank list is computed.
+
+The evaluation is presented in Table~\ref{tab:semi_supervised_clustering} show the results for each linkage criterion (Single, Average, Complete).
 
 The following conclusions can be drawn with these results:
 \begin{itemize}
   \item
-  A rather wide range of distance threshold is found depending on the corpus.
-  It corresponds to the interval $\left[-0.42, -0.96\right]$ which is 14\% of the interval containing every Z-Scores for these datasets ($\left[-4.79, 2.63\right]$).
+  In terms of linkage criteria, the single linkage is not adapted with an average $B^3_{F_1} = 0.22$.
+  Average linkage have the best $r_{diff} = 0.06$ which indicate that this criterion can estimate the most accuratly the number of clusters.
+  Complete linkage have the best $B^3_{F_1} = 0.82$ which make it the best criterion for this method.
   \item
-  The average r-ratio is positive, which indicate that this method tends to overestimate the number of clusters, but is really close to find the right number of clusters.
+  The training corpus does not influance a lot the quality of the results ($std(B^3_{F_1}) = 0.01$).
+  The best corpus for train is Brunet with slightly better results.
   \item
-  The better the average precision of the rank list used is, the better the $B^3_{F_1}$ score seem to be when clustering for this method.
-  With an exception for Oxquarry corpus which have better average precision then Brunet (0.84, 0.76) but a lower $B^3_{F_1}$ score in average (0.82 / 0.83) when testing with these corpora.
-  \item
-  The distance threshold use only have a slight impact when comparing the average $B^3_{F_1}$ score across the corpus.
-  The St-Jean A corpus give the best $B^3_{F_1}$ (0.88) and regarding the number of clusters Oxquarry (0.02) seem to be the best corpus for the training.
-  This possible difference was already observed in Section~\ref{sec:hierarchical_clustering}, having a slightly greater $r_{diff}$ tends to produce a better $B^3_{F_1}$ score.
+  In the other hand, the quality of the rank list used for the testing phase is more impactful ($std(B^3_{F_1}) = 0.04$).
+  St-Jean B have the best rank list average precisions and the best clustering results.
 \end{itemize}
-
-\begin{table}
-  \centering
-  \caption{Distance threshold found with the two beta distribution on every corpora when using the Z-Score fusion of the retained rank lists}
-  \label{tab:semi_supervised_clustering_thresholds}
-
-  \begin{tabular}{l r}
-    \toprule
-    Corpus & Threshold \\
-    \midrule
-    Oxquarry & -0.42 \\
-    Brunet & -0.62 \\
-    St-Jean A & -0.76 \\
-    St-Jean B & -0.96 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
 \begin{table*}
   \centering
-  \caption{Semi-supervised clustering evaluation}
+  \caption{Semi-supervised clustering evaluation, Mean retained rank lists $B^{3}_{F_1}$/$r_{diff}$ for each corpus pair}
   \label{tab:semi_supervised_clustering}
 
-  \subcaption{Every possible distance threshold (DT) and retained Z-Score rank list pairs. Metrics in order : $B^{3}_{F_1}$ / $B^{3}_{precision}$ / $B^{3}_{recall}$ / $r_{diff}$}
-  \label{tab:semi_supervised_clustering_train_test}
-  \begin{tabular}{l l| c c c c}
+  \subcaption{Single Linkage}
+  \begin{tabular}{l l| c c c c|c}
     \toprule
     \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing} \\
-    \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B \\
+    \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B & Mean \\
     \midrule
-    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{DT}}}
-    & Oxquarry
-    & 0.82/1.00/0.70/0.08
-    & 0.81/0.85/0.77/0.07
-    & 0.86/0.84/0.87/-0.02
-    & 0.91/0.86/0.98/-0.03
-    \\
-    & Brunet
-    & 0.82/1.00/0.70/0.08
-    & 0.81/0.85/0.77/0.07
-    & 0.87/0.86/0.87/-0.01
-    & 0.92/0.88/0.98/-0.02
-    \\
-    & St-Jean A
-    & 0.82/1.00/0.70/0.08
-    & 0.85/0.94/0.77/0.09
-    & 0.87/0.86/0.87/-0.01
-    & 0.97/0.97/0.98/0.00
-    \\
-    & St-Jean B
-    & 0.80/1.00/0.67/0.10
-    & 0.84/1.00/0.73/0.14
-    & 0.84/0.93/0.77/0.04
-    & 0.90/0.97/0.83/0.04
-    \\
+    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
+    & Oxquarry  & 0.27/0.15 & 0.18/0.22 & 0.14/0.16 & 0.12/0.18 & 0.18/0.18\\
+    & Brunet    & 0.36/0.12 & 0.18/0.22 & 0.15/0.16 & 0.12/0.18 & 0.20/0.17\\
+    & St-Jean A & 0.42/0.11 & 0.30/0.19 & 0.14/0.16 & 0.13/0.18 & 0.25/0.16\\
+    & St-Jean B & 0.42/0.10 & 0.35/0.16 & 0.16/0.16 & 0.16/0.17 & 0.27/0.15\\
+    \midrule
+    & Mean      & 0.37/0.12 & 0.25/0.20 & 0.15/0.16 & 0.13/0.18 & 0.22/0.16\\
     \bottomrule
   \end{tabular}
 
   \vspace{0.5cm}
 
-  \subcaption{Metrics absolute mean}
-  \label{tab:semi_supervised_clustering_average}
-  \begin{tabular}{l c c c c}
+  \subcaption{Average Linkage}
+  \begin{tabular}{l l| c c c c|c}
     \toprule
-    & $B^{3}_{F_1}$
-    & $B^{3}_{precision}$
-    & $B^{3}_{recall}$
-    & $r_{diff}$ \\
+    \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing} \\
+    \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B & Mean \\
     \midrule
-    Testing on Oxquarry               & 0.82 & 1.00 & 0.69 & 0.08 \\
-    Testing on Brunet                 & 0.83 & 0.91 & 0.76 & 0.09 \\
-    Testing on St-Jean A              & 0.86 & 0.88 & 0.85 & 0.02 \\
-    Testing on St-Jean B              & 0.93 & 0.92 & 0.94 & 0.02 \\
-    Distance threshold from Oxquarry  & 0.85 & 0.89 & 0.83 & 0.05 \\
-    Distance threshold from Brunet    & 0.86 & 0.90 & 0.83 & 0.04 \\
-    Distance threshold from St-Jean A & 0.88 & 0.94 & 0.83 & 0.04 \\
-    Distance threshold from St-Jean B & 0.85 & 0.98 & 0.75 & 0.08 \\
-    \textbf{Global absolute mean} & \textbf{0.86} & \textbf{0.93} & \textbf{0.81} & \textbf{0.05} \\
+    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
+    & Oxquarry  & 0.73/0.04 & 0.65/0.08 & 0.59/0.10 & 0.61/0.11 & 0.65/0.08 \\
+    & Brunet    & 0.78/0.05 & 0.73/0.04 & 0.73/0.07 & 0.73/0.08 & 0.74/0.06 \\
+    & St-Jean A & 0.82/0.05 & 0.74/0.06 & 0.81/0.04 & 0.83/0.05 & 0.80/0.05 \\
+    & St-Jean B & 0.83/0.09 & 0.79/0.08 & 0.83/0.02 & 0.90/0.02 & 0.84/0.05 \\
+    \midrule
+    & Mean      & 0.79/0.06 & 0.73/0.06 & 0.74/0.06 & 0.77/0.06 & 0.76/0.06 \\
     \bottomrule
   \end{tabular}
+
+  \vspace{0.5cm}
+
+  \subcaption{Complete Linkage}
+  \begin{tabular}{l l| c c c c|c}
+    \toprule
+    \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing} \\
+    \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B & Mean \\
+    \midrule
+    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
+    & Oxquarry  & 0.79/0.06 & 0.77/0.05 & 0.82/0.04 & 0.84/0.04 & 0.81/0.05 \\
+    & Brunet    & 0.79/0.10 & 0.81/0.09 & 0.84/0.02 & 0.90/0.02 & 0.83/0.06 \\
+    & St-Jean A & 0.79/0.11 & 0.81/0.11 & 0.82/0.05 & 0.90/0.02 & 0.83/0.07 \\
+    & St-Jean B & 0.78/0.13 & 0.79/0.14 & 0.77/0.09 & 0.90/0.04 & 0.81/0.10 \\
+    \midrule
+    & Mean      & 0.79/0.10 & 0.80/0.10 & 0.81/0.05 & 0.88/0.03 & 0.82/0.07 \\
+    \bottomrule
+  \end{tabular}
+
 \end{table*}

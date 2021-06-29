@@ -1,30 +1,29 @@
 \subsection{Clustering Summary}
 
 Table~\ref{tab:clustering_evaluation_summary} contains a summary of the proposed method to evaluate using the $B^3_{F_1}$ score and the $r_{diff}$.
-As observed previously, having an $r_{diff}$ slightly larger than 0, produce better a $B^3_{F_1}$ as shown with the two upper bounds.
-Each method produces similar results, but the unsupervised tweak method give the best results.
-When compared to the tweaked unsupervised method, the semi-supervised and supervised methods produce slightly worse results.
-The non-tweak unsupervised model give the worse results.
-If the upper bound, best $B^3_{F_1}$ is considered the best possible clustering for these ranks lists.
-The clustering models can be evaluated in terms of $B^3_{F_1}$ completion to the best $B^3_{F_1}$ upper bound (completion: $\frac{score_{model}}{score_{upper bound}}$).
-This completion value should reflect the model clustering with a hypothetical perfect rank list, since the upper bound for a perfect rank list should be 1.00.
-The unsupervised have a 0.82 $B^3_{F_1}$ completion, the unsupervised tweaked 0.95, the semi-supervised 0.93 and the supervised 0.91.
 
-\begin{table}
+Each method produces similar results, but the semi-supervised with complete linkage give the best results, $B^3_{F_1} = 0.82$.
+When compared to the tweaked unsupervised methods and the supervised method produce slightly worse results.
+The non-tweak unsupervised model give the worse results.
+
+The tweaked unsupervised model with average linkage and complete linkage and the semi-supervised with average linkage are the best models to estimate the number of clustersm, $r_{diff} = 0.06$.
+
+Overall the results are close to the upper bound.
+
+\begin{table*}
   \centering
-  \caption{Absolute mean performances of the proposed clustering methods}
+  \caption{Mean retained rank lists $B^{3}_{F_1}$/$r_{diff}$ for each corpus pair}
   \label{tab:clustering_evaluation_summary}
-  \begin{tabular}{l c c}
+  \begin{tabular}{l c c c}
     \toprule
-    Clustering method              & $B^3_{F_1}$ & $r_{diff}$ \\
+    Clustering method              & Single Linkage & Average Linkage & Complete Linkage \\
     \midrule
-    Unsupervised ($\alpha = 0$)    & 0.75 & 0.16 \\
-    Unsupervised ($\alpha = -0.2$) & \textbf{0.87} & 0.07 \\
-    Semi-Supervised                & 0.86 & \textbf{0.05} \\
-    Supervised                     & 0.84 & 0.07 \\
+    Unsupervised ($\alpha = 0$)    & 0.74/0.22      & \textbf{0.76/0.17} & 0.75/0.17 \\
+    Unsupervised ($\alpha = -0.2$) & 0.79/0.08      & \textbf{0.81/0.06} & 0.80/0.06 \\
+    Semi-Supervised                & 0.22/0.16      & 0.76/0.06          & \textbf{0.82/0.07} \\
+    Supervised                     & 0.64/0.10      & \textbf{0.80/0.13} & 0.74/0.19 \\
     \midrule
-    \textit{Upper bound (Best $r_{diff}$)}  & \textit{0.88} & \textit{0.00} \\
-    \textit{Upper bound (Best $B^3_{F_1}$)} & \textit{0.92} & \textit{0.04} \\
+    \textit{Upper bound}           & \textit{0.83/0.00} & \textit{0.88/0.00} & \textit{0.87/0.00} \\
     \bottomrule
   \end{tabular}
-\end{table}
+\end{table*}
