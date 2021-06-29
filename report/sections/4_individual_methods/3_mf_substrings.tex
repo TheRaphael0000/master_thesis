@@ -92,21 +92,21 @@ The current methodology does not take this into account.
 
 \textbf{First part}
 
-For the first part, the Z-Score normalized cosine distance measure is used to compare the vectors and create the rank list.
+For the first part, the Z-Score normalized Cosine distance measure is used to compare the vectors and create the rank list.
 The parameters used are:
 
 \begin{itemize}
   \item
   A varying $n$-MF vector size ranging between 500 and 15000 with a step of 500.
   \item
-  An $n$ for the following values : $3$, $4$, $5$, $(2, 3)$, $(3, 4)$, $(4, 5)$.
+  $n$-ngrams with $n$ = $3$, $4$, $5$, $(2, 3)$, $(3, 4)$, $(4, 5)$.
 \end{itemize}
 
 The number of different $n$-grams is assumed to be larger than the vocabulary of the texts, thus the importance of having a larger vector when dealing with long texts such as the literature datasets.
 
 Figure~\ref{fig:letter_ngrams} show the average precision for the experiment first part on the Oxquarry corpus (\ref{fig:letter_ngrams_oxquarry}), Brunet (\ref{fig:letter_ngrams_brunet}) and St-Jean (\ref{fig:letter_ngrams_st_jean}).
 
-The trends seem to indicate that a lower $n$-grams size converge with lower $n$-MF vector size but reach a maximal average precision faster.
+The trends seem to indicate that a lower $n$-grams size converge with lower $n$-MF vector size, but reach a maximal average precision faster.
 With $3$-grams, $\sim 3000-4000$-MF give good results on Oxquarry and Brunet with this distance metric.
 On the Brunet corpus, after reaching the maximal average precision at $\sim 4000$-MF, a larger number of frequent words decrease the precision until reaching the maximal number of different $3$-grams at $\sim 6500$-MF.
 For Oxquarry, $3$-grams the average precision increase until $\sim 4000$-MF but stay still after this.
@@ -212,11 +212,11 @@ But this method is not as effective for the Brunet dataset.
 For the Brunet dataset, the $5$-First can a good results compared to other text representations with small MF vector size.
 And for St-Jean, the $5$-First with a small MF vector size give the best results.
 
-No clear best configuration can be extracted with these results since the results are mixed across datasets, thus for this experiment, no text representation / distance measure are retained for the fusion.
+No clear best configuration can be extracted with these results since the results are mixed across datasets, thus for this experiment, no text representation / distance measure are retained.
 
 \begin{figure}
   \centering
-  \caption{Average precision over the MF in the rank list generated using the Z-Score normalized Cosine distance}
+  \caption{Average precision over the $n$-MF In-word $n$-grams, $n$-First and $n$-Last using Z-Score normalized Cosine distance}
   \label{fig:first_last_letters_ngrams}
 
   \subcaption{Oxquarry}

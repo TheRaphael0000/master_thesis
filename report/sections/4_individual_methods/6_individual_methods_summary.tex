@@ -36,7 +36,7 @@ The complete evaluation of the rank list produced on these text representation f
 
 \subsubsection{Distances' Matrix Visualization}
 
-From a rank list, it is possible to create a distances' matrix (ref~\ref{sec:distances_matrix}).
+From a rank list, it is possible to create a distances' matrix (ref. Section~\ref{sec:distances_matrix}).
 Distances' matrices created from rank list can be visualized.
 To represent distances' matrices, each element of the matrix is mapped to a pixel in an 2D image.
 The element value in the matrix is mapped to the pixel brightness, the low values are in light colours and high values in dark colours.
@@ -50,7 +50,7 @@ This creates light colour squares in the diagonal.
 The square size is related to the number of document written by this author.
 The diagonal is the lightest colour (white), since the distance between two same documents is always 0, with respect to the identity of indiscernible axiom of the distance functions.
 
-The distance matrix for the best retained representation (the highest AP) and the worse retained text representation (the lowest AP) is visually presented in Figure~\ref{fig:distances_matrix_oxquarry} for Oxquarry.
+The distance matrix for the best retained representation (the highest AP) and the worse retained text representation (the lowest AP) is visually presented in Figure~\ref{fig:distances_matrix_oxquarry} for Oxquarry using a blue tint.
 Respectively the Clark distance on the $750$-MF which gives an average precision of $0.89$, and the Tanimito distance on the $750$-MF gives an $0.63$ average precision.
 The diagonal is white in both images.
 Light colour square in the diagonal can clearly be observed on both distance matrix visualizations.
@@ -62,16 +62,16 @@ For Tanimoto, firstly one can observe these stripes, which are due to the max fu
 The main suspects for this observation is due to some high frequency term only used in some excerpts, thus when normalizing by the sum of maxima in the Tanimoto computation, document with these high relative frequency create these stripes.
 
 \begin{figure}
-  \caption{Distance matrix visualization Oxquarry}
+  \caption{Distance matrix visualization using Oxquarry}
   \label{fig:distances_matrix_oxquarry}
 
-  \caption{Best retained text representation for Oxquarry ($750$-MF tokens with Clark)}
+  \subcaption{Best retained text representation for Oxquarry ($750$-MF tokens with Clark)}
   \label{fig:distance_matrix_oxquarry_clark}
   \includegraphics{img/distance_matrix_oxquarry_clark.png}
 
   \vspace{0.5cm}
 
-  \caption{Worse retained text representation for Oxquarry ($750$-MF tokens with Tanimoto)}
+  \subcaption{Worse retained text representation for Oxquarry ($750$-MF tokens with Tanimoto)}
   \label{fig:distance_matrix_oxquarry_tanimoto}
   \includegraphics{img/distance_matrix_oxquarry_tanimoto.png}
 \end{figure}
@@ -98,7 +98,7 @@ In fact, 281 of the 670 ($\sim 42\%$) true links were published the same year.
 453 out of 670 ($\sim 68\%$) true links have a publication date difference below or equal to 5 years.
 For St-Jean the largest date difference from the same author (correspond to the longest career) is 31 years, which correspond to the two following books from Victor Hugo : \textit{Notre Dame de Paris} (The Hunchback of Notre-Dame), in 1831 and \textit{Les Misérables}, in 1862.
 The average date difference for the false links is 28.24 years, with a standard deviation of 20.73 years.
-The overall average (both true and false links) is at 29.04 years with a standard deviation of 20.58 years.
+The overall average (both true and false links) is at 29.04 years, with a standard deviation of 20.58 years.
 
 The previous statistics can be compared to the ones in Figure~\ref{fig:dates_differences_r_false}.
 This figure shows the date difference density on the top-r false links (top-670 in case of St-Jean) on a rank list with 85\% average precision (Z-Score fusion of the retained text representations, Table~\ref{tab:rls_st_jean}, ref. Chapter~\ref{sec:fusions}).
@@ -106,7 +106,7 @@ This figure shows the date difference density on the top-r false links (top-670 
 Two interesting information can be extracted here.
 Firstly, the mean is lower by 7.75 years (29.04 - 21.29) compared to every false links and have a narrow standard deviation distribution.
 Having a lower mean in this case indicate that more mistakes are made for document pairs with a lower date difference then for the ones with a large date difference, which can lead to the following conclusion : distinguishing between a false link and a true link for documents pair with low date difference is harder.
-Secondly, we can observe a drop after 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ years are harder to discriminate between a true link and a false link than ones outside this interval.
+Secondly, we can observe a drop after 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ years are harder to discriminate between a true link and a false link than one's outside this interval.
 
 The 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France~\cite{generations}, authors birth country for this corpus.
 Each new generation tends to use its own vocabulary, and thus it can be harder to discriminate the author of text belonging to the same generation, if we assume that the authors write their books at around the same age.
@@ -114,8 +114,8 @@ In the other hand, having different vocabulary can indicate a different time per
 
 The small spike between 60 and 65 in the top-r false link is due to the matching of most excerpts from \textit{Volupté} (excerpts 117, 135, 151, 165, 181, 189) written by Charles Sainte-Beuve in 1834 and \textit{Les plaisirs et les jours} (excerpts 114, 132, 148) written by Marcel Proust in 1896.
 Out of the 18 possible false link for these excerpts, 12 are in the top-r false link.
-This indicate that the styles used in these excerpts are close.
-We can't discriminate the authors correctly even though the books were published with 62 years interval.
+This indicates that the styles used in these excerpts are close.
+We can not discriminate the authors correctly even though the books were published with 62 years interval.
 
 \begin{figure}
   \centering

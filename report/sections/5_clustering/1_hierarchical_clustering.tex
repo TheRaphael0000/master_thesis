@@ -5,12 +5,12 @@ The rank list indicate if the two documents should belong to the same cluster by
 The hierarchical clustering regroup documents following this order.
 
 The hardest task with this clustering scheme is to find the position in the rank list where true link become less frequent than false link.
-In a the clustering context, the optimal position is unknown since the true labels are not available.
-The position should minimized the true links under it and the false links above it.
+In the clustering context, the optimal position is unknown since the true labels are not available.
+The position should minimize the true links under it and the false links above it.
 
-In this study, finding this position will also be refered as finding the \textit{cut}.
+In this study, finding this position will also be referred to as finding the \textit{cut}.
 We define the true positive as true links above the cut, true negatives as false links under the cut.
-In addition false positive are true links under the cut and false negatives are false links above the cut.
+In addition, false positive are true links under the cut and false negatives are false links above the cut.
 
 To find this cut, three approaches are explored : an unsupervised, a semi-supervised and a supervised.
 
@@ -27,30 +27,30 @@ The scikit-learn package~\cite{sklearn} provide an implementation bottom-up impl
 
 The agglomerative clustering follow this procedure:
 \begin{enumerate}
-  \item The rank list used is converted into a 2D distances' matrix with each link representing a element of the matrix (ref. Section~\ref{sec:distances_matrix}).
-  \item At the begining, each document is considered as a single document cluster.
+  \item The rank list used is converted into a 2D distances' matrix, with each link representing an element of the matrix (ref. Section~\ref{sec:distances_matrix}).
+  \item At the beginning, each document is considered as a single document cluster.
   \item The link (element) with the lowest score in the matrix is used to merge the next clusters.
-  \item The matrix is updated following a linkage criteria.
+  \item The matrix is updated following a linkage criterion.
   \item 3. and 4. can be repeated until a single cluster remain.
 \end{enumerate}
 
 Multiple linkage criteria are available : \textit{Ward} (metric that aim to minimize the variance of the cluster merged), \textit{average-linkage} (use the average score of each link of the cluster merged), \textit{complete-linkage} (use the cluster merged maximal score), \textit{single-linkage} (use the cluster merged minimal score).
-Example~\ref{ex:agglomerative_clustering} show an example for the merging procedures and the linkage criteria.
+Example~\ref{ex:agglomerative_clustering} show an example for the merging procedures and linkage criteria.
 
-Ward linkage was discarded since the current implementation only allow Euclidian distance for its computation.
-The merging procedure can be stopped either of the two following criteria : When a certain cluster number is reached or when the minimal score for the next merge is above a certain value.
+Ward linkage was discarded since the current implementation only allow Euclidean distance for its computation.
+The merging procedure can be stopped in either of the two following criteria : When a certain cluster number is reached or when the minimal score for the next merge is above a certain value.
 This value is called the distance threshold.
 
-The so called cut can be associated to the distance threshold.
-The cut is a position in the rank list and the distance threshold is the score which can help to seperate the rank list.
+The so-called cut can be associated to the distance threshold.
+The cut is a position in the rank list and the distance threshold is the score which can help to separate the rank list.
 
 There is one main flaw with the scikit-learn implementation.
 It does not provide a way to access the current cluster at each merging step.
 A possible workaround is to run the algorithm multiple time.
-Each time the algorithm is stopped at a different cluster number.
-This workaround introduce an overhead of $O\frac{n * (n - 1)}{2} = O(n^2)$, with $n$ equal to the number of documents.
+Each time, the algorithm is stopped at a different cluster number.
+This workaround introduces an overhead of $O\frac{n * (n - 1)}{2} = O(n^2)$, with $n$ equal to the number of documents.
 
-The agglomerative clustering algorithm was reimplementated to allow access to the clusters at each steps and avoid this overhead.
+The agglomerative clustering algorithm was reimplemented to allow access to the clusters at each step and avoid this overhead.
 The implementation profit of the generator functions that Python offers.
 
 \begin{example}
@@ -76,7 +76,7 @@ The implementation profit of the generator functions that Python offers.
 
   \vspace{0.2cm}
   The link with the smallest distance is A-B with a distance of 1.
-  At the next step the clusters A and B are merged into a cluster called AB.
+  At the next step, the clusters A and B are merged into a cluster called AB.
 
   \vspace{0.5cm}
 
@@ -141,7 +141,7 @@ The implementation profit of the generator functions that Python offers.
 
 As explained in Section~\ref{sec:algorithm_and_implementation}, the hierarchical clustering decide clusters based on a bottom-up approach and have two main parameters, the stopping procedure and the linkage criterion.
 The linkage criterion can be : single, complete, average linkage.
-Oxquarry, Brunet, St-Jean A, St-Jean B and St-Jean copora are used for this experiment.
+Oxquarry, Brunet, St-Jean A, St-Jean B and St-Jean corpora are used for this experiment.
 
 The goal is to understand how the linkage criterion behave for the best clustering achievable (best $B^3_{F_1}$)
 
@@ -155,11 +155,11 @@ These results can be considered as the $B^3_{F_1}$ upper bound for the clusterin
 
 The best linkage criterion depends on the corpus, but in average, the best $B^3_{F_1}$ is achieved with the average linkage criterion, a relative increase of 0.01 compared to the complete linkage and 0.05 compared to the single linkage.
 
-We assumed that the better the rank list are the better the clustering is.
+We assumed that the better the rank list are, the better the clustering is.
 This assumption can be verified in Figure~\ref{fig:correlation_average_precision_b3f1}.
 We can clearly observe a linear relationship between the average precision and the $B^3_{F_1}$.
-The linear regression for the single linkage have a r-value of $1^{-11}$, $1^{-12}$ for the average linkage and $1^{-6}$ for the complete linkage.
-This further motive this assumption.
+The linear regression for the single linkage have an r-value of $1^{-11}$, $1^{-12}$ for the average linkage and $1^{-6}$ for the complete linkage.
+The results obtained further motive this assumption.
 
 \begin{table}
   \centering
