@@ -100,7 +100,7 @@ The presented metrics are also well know in the authorship verification and the 
 The average precision, the R-Precision and the High Precision are strongly correlated.
 Thus, in the study, for some experiment, only the average precision is computed.
 
-Example~\ref{ex:rank_list_eval} show a example for each metric.
+Example~\ref{ex:rank_list_eval} show case each metric for the rank list evaluation.
 
 \begin{definition}[Relevant link~\cite{kocher_linking}]
   A relevant link is a link in the relevant set.
@@ -326,7 +326,7 @@ Example~\ref{ex:gain} show the gain computation using average precision on rank 
       Rank list B & $0.6$ \\
       \midrule
       \textbf{Gain} & \textbf{AP gain} \\
-      Gain A over B & $0.8$ - $0.6 = +0.2$ \\
+      A gain over B & $0.8$ - $0.6 = +0.2$ \\
       \bottomrule
     \end{tabular}
   \end{subexample}
@@ -350,13 +350,13 @@ Example~\ref{ex:gain} show the gain computation using average precision on rank 
       Rank list B & $0.6$ \\
       Rank list C & $0.9$ \\
       \midrule
-      \textbf{Aggregation strategy} & \textbf{AP} \\
-      Single-Mean & $(0.8 + 0.6) / 2 = 0.7$ \\
-      Single-Max & $\max(0.8, 0.6) = 0.8$ \\
+      \textbf{Aggregation} & \textbf{AP} \\
+      A-B (Single-Mean) & $(0.8 + 0.6) / 2 = 0.7$ \\
+      A-B (Single-Max) & $\max(0.8, 0.6) = 0.8$ \\
       \midrule
-      \textbf{Gain with strategies} & \textbf{AP gain} \\
-      Gain C over A-B (Single-Mean) & $0.9 - 0.7 = +0.2$ \\
-      Gain C over A-B (Single-Max) & $0.9 - 0.8 = +0.1$ \\
+      \textbf{Gain with aggregation} & \textbf{AP gain} \\
+      C gain over A-B (Single-Mean) & $0.9 - 0.7 = +0.2$ \\
+      C gain over A-B (Single-Max) & $0.9 - 0.8 = +0.1$ \\
       \bottomrule
     \end{tabular}
     }

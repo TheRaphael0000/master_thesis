@@ -1,13 +1,14 @@
 \subsection{Most Frequent Approach}
 
-The first method used to represent and compare the documents is called: Most frequent (MF), and try to compare documents by creating feature vectors containing frequencies of the most frequent items in a text representation (TR).
+The first method to represent and compare the documents is called: Most frequent (MF).
+This method try to compare documents by creating feature vectors containing frequencies of the most frequent items in a text representation (TR).
 A text representation can be for example words in the text or a new representation generated from the text.
 This method is a generalized approach of the most frequent words technique (MFWs), which consider words as items.
 
-By only considering the most frequent items, this ensures that no all the document details will be synthesised in the vector but rather the most important in the document.
+By only considering the most frequent items, this ensures that no all the document details will be synthesized in the vector, but rather the most important in the document.
 The vector will thus contain the style of the document rather than the topic of the document.
 When comparing these vector, this method focus on the difference between the authors styles rather than the topic of the documents or the time period the text was written in.
-This asumptions is experimented in this study in Section~\ref{sec:influance_mf_restriction}.
+This assumption is experimented in this study in Section~\ref{sec:influance_mf_restriction}.
 
 Previous studies have shown the importance of having documents of good quality and with at least 5000 tokens to have reliable results.
 Skilled authors can easily change their style to imitate others for small texts, but it becomes more difficult for larger texts~\cite{savoy_stylo}.
@@ -20,7 +21,7 @@ For example, if a corpus contains novels of multiple genres (e.g. Comedy, Sci-fi
 With the right $n$ all the specific items of each genre will be discarded since their frequency should be lower than the non topic related items which are contained in every document.
 The frequencies of these items should reflect the style of the author.
 
-In this study, multiple text representation are explored, such as tokens/lemmas (Section~\ref{sec:tokens_lemmas}), substrings (Section~\ref{sec:substrings}) and short sequences of POS (Section~\ref{sec:pos_short_sequences}).
+In this study, multiple text representation are explored, such as tokens/lemmas (Section~\ref{sec:tokens_lemmas}), substrings (Section~\ref{sec:substrings}) and sequences of POS (Section~\ref{sec:pos_sequences}).
 
 Example~\ref{ex:mf_vector} show a computation of the MF items vector, using words as items.
 
@@ -58,9 +59,12 @@ Example~\ref{ex:mf_vector} show a computation of the MF items vector, using word
 Applying a normalization can improve the performances of the distance metrics presented in Section~\ref{sec:vectors_distances}.
 The Z-Score normalization is one of them, see Definition~\ref{def:z_score}.
 
-In this study, the following distance metrics are always normalized using the Z-Score normalization : Manhattan, Euclidean and Cosine Distance, since they tends to produce better results when normalized.
-The Manhattan distance using the z-score normalization on MF words vectors is also called Delta model~\cite{savoy_stylo}.
+In this study, the following distance metrics are always normalized using the Z-Score normalization : Manhattan, Euclidean and Cosine Distance, since they tend to produce better results when normalized.
+The Manhattan distance using the Z-Score normalization on MF words vectors is also called Delta model~\cite{savoy_stylo}.
+
 Definition~\ref{def:normalization} show two ways to linearly normalize a vector.
+These are used for to fit data to distributions which require a certain interval.
+In this study, linear normalization is used to fit the beta distribution.
 
 \begin{definition}[Z-Score normalization~\cite{savoy_stylo}]
   \label{def:z_score}
@@ -76,11 +80,11 @@ Definition~\ref{def:normalization} show two ways to linearly normalize a vector.
   \begin{gather*}
     Norm(X) = \frac{X - Min(X)}{Max(X) - Min(X)}
   \end{gather*}
-  Normalize a list of numbers X in the interval $[0, 1]$.
+  Normalize a vector X in the interval $[0, 1]$.
   \begin{gather*}
     Norm_{ab}(X, a, b) = Norm(X) \cdot (b - a) + a
   \end{gather*}
-  Normalize a list of numbers X in the interval $[a, b]$, with $b > a$.
+  Normalize a vector X in the interval $[a, b]$, with $b > a$.
 \end{definition}
 
 \subsubsection{Smoothing}
@@ -88,8 +92,11 @@ Definition~\ref{def:normalization} show two ways to linearly normalize a vector.
 Relative term frequencies can be considered as a probability of occurrence based on the maximum likelihood principle.
 The main problem with this approach is that the probability of occurrence of frequent terms tend to be overestimated and underestimate the probability of occurrence of low frequency terms or for terms that never occur.
 If, for example, a term is not present in a document its relative term frequency is 0, but this should not mean that the probability of the author using this item is 0.
+
 The solution proposed is to use a smoothing technique such as the Lidstone smoothing presented in Definition~\ref{def:lidstone_smoothing}.
 Smoothing techniques can help distance functions based on probabilities, such as the Kullback-Leibler Divergence~\cite{savoy_stylo}.
+
+In this study, when a smoothing technique is used, except stated otherwise, the Lidstone smoothing is used with $\lambda = 0.1$ since it tends to produce better results~\cite{savoy_stylo}.
 
 \begin{definition}[Lidstone smoothing~\cite{savoy_stylo}]
   \label{def:lidstone_smoothing}
@@ -98,5 +105,3 @@ Smoothing techniques can help distance functions based on probabilities, such as
   \end{gather*}
   With $t_i$ the i-th term, $D_j$ the j-th document, $tf_{i,j}$ the number of occurrences of the i-th term in $D_j$, $|V|$ the size of the vocabulary, $\lambda$ a small value ($\lambda = 1$, is a special case called Laplace smoothing), n the total number of items in the document $D_j$.
 \end{definition}
-
-In this study, when a smoothing technique is used, except stated otherwise, the Lidstone smoothing is used with $\lambda = 0.1$ since it tends to produce better results~\cite{savoy_stylo}.

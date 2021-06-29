@@ -12,8 +12,8 @@ The underscore is used to remove visual ambiguity due to the nature of the space
   A letter $n$-grams is a tokenization which is constructed by creating a token of size $n$ for each substrings starting from the position $0$ to \textit{text\_size} $- n - 1$.
 
   Example: \\*
-  Using 3-grams the string: \textit{"fox\_is\_brown"} \\*
-  is converted to: (\textit{"fox", "ox\_", "x\_i", "\_is", "is\_", "s\_b", "\_br", "bro", "row", "own"})
+  Using 3-grams the string: \textit{"fox\_is\_running"} \\*
+  is converted to: (\textit{"fox", "ox\_", "x\_i", "\_is", "is\_", "s\_r", "\_ru", "run", "unn", "nni", "nin", "ing"})
 \end{definition}
 
 This technique can be further explored by combining for example two or more $n$-grams sizes together.
@@ -21,7 +21,7 @@ In this study, the following notation is used : $(a, b)$-grams.
 This correspond to both $a$-grams and $b$-grams in the same text representation.
 
 $n$-grams can be really effective, even though no clear meaning can be exploited at first sight.
-A simple explanation on why $n$-grams can be effective is by using $n$-grams of size 3 to 5 in most Germanic languages this can correspond to for example : the tense of the verbs (i.e. : \textit{"ing\_"}, \textit{"ed\_"}), some small common words (\textit{"\_the\_"}, \textit{"\_and\_"}, \textit{"\_that"}), or in French the adverbs (\textit{"\_ment"}) which can capture the style of an author~\cite{ngrams_authorship}.
+A simple explanation on why $n$-grams can be effective is by using $n$-grams of size 3 to 5 in most Indo-European languages this can correspond to for example : the tense of the verbs (i.e. : \textit{"ing\_"}, \textit{"ed\_"}), some small common words (\textit{"\_the\_"}, \textit{"\_and\_"}, \textit{"\_that"}), or in French the adverbs (\textit{"\_ment"}) which can capture the style of an author~\cite{ngrams_authorship}.
 
 When considering letters $n$-grams the text representation increases approximately by a factor of $t$ compared to the token representation.
 $t$ is the average token length.
@@ -39,8 +39,8 @@ An alternative version of the $n$-grams algorithm used here is defined in Defini
   When a token is smaller than $n$, the whole token is considered.
 
   Example: \\*
-  Using words 3-grams on the following tokens: ["fox", "is", "brown"] \\
-  is converted to: (\textit{"fox", "is", "bro", "row, "own"})
+  Using words 3-grams on the following tokens: ["fox", "is", "running"] \\
+  is converted to: (\textit{"fox", "is", "run", "unn", "nni", "nin", "ing"})
 \end{definition}
 
 In this study, to differentiate it from the classical $n$-grams algorithm.
@@ -55,32 +55,32 @@ This method yield a subset of the letters $n$-grams algorithm when the tokens ar
 Two other similar approach to the $n$-grams are to consider only the $n$ first letters of each token or the $n$-Last letters of each token.
 Definition~\ref{def:n_first} and Definition~\ref{def:n_last} explain and propose an example.
 These methods are subsets of the in-word $n$-grams.
-These methods have the same number of items as token representation.
+These methods have the same number of items as the token text representation.
 
 \begin{definition}[$n$-First \label{def:n_first}]
   The $n$-First algorithm create for every tokens a new string which a substring from the first character to the $n$-th.
   If the token token is smaller than $n$, the whole token is used.
 
   Example: \\
-  Using $3$-First on the following tokens: ["fox", "is", "brown"] \\
-  is converted to: (\textit{"fox", "is", "bro"})
+  Using $3$-First on the following tokens: ["fox", "is", "running"] \\
+  is converted to: (\textit{"fox", "is", "run"})
 \end{definition}
 
-The $n$-First correspond generally to the meaning of a word and can be related to the lemma approach.
+The $n$-First correspond generally in Indo-European languages to the meaning of a word and can be related to the lemma approach.
 
 \begin{definition}[$n$-Last]
   \label{def:n_last}
-  The $n$-Last algorithm create for every tokens a new string which a substring from the last minus $n$ character to the last.
+  The $n$-Last algorithm create for every tokens a new string which is a substring from the last minus $n$ character to the last.
   If the token token is smaller than $n$, the whole token is used.
 
   Example: \\
-  Using $3$-Last on the following tokens: ["fox", "is", "brown"] \\
-  is converted to: (\textit{"fox", "is", "own"})
+  Using $3$-Last on the following tokens: ["fox", "is", "running"] \\
+  is converted to: (\textit{"fox", "is", "ing"})
 \end{definition}
 
 \subsubsection{MF Letters $n$-grams Evaluation}
 
-To evaluate the $n$-grams with the MF approach another methodology is used.
+To evaluate the $n$-grams with the MF approach, another methodology is used.
 Since the $n$-grams create an additional parameter, the field of possible parameter increase.
 To reduce the field of the possible parameters, the experiment is split in two parts :
 The first part aim to find the optimal $n$-grams size, and the size of $n$-MF $n$-grams vector.
@@ -88,7 +88,7 @@ The second is to compare the distance metrics with the previously found paramete
 
 One of the main drawback with this methodology is that some distance metrics can have better performance on highly dimensional vectors (large MF vector) than others.
 Or some $n$-grams size have better results depending on the distance metric.
-The current methodology does not take into account this.
+The current methodology does not take this into account.
 
 \textbf{First part}
 
