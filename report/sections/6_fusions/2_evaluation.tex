@@ -261,7 +261,7 @@ The Z-Score fusion give the best results overall.
 \subsubsection{Veto Evaluation}
 
 In this experiment, the goal is to understand if the veto method can improve the average precision on the fused rank lists when using the regression fusion method.
-To do so, the St-Jean retained rank list are used (ref. Table~\ref{tab:9rl_results_st_jean} in annex).
+To do so, the St-Jean retained rank list are used (ref. Table~\ref{tab:rls_st_jean} in annex).
 The fusion scheme is learnt on first St-Jean A and trained on St-Jean B (ref. Section~\ref{sec:regression_fusion}), then the inverse.
 After computing the probabilities for each link in each rank list on the testing set, the probabilities under the threshold are set according to each proposed veto strategy (set to $0$, $-1$, $-n$, $-\infty$).
 The threshold is analysed for the values between $0.01$ and $0.50$, with a step of $0.01$.
@@ -334,7 +334,7 @@ A large gain, when the rank lists are different, thus a low rank list correlatio
 The fusion strategy used here is the Z-Score fusion, since this strategy is parameterless and obtained satisfying results during previous experiments.
 As for previous experiments dealing with fusion, the gain in average precision when comparing a set of rank list to a fused rank list can be established in the two following ways : \textit{Single-Mean} and \textit{Single-Max}.
 Single-Mean represent the rank lists mean average precision and Single-Max the rank list maximal average precision.
-Example~\ref{ex:single_mean_single_max} contain a small example with two rank lists for the Single-Mean and Single-Max methods to compute the average precision gain.
+Example~\ref{ex:gain} in Section~\ref{sec:results_comparaison} contain a small example with two rank lists for the Single-Mean and Single-Max methods to compute the average precision gain.
 
 Table~\ref{tab:rl_correlations} show the Kendall correlation coefficient for every combination of retained rank list in St-Jean (see Table~\ref{tab:9rl}).
 The most similar rank list pair are the two rank list using letters $n$-grams (0.95), least similar are the BZip2 compression and the 250-MFW POS (0.66).

@@ -1,18 +1,17 @@
 \subsection{Most Frequent Approach}
 
-The first method used to represent and compare the documents is called: Most frequent (MF), and try to compare documents by creating feature vectors containing frequencies of the most common items in a text representation (TR).
+The first method used to represent and compare the documents is called: Most frequent (MF), and try to compare documents by creating feature vectors containing frequencies of the most frequent items in a text representation (TR).
 A text representation can be for example words in the text or a new representation generated from the text.
 This method is a generalized approach of the most frequent words technique (MFWs), which consider words as items.
 
 By only considering the most frequent items, this ensures that no all the document details will be synthesised in the vector but rather the most important in the document.
+The vector will thus contain the style of the document rather than the topic of the document.
+When comparing these vector, this method focus on the difference between the authors styles rather than the topic of the documents or the time period the text was written in.
 This asumptions is experimented in this study in Section~\ref{sec:influance_mf_restriction}.
 
 Previous studies have shown the importance of having documents of good quality and with at least 5000 tokens to have reliable results.
 Skilled authors can easily change their style to imitate others for small texts, but it becomes more difficult for larger texts~\cite{savoy_stylo}.
 This problematic is explored in Section~\ref{sec:importance_of_text_size}.
-
-The vector will thus contain the style of the document rather than the topic of the document.
-When comparing these vector, this method focus on the difference between the authors styles rather than the topic of the documents or the time period the text was written in.
 
 To be able to express a document as a feature vector of size $n$, the strategy used is to find the $n$ most frequent ($n$-MF) items in a corpus, and for each document compute their item relative frequency by dividing by the total number of $n$-MF items in the document~\cite{savoy_stylo}.
 The resulting vector will represent the MF items proportions contained in a document.

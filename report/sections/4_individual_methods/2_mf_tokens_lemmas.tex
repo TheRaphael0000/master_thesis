@@ -4,7 +4,7 @@ This section aim to evaluate the vector representation using the most frequent (
 
 \subsubsection{MF Tokens and Lemmas Method}
 
-The MF method only have one parameter, $n$.
+The MF method only have one parameter: $n$.
 $n$ is the number of most frequent items.
 For the tokens and lemmas text representation, no clear $n$ value for the $n$-MF is to choose over others.
 Depending on the documents' length, previous studies have shown that using $n$ value between $50$ and $500$ tends to produce good results for the token text representation~\cite{savoy_text_representation}.
@@ -20,7 +20,7 @@ Instead of using directly the words to create the feature vector, another possib
 
 Here the goal is to compare two similar text representations, which are the token representation and the lemmatize representation.
 Rank list using these representation are created and evaluated.
-The corpora used for this experiment is St-Jean since contains the lemma text representation and is a large corpus.
+The corpus used for this experiment is St-Jean since contains the lemma text representation and is a large corpus.
 
 The proposed methodology is to create rank lists of every proposed distance measures (ref. Section~\ref{sec:vectors_distances}) for the two text representations.
 The value of $n$ is also explored between 250 and 2000 with a step of 250.
@@ -89,8 +89,8 @@ For this study having standard and easier corpus is required in order to show th
 
 \begin{figure}
   \centering
-  \label{fig:degradation}
   \caption{St-Jean ranks list evaluation on AP, RPrec and HPrec over the text size. Rank list computed using $750$-MF tokens and the Z-Score normalized Cosine distance}
+  \label{fig:degradation}
   \includegraphics[width=\linewidth]{img/degradation.png}
 \end{figure}
 
@@ -197,7 +197,7 @@ The previous statement can be deduced by the following reasoning : For example w
 We believe some errors in the system are due to documents having close feature vectors values even though they are not from the same authors.
 To motivate this statement, the following experiment is realized.
 
-The four token-based retained rank list from the St-Jean corpus are used, see Table~\ref{tab:9rl_results_st_jean_A_B} in annex.
+The four token-based retained rank list from the St-Jean corpus are used, see Table~\ref{tab:rls_st_jean} in annex.
 These four rank lists share the same text representation, in this case the relative frequency of the $750$-MF tokens as feature vector, only the distance function used to create the rank lists are different.
 For the sake of this experiment, we define \textit{frequent errors} as : \textit{Links often appearing in the top 20 false links in the rank lists (for example in the top 20 false link of 3 out of the 4 rank lists)}.
 
