@@ -1,4 +1,4 @@
-\subsection{Supervised Clustering \label{sec:supervised_clustering}}
+\subsection{Regression-based clustering \label{sec:regression-based_clustering}}
 
 \subsubsection{Method}
 
@@ -33,7 +33,7 @@ The logistic regression model can be re-used on any other rank lists produced wi
 
 \begin{example}
   \centering
-  \caption{Linear interpolation for supervised distance threshold selection (probability threshold fixed at 0.5)}
+  \caption{Linear interpolation for regression-based clustering distance threshold selection (probability threshold fixed at 0.5)}
   \label{ex:linear_interpolation}
 
   \begin{subexample}{\linewidth}
@@ -69,8 +69,8 @@ The logistic regression model can be re-used on any other rank lists produced wi
 \subsubsection{Evaluation}
 
 
-To evaluate the supervised clustering approach: Oxquarry, Brunet, St-Jean A and B were used.
-The same approach as for the semi-supervised clustering is used.
+To evaluate the regression-based clustering approach: Oxquarry, Brunet, St-Jean A and B were used.
+The same approach as for the distribution-based clustering is used.
 Each retained rank list for each corpus is computed, see Table~\ref{tab:rls_oxquarry_brunet}~and~\ref{tab:rls_st_jean} in annex.
 For each rank list pair, the distance threshold is computed, using the logistic regression approach.
 This step corresponds to the training phase.
@@ -81,7 +81,7 @@ In other words, a model to create cuts is trained on every dataset and tested on
 To simplify the results the mean $B^3_{F_1}$ and $r_{diff}$ across all retained rank list is computed.
 
 The model does not depend on the rank list size since only relative magnitudes are used.
-The BCubed metrics and the r ratio difference are computed during this experiment and are presented in Table~\ref{tab:supervised_clustering}, for every pairs of dataset.
+The BCubed metrics and the r ratio difference are computed during this experiment and are presented in Table~\ref{tab:regression-based_clustering}, for every pairs of dataset.
 
 The following conclusions can be drawn with these results:
 \begin{itemize}
@@ -100,8 +100,8 @@ No clear rank lists property was found which makes some of them better to train 
 
 \begin{table*}
   \centering
-  \caption{Supervised clustering evaluation, Mean retained rank lists $B^{3}_{F_1}$/$r_{diff}$ for each corpus pair}
-  \label{tab:supervised_clustering}
+  \caption{Regression-based clustering evaluation, Mean retained rank lists $B^{3}_{F_1}$/$r_{diff}$ for each corpus pair}
+  \label{tab:regression-based_clustering}
 
   \subcaption{Single Linkage}
   \begin{tabular}{l l| c c c c|c}

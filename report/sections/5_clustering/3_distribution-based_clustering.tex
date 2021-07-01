@@ -1,4 +1,4 @@
-\subsection{Semi-supervised clustering}
+\subsection{Distribution-based clustering}
 
 \subsubsection{Method}
 
@@ -13,14 +13,11 @@ At each step the CDF for the two beta distribution is evaluated until it converg
 The binary search have a complexity of $O(\log n)$.
 With an analytical solve, the complexity could drop to $O(1)$.
 
-As explained in~\cite{savoy_probability} the beta distribution is better suited for authorship problem than the Gaussian distribution since it can grasp a large amount of distribution shapes with its parameters' flexibility.
+As explained in~\cite{savoy_probability} the beta distribution is better suited for authorship problem than the Gaussian distribution for example since it can grasp a larger amount of distribution shapes with its parameters' flexibility.
 
-Since the authors of each document must be known to find the cut.
 The idea is here to find the cut location using corpus with known authors and re-use the same value for new corpora.
-Thus, turn this method into supervised.
-
-We consider this method as semi-supervised since the only \textit{learnt} parameter is a fixed real number, the distance threshold, and this method do not consider any new corpus for this value computation.
-The linkage parameter for this method is the complete linkage, since the cut correspond to the position where the most extremes of the same categories, either true or false links meet.
+This method is a supervised method since it requires examples for learn the cut, even though the only \textit{learnt} parameter is a fixed real number, the distance threshold.
+This method do not consider any new corpus for this value computation.
 
 Figure~\ref{fig:links_score_density} show the distance density for true and false link as well as a beta distribution estimation for St-Jean B rank list generated with text representation 0 (ref. Section~\ref{sec:individual_methods_summary}).
 Notice that to be able to modelize the beta distribution, the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization}.
@@ -42,14 +39,14 @@ The same binary search can be used for this computation, just the target need to
 
 \subsubsection{Evaluation}
 
-To evaluate the semi-supervised clustering approach: Oxquarry, Brunet, St-Jean A and B were used.
+To evaluate the distribution-based clustering approach: Oxquarry, Brunet, St-Jean A and B are used.
 Each retained rank list for each corpus is computed, see Table~\ref{tab:rls_oxquarry_brunet}~and~\ref{tab:rls_st_jean} in annex.
 For each rank list, the distance threshold is computed, using the two beta approach.
 This step corresponds to the training phase.
 Then for every distance threshold and rank list pair, the clustering is evaluated using the $B^3_{F_1}$ and the $r_{diff}$.
 This correspond to the testing phase.
 
-To simplify the results the mean $B^3_{F_1}$ and $r_{diff}$ across all retained rank list is computed.
+The results evaluation are aggregated by applying the arithmetic mean on the $B^3_{F_1}$ and $r_{diff}$ across all retained rank list.
 
 The evaluation is presented in Table~\ref{tab:semi_supervised_clustering} show the results for each linkage criterion (Single, Average, Complete).
 
@@ -69,7 +66,7 @@ The following conclusions can be drawn with these results:
 
 \begin{table*}
   \centering
-  \caption{Semi-supervised clustering evaluation, Mean retained rank lists $B^{3}_{F_1}$/$r_{diff}$ for each corpus pair}
+  \caption{Distribution-based clustering evaluation, Mean retained rank lists $B^{3}_{F_1}$/$r_{diff}$ for each corpus pair}
   \label{tab:semi_supervised_clustering}
 
   \subcaption{Single Linkage}

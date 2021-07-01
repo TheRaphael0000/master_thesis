@@ -1,1 +1,133 @@
 \subsection{Clustering with Fusions Evaluation}
+
+
+\begin{table}
+  \centering
+  \caption{Silhouette-based clustering evaluation on Z-Scores rank lists, $B^3_{F_1}$/$r_{diff}$, Maximal Silhouette ($\alpha = 0$)}
+  \label{tab:silhouette-based_clustering_zscore}
+
+  \resizebox{\linewidth}{!}{
+  \begin{tabular}{l c c c}
+    \toprule
+           & \multicolumn{3}{c}{Linkage criterion} \\
+    Corpus    & Single     & Average   & Complete \\
+    \midrule
+    Oxquarry  & 0.80/0.10 & 0.80/0.10 & 0.80/0.10 \\
+    Brunet    & 0.67/0.32 & 0.72/0.20 & 0.70/0.25 \\
+    St-Jean A & 0.57/0.30 & 0.57/0.29 & 0.60/0.25 \\
+    St-Jean B & 0.89/0.08 & 0.91/0.05 & 0.91/0.05 \\
+    \midrule
+    Absolute mean & 0.73/0.20 & 0.75/0.16 & 0.75/0.16 \\
+    \bottomrule
+  \end{tabular}
+  }
+\end{table}
+
+\begin{table}
+  \centering
+  \caption{Silhouette-based clustering evaluation on Z-Scores rank lists, $B^3_{F_1}$/$r_{diff}$, $\alpha = -0.2$}
+  \label{tab:silhouette-based_clustering_zscore_alpha}
+
+  \resizebox{\linewidth}{!}{
+  \begin{tabular}{l c c c}
+    \toprule
+           & \multicolumn{3}{c}{Linkage criterion} \\
+    Corpus    & Single     & Average   & Complete \\
+    \midrule
+    Oxquarry  & 0.85/ 0.02 & 0.96/ 0.02 & 0.87/ 0.04 \\
+    Brunet    & 0.82/ 0.05 & 0.85/ 0.09 & 0.82/ 0.11 \\
+    St-Jean A & 0.77/ 0.13 & 0.79/ 0.12 & 0.74/ 0.12 \\
+    St-Jean B & 0.92/-0.01 & 0.89/-0.03 & 0.91/-0.03 \\
+    \midrule
+    Absolute mean & 0.84/0.05 & 0.87/0.07 & 0.84/0.08 \\
+    \bottomrule
+  \end{tabular}
+  }
+\end{table}
+
+
+\begin{table*}
+  \centering
+  \caption{Distribution-based clustering evaluation, Z-Score rank lists $B^{3}_{F_1}$/$r_{diff}$ for each corpus pair}
+  \label{tab:distribution-based_clustering_zscore}
+
+  \vspace{0.5cm}
+
+  \subcaption{Average Linkage}
+  \begin{tabular}{l l| c c c c|c}
+    \toprule
+    \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing} \\
+    \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B & Mean \\
+    \midrule
+    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
+    & Oxquarry  & 0.85/-0.04 & 0.71/-0.07 & 0.64/-0.09 & 0.72/-0.10 & 0.73/-0.07 \\
+    & Brunet    & 0.96/ 0.02 & 0.81/ 0.00 & 0.75/-0.07 & 0.82/-0.06 & 0.84/-0.03 \\
+    & St-Jean A & 0.89/ 0.04 & 0.81/ 0.00 & 0.86/-0.04 & 0.92/-0.02 & 0.87/-0.01 \\
+    & St-Jean B & 0.82/ 0.08 & 0.82/ 0.07 & 0.88/-0.03 & 0.95/-0.01 & 0.87/ 0.03 \\
+    \midrule
+    & Mean      & 0.88/ 0.02 & 0.79/ 0.00 & 0.78/-0.06 & 0.85/-0.05 & 0.83/-0.02 \\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5cm}
+
+  \subcaption{Complete Linkage}
+  \begin{tabular}{l l| c c c c|c}
+    \toprule
+    \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing} \\
+    \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B & Mean \\
+    \midrule
+    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
+    & Oxquarry  & 0.82/ 0.08 & 0.81/ 0.07 & 0.86/-0.02 & 0.91/-0.03 & 0.85/0.02\\
+    & Brunet    & 0.82/ 0.08 & 0.81/ 0.07 & 0.87/-0.01 & 0.92/-0.02 & 0.86/0.03\\
+    & St-Jean A & 0.82/ 0.08 & 0.85/ 0.09 & 0.87/-0.01 & 0.97/ 0.00 & 0.88/0.04\\
+    & St-Jean B & 0.80/ 0.10 & 0.84/ 0.14 & 0.84/ 0.04 & 0.90/ 0.04 & 0.85/0.08\\
+    \midrule
+    & Mean      & 0.82/ 0.08 & 0.83/ 0.09 & 0.86/ 0.00 & 0.93/-0.00 & 0.86/0.04\\
+    \bottomrule
+  \end{tabular}
+
+\end{table*}
+
+\begin{table*}
+  \centering
+  \caption{Regression-based clustering evaluation, Z-Score rank lists $B^{3}_{F_1}$/$r_{diff}$ for each corpus pair}
+  \label{tab:regression-based_clustering_zscore}
+
+  \vspace{0.5cm}
+
+  \subcaption{Average Linkage}
+  \begin{tabular}{l l| c c c c|c}
+    \toprule
+    \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing} \\
+    \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B & Mean \\
+    \midrule
+    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
+    & Oxquarry  & 0.82/ 0.08 & 0.82/ 0.07 & 0.87/-0.02 & 0.95/-0.01 & 0.86/0.03\\
+    & Brunet    & 0.80/ 0.10 & 0.75/ 0.18 & 0.82/ 0.07 & 0.91/ 0.05 & 0.82/0.10\\
+    & St-Jean A & 0.80/ 0.10 & 0.82/ 0.11 & 0.84/ 0.04 & 0.95/ 0.03 & 0.85/0.07\\
+    & St-Jean B & 0.80/ 0.10 & 0.76/ 0.16 & 0.83/ 0.05 & 0.95/ 0.03 & 0.84/0.08\\
+    \midrule
+    & Mean      & 0.81/ 0.09 & 0.79/ 0.13 & 0.84/ 0.04 & 0.94/ 0.03 & 0.84/0.07\\
+    \bottomrule
+  \end{tabular}
+
+  \vspace{0.5cm}
+
+  \subcaption{Complete Linkage}
+  \begin{tabular}{l l| c c c c|c}
+    \toprule
+    \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing} \\
+    \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B & Mean \\
+    \midrule
+    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
+    & Oxquarry  & 0.80/0.10 & 0.84/0.14 & 0.83/0.05 & 0.91/0.05 & 0.85/0.08 \\
+    & Brunet    & 0.73/0.19 & 0.77/0.20 & 0.67/0.19 & 0.89/0.07 & 0.77/0.16 \\
+    & St-Jean A & 0.78/0.13 & 0.78/0.18 & 0.74/0.14 & 0.91/0.05 & 0.80/0.13 \\
+    & St-Jean B & 0.78/0.13 & 0.78/0.18 & 0.70/0.16 & 0.90/0.06 & 0.79/0.13 \\
+    \midrule
+    & Mean      & 0.77/0.14 & 0.79/0.18 & 0.74/0.14 & 0.90/0.06 & 0.80/0.13 \\
+    \bottomrule
+  \end{tabular}
+
+\end{table*}

@@ -1,4 +1,4 @@
-\subsection{Unsupervised Clustering \label{sec:unsupervised_clustering}}
+\subsection{Silhouette-based clustering \label{sec:silhouette-based_clustering}}
 
 \subsubsection{Method}
 
@@ -31,14 +31,14 @@ An alternative to this method is the Iterative Positive Silhouette (IPS) and was
 
 \subsubsection{Evaluation}
 
-For this experiment, the goal is to test the unsupervised hierarchical clustering cut method based on the maximization of the mean Silhouette score on the literature corpora.
+For this experiment, the goal is to test the Silhouette-based hierarchical clustering cut method based on the maximization of the mean Silhouette score on the literature corpora.
 The right number of cluster is not known.
 When applying the procedure, the number of clusters start at 2 and end at the number of documents minus 1.
 The best clustering according to this method is the one that yield the greatest mean Silhouette score.
 
 The rank list used for this experiment is the one from the retained text representation (9 for St-Jean and 7 for Brunet and Oxquarry), see Table~\ref{tab:rls_oxquarry_brunet}~and~\ref{tab:rls_st_jean} in annex.
 
-The $B^3_{F_1}$ score and $r_{diff}$ average on the unsupervised clustering are presented in Table~\ref{tab:unsupervised_clustering}, the complete table is available in Table~\ref{tab:unsupervised_clustering_full} in annex.
+The $B^3_{F_1}$ score and $r_{diff}$ average on the Silhouette-based clustering are presented in Table~\ref{tab:silhouette-based_clustering}, the complete table is available in Table~\ref{tab:silhouette-based_clustering_full} in annex.
 
 The average r-ratio difference is positive value ranging between $\left[0.17, 0.22\right]$ depending on the linkage criterion.
 Having a too large r-ratio indicate that estimated number of cluster is on every dataset overestimated.
@@ -47,8 +47,8 @@ This can be due to the fact that the rank list used for the clustering is not pe
 
 \begin{table}
   \centering
-  \caption{Unsupervised clustering evaluation, $B^3_{F_1}$/$r_{diff}$, Maximal Silhouette ($\alpha = 0$)}
-  \label{tab:unsupervised_clustering}
+  \caption{Silhouette-based clustering evaluation on retained rank lists, average $B^3_{F_1}$/$r_{diff}$, Maximal Silhouette ($\alpha = 0$)}
+  \label{tab:silhouette-based_clustering}
 
   \resizebox{\linewidth}{!}{
   \begin{tabular}{l c c c}
@@ -93,7 +93,7 @@ Example~\ref{ex:alpha_correction} show the $\alpha$ computation and usage.
 By using for example $\alpha = -0.2$, we aim to correct this overshoot.
 This value was choosen using a grid search to optimize the $B^3_{F_1}$.
 
-Table~\ref{tab:unsupervised_clustering_alpha} show the results with $\alpha = -0.2$, the complete table is available in Table~\ref{tab:unsupervised_clustering_alpha_full} in annex.
+Table~\ref{tab:silhouette-based_clustering_alpha} show the results with $\alpha = -0.2$, the complete table is available in Table~\ref{tab:silhouette-based_clustering_alpha_full} in annex.
 With this correction technique, in average the $r_{diff}$ is closer to 0 and the average $B^3_{F_1}$ is increased in average by 6\% across all the corpora.
 The average linkage criterion give the best results for this clustering method, the $B^3_{F_1}$ is in average 2\% better with this method.
 
@@ -140,8 +140,8 @@ The average linkage criterion give the best results for this clustering method, 
 
 \begin{table}
   \centering
-  \caption{Unsupervised clustering evaluation, $B^3_{F_1}$/$r_{diff}$, $\alpha = -0.2$}
-  \label{tab:unsupervised_clustering_alpha}
+  \caption{Silhouette-based clustering evaluation on retained rank lists, average  $B^3_{F_1}$/$r_{diff}$, $\alpha = -0.2$}
+  \label{tab:silhouette-based_clustering_alpha}
 
   \resizebox{\linewidth}{!}{
   \begin{tabular}{l c c c}

@@ -12,14 +12,14 @@ In this study, finding this position will also be referred to as finding the \te
 We define the true positive as true links above the cut, true negatives as false links under the cut.
 In addition, false positive are true links under the cut and false negatives are false links above the cut.
 
-To find this cut, three approaches are explored : an unsupervised, a semi-supervised and a supervised.
+To find this cut, three approaches are explored : a Silhouette-based model, a distribution-based model and a regression-based model.
 
-The unsupervised method can be used when only one corpus is available and no learning procedures can be applied.
+The Silhouette-based method can be used when only one corpus is available and no learning procedures can be applied.
 
-The semi-supervised learn based on a corpus with labels (training corpus) a rank list score where the cut should be for any other corpus (called testing corpus).
+The distribution-based model learn based on a corpus with labels (training corpus) a rank list score where the cut should be for any other corpus (called testing corpus).
 
-Finally, the supervised approach, learn based on a rank from a corpus with labels (training corpus) a model.
-The model can find the optimal cut for a rank list from a new corpus (called testing corpus) generated using the same metrics as ones used for training.
+Finally, the regression based model, learn to classify rank list's links from a corpus with labels (training corpus).
+The model can find the optimal cut for a rank list from a new corpus (called testing corpus), by estimating the true link probabilities for each link.
 
 \subsubsection{Algorithm and Implementation \label{sec:algorithm_and_implementation}}
 

@@ -9,15 +9,15 @@ The quality can be measured with the metrics presented in Section~\ref{sec:clust
 For the clustering part, multiple methods based on hierarchical clustering are investigated and proposed:
 \begin{itemize}
   \item
-  A full unsupervised clustering, by minimizing intercluster distances and maximizing nearest cluster distance.
+  Silhouette-based clustering : A fully unsupervised clustering which aim to minimize intercluster distances and maximize nearest cluster distance.
   \item
-  A semi-supervised clustering technique using previously computed values as a decision point.
+  Distribution-based clustering : A supervised clustering technique which aim to modelize known corpus rank lists a compute a decision point.
   \item
-  A supervised clustering technique which takes clues from previous corpora analysis to lead the clustering.
+  Regression-based clustering : A supervised clustering technique which takes clues from previous corpora analysis to lead the clustering.
 \end{itemize}
 
 \subfile{1_hierarchical_clustering}
-\subfile{2_unsupervised_clustering}
-\subfile{3_semi_supervised_clustering}
-\subfile{4_supervised_clustering}
+\subfile{2_silhouette-based_clustering}
+\subfile{3_distribution-based_clustering}
+\subfile{4_regression-based_clustering}
 \subfile{5_clustering_summary}

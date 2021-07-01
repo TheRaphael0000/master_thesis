@@ -143,7 +143,7 @@ def clustering_at_dist_thresh(rank_list, linkage="average", distance_threshold=n
     return labels
 
 
-def unsupervised_clustering(rank_list, linkage="average", alpha=0):
+def silhouette_based_clustering(rank_list, linkage="average", alpha=0):
     ac = agglomerative_clustering(rank_list, linkage, np.inf)
     distances_matrix = distances_matrix_from_rank_list(rank_list)
     
