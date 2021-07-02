@@ -39,24 +39,24 @@ The complete evaluation of the rank list produced on these text representation f
 From a rank list, it is possible to create a distances' matrix (ref. Section~\ref{sec:distances_matrix}).
 Distances' matrices created from rank list can be visualized.
 To represent distances' matrices, each element of the matrix is mapped to a pixel in an 2D image.
-The element value in the matrix is mapped to the pixel brightness, the low values are in light colours and high values in dark colours.
+The element value in the matrix is mapped to the pixel brightness, the low values are in light colors and high values in dark colors
 
-A good distance matrix should have each same author documents pair with a low distances (light colour in the image) and different authors documents pairs with a high distance (dark colour in the image).
+A good distance matrix should have each same author documents pair with a low distances (light color in the image) and different authors documents pairs with a high distance (dark color in the image).
 The greater the contrast between the true links (same author documents) and the false links is (different authors documents), the better the text representation is, since the related rank list will have a greater average precision.
 
 Authors in the matrix are sorted alphabetically.
 If the distances' matrix can represent correctly the author style, same authors documents have generally a low distance.
-This creates light colour squares in the diagonal.
+This creates light color squares in the diagonal.
 The square size is related to the number of document written by this author.
-The diagonal is the lightest colour (white), since the distance between two same documents is always 0, with respect to the identity of indiscernible axiom of the distance functions.
+The diagonal is the lightest color (white), since the distance between two same documents is always 0, with respect to the identity of indiscernible axiom of the distance functions.
 
 The distance matrix for the best retained representation (the highest AP) and the worse retained text representation (the lowest AP) is visually presented in Figure~\ref{fig:distances_matrix_oxquarry} for Oxquarry using a blue tint.
-Respectively the Clark distance on the $750$-MF which gives an average precision of $0.89$, and the Tanimito distance on the $750$-MF gives an $0.63$ average precision.
+Respectively, the Clark distance on the $750$-MF which gives an average precision of $0.89$, and the Tanimito distance on the $750$-MF gives an $0.63$ average precision.
 The diagonal is white in both images.
-Light colour square in the diagonal can clearly be observed on both distance matrix visualizations.
+Light color square in the diagonal can clearly be observed on both distance matrix visualizations.
 Thought some are slightly tainted.
 
-Clark has overall a good distances matrix, except some document pairs from \textit{Conrad}, \textit{Hardy} and \textit{Orczy} which have darker colours, these are ranked below some false links in the rank list.
+Clark has overall a good distances matrix, except some document pairs from \textit{Conrad}, \textit{Hardy} and \textit{Orczy} which have darker colors, these are ranked below some false links in the rank list.
 
 For Tanimoto, firstly one can observe these stripes, which are due to the max function in its computation, which create a more cleaved decision in the score value.
 The main suspects for this observation is due to some high frequency term only used in some excerpts, thus when normalizing by the sum of maxima in the Tanimoto computation, document with these high relative frequency create these stripes.
@@ -81,7 +81,7 @@ The main suspects for this observation is due to some high frequency term only u
 When dealing with false links ranked high in the rank list, as the previous experiment showed, some excerpt use similar words (ref.~\ref{sec:frequent_errors}).
 These shared words might be related to the era the book was written in.
 The following experiment tries to investigate on this assumption.
-By analysing the difference in publication date for the most incorrect document pairs in the rank lists (false links ranked high in the rank list) this assumption can be verified.
+By analyzing the difference in publication date for the most incorrect document pairs in the rank lists (false links ranked high in the rank list) this assumption can be verified.
 
 In the St-Jean corpus publication paper, the publication dates of each excerpt are available~\cite{st_jean}.
 First, the publication date distribution of the corpus must be understood to further continue the experiment.
@@ -108,7 +108,7 @@ Firstly, the mean is lower by 7.75 years (29.04 - 21.29) compared to every false
 Having a lower mean in this case indicate that more mistakes are made for document pairs with a lower date difference then for the ones with a large date difference, which can lead to the following conclusion : distinguishing between a false link and a true link for documents pair with low date difference is harder.
 Secondly, we can observe a drop after 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ years are harder to discriminate between a true link and a false link than one's outside this interval.
 
-The 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France~\cite{generations}, authors birth country for this corpus.
+The 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France~\cite{generations}, authors' birth country for this corpus.
 Each new generation tends to use its own vocabulary, and thus it can be harder to discriminate the author of text belonging to the same generation, if we assume that the authors write their books at around the same age.
 In the other hand, having different vocabulary can indicate a different time period and is often used to detect document forgery~\cite{savoy_stylo}.
 

@@ -3,7 +3,7 @@
 \subsubsection{Method}
 
 To learn at which position in the rank list the cut should be, this third idea is to fit a linear regression model on samples created from the rank list.
-The model must be linear since only one cut should seperate the true links and the false links.
+The model must be linear, since only one cut should separate the true links and the false links.
 To train the model, a sample is created for each link in a rank list.
 The links labels are either \textit{true} (1.0) when both document in the link are from the same author and \textit{false} (0.0) otherwise.
 
@@ -75,13 +75,13 @@ Each retained rank list for each corpus is computed, see Table~\ref{tab:rls_oxqu
 For each rank list pair, the distance threshold is computed, using the logistic regression approach.
 This step corresponds to the training phase.
 Then for every distance threshold and rank list pair, the clustering is evaluated using the $B^3_{F_1}$ and the $r_{diff}$.
-This correspond to the testing phase.
+This corresponds to the testing phase.
 In other words, a model to create cuts is trained on every dataset and tested on all the datasets.
 
-To simplify the results the mean $B^3_{F_1}$ and $r_{diff}$ across all retained rank list is computed.
+To simplify the results, the mean $B^3_{F_1}$ and $r_{diff}$ across all retained rank list is computed.
 
-The model does not depend on the rank list size since only relative magnitudes are used.
-The BCubed metrics and the r ratio difference are computed during this experiment and are presented in Table~\ref{tab:regression-based_clustering}, for every pairs of dataset.
+The model does not depend on the rank list size, since only relative magnitudes are used.
+The BCubed metrics and the r ratio difference are computed during this experiment and are presented in Table~\ref{tab:regression-based_clustering}, for every pair of datasets.
 
 The following conclusions can be drawn with these results:
 \begin{itemize}
@@ -89,14 +89,14 @@ The following conclusions can be drawn with these results:
   The best linkage criterion for this model is the average linkage with an $B^3_{F_1} = 0.80$.
   \item
   Some corpus such as the Oxquarry corpus have better rank list for training the clustering model even though their rank list have a worse average precision than other corpora.
-  This indicate that the training set does not require high quality rank list for training the clustering model.
+  This indicates that the training set does not require a high quality rank list for training the clustering model.
   \item
   When testing the cut model, having a rank list of good quality tends to produce a better clustering, no matter the quality of the rank list used for the training.
   When testing the clustering model on St-Jean B (the corpus with the best rank list is average), it obtains in average the best $B^3_{F_1} = 0.91$.
 \end{itemize}
 
 The conclusion to the previous points is that having a good rank list is more important for testing than training.
-No clear rank lists property was found which makes some of them better to train the model.
+No clear rank lists property was found, which makes some of them better to train the model.
 
 \begin{table*}
   \centering

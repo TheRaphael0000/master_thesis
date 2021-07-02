@@ -3,16 +3,19 @@
 Table~\ref{tab:clustering_evaluation_summary} contains a summary of the proposed method to evaluate using the $B^3_{F_1}$ score and the $r_{diff}$.
 
 Each method produces similar results, but the distribution-based clustering with complete linkage give the best results, $B^3_{F_1} = 0.82$.
-When compared to the Silhouette-based methods and the regression-based method produce slightly least accurate results.
+When compared to the Silhouette-based methods and the regression-based method produce slightly less accurate results.
 The non-tweak Silhouette-based model give the least accurate results.
+The upper bound is the best clustering achievable with the rank lists used.
+The upper bound is found by evaluating the clusters of each step of the hierarchical clustering for each rank lists.
+The ones with the best metrics are kept, and the value exposed in this table is the average metrics of each \textit{best clustering} for these rank lists.
 
-Since the single linkage criterion show terrible results for every models, this criterion is left.
+Since the single linkage criterion show terrible results for every model, this criterion is left.
 The complete linkage and average linkage give overall the same results.
 Though the average precision have better results on 3 out of the 4 models, the distribution based model with the complete linkage give the best results across the board.
 
 The tweaked Silhouette-based model with average linkage and complete linkage and the distribution-based with average linkage are the best models to estimate the number of clusters, $r_{diff} = 0.06$.
 
-Overall the results are close to the upper bound.
+Overall, the results are close to the upper bound.
 
 \begin{table*}[t]
   \centering
@@ -20,14 +23,15 @@ Overall the results are close to the upper bound.
   \label{tab:clustering_evaluation_summary}
   \begin{tabular}{l c c c}
     \toprule
-    Clustering method                  & Single Linkage & Average Linkage    & Complete Linkage \\
+                                       & \multicolumn{3}{c}{Linkage criterion} \\
+    Clustering method                  & Single         & Average            & Complete \\
     \midrule
     Silhouette-based ($\alpha = 0$)    & 0.74/0.22      & \textbf{0.76/0.17} & 0.75/0.17 \\
     Silhouette-based ($\alpha = -0.2$) & 0.79/0.08      & \textbf{0.81/0.06} & 0.80/0.06 \\
     Distribution-based                 & 0.22/0.16      & 0.76/0.06          & \textbf{0.82/0.07} \\
     Regression-based                   & 0.64/0.10      & \textbf{0.80/0.13} & 0.74/0.19 \\
     \midrule
-    \textit{Upper bound}           & \textit{0.83/0.00} & \textit{0.88/0.00} & \textit{0.87/0.00} \\
+    \textit{Rank lists upper bound}    & \textit{0.83/0.00} & \textit{0.88/0.00} & \textit{0.87/0.00} \\
     \bottomrule
   \end{tabular}
 \end{table*}

@@ -1,12 +1,10 @@
-\subsection{Clustering with Fusions Evaluation}
+\subsection{Fusions and Clustering}
 
-
-\begin{table}
+\begin{table}[H]
   \centering
   \caption{Silhouette-based clustering evaluation on Z-Scores rank lists, $B^3_{F_1}$/$r_{diff}$, Maximal Silhouette ($\alpha = 0$)}
   \label{tab:silhouette-based_clustering_zscore}
 
-  \resizebox{\linewidth}{!}{
   \begin{tabular}{l c c c}
     \toprule
            & \multicolumn{3}{c}{Linkage criterion} \\
@@ -20,15 +18,13 @@
     Absolute mean & 0.73/0.20 & 0.75/0.16 & 0.75/0.16 \\
     \bottomrule
   \end{tabular}
-  }
 \end{table}
 
-\begin{table}
+\begin{table}[H]
   \centering
   \caption{Silhouette-based clustering evaluation on Z-Scores rank lists, $B^3_{F_1}$/$r_{diff}$, $\alpha = -0.2$}
   \label{tab:silhouette-based_clustering_zscore_alpha}
 
-  \resizebox{\linewidth}{!}{
   \begin{tabular}{l c c c}
     \toprule
            & \multicolumn{3}{c}{Linkage criterion} \\
@@ -42,11 +38,10 @@
     Absolute mean & 0.84/0.05 & 0.87/0.07 & 0.84/0.08 \\
     \bottomrule
   \end{tabular}
-  }
 \end{table}
 
 
-\begin{table*}
+\begin{table}[H]
   \centering
   \caption{Distribution-based clustering evaluation, Z-Score rank lists $B^{3}_{F_1}$/$r_{diff}$ for each corpus pair}
   \label{tab:distribution-based_clustering_zscore}
@@ -87,9 +82,9 @@
     \bottomrule
   \end{tabular}
 
-\end{table*}
+\end{table}
 
-\begin{table*}
+\begin{table}[H]
   \centering
   \caption{Regression-based clustering evaluation, Z-Score rank lists $B^{3}_{F_1}$/$r_{diff}$ for each corpus pair}
   \label{tab:regression-based_clustering_zscore}
@@ -130,4 +125,4 @@
     \bottomrule
   \end{tabular}
 
-\end{table*}
+\end{table}

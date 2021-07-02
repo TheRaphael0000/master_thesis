@@ -5,11 +5,11 @@ Oxquarry (English), Brunet (French), St-Jean (French) are three corpora containi
 Nine different techniques to produce individual rank lists are cherry-picked for the fusion step.
 These techniques are mostly based on the relative frequency of the most frequent words in each document, but also using compression techniques.
 
-Two rank list fusion method are used, one use the Z-Score normalization and the other one convert the rank list scores into probabilities using multiple logistic regression.
+Two rank lists' fusion method are used, one use the Z-Score normalization and the other one convert the rank list scores into probabilities using multiple logistic regression.
 The Z-Score fusion technique show a significant improvement of the results when compared to the best rank list used for the fusion.
 Whereas the logistic regression fusion procedure give slightly worse results but still shown a significant stabilization of the results.
 The rank list produced with the logistic regression fusion give a rank list quality equivalent to the average quality of the rank list used.
-These results motivate on the beneficial aspect of the rank list fusion.
+These results motivate on the beneficial aspect of the rank lists' fusion.
 Other fusion methods still need to be found to further increase the quality of the fusions.
 
 Two veto-based techniques are proposed and evaluated to try to further improve the quality of the fused rank list.
@@ -24,4 +24,4 @@ A second method called distribution-based which require a corpus with labels to 
 The last technique to perform the cut is supervised and is based on a Logistic model trained using a corpus with known labels, for any subsequent corpus this model can be used given a new rank list to find the most appropriate cut.
 The three clustering methods give good results close to the best clustering achievable with for rank lists used.
 By adding a parameter to the Unsupervised clustering and tweaking it, this model gives the best clustering results across the three corpora.
-The clustering task was archievable and convincing for corpora used when using rank list obtained by fusion of the cherry-picked individual rank lists.
+The clustering task was achievable and convincing for corpora used when using rank list obtained by fusion of the cherry-picked individual rank lists.

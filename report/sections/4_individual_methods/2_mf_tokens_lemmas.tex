@@ -12,14 +12,14 @@ Depending on the documents' length, previous studies have shown that using $n$ v
 One of the main advantage of this representation is that they can be easily explained.
 The feature vector can be show to the user.
 It represents the proportion of the most frequent words in a document.
-If $n$ is too large to present to the user, a dimensionality reduction with, for example the principal component analysis (PCA) can be helpful~\cite{savoy_stylo}.
+If $n$ is too large to present to the user, a dimensionality reduction with, for example, the principal component analysis (PCA) can be helpful~\cite{savoy_stylo}.
 
 Instead of using directly the words to create the feature vector, another possibility is to use the lemma corresponding to each word, for example the sentence \textit{i saw two men with a saw} its lemmatized version is : \textit{i see two man with a saw} this requires advanced text preprocessing, but it can remove ambiguity.
 
 \subsubsection{MF Tokens and Lemmas evaluation \label{sec:tokens_lemmas_eval}}
 
-Here the goal is to compare two similar text representations, which are the token representation and the lemmatize representation.
-Rank list using these representation are created and evaluated.
+Here, the goal is to compare two similar text representations, which are the token representation and the lemmatize representation.
+Rank list using these representations are created and evaluated.
 The corpus used for this experiment is St-Jean since contains the lemma text representation and is a large corpus.
 
 The proposed methodology is to create rank lists of every proposed distance measures (ref. Section~\ref{sec:vectors_distances}) for the two text representations.
@@ -75,17 +75,17 @@ Only the tokens' representation is kept since it is obtainable more easily and n
 For this study, an experiment on the St-Jean corpus is accomplished, to show the importance of having large documents.
 To test this, the number of token is artificially modified by considering only the $t$ first tokens of each text.
 Here $t$ range between 9000 and 250 with steps of 250 tokens.
-From these texts, the $750$-MF tokens text representation is used in conjonction with the Z-Score normalized Cosine distance to compute the rank lists.
+From these texts, the $750$-MF tokens text representation is used in conjunction with the Z-Score normalized Cosine distance to compute the rank lists.
 
 Figure~\ref{fig:degradation} show the rank lists evaluated using the average precision, RPrec, HPrec over the number of tokens.
 The full evaluation is showed in Table~\ref{tab:degradation} in annex.
 
 Every metric decrease over the text size.
-This indicate that it becomes harder to determinate documents pairs with the same author as the text size decrease.
+This indicates that it becomes harder to determinate documents pairs with the same author as the text size decrease.
 
 PAN16 corpus is a difficult corpus due to its small size, thus extracting reliable features for each text to estimate each style is also a difficult task.
 After multiple tests, the PAN @ CLEF 2016 corpus is not used further in this study due to its difficulty in finding reliable Stylometric clues.
-For this study having standard and easier corpus is required in order to show the proposed methods.
+For this study, having standard and easier corpus is required in order to show the proposed methods.
 
 \begin{figure}
   \centering
@@ -96,7 +96,7 @@ For this study having standard and easier corpus is required in order to show th
 
 \subsubsection{Most Frequent Items Restriction \label{sec:influance_mf_restriction}}
 
-Previously the MF method was proposed to limit the items used to only the most frequents in the vocabulary of a corpus.
+Previously, the MF method was proposed to limit the items used to only the most frequents in the vocabulary of a corpus.
 This experiment aim to show the importance of limiting the items used when creating the vector representing the document.
 Three approach are compared, the first use the whole corpus vocabulary to create the feature vector, denoted \textit{every token}.
 In the second, every token appearing more than once are used to create the vector, denoted \textit{without hapax legomena}.
@@ -110,7 +110,7 @@ Table~\ref{tab:gain_without_hapax_legomena} and Table~\ref{tab:gain_750_mf} show
 
 When looking at the baseline : the Manhattan, Euclidean and Clark distance measure have a poor average precision, all are below 0.3 in average.
 The other metric have medium to good results.
-It range from 0.58 for the KLD to 0.79 with the Cosine distance.
+It ranges from 0.58 for the KLD to 0.79 with the Cosine distance.
 The Cosine distance with \textit{every token} reach a 0.91 average precision for the Oxquarry corpus.
 When removing hapax legomena, for most distance metrics the gain in average precision is limited, except for the Clark distance where the mean average precision rise from 0.3 to 0.5.
 After limiting to the 750-MF, the Manhattan, Euclidean and Clark distance, the ones that had poor results for the baseline increase their average precision by around 48\% which correspond to an average precision of 0.71, 0.63 and 0.78 respectively, which makes them in the same range as the other metrics in the baseline.
@@ -119,7 +119,7 @@ This clearly indicate the importance of limiting the size of the vector for most
 
 From this experiment, each distance metric can be placed in one of the two following categories : the ones sensible to large and noisy vectors, the ones not sensible.
 In the first category are : Manhattan, Clark and Euclidean, in the second : Cosine, Matusita and Tanimoto.
-As for KLD and JD, they are nor in the first nor the second since both of them had a small gain in regard to the Oxquarry corpus but larger gain for the St-Jean dataset.
+As for KLD and JD, they are nor in the first nor the second, since both of them had a small gain in regard to the Oxquarry corpus but larger gain for the St-Jean dataset.
 Further, test are required to classify these distance metrics.
 
 \begin{table}
@@ -199,7 +199,7 @@ To motivate this statement, the following experiment is realized.
 
 The four token retained rank list from the St-Jean corpus are used, see Section~\ref{sec:tokens_lemmas_eval}.
 These four rank lists share the same text representation, in this case the relative frequency of the $750$-MF tokens as feature vector, only the distance function used to create the rank lists are different.
-For the sake of this experiment, we define \textit{frequent errors} as : \textit{Links often appearing in the top 20 false links in the rank lists} (for example in the top 20 false link of 3 out of the 4 rank lists).
+For the sake of this experiment, we define \textit{frequent errors} as : \textit{Links often appearing in the top 20 false links in the rank lists} (for example, in the top 20 false links of 3 out of the 4 rank lists).
 
 The goal is to compare the feature vector of the two documents for some specific link, in our case the following were chosen : Frequent errors, ranked first in a rank list (most similar vectors, according to the distance function), ranked last in a rank list (the least similar vectors) and ranked \textit{HPrec}-th in a rank list.
 
@@ -226,7 +226,7 @@ Thus, this experiment motivate the need of having multiple text representation t
 
 \begin{figure}
   \centering
-  \caption{Example of 750-MF relative frequency vectors for the two documents in a reccurant false link in the top 20 false links}
+  \caption{Example of 750-MF relative frequency vectors for recurrent false link in the top 20 false links}
   \label{fig:mf_vector_error}
 
   \subcaption{First example}

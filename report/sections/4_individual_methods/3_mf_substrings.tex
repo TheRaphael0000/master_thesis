@@ -18,7 +18,7 @@ The underscore is used to remove visual ambiguity due to the nature of the space
 
 This technique can be further explored by combining for example two or more $n$-grams sizes together.
 In this study, the following notation is used : $(a, b)$-grams.
-This correspond to both $a$-grams and $b$-grams in the same text representation.
+This corresponds to both $a$-grams and $b$-grams in the same text representation.
 
 $n$-grams can be really effective, even though no clear meaning can be exploited at first sight.
 A simple explanation on why $n$-grams can be effective is by using $n$-grams of size 3 to 5 in most Indo-European languages this can correspond to for example : the tense of the verbs (i.e. : \textit{"ing\_"}, \textit{"ed\_"}), some small common words (\textit{"\_the\_"}, \textit{"\_and\_"}, \textit{"\_that"}), or in French the adverbs (\textit{"\_ment"}) which can capture the style of an author~\cite{ngrams_authorship}.
@@ -47,8 +47,8 @@ In this study, to differentiate it from the classical $n$-grams algorithm.
 The latter algorithm, is called \textit{In-word $n$-grams} (Definition~\ref{def:words_n_grams}) and the other one is called \textit{letters $n$-grams} (Definition~\ref{def:letters_n_grams}).
 
 This algorithm considers each token as a string to apply the letters $n$-grams algorithm to.
-In-word $n$-grams are an hybrid version between the letters $n$-grams and the word token text representations.
-This method yield a subset of the letters $n$-grams algorithm when the tokens are bigger than $n$.
+In-word $n$-grams are a hybrid version between the letters $n$-grams and the word token text representations.
+This method yields a subset of the letters $n$-grams algorithm when the tokens are bigger than $n$.
 
 \subsubsection{MF $n$-First / $n$-Last}
 
@@ -58,8 +58,8 @@ These methods are subsets of the in-word $n$-grams.
 These methods have the same number of items as the token text representation.
 
 \begin{definition}[$n$-First \label{def:n_first}]
-  The $n$-First algorithm create for every tokens a new string which a substring from the first character to the $n$-th.
-  If the token token is smaller than $n$, the whole token is used.
+  The $n$-First algorithm create for every token a new string which a substring from the first character to the $n$-th.
+  If the token is smaller than $n$, the whole token is used.
 
   Example: \\
   Using $3$-First on the following tokens: ["fox", "is", "running"] \\
@@ -70,8 +70,8 @@ The $n$-First correspond generally in Indo-European languages to the meaning of 
 
 \begin{definition}[$n$-Last]
   \label{def:n_last}
-  The $n$-Last algorithm create for every tokens a new string which is a substring from the last minus $n$ character to the last.
-  If the token token is smaller than $n$, the whole token is used.
+  The $n$-Last algorithm create for every token a new string which is a substring from the last minus $n$ character to the last.
+  If the token is smaller than $n$, the whole token is used.
 
   Example: \\
   Using $3$-Last on the following tokens: ["fox", "is", "running"] \\
@@ -152,7 +152,7 @@ Using the right distance measure can have a relative increase up to $36$\%, when
 
 For the $4$-grams approach, as for the $3$-grams the Cosine is the best measure with this configuration.
 The Manhattan distance and the Clark distance also are the second choice.
-The Euclidean distance have the same behaviour as for $3$-grams on the dataset.
+The Euclidean distance have the same behavior as for $3$-grams on the dataset.
 For this configuration of $4$-grams with $8000$-MF, using the right distance measure is less impactful than the $3$-grams approach but still can have a relative increase in performance of $28$\% when changing from the worse distance metric to the best, with these datasets.
 
 \begin{table}

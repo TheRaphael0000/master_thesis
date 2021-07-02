@@ -1,0 +1,28 @@
+\subsection{Clustering with Fusions Evaluation}
+
+Table~\ref{tab:silhouette-based_clustering_zscore}~/~\ref{tab:silhouette-based_clustering_zscore_alpha}~/~\ref{tab:distribution-based_clustering_zscore}~/~\ref{tab:regression-based_clustering_zscore} in annex show the evaluation of the clustering task for rank lists obtained by fusing every retained rank lists using the Z-Score method.
+
+Table~\ref{tab:clustering_zscore_evaluation_summary} is a summary of the results.
+The upper bound is, using the same rank lists, the best clustering achievable with the hierachical clustering and a specific linkage criterion.
+It is obtained by evaluating the clustering a each step, the ones with the greatest metrics is kept.
+
+\begin{table}[t]
+  \centering
+  \caption{Retained rank lists Mean $B^{3}_{F_1}$/$r_{diff}$ for each corpus pair}
+  \label{tab:clustering_zscore_evaluation_summary}
+  \resizebox{\linewidth}{!}{
+  \begin{tabular}{l c c}
+    \toprule
+                                       & \multicolumn{2}{c}{Linkage criterion} \\
+    Clustering method                  & Average             & Complete \\
+    \midrule
+    Silhouette-based ($\alpha = 0$)    & \textbf{0.75/0.16}  & \textbf{0.75/0.16} \\
+    Silhouette-based ($\alpha = -0.2$) & \textbf{0.87/0.07}  & 0.84/0.08 \\
+    Distribution-based                 & 0.83/-0.02          & \textbf{0.86/0.04} \\
+    Regression-based                   & \textbf{0.84/0.07}  & 0.80/0.13 \\
+    \midrule
+    \textit{Rank lists upper bound}    & \textit{0.92/0.00} & \textit{0.89/0.00} \\
+    \bottomrule
+  \end{tabular}
+  }
+\end{table}

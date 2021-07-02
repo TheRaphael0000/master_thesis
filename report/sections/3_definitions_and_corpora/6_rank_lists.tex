@@ -56,7 +56,7 @@ Example~\ref{ex:rank_list} show the creation of a rank list using two-dimensiona
 
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{Pairwise manhanttan distances}
+    \subcaption{Pairwise Manhattan distances}
     \begin{tabular}{l l}
       \toprule
       Vector Pair IDs & $dist_{Manhattan}(A, B)$ \\
@@ -100,11 +100,11 @@ The presented metrics are also well know in the authorship verification and the 
 The average precision, the R-Precision and the High Precision are strongly correlated.
 Thus, in the study, for some experiment, only the average precision is computed.
 
-Example~\ref{ex:rank_list_eval} show case each metric for the rank list evaluation.
+Example~\ref{ex:rank_list_eval} showcase each metric for the rank list evaluation.
 
 \begin{definition}[Relevant link~\cite{kocher_linking}]
   A relevant link is a link in the relevant set.
-  The relevant set contain every document pair written by the same author, see Definition~\ref{def:relevant_set}.
+  The relevant set contains every document pair written by the same author, see Definition~\ref{def:relevant_set}.
   \begin{gather*}
     relevant(l_i) =
     \begin{cases}
@@ -242,10 +242,10 @@ Example~\ref{ex:rank_list_eval} show case each metric for the rank list evaluati
 \subsubsection{Rank Lists Relationship with Distances' Matrix \label{sec:distances_matrix}}
 
 When computing the rank lists, each link have its distance calculated and can be represented in a matrix.
-In this matrix each document represent a row and a column.
+In this matrix, each document represent a row and a column.
 The elements of the matrix are the distances between the two.
-For the non-commutative distances functions the whole matrix is used.
-For the commutative distances functions only a triangle / symmetric matrix is required.
+For the non-commutative distances functions, the whole matrix is used.
+For the commutative distances functions, only a triangle / symmetric matrix is required.
 
 Example~\ref{ex:distances_matrix} show the two representations for the same distances.
 
@@ -295,13 +295,13 @@ The transformation can be effectuated either from a rank list to a distances' ma
 To be able to compare rank list results, the gain strategy is used.
 In this study, the gain is defined as the difference between two evaluations.
 It can be either positive or negative.
-A positive gain indicate that the rank list have better results over another.
-When the gain is negative, the rank list have worse restuls than the other one.
+A positive gain indicates that the rank list have better results over another.
+When the gain is negative, the rank list have worse results than the other one.
 
 When multiple rank list need to be compared to one rank list, two simple aggregation methods are used.
 One use the mean of the results and the second the maximal value.
 These are called respectively Single-Mean and Single-Max.
-These aggregations strategies can be used in conjonction with the gain definition to compare one rank list to multiple rank lists.
+These aggregations strategies can be used in conjunction with the gain definition to compare one rank list to multiple rank lists.
 
 Example~\ref{ex:gain} show the gain computation using average precision on rank lists and the aggregation with Single-Mean and Single-Max.
 
@@ -337,7 +337,7 @@ Example~\ref{ex:gain} show the gain computation using average precision on rank 
     \centering
     \subcaption{Gain (One to many)}
 
-    Here one rank list is compared two others by evaluating the gain is average precision using two aggregations strategies (Single-Mean, Single-Max).
+    Here one rank list is compared to two others by evaluating the gain is average precision using two aggregations strategies (Single-Mean, Single-Max).
 
     \vspace{0.2cm}
 

@@ -6,11 +6,11 @@ The first part is specific to each corpus, and the second is the same for every 
 
 Oxquarry and Brunet are already tokenized such that every token is in a separate line.
 Additionally, Brunet have a lemma representation of the texts, which in this case in contained in a separate file in the same way as the token files.
-For these two corpora, a simple script is used to parse the file and create vector of words for each document.
+For these two corpora, a simple script is used to parse the file and create a vector of words for each document.
 
 St-Jean is also already tokenized with the one token, one line approach, but each document have its three representation (token, lemma and POS) in the same file, the three representation are separated by a comma on each line.
 There are a few additional preprocessing needed for this corpus.
-When the word \textit{des} (equivalant to a plural \textit{the} in French) is encounter, the tokenizer used to create the St-Jean files created two lines for this word since it can be lemmatized into either \textit{de} (\textit{some/any}) or \textit{le} (\textit{the}).
+When the word \textit{des} (equivalent to a plural \textit{the} in French) is encounter, the tokenizer used to create the St-Jean files created two lines for this word since it can be lemmatized into either \textit{de} (\textit{some/any}) or \textit{le} (\textit{the}).
 
 To avoid having these words weighted twice, only the first line is kept.
 St-Jean also have another specificity, it contains both the numerical representation of numbers and the textual representation.

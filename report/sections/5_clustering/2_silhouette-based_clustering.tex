@@ -2,8 +2,8 @@
 
 \subsubsection{Method}
 
-The idea is to unsupervisely evaluate the agglomerative clustering at each number of clusters (at each merge step).
-When discarding clustering with $N$ and clusters $1$, this produce $N - 2$ possible clusterings, each of those are evaluated using the mean Silhouette score.
+The idea is to unsupervised evaluate the agglomerate clustering at each number of clusters (at each merge step).
+When discarding clustering with $N$ and clusters $1$, this produce $N - 2$ possible clustering, each of those are evaluated using the mean Silhouette score.
 See Definition~\ref{def:silhouette}.
 
 \begin{definition}[Mean Silhouette score~\cite{sklearn}~\cite{wiki_silhouette}]
@@ -40,9 +40,9 @@ The rank list used for this experiment is the one from the retained text represe
 
 The $B^3_{F_1}$ score and $r_{diff}$ average on the Silhouette-based clustering are presented in Table~\ref{tab:silhouette-based_clustering}, the complete table is available in Table~\ref{tab:silhouette-based_clustering_full} in annex.
 
-The average r-ratio difference is positive value ranging between $\left[0.17, 0.22\right]$ depending on the linkage criterion.
+The average r-ratio difference is a positive value ranging between $\left[0.17, 0.22\right]$ depending on the linkage criterion.
 Having a too large r-ratio indicate that estimated number of cluster is on every dataset overestimated.
-This means that the mean neareast-cluster distance is greater than the mean intra-cluster distance even when dealing with the right number of clusters.
+This means that the mean neareast-cluster distance is greater than the mean intra-cluster distance, even when dealing with the right number of clusters.
 This can be due to the fact that the rank list used for the clustering is not perfect (AP $\neq 1$).
 
 \begin{table}
@@ -79,7 +79,7 @@ With $\alpha = 0$, this corresponds to the maximal mean Silhouette score.
 With a negative $\alpha$ the left side is targeted and with a positive $\alpha$, the right side.
 
 \begin{definition}[$\alpha$-Silhouette]
-  The $\alpha$-Silhouette target score found by using the maximal Silhouette score as a base line and is ajusted using a parameter called $\alpha$.
+  The $\alpha$-Silhouette target score found by using the maximal Silhouette score as a baseline and is adjusted using a parameter called $\alpha$.
   \begin{gather*}
     \begin{aligned}
     target &= max(Scores) - |\alpha| \cdot max(Scores) \\
@@ -91,7 +91,7 @@ With a negative $\alpha$ the left side is targeted and with a positive $\alpha$,
 Example~\ref{ex:alpha_correction} show the $\alpha$ computation and usage.
 
 By using for example $\alpha = -0.2$, we aim to correct this overshoot.
-This value was choosen using a grid search to optimize the $B^3_{F_1}$.
+This value was chosen by grid search to optimize the $B^3_{F_1}$.
 
 Table~\ref{tab:silhouette-based_clustering_alpha} show the results with $\alpha = -0.2$, the complete table is available in Table~\ref{tab:silhouette-based_clustering_alpha_full} in annex.
 With this correction technique, in average the $r_{diff}$ is closer to 0 and the average $B^3_{F_1}$ is increased in average by 6\% across all the corpora.
