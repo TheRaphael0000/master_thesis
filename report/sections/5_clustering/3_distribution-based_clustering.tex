@@ -1,6 +1,6 @@
-\subsection{Distribution-based clustering}
+\section{Distribution-based clustering}
 
-\subsubsection{Method}
+\subsection{Method}
 
 In Savoy (2014)'s \textit{Estimating the Probability of an Authorship Attribution}~\cite{savoy_probability} they modelled the distribution of the true and false links across the score obtained using a mixture of 2 beta distribution.
 Using these two beta distribution models, the position where the area under the curve for both models is maximized (same area under the cut for both models), correspond to the position where the true positive and true negatives are maximized.
@@ -37,7 +37,7 @@ The same binary search can be used for this computation, just the target need to
   \includegraphics[width=\linewidth]{img/links_score_density.png}
 \end{figure}
 
-\subsubsection{Evaluation}
+\subsection{Evaluation}
 
 To evaluate the distribution-based clustering approach: Oxquarry, Brunet, St-Jean A and B are used.
 Each retained rank list for each corpus is computed, see Table~\ref{tab:rls_oxquarry_brunet}~and~\ref{tab:rls_st_jean} in annex.

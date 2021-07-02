@@ -1,10 +1,10 @@
-\subsection{Rank lists}
+\section{Rank lists}
 
 Rank lists are used to order objects such that the most interesting object is at the top and every subsequent object become less interesting.
 In information retrieval systems, rank lists are used to order the results from the most relevant to the user's query to the least relevant.
 For the authorship verification problem, the rank list can also be used.
 
-\subsubsection{Definition and Example}
+\subsection{Definition and Example}
 
 \begin{definition}[Ranked list for authorship verification \label{def:rank_list}]
   \begin{gather*}
@@ -91,7 +91,7 @@ Example~\ref{ex:rank_list} show the creation of a rank list using two-dimensiona
   \end{subexample}
 \end{example}
 
-\subsubsection{Evaluation Metrics \label{sec:rl_eval}}
+\subsection{Evaluation Metrics \label{sec:rl_eval}}
 
 In order to know the quality of a rank list, multiple rank list evaluation metrics are used and presented in this section.
 Definitions in these sections are adapted versions of the ones from Kocher and Savoy~\cite{kocher_linking}.
@@ -239,7 +239,7 @@ Example~\ref{ex:rank_list_eval} showcase each metric for the rank list evaluatio
 
 \end{example}
 
-\subsubsection{Rank Lists Relationship with Distances' Matrix \label{sec:distances_matrix}}
+\subsection{Rank Lists Relationship with Distances' Matrix \label{sec:distances_matrix}}
 
 When computing the rank lists, each link have its distance calculated and can be represented in a matrix.
 In this matrix, each document represent a row and a column.
@@ -290,7 +290,7 @@ The transformation can be effectuated either from a rank list to a distances' ma
   \end{subexample}
 \end{example}
 
-\subsubsection{Results Comparaisons \label{sec:results_comparaison}}
+\subsection{Results Comparaisons \label{sec:results_comparaison}}
 
 To be able to compare rank list results, the gain strategy is used.
 In this study, the gain is defined as the difference between two evaluations.

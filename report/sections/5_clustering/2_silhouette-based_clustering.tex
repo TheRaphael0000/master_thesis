@@ -1,6 +1,6 @@
-\subsection{Silhouette-based clustering \label{sec:silhouette-based_clustering}}
+\section{Silhouette-based clustering \label{sec:silhouette-based_clustering}}
 
-\subsubsection{Method}
+\subsection{Method}
 
 The idea is to unsupervised evaluate the agglomerate clustering at each number of clusters (at each merge step).
 When discarding clustering with $N$ and clusters $1$, this produce $N - 2$ possible clustering, each of those are evaluated using the mean Silhouette score.
@@ -29,7 +29,7 @@ The idea is to apply the hierarchical clustering at each possible number of clus
 The best clustering is the one which have the largest mean Silhouette score.
 An alternative to this method is the Iterative Positive Silhouette (IPS) and was proposed in Layton, Watters, Dazeley (2011)~\cite{automated_unsupervised}.
 
-\subsubsection{Evaluation}
+\subsection{Evaluation}
 
 For this experiment, the goal is to test the Silhouette-based hierarchical clustering cut method based on the maximization of the mean Silhouette score on the literature corpora.
 The right number of cluster is not known.
@@ -67,7 +67,7 @@ This can be due to the fact that the rank list used for the clustering is not pe
   }
 \end{table}
 
-\subsubsection{Algorithm tweaking for authorship clustering}
+\subsection{Algorithm tweaking for authorship clustering}
 
 To mitigate the problem of having the number of cluster overestimated, an easy solution would be to use the labels produced by the clustering of a non-maximal value of the Silhouette score on the left side of the maximal Silhouette score.
 In this study, we introduce a parameter called $\alpha$.

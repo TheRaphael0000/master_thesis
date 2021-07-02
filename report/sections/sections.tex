@@ -1,8 +1,7 @@
-\pagenumbering{roman}
-\setcounter{page}{-1}
-
 \onecolumn
 \subfile{0_preamble/0_preamble}
+
+\pagestyle{plain}
 
 \twocolumn
 \pagenumbering{arabic}
@@ -25,7 +24,7 @@
 \setcounter{subsection}{0}
 \setcounter{table}{0}
 \setcounter{figure}{0}
-\renewcommand{\thesubsection}{\Alph{subsection}}
+\renewcommand{\thesection}{\Alph{section}}
 \renewcommand{\thetable}{\Alph{table}}
 \renewcommand{\thefigure}{\Alph{figure}}
 \subfile{8_references/0_references}

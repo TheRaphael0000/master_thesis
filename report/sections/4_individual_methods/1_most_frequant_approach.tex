@@ -1,4 +1,4 @@
-\subsection{Most Frequent Approach}
+\section{Most Frequent Approach}
 
 The first method to represent and compare the documents is called: Most frequent (MF).
 This method try to compare documents by creating feature vectors containing frequencies of the most frequent items in a text representation (TR).
@@ -54,7 +54,7 @@ Example~\ref{ex:mf_vector} show a computation of the MF items vector, using word
   \end{subexample}
 \end{example}
 
-\subsubsection{Normalization \label{sec:normalization}}
+\subsection{Normalization \label{sec:normalization}}
 
 Applying a normalization can improve the performances of the distance metrics presented in Section~\ref{sec:vectors_distances}.
 The Z-Score normalization is one of them, see Definition~\ref{def:z_score}.
@@ -87,7 +87,7 @@ In this study, linear normalization is used to fit the beta distribution.
   Normalize a vector X in the interval $[a, b]$, with $b > a$.
 \end{definition}
 
-\subsubsection{Smoothing}
+\subsection{Smoothing}
 
 Relative term frequencies can be considered as a probability of occurrence based on the maximum likelihood principle.
 The main problem with this approach is that the probability of occurrence of frequent terms tend to be overestimated and underestimate the probability of occurrence of low frequency terms or for terms that never occur.

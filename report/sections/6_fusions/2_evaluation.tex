@@ -1,6 +1,6 @@
-\subsection{Evaluation}
+\section{Evaluation}
 
-\subsubsection{Rank Lists' Fusions Evaluation \label{sec:eval_fusion}}
+\subsection{Rank Lists' Fusions Evaluation \label{sec:eval_fusion}}
 
 In this experiment, the goal to understand if fusing rank lists can create better rank lists.
 The methodology used, is to create $n$ isolated rank lists and fuse them for every $r$ rank lists combinations ($C^n_r$) for the two fusing methods proposed, Z-Score fusion and regression fusion.
@@ -260,7 +260,7 @@ The Z-Score fusion give the best results overall.
 
 \end{table*}
 
-\subsubsection{Veto Evaluation}
+\subsection{Veto Evaluation}
 
 In this experiment, the goal is to understand if the veto method can improve the average precision on the fused rank lists when using the regression fusion method.
 To do so, the St-Jean retained rank list are used (ref. Table~\ref{tab:rls_st_jean} in annex).
@@ -301,7 +301,7 @@ This strategy may be appliable on harder corpus such as the PAN 16 corpus.
   \end{tabular}
 \end{table}
 
-\subsubsection{Soft-veto Evaluation}
+\subsection{Soft-veto Evaluation}
 
 To evaluate the performance of the soft veto strategy, the idea is to compute the average precision gain obtained when using the soft-veto over the simple fusion without it.
 The gain is computed by subtracting the average precision of the Z-Score fusion without the soft-veto to the average precision of the Z-Score fusion with the soft-veto.
@@ -319,7 +319,7 @@ As for the veto experiment, no real average precision gain can be obtained using
   \includegraphics[width=\linewidth]{img/soft_veto.png}
 \end{figure}
 
-\subsubsection{Average Precision Fusion Gain Relation with the Rank Lists Diversity}
+\subsection{Average Precision Fusion Gain Relation with the Rank Lists Diversity}
 
 As stated previously, we believe fusing high quality rank lists (high AP), with the most diverse results can increase the quality of the fusion.
 First, a correlation metric to compare the rank lists must be selected.

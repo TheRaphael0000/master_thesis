@@ -1,4 +1,4 @@
-\subsection{Hierarchical Clustering \label{sec:authorship_clustering_methods}}
+\section{Hierarchical Clustering \label{sec:authorship_clustering_methods}}
 
 To find clusters of authors, a possible way is to use a hierarchical clustering algorithm on a rank list.
 The rank list indicate if the two documents should belong to the same cluster by order of certainty.
@@ -21,7 +21,7 @@ The distribution-based model learn based on a corpus with labels (training corpu
 Finally, the regression based model, learn to classify rank list's links from a corpus with labels (training corpus).
 The model can find the optimal cut for a rank list from a new corpus (called testing corpus), by estimating the true link probabilities for each link.
 
-\subsubsection{Algorithm and Implementation \label{sec:algorithm_and_implementation}}
+\subsection{Algorithm and Implementation \label{sec:algorithm_and_implementation}}
 
 The scikit-learn package~\cite{sklearn} provide an implementation bottom-up implementation of the hierarchical clustering, which is called agglomerative clustering.
 
@@ -137,7 +137,7 @@ The implementation profit of the generator functions that Python offers.
 \end{example}
 
 
-\subsubsection{Parameters\label{sec:hierarchical_clustering}}
+\subsection{Parameters\label{sec:hierarchical_clustering}}
 
 As explained in Section~\ref{sec:algorithm_and_implementation}, the hierarchical clustering decide clusters based on a bottom-up approach and have two main parameters, the stopping procedure and the linkage criterion.
 The linkage criterion can be : single, complete, average linkage.

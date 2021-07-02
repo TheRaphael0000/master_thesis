@@ -1,8 +1,8 @@
-\subsection{MF Tokens and Lemmas \label{sec:tokens_lemmas}}
+\section{MF Tokens and Lemmas \label{sec:tokens_lemmas}}
 
 This section aim to evaluate the vector representation using the most frequent (MF) tokens and lemmas.
 
-\subsubsection{MF Tokens and Lemmas Method}
+\subsection{MF Tokens and Lemmas Method}
 
 The MF method only have one parameter: $n$.
 $n$ is the number of most frequent items.
@@ -16,7 +16,7 @@ If $n$ is too large to present to the user, a dimensionality reduction with, for
 
 Instead of using directly the words to create the feature vector, another possibility is to use the lemma corresponding to each word, for example the sentence \textit{i saw two men with a saw} its lemmatized version is : \textit{i see two man with a saw} this requires advanced text preprocessing, but it can remove ambiguity.
 
-\subsubsection{MF Tokens and Lemmas evaluation \label{sec:tokens_lemmas_eval}}
+\subsection{MF Tokens and Lemmas evaluation \label{sec:tokens_lemmas_eval}}
 
 Here, the goal is to compare two similar text representations, which are the token representation and the lemmatize representation.
 Rank list using these representations are created and evaluated.
@@ -70,7 +70,7 @@ Only the tokens' representation is kept since it is obtainable more easily and n
   \includegraphics[width=0.9\linewidth]{img/mf_lemmas.png}
 \end{figure}
 
-\subsubsection{Text Size\label{sec:importance_of_text_size}}
+\subsection{Text Size\label{sec:importance_of_text_size}}
 
 For this study, an experiment on the St-Jean corpus is accomplished, to show the importance of having large documents.
 To test this, the number of token is artificially modified by considering only the $t$ first tokens of each text.
@@ -94,7 +94,7 @@ For this study, having standard and easier corpus is required in order to show t
   \includegraphics[width=\linewidth]{img/degradation.png}
 \end{figure}
 
-\subsubsection{Most Frequent Items Restriction \label{sec:influance_mf_restriction}}
+\subsection{Most Frequent Items Restriction \label{sec:influance_mf_restriction}}
 
 Previously, the MF method was proposed to limit the items used to only the most frequents in the vocabulary of a corpus.
 This experiment aim to show the importance of limiting the items used when creating the vector representing the document.
@@ -188,7 +188,7 @@ Further, test are required to classify these distance metrics.
   \end{tabular}
 \end{table}
 
-\subsubsection{Frequent Errors \label{sec:frequent_errors}}
+\subsection{Frequent Errors \label{sec:frequent_errors}}
 
 For this experiment, the goal is to try to understand the errors in the system, in this case the false links (document pairs with different authors) highly ranked on different rank lists.
 The rank list quality is high based on the text representation and the distance function, but mostly on the first.

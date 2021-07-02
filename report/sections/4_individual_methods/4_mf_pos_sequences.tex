@@ -1,8 +1,8 @@
-\subsection{MF POS Sequences \label{sec:pos_sequences}}
+\section{MF POS Sequences \label{sec:pos_sequences}}
 
 Another possible stylistic aspect that can be detected is to consider the sentence constructions.
 
-\subsubsection{Method}
+\subsection{Method}
 
 This can be solved by creating a short POS sequences text representation.
 Used in conjunction with the MF method, this can produce feature vectors which can be used to compare documents.
@@ -20,7 +20,7 @@ For the sake of simplicity, in this study, a POS sequence of size $n$ is written
 The MF method can be applied to the $n$-POS text representation to turn each document into a feature vector.
 Then they can be compared using distance metrics to find distance between documents.
 
-\subsubsection{Evaluation}
+\subsection{Evaluation}
 
 For this experiment, $n$-POS are used to detect the style of the author.
 
@@ -79,6 +79,8 @@ And the second is $3$-POS $1000$-MF using the smoothed Z-Scored Manhattan distan
   \centering
   \caption{Average precision for every distance metrics with the $n$-POS representation on St-Jean}
   \label{tab:n_pos}
+
+  \resizebox{\linewidth}{!}{
   \begin{tabular}{l c c c}
     \toprule
                     & \multicolumn{2}{c}{$n$-POS/$n$-MF} \\
@@ -94,4 +96,5 @@ And the second is $3$-POS $1000$-MF using the smoothed Z-Scored Manhattan distan
     JD & 0.69 & 0.73 \\
     \bottomrule
   \end{tabular}
+  }
 \end{table}

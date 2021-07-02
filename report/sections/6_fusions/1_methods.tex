@@ -1,11 +1,11 @@
-\subsection{Methods \label{sec:rank_lists_fusion}}
+\section{Methods \label{sec:rank_lists_fusion}}
 
 The idea of rank lists' fusion is to combine multiple rank lists in such a way that the resulting rank list produced is a more accurate modelling of a perfect rank list.
 This perfect rank list contain every true links (same author document pairs) at the top and every false links (different author document pair) at the bottom, therefore maximizing every metrics in Section~\ref{sec:rl_eval}.
 
 Two methods are proposed, one is based on the Z-Score normalization, and the second one use the logistic regression.
 
-\subsubsection{Z-Score Fusion}
+\subsection{Z-Score Fusion}
 
 When merging rank lists, a problem arise: due to the difference of distance metric and/or text representation, the scores used in the rank list are of different order of magnitude.
 Thus, applying the arithmetic mean on the scores for each rank list is not effective.
@@ -78,7 +78,7 @@ Example~\ref{ex:z_score_fusion} show an example for the Z-Score fusion computati
 
 \end{example}
 
-\subsubsection{Regression Fusion \label{sec:regression_fusion}}
+\subsection{Regression Fusion \label{sec:regression_fusion}}
 
 This second fusion method is based on logistic regression and is called regression fusion in this study.
 
@@ -99,7 +99,7 @@ The probability framework can now be used on the rank list.
 To obtain the most reliable probability given multiple observations (different rank lists), the regression fusion consists in computing the expected value for each link's probability using these observations.
 In this case, the final value for sorting the rank list is an average of the probabilities, since no weighting is used on the rank lists.
 
-\subsubsection{Veto}
+\subsection{Veto}
 
 The idea here is to provide a veto power for the rank lists, to try to improve the results.
 The following assumption is made: if a link have a low probability in a rank list before the fusion.
@@ -279,7 +279,7 @@ Link with ID = 5 is still rank at the bottom.
   \end{subexample}
 \end{example}
 
-\subsubsection{Soft-veto}
+\subsection{Soft-veto}
 
 As an extension to the veto method, an additional desired constraint is to favor top ranked link and as well as penalizing bottom ranked links.
 This constraint can be easily explained by observing the distribution of the distances according to the rank.

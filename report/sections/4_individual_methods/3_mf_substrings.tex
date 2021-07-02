@@ -1,8 +1,8 @@
-\subsection{MF Substrings \label{sec:substrings}}
+\section{MF Substrings \label{sec:substrings}}
 
 Instead of considering tokens or lemmas for the MF method, another strategy is to create a short sequences of letters called substrings.
 
-\subsubsection{MF Letters $n$-grams}
+\subsection{MF Letters $n$-grams}
 
 Letters $n$-grams is one possible substring method using Definition~\ref{def:letters_n_grams}.
 To consider overlapping words, the whole document is synthesized into a long string by joining every token with an \textit{underscore} : "$\_$".
@@ -30,7 +30,7 @@ To avoid having too large text representation, a possible idea is to remove the 
 This method can also be generalized to remove words appearing less than $x$ times.
 This pruning approach was explored in Kocher and Savoy~\cite{kocher_linking} but was not used in this study.
 
-\subsubsection{MF In-word $n$-grams}
+\subsection{MF In-word $n$-grams}
 
 An alternative version of the $n$-grams algorithm used here is defined in Definition~\ref{def:words_n_grams}.
 
@@ -50,7 +50,7 @@ This algorithm considers each token as a string to apply the letters $n$-grams a
 In-word $n$-grams are a hybrid version between the letters $n$-grams and the word token text representations.
 This method yields a subset of the letters $n$-grams algorithm when the tokens are bigger than $n$.
 
-\subsubsection{MF $n$-First / $n$-Last}
+\subsection{MF $n$-First / $n$-Last}
 
 Two other similar approach to the $n$-grams are to consider only the $n$ first letters of each token or the $n$-Last letters of each token.
 Definition~\ref{def:n_first} and Definition~\ref{def:n_last} explain and propose an example.
@@ -78,7 +78,7 @@ The $n$-First correspond generally in Indo-European languages to the meaning of 
   is converted to: (\textit{"fox", "is", "ing"})
 \end{definition}
 
-\subsubsection{MF Letters $n$-grams Evaluation}
+\subsection{MF Letters $n$-grams Evaluation}
 
 To evaluate the $n$-grams with the MF approach, another methodology is used.
 Since the $n$-grams create an additional parameter, the field of possible parameter increase.
@@ -195,7 +195,7 @@ For this configuration of $4$-grams with $8000$-MF, using the right distance mea
   \end{tabular}
 \end{table}
 
-\subsubsection{MF In-word $n$-grams / $n$-First / $n$-Last Evaluation}
+\subsection{MF In-word $n$-grams / $n$-First / $n$-Last Evaluation}
 
 In this experiment, the goal is to compare the three following substring text representations : In-word $n$-grams, $n$-First and $n$-Last.
 
