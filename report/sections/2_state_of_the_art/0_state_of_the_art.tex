@@ -30,6 +30,7 @@ Depending on the corpus, the text representation and the evaluation metric used,
 
 During the PAN @ CLEF 2020, the clustering task was not one of the shared task, but the closest related task was the authorship verification.
 For this competition, a large corpus containing around 276,000 document pairs and smaller with 52,000 document pairs, both of them are in the English language and their documents around 21,000 characters~\cite{overview_pan20}.
+
 Weerasinghe and Greenstadt~\cite{feature_vector_pan20} proposed using the Manhattan distance between two features vector based on multiple clues.
 They created the feature vector based on the following principles : Character n-grams, POS n-grams, special characters, frequency of function words, number of characters, number of words, average number of character per word, word-length distribution (between 1 and 10), the vocabulary richness (using hapax-legomenon and dis-legomenon ratios), POS chunks and NP and VP construction.
 For the classification, a linear regression and neural network model was trained on respectively the small and large dataset, they obtained one of the best model of the shared task.

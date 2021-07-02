@@ -1,6 +1,12 @@
 \subsection{Clustering Summary}
 
-Table~\ref{tab:clustering_evaluation_summary} contains a summary of the proposed method to evaluate using the $B^3_{F_1}$ score and the $r_{diff}$.
+Three methods based on hierarchical clustering were proposed to solve the authorship clustering task.
+The first is based on the Silhouette score to find the best clustering at each step of the hierarchical clustering.
+The second uses a modelization of the author links distribution.
+And the last is based on a logistic regression model to estimate the true link probability for new rank lists.
+These methods are summarized in Figure~\ref{fig:schema-clustering}.
+
+Table~\ref{tab:clustering_evaluation_summary} contains a summary of the proposed method evaluation using the $B^3_{F_1}$ score and the $r_{diff}$.
 
 Each method produces similar results, but the distribution-based clustering with complete linkage give the best results, $B^3_{F_1} = 0.82$.
 When compared to the Silhouette-based methods and the regression-based method produce slightly less accurate results.
@@ -17,9 +23,16 @@ The tweaked Silhouette-based model with average linkage and complete linkage and
 
 Overall, the results are close to the upper bound.
 
+\begin{figure*}
+  \centering
+  \caption{Clustering methods schema}
+  \label{fig:schema-clustering}
+  \includegraphics[width=1\linewidth]{img/schema-clustering.png}
+\end{figure*}
+
 \begin{table*}[t]
   \centering
-  \caption{Mean retained rank lists $B^{3}_{F_1}$/$r_{diff}$ for each corpus pair}
+  \caption{Mean retained rank lists $B^{3}_{F_1}$/$r_{diff}$ for each clustering method}
   \label{tab:clustering_evaluation_summary}
   \begin{tabular}{l c c c}
     \toprule

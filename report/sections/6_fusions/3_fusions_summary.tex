@@ -8,6 +8,8 @@ This corresponds to one rank list for each corpus.
 When fusing rank lists with the regression, fusion pairs of corpora are required (one for training and one for testing).
 When evaluating this method with 4 corpora (Oxquarry, Brunet, St-Jean A and St-Jean B), this creates $4^2 = 16$ possible corpus pairs which yield one rank list each.
 
+These two methods are summarized in Figure~\ref{fig:schema-fusion}.
+
 Table~\ref{tab:fusion_evaluation_summary} is a summary of the results for the fusion using every individual methods.
 Table~\ref{tab:fusions_scores} in annex contain the rank lists' evaluation, for every corpus, with every retained rank lists for the fusion.
 
@@ -24,6 +26,13 @@ Thus, we advise to use the Z-Score fusion since it provides in average better re
 The corpus with the worst average precision using the Z-Score rank lists is obtained on Brunet with 0.76 and is as efficient as the individual \textit{BZip2 compression with CBC distance} method.
 
 The proposed veto methods did not provide good results and are not advised to use.
+
+\begin{figure*}
+  \centering
+  \caption{Fusion methods schema}
+  \label{fig:schema-fusion}
+  \includegraphics[width=1\linewidth]{img/schema-fusion.png}
+\end{figure*}
 
 \begin{table}
   \caption{Fusion evaluation summary, mean across every datasets}
