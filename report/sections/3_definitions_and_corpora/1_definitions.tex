@@ -56,16 +56,20 @@ Basic metrics to evaluate simple properties of a corpus.
 \end{definition}
 
 \begin{definition}[Relevant set\label{def:relevant_set}]
-  The relevant set $R$ contain every possible pairs of documents with the same authors.
+  The relevant set $R$ contain every different pairs of documents with the same authors.
   Links in this set are called \textit{true links} in this study.
   \begin{gather*}
-    R = \{(X_a, X_b)\ |\ \left( f(X_a) = f(X_b) \right) \land \left(X_a \neq X_b \right) \forall (X_a, X_b)\}
+    R = \{(X_a, X_b)\ \\
+    |\ \left( f(X_a) = f(X_b) \right) \land \left(X_a \neq X_b \right) \\
+    \forall (X_a, X_b) \}
   \end{gather*}
-  The non-relevant set $\bar{R}$ contain every \textit{false links}.
-  All links are contained in $L$, the union of the relevant set $R$ and non-relevant set $\bar{R}$.
+  The non-relevant set $\bar{R}$ contain every \textit{false links}, documents pair with different authors.
   \begin{gather*}
-    \bar{R} = \{(X_a, X_b)\ |\ \left( f(X_a) \neq f(X_b) \right) \land \left(X_a \neq X_b \right) \forall (X_a, X_b)\}
+    \bar{R} = \{(X_a, X_b)\ \\
+    |\ \left( f(X_a) \neq f(X_b) \right) \land \left(X_a \neq X_b \right) \\
+    \forall (X_a, X_b)\}
   \end{gather*}
+  All links are contained in $L$, the union of the relevant set $R$ and non-relevant set $\bar{R}$.
   \begin{gather*}
     R \cap \bar{R} = \emptyset \\
     L = \bar{R} \cup R \\

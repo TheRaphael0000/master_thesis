@@ -18,6 +18,7 @@ For the authorship verification problem, the rank list can also be used.
 \end{definition}
 
 A ranked list for the authorship verification problem is an ordered list containing document pairs and a score for the pair.
+These pairs are also called links.
 In most cases, the rank list contain every possible pairs of documents.
 
 The ranked list is ordered by the score, such that the most similar document pair are at the top of the list.
@@ -114,7 +115,7 @@ Example~\ref{ex:rank_list_eval} showcase each metric for the rank list evaluatio
   \end{gather*}
 \end{definition}
 
-\begin{definition}[Precision@k~\cite{kocher_linking}]
+\begin{definition}[Precision@k~\cite{kocher_linking}~\cite{wiki_measures}]
   The precision@k is a function which take a positive integer k, with k < |L|
   \begin{gather*}
     precision(k) = \frac{1}{k} \sum_{j=1}^{k} relevant(j)
@@ -127,34 +128,33 @@ Example~\ref{ex:rank_list_eval} showcase each metric for the rank list evaluatio
     HPrec = \max\{i \in \mathbf{N} | precision(i) = 1\}
   \end{gather*}
   This value is in the range $\left[0, |R|\right]$.
-  $0$ means the first pair in the rank list is incorrect.
-  $|R|$ means every true links are ranked in the top part of the rank list.
+  $HPrec=0$ means the first pair in the rank list is incorrect.
+  $HPrec=|R|$ means every true links are ranked in the top part of the rank list.
 \end{definition}
 
-\begin{definition}[R-Precision~\cite{kocher_linking}]
+\begin{definition}[R-Precision~\cite{kocher_linking}~\cite{wiki_measures}]
   The R-Precision (RPrec) is the precision in the rank list at rank |R| (Precision@r).
   With R being the relevant set (Definition~\ref{def:relevant_set}).
   \begin{gather*}
     RPrec = precision(|R|)
   \end{gather*}
   The RPrec value is in the range $\left[0, 1\right]$.
-  With 0 mean every link in the first $|R|$-ranks are not in the relevant set.
-  And 1, every link in the first $|R|$-ranks are in the relevant set.
+  With $RPrec=0$, every link in the first $|R|$-ranks are not in the relevant set.
+  And $RPrec=1$, every link in the first $|R|$-ranks are in the relevant set.
 \end{definition}
 
-\begin{definition}[Average Precision (AP)]
+\begin{definition}[Average Precision (AP)~\cite{wiki_measures}]
   The mean over the precision@k each time a relevant link is retrieved.
-  The average precision can be considered as an approximation of the area under the precision-recall curve.
   \begin{gather*}
     AP = \frac{1}{|R|} \sum_{j=1}^{|L|} precision(j) \cdot relevant(j)
   \end{gather*}
+  The average precision can be considered as an approximation of the area under the precision-recall curve.
 \end{definition}
 
 \begin{example}
   \centering
   \caption{Rank list evaluation example}
   \label{ex:rank_list_eval}
-
 
   \begin{subexample}{\linewidth}
   \subcaption{Documents, authorship and rank list}
@@ -163,7 +163,7 @@ Example~\ref{ex:rank_list_eval} showcase each metric for the rank list evaluatio
   Documents 0, 1 and 3 are written by the same author A.
   Document 2 is written by author B.
 
-  The following relevant set $R$ and non-relevant set $\bar{R}$ can be computed using these informations.
+  The following relevant set $R$ and non-relevant set $\bar{R}$ can be computed using this information.
   \begin{gather*}
     \begin{split}
             R =& \{(0, 1), (0, 3), (1, 3) \} \\
@@ -172,7 +172,7 @@ Example~\ref{ex:rank_list_eval} showcase each metric for the rank list evaluatio
     \end{split}
   \end{gather*}
 
-  Suppose the following rank list order for the pairs :
+  Suppose that these links are in a rank list with the following order :
   \begin{gather*}
     \begin{split}
       ((1, 3), (0, 1), (2, 3), (0, 3), (1, 2), (0, 2))
@@ -189,12 +189,12 @@ Example~\ref{ex:rank_list_eval} showcase each metric for the rank list evaluatio
       \toprule
       Rank  & Pair IDs & Pair $\in R$ & Precision@k\\
       \midrule
-      1st   & (1, 3)   & Yes  & 1.00 \\
-      2nd   & (0, 1)   & Yes  & 1.00 \\
-      3rd   & (2, 3)   & No   & 0.66 \\
-      4th   & (0, 3)   & Yes  & 0.75 \\
-      5th   & (1, 2)   & No   & 0.60 \\
-      6th   & (0, 2)   & No   & 0.50 \\
+      1st   & (1, 3)   & Yes  & $1/1 = 1.00$ \\
+      2nd   & (0, 1)   & Yes  & $2/2 = 1.00$ \\
+      3rd   & (2, 3)   & No   & $2/3 = 0.66$ \\
+      4th   & (0, 3)   & Yes  & $3/4 = 0.75$ \\
+      5th   & (1, 2)   & No   & $3/5 = 0.60$ \\
+      6th   & (0, 2)   & No   & $3/6 = 0.50$ \\
       \bottomrule
     \end{tabular}
   \end{subexample}

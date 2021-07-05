@@ -9,6 +9,7 @@
 \usepackage[english]{babel}
 \usepackage{booktabs}
 \usepackage{caption}
+\usepackage{chngcntr}
 \usepackage{float}
 \usepackage[margin=2cm]{geometry}
 \usepackage{graphicx}
@@ -24,7 +25,9 @@
 \usepackage{url}
 \usepackage{xcolor}
 
+
 \renewcommand{\familydefault}{\sfdefault}
+
 \renewcommand{\listtheoremname}{List of definitions}
 
 \usepackage[pdfauthor={Raphaël Margueron},
@@ -59,6 +62,11 @@
   name=Example
 ]{example}
 \DeclareCaptionSubType{example}
+
+\counterwithout{figure}{chapter}
+\counterwithout{table}{chapter}
+\counterwithout{definition}{chapter}
+\counterwithout{example}{chapter}
 
 \date{Mars-August, 2021}
 \author{Raphaël Margueron}
