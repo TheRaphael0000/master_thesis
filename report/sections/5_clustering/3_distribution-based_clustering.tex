@@ -13,14 +13,15 @@ At each step, the CDF for the two beta distribution is evaluated until it conver
 The binary search have a complexity of $O(\log n)$.
 With an analytical solve, the complexity could drop to $O(1)$.
 
-As explained in~\cite{savoy_probability} the beta distribution is better suited for authorship problem than the Gaussian distribution for example since it can grasp a larger amount of distribution shapes with its parameters' flexibility.
+As explained in~\cite{savoy_probability} the beta distribution is better suited for authorship problem than, for example, the Gaussian distribution since it can grasp a larger amount of distribution shapes with its parameters' flexibility.
 
-The idea is here to find the cut location using corpus with known authors and re-use the same value for new corpora.
-This method is a supervised method since it requires examples to learn the cut, even though the only \textit{learnt} parameter is a fixed real number, the distance threshold.
-This method do not consider any new corpus for this value computation.
+The idea is here to find the cut location using a corpus with known authors and re-use the same value for new corpora.
+This method is a supervised method since it requires examples to learn the cut.
+The distribution-based clustering do not consider any new corpus for its value computation.
+Each training corpus and rank list generation method combinations yield a \textit{static} model, which is represented by a single fixed real number, the distance threshold.
 
-Figure~\ref{fig:links_score_density} show the distance density for true and false link as well as a beta distribution estimation for St-Jean B rank list generated with text representation 0 (ref. Section~\ref{sec:individual_methods_summary}).
-Notice that to be able to modelize the beta distribution, the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization}.
+Figure~\ref{fig:links_score_density} show the distance density for true and false link as well as a beta distribution estimation for the St-Jean B rank list generated with text representation 0 (ref. Section~\ref{sec:individual_methods_summary}).
+Notice that to be able to model the beta distribution, the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization}.
 
 The vertical line indicate the equiprobable position where both beta distribution have the same probability of being a true link and false link (same area under the curve), found using the binary search.
 This point can be used as a decision point where the cut should be made in the rank list, this ensures that both false positives and false negatives are minimized.
@@ -39,7 +40,7 @@ The same binary search can be used for this computation, just the target need to
 
 \subsection{Evaluation}
 
-To evaluate the distribution-based clustering approach: Oxquarry, Brunet, St-Jean A and B are used.
+To evaluate the distribution-based clustering approach: Oxquarry, Brunet, St-Jean A and B corpora are used.
 Each retained rank list for each corpus is computed, see Table~\ref{tab:rls_oxquarry_brunet}~and~\ref{tab:rls_st_jean} in annex.
 For each rank list, the distance threshold is computed, using the two beta approach.
 This step corresponds to the training phase.
@@ -53,8 +54,10 @@ The evaluation is presented in Table~\ref{tab:semi_supervised_clustering} show t
 The following conclusions can be drawn with these results:
 \begin{itemize}
   \item
-  In terms of linkage criteria, the single linkage is not adapted with an average $B^3_{F_1} = 0.22$.
+  In terms of linkage criteria, the single linkage is not adapted, with an average $B^3_{F_1} = 0.22$.
+  \item
   Average linkage have the best $r_{diff} = 0.06$ which indicate that this criterion can estimate the most accurately the number of clusters.
+  \item
   Complete linkage have the best $B^3_{F_1} = 0.82$ which make it the best criterion for this method.
   \item
   The training corpus does not influence a lot the quality of the results ($std(B^3_{F_1}) = 0.01$).

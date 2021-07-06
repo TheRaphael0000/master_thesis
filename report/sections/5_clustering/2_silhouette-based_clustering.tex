@@ -2,7 +2,7 @@
 
 \subsection{Method}
 
-The idea is to unsupervised evaluate the agglomerate clustering at each number of clusters (at each merge step).
+The main idea of the Silhouette-based clustering is to evaluate in an unsupervised manner the clustering result for each number of clusters (at each merge step of the hierarchical clustering).
 When discarding clustering with $N$ and clusters $1$, this produce $N - 2$ possible clustering, each of those are evaluated using the mean Silhouette score.
 See Definition~\ref{def:silhouette}.
 
@@ -72,11 +72,14 @@ This can be due to the fact that the rank list used for the clustering is not pe
 To mitigate the problem of having the number of cluster overestimated, an easy solution would be to use the labels produced by the clustering of a non-maximal value of the Silhouette score on the left side of the maximal Silhouette score.
 In this study, we introduce a parameter called $\alpha$.
 $\alpha$ represents a percentage of value to subtract to the maximal mean Silhouette score to obtain the new target (instead of the maximal value).
-The clustering with the Silhouette score the closest to the target is retained.
 
-The sign of the alpha indicate on the side of the maximal Silhouette score the target should be.
+Since the mean Silhouette score is concave, the two sides of the maximal mean Silhouette can be the new target.
+To remove this ambiguity, the sign of $\alpha$ indicate on which side of the maximal Silhouette score the target should be.
+
 With $\alpha = 0$, this corresponds to the maximal mean Silhouette score.
 With a negative $\alpha$ the left side is targeted and with a positive $\alpha$, the right side.
+
+The clustering with the Silhouette score the closest to the target on the indicated side is retained.
 
 \begin{definition}[$\alpha$-Silhouette]
   The $\alpha$-Silhouette target score found by using the maximal Silhouette score as a baseline and is adjusted using a parameter called $\alpha$.

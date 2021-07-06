@@ -14,11 +14,15 @@ Previous studies have shown the importance of having documents of good quality a
 Skilled authors can easily change their style to imitate others for small texts, but it becomes more difficult for larger texts~\cite{savoy_stylo}.
 This problematic is explored in Section~\ref{sec:importance_of_text_size}.
 
-To be able to express a document as a feature vector of size $n$, the strategy used is to find the $n$ most frequent ($n$-MF) items in a corpus, and for each document compute their item relative frequency by dividing by the total number of $n$-MF items in the document~\cite{savoy_stylo}.
-The resulting vector will represent the MF items proportions contained in a document.
+To be able to express a document as a feature vector of size $n$, the strategy used is to find the $n$ most frequent ($n$-MF) items in a corpus.
+For each document, compute the items' relative frequency on the $n$-MF items.
+The items' occurrence vector is the number of times each item is present in a document text representation.
+The items' relative frequency vector is obtained by normalizing the items' occurrence vector such that its magnitude is 1.
+By normalizing the vector, this ensures that long and short texts are comparable.
+The items' relative frequency vector will represent the MF items proportions contained in a document.
 
 For example, if a corpus contains novels of multiple genres (e.g. Comedy, Sci-fi, Fantastic, Romance).
-With the right $n$ all the specific items of each genre will be discarded since their frequency should be lower than the non topic related items which are contained in every document.
+With the right $n$, all the specific items of each genre will be discarded since their frequency should be lower than the non topic related items which are contained in every document.
 The frequencies of these items should reflect the style of the author.
 
 In this study, multiple text representation are explored, such as tokens/lemmas (Section~\ref{sec:tokens_lemmas}), substrings (Section~\ref{sec:substrings}) and sequences of POS (Section~\ref{sec:pos_sequences}).
@@ -32,7 +36,7 @@ Example~\ref{ex:mf_vector} show a computation of the MF items vector, using word
 
   \begin{subexample}{\linewidth}
     \subcaption{Text}
-    "\textit{i realize now that i was not looking in i was looking out and he on the other side was looking in}"\cite{ddlc}
+    "\textit{i realize now , that i was not looking in . i was looking out . and he , on the other side was looking in .}"\cite{ddlc}
   \end{subexample}
 
   \vspace{0.5cm}
@@ -72,7 +76,7 @@ In this study, linear normalization is used to fit the beta distribution.
     ZScore(X) = \frac{X - \mu}{\sigma}
   \end{gather*}
   Z-Score normalize a vector X, such that the resulting vector have a 0 mean and a standard deviation of 1.
-  When using the Z-Score normalization on MF vectors, $\mu$ and $\sigma$ usually are vectors containing the mean and the standard deviation of each term in the corpus.
+  When using the Z-Score normalization on MF vectors, $\mu$ and $\sigma$ usually are vectors containing the mean and the standard deviation of each item in the corpus.
 \end{definition}
 
 \begin{definition}[Linear normalization]
@@ -89,9 +93,9 @@ In this study, linear normalization is used to fit the beta distribution.
 
 \subsection{Smoothing}
 
-Relative term frequencies can be considered as a probability of occurrence based on the maximum likelihood principle.
-The main problem with this approach is that the probability of occurrence of frequent terms tend to be overestimated and underestimate the probability of occurrence of low frequency terms or for terms that never occur.
-If, for example, a term is not present in a document its relative term frequency is 0, but this should not mean that the probability of the author using this item is 0.
+Relative item frequencies can be considered as a probability of occurrence based on the maximum likelihood principle.
+The main problem with this approach is that the probability of occurrence of frequent items tend to be overestimated and underestimate the probability of occurrence of low frequency items or for items that never occur.
+If, for example, an item is not present in a document its relative item frequency is 0, but this should not mean that the probability of the author using this item is 0.
 
 The solution proposed is to use a smoothing technique such as the Lidstone smoothing presented in Definition~\ref{def:lidstone_smoothing}.
 Smoothing techniques can help distance functions based on probabilities, such as the Kullback-Leibler Divergence~\cite{savoy_stylo}.
@@ -103,5 +107,5 @@ In this study, when a smoothing technique is used, except stated otherwise, the 
   \begin{gather*}
     p(t_i, D_j) = \frac{tf_{i,j} + \lambda}{n + \lambda \cdot |V|}
   \end{gather*}
-  With $t_i$ the i-th term, $D_j$ the j-th document, $tf_{i,j}$ the number of occurrences of the i-th term in $D_j$, $|V|$ the size of the vocabulary, $\lambda$ a small value ($\lambda = 1$, is a special case called Laplace smoothing), n the total number of items in the document $D_j$.
+  With $t_i$ the i-th item, $D_j$ the j-th document, $tf_{i,j}$ the number of occurrences of the i-th item in $D_j$, $|V|$ the size of the vocabulary, $\lambda$ a small value ($\lambda = 1$, is a special case called Laplace smoothing), n the total number of items in the document $D_j$.
 \end{definition}

@@ -38,7 +38,7 @@ Multiple linkage criteria are available : \textit{Ward} (metric that aim to mini
 Example~\ref{ex:agglomerative_clustering} show an example for the merging procedures and linkage criteria.
 
 Ward linkage was discarded since the current implementation only allow Euclidean distance for its computation.
-The merging procedure can be stopped in either of the two following criteria : When a certain cluster number is reached or when the minimal score for the next merge is above a certain value.
+The merging procedure can be stopped in either one of the two following criteria : When a certain cluster number is reached or when the minimal score for the next merge is above a certain value.
 This value is called the distance threshold.
 
 The so-called cut can be associated to the distance threshold.
@@ -155,7 +155,7 @@ These results can be considered as the $B^3_{F_1}$ upper bound for the clusterin
 
 The best linkage criterion depends on the corpus, but in average, the best $B^3_{F_1}$ is achieved with the average linkage criterion, a relative increase of 0.01 compared to the complete linkage and 0.05 compared to the single linkage.
 
-We assumed that the better the rank list are, the better the clustering is.
+We assumed that the better the rank list are, the better the clustering is when applying the hierarchical clustering.
 This assumption can be verified in Figure~\ref{fig:correlation_average_precision_b3f1}.
 We can clearly observe a linear relationship between the average precision and the $B^3_{F_1}$.
 The linear regression for the single linkage have an r-value of $1^{-11}$, $1^{-12}$ for the average linkage and $1^{-6}$ for the complete linkage.

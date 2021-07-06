@@ -3,23 +3,24 @@
 \subsection{Definition and Examples}
 
 The clustering aim to group items such that the most similar items are in the same group.
-These groups of clusters are called clusters.
+These groups of similar items are called clusters.
 
 Example~\ref{ex:clustering} show the clustering task for 2D points.
+The points are grouped according to their distance.
 
 For the case of authorship clustering, finding the authorship function can be useful (Definition~\ref{def:authorship} in Section~\ref{sec:definitions}).
 But this task can be hard since the real author (ground truth labels) are generally not available.
 Without example, finding the authorship function is not possible.
 
 For the authorship clustering, we only aim to group similar texts instead of finding the actual authors.
-This task can be solved by finding the relevant set (Definition~\ref{def:relevant_set} in Section~\ref{sec:definitions}) which is much easier when no ground truth labels are available.
+This task can be solved by finding the relevant set (Definition~\ref{def:relevant_set} in Section~\ref{sec:definitions}).
 
-A simple method to find clusters from the relevant set is:
+To find clusters from the relevant set, a simple method is to:
 Consider each pair of documents in the relevant set as: \textit{in the same cluster}.
-With transitivity, the clusters can be created.
+The clusters are created using transitivity.
 
 One main issue arise with this method.
-If the relevant set is not perfect (a pair of documents with different authors is in the relevant set), the two authors will be in the same cluster.
+If the relevant set is not perfect (documents pairs with actual different authors are in the relevant set), the two authors will be in the same cluster.
 Noisy relevant set can quickly be considered as a single cluster with this method.
 
 Chapter~\ref{sec:clustering} will introduce and evaluate methods using rank lists to create the clusters instead of the relevant set.
@@ -54,17 +55,17 @@ BCubed has shown to satisfy the four following important constraints when evalua
 
 \begin{enumerate}
   \item
-  \textit{Cluster Homogeneity} (different authors should be in the different clusters)
+  \textit{Cluster Homogeneity} : different authors should be in the different clusters
   \item
-  \textit{Cluster Completeness} (same authors should belong to the same cluster)
+  \textit{Cluster Completeness} : same authors should belong to the same cluster
   \item
-  \textit{Rag Bag constraint} (noisy / miscellaneous authors should be in the same cluster and not in \textit{healthy} clusters)
+  \textit{Rag Bag constraint} : noisy or miscellaneous authors should be in the same cluster and not in \textit{healthy} clusters
   \item
-  \textit{Cluster size vs quantity constraints} (favour large cluster)
+  \textit{Cluster size vs quantity constraints} : favour large cluster
 \end{enumerate}
 
 These metrics are used in the clustering task at PAN @ CLEF~\cite{pan16}.
-In addition to the BCubed family, this study introduce a simple metric for evaluating the clustering, which is called the Cluster difference.
+In addition to the BCubed family, this study introduce a simple metric for evaluating the clustering called \textit{cluster difference}.
 
 \begin{definition}[Correctness~\cite{bcubed}]
   The $BCubed$ metric family is based on the following \textit{Correctness} principle.
@@ -77,7 +78,7 @@ In addition to the BCubed family, this study introduce a simple metric for evalu
       0, & otherwise
     \end{cases}
   \end{gather*}
-  In other terms, the correctness has a value of 1 (100\% correct) if the two elements are in the both in the same cluster and has the same author OR both in a different cluster and a different author.
+  In other terms, the correctness has a value of 1 (100\% correct) if the two elements are in the both in the same cluster and have the same author OR both are in a different cluster and have a different author.
 \end{definition}
 
 \begin{definition}[$BCubed$ Precision~\cite{bcubed}]
@@ -114,6 +115,7 @@ In addition to the BCubed family, this study introduce a simple metric for evalu
   Zero indicate that the right number of cluster was found.
   This value can also be used to summarize if the $B^3_{recall}$ is greater or not than the $B^3_{precision}$.
   A positive Cluster diff should indicate a larger $B^3_{precision}$ than $B^3_{recall}$, and vice versa.
+
   This value can be normalized by the number of documents N, which correspond to the difference of the r ratios.
   This is useful when comparing corpora results with different number of clusters.
   \begin{gather*}
