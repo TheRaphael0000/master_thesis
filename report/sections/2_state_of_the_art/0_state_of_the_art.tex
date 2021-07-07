@@ -16,7 +16,7 @@ Stylometry main focus is to identify the writing methods of an author, for examp
 
 When dealing with large amount of data, compression methods can be used to compute similarities.
 These methods were used and evaluated in Oliveira and Justino (2013)~\cite{comparing_compression} for the authorship attribution task.
-Compression based model had shown to be a good alternative to other traditional feature and pattern based models.
+Compression based model had shown to be a good alternative to other traditional feature and pattern based models and is sometime used as a baseline.
 
 In 2014, Kocher and Savoy~\cite{kocher_linking} proposed SPATIUM-L1, an unsupervised authorship verification model based on most frequent words in texts.
 It uses the L1 norm to be able to discriminate if a text come from the same author as another one.
@@ -43,7 +43,7 @@ During the PAN @ CLEF 2020, the clustering task was not one of the shared task, 
 For this competition, a large corpus containing around 276,000 document pairs and smaller with 52,000 document pairs, both of them are in the English language and their documents around 21,000 characters~\cite{overview_pan20}.
 
 Weerasinghe and Greenstadt~\cite{feature_vector_pan20} proposed using the Manhattan distance between two features vector based on multiple clues.
-They created the feature vector based on the following principles : Character $n$-grams, POS sequences, special characters, frequency of function words, number of characters, number of words, average number of character per word, word-length distribution (between 1 and 10), the vocabulary richness (using hapax-legomenon and dis-legomenon ratios), POS chunks and NP and VP construction.
+They created the feature vector based on the following principles : Character $n$-grams, POS sequences, special characters, frequency of function words, number of characters, number of words, average number of character per word, word-length distribution (between one and ten), the vocabulary richness (using hapax-legomenon and dis-legomenon ratios), POS chunks and NP and VP construction.
 For the classification, a linear regression and neural network model was trained on respectively the small and large dataset, they obtained one of the best model of the shared task.
 Another method for this task proposed by Araujo, Gómez and Fuentes~\cite{siamese_network_pan20} was to use a Siamese neural network using words $n$-grams with a size from 1 to 3 (short sequences of words) for their feature vector.
 Instead, Ikae~\cite{unine_pan20_verif} for this task used Labbé similarity on the most frequent tokens from each author and the ones in the English language.

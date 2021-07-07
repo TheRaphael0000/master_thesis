@@ -89,7 +89,7 @@ This method is similar to the one proposed in \textit{Le Calvé and Savoy (2000)
 The main idea here is to learn a logistic regression model for each combination of text representation and distance metrics (here denoted \textit{type of rank list}).
 From each distinct rank list, features for each link are created.
 We have selected the log of the relative rank and the link score.
-Since a probability of being a true link is desired, the target value for each link is either 1 for the true links or 0 when it's a false link.
+Since a probability of being a true link is desired, the target value for each link is either 1 for the true links or 0 when it is a false link.
 This feature construction is the same as the one used for the regression-based clustering method (ref. Section~\ref{sec:regression-based_clustering}).
 
 One model per type of rank list is trained, this model can provide for any new same type rank list, probabilities for each link being of being a true link.
@@ -334,7 +334,7 @@ This strategy can be use on any type of scoring method (similarity, distances, Z
 
 \begin{figure}
   \centering
-  \caption{Distance values over rank in the rank list using the smoothed Manhattan distance, 500 MFW tokens on the Brunet dataset}
+  \caption{Distance values over rank in the rank list using the smoothed Manhattan distance, 500 MF tokens on the Brunet dataset}
   \label{fig:distance_over_rank}
   \includegraphics[width=\linewidth]{img/distance_over_rank.png}
 \end{figure}

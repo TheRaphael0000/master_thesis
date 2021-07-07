@@ -1,0 +1,25 @@
+\section{Implementation and evaluation methodologies}
+
+The experiments realized in this study were written in the Python programming language (version 3.8.8)~\cite{python}, using the following libraries:
+
+\begin{itemize}
+  \item Python Standard Library 3.8.8, for the data types, functional programming, file and directory access, data compression, text processing~\cite{python_standard_library}
+  \item Matplotlib 3.3.4, for the plot generations~\cite{matplotlib}
+  \item Numpy 1.20.2, for scientific computations~\cite{numpy}
+  \item SciPy 1.4.1, for scientific computations~\cite{scipy}
+  \item Scikit-learn 0.24.1, for machine learning algorithms implementations~\cite{sklearn}
+  \item bcubed 1.5, to compute the BCubed family metrics~\cite{bcubed_gh}
+  \item adjustText 0.7.3, for automatics text adjustments in plots~\cite{adjustText}
+  \item tqdm 4.60.0, to have progress bars for heavy computations~\cite{tqdm}
+\end{itemize}
+
+The methods proposed are written in separate Python files (extension .py).
+Instead, the experiments are contained in a special file format called IPython Notebook (extension .ipynb)~\cite{jupyter}.
+
+In this report, each evaluation is described by its purpose in the study, the methodology used to conduct it, the results obtained in the form of: graphic, table or statistics coming from the experiments.
+An analysis of the results and sometimes a few additional conclusions are also available.
+
+A Jupyter environment is required to run these files.
+For instance, the JupyterLab environment allows markdown annotation, the possibility to run only portions of codes and even new code in the same Python kernel.
+By running each code portion in the same Python kernel, this allows to keep in RAM results of heavy computations.
+This allows to dynamically implement and optimize the methods.

@@ -2,7 +2,7 @@
 
 For the next experiments, medium to high quality rank list are required.
 The previous experiments aim to find methods that can produce good rank list across different text representation.
-Figure~\ref{fig:schema-rank_lists} summarize the steps to obtain rank lists using the different approaches.
+Figure~\ref{fig:schema-rank_lists} contains a schema summarizing the steps to obtain rank lists using the different approaches.
 The retained methods are presented in Table~\ref{tab:9rl}.
 Four of them are using the $n$-MF tokens, two $n$-MF tokens $n$-grams, one compression techniques and two the $n$-POS with $n$-MF.
 
@@ -12,7 +12,7 @@ The complete evaluation of the rank list produced on these text representation f
   \centering
   \caption{Rank lists methods schema}
   \label{fig:schema-rank_lists}
-  \includegraphics[width=0.82\linewidth]{img/schema-rank_lists.png}
+  \includegraphics[width=0.90\linewidth]{img/schema-rank_lists.png}
 \end{figure*}
 
 \begin{table*}
@@ -38,8 +38,7 @@ The complete evaluation of the rank list produced on these text representation f
     \bottomrule
   \end{tabular}
 
-  \vspace{0.2cm}
-  \textit{Note: text representations with a star (*) are only used for the St-Jean dataset}
+  \textit{Note: text representations with a star (*) are only used for the St-Jean corpus}
 \end{table*}
 
 \subsection{Distances' Matrix Visualization}
@@ -114,7 +113,7 @@ This figure shows the date difference density on the top-r false links (top-670 
 Two interesting information can be extracted here.
 Firstly, the mean is lower by 7.75 years (29.04 - 21.29) compared to every false links and have a narrow standard deviation distribution.
 Having a lower mean in this case indicate that more mistakes are made for document pairs with a lower date difference then for the ones with a large date difference, which can lead to the following conclusion : distinguishing between a false link and a true link for documents pair with low date difference is harder.
-Secondly, we can observe a drop after 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ years are harder to discriminate between a true link and a false link than one's outside this interval.
+Secondly, we can observe a drop after 35 years of date difference, which indicate that links in the interval $\left[0-35\right]$ years are harder to discriminate between a true link and a false link than the ones outside this interval.
 
 The 35 years interval can be related to the generation factor, the age of woman giving birth is around 25-34 in France~\cite{generations}, authors' birth country for this corpus.
 Each new generation tends to use its own vocabulary, and thus it can be harder to discriminate the author of text belonging to the same generation, if we assume that the authors write their books at around the same age.

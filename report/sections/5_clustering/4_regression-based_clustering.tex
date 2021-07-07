@@ -24,13 +24,13 @@ To find the cut on the test datasets, the fitted model predict the probability o
 From these predictions, a probability threshold must be chosen.
 For example, having a probability threshold at $0.5$, minimize both false negatives and the false positives.
 This can be adjusted, for example if false negatives are more important to minimize, a probability threshold at $0.6$ can be selected instead or $0.4$ if the false positive should be minimized.
-Which will either affect improve the $B^3_{recall}$ or the $B^3_{precision}$ when evaluating the clustering.
+Which will subsequently either improve the $B^3_{recall}$ or the $B^3_{precision}$ when evaluating the clustering.
 To optimize the $B^3_{F_1}$, the probability threshold should be $0.5$, since this metrics aim to optimize both the recall and the precision with the harmonic mean.
 
-The distance threshold to correctly separate true links to false links is chosen by linearly interpolating the probability threshold with its closest probability of the one above and the one below to their scores.
+An impression caused by the fact that the rank list live in a discrete space, and the score in a continuous space arise.
 The interpolation is one method to allow having a more accurate distance threshold.
-This imprecision is caused by the fact that the rank list live in a discrete space, and the score in a continuous space.
-Example~\ref{ex:linear_interpolation} showcase a linear interpolation computation using a probability threshold of $0.5$.
+To correctly separate true links from false links, the distance threshold is chosen by linearly interpolating the probability threshold to the scores with the closest probabilities, respectively, the one directly above and the one directly below the threshold.
+Example~\ref{ex:linear_interpolation} showcase a linear interpolation computation using a $0.5$ probability threshold.
 The logistic regression model can be re-used on any other rank lists produced with the same distance metrics.
 
 \begin{example}
@@ -70,14 +70,14 @@ The logistic regression model can be re-used on any other rank lists produced wi
 
 \subsection{Evaluation}
 
-To evaluate the regression-based clustering approach: Oxquarry, Brunet, St-Jean A and B corpora were used.
+To evaluate the regression-based clustering approach: the Oxquarry, Brunet, St-Jean A and B corpora were used.
 The same approach as for the distribution-based clustering is used.
 Each retained rank list for each corpus is computed, see Table~\ref{tab:rls_oxquarry_brunet}~and~\ref{tab:rls_st_jean} in annex.
 For each rank list pair, the distance threshold is computed, using the logistic regression approach.
 This step corresponds to the training phase.
 Then for every distance threshold and rank list pair, the clustering is evaluated using the $B^3_{F_1}$ and the $r_{diff}$.
 This corresponds to the testing phase.
-In other words, a model to create cuts is trained on every dataset and tested on all the datasets.
+In other words, a model to create cuts is trained on every corpus and tested on all the corpora.
 
 The BCubed metrics and the r ratio difference are computed during this experiment and are presented in Table~\ref{tab:regression-based_clustering}, for every pair of datasets.
 To aggregate the results, the arithmetic mean for $B^3_{F_1}$ and $r_{diff}$ across all retained rank list is computed.
@@ -93,7 +93,7 @@ The following conclusions can be drawn with these results:
   \item
   When testing the cut model, having a rank list of good quality tends to produce a better clustering, no matter the quality of the rank list used for the training.
   As shown in Section~\ref{sec:hierarchical_clustering}
-  When testing the clustering model on St-Jean B (the corpus with the best rank list is average), it obtains in average the best $B^3_{F_1} = 0.91$.
+  For example, when testing the clustering model on the corpus with the best rank list in average (St-Jean B), it obtains in average the best clustering, $B^3_{F_1} = 0.91$.
 \end{itemize}
 
 The conclusion to the previous points is that having a good rank list is more important for testing than training.

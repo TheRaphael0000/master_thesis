@@ -266,6 +266,7 @@ The Z-Score fusion give the best results overall.
 In this experiment, the goal is to understand if the veto method can improve the average precision on the fused rank lists when using the regression fusion method.
 To do so, the St-Jean retained rank list are used (ref. Table~\ref{tab:rls_st_jean} in annex).
 The fusion scheme is learnt on first St-Jean A and trained on St-Jean B (ref. Section~\ref{sec:regression_fusion}), then the inverse.
+
 After computing the probabilities for each link in each rank list on the testing set, the probabilities under the threshold are set according to each proposed veto strategy (set to $0$, $-1$, $-n$, $-\infty$).
 The threshold is analysed for the values between $0.01$ and $0.50$, with a step of $0.01$.
 A threshold of $0.50$ is an upper bound, after this value the probability of being a false link is smaller than the probability of being a true link, thus having a veto on a link more likely to be true link than false link is a bad idea.
@@ -273,12 +274,15 @@ The fusion of the rank list is normally computed with the average of the probabi
 To understand if the veto improve the results, the average precision gain of the rank list between the veto strategy and without the veto.
 
 The average precision difference over the threshold value is visually presented in Figure~\ref{fig:veto}, and the best configurations found are summarized in Table~\ref{tab:veto}.
+
 Overall, the veto strategy seem to be a bad option.
-The best result obtained is only a gain of 0.0193 average precision, with a tiny threshold (0.01, the closest to a non threshold approach) which may indicate an increase due to random factors.
+The best result obtained is only a gain of 0.0193 average precision, with a threshold of 0.01, which is the closest to the non threshold approach, since only a small portion of the rank list is affected.
+This tiny improvement may be due to random factors.
+
 Using the $-\infty$ strategy only give worse results.
-A possible reason why the veto fail to improve the results is that the veto strategy is only impactful when most of the rank lists rank a false link at the top except one rank list which correctly identify this false link and rank him at the bottom.
-The rank list used for the experiment do not have such special cases since most of them correct classify false link at the bottom and true links at the top.
-This strategy may be appliable on harder corpus such as the PAN 16 corpus.
+A possible reason why the veto fail to improve the results is that the veto strategy is only impactful when most of the rank lists rank a false link at the top, except one rank list which correctly identify this false link and rank him at the bottom.
+The rank list used for the experiment do not have such special cases, since most of them correct classify false link at the bottom and true links at the top.
+This strategy may be appliable on harder corpus such as the PAN 16 corpus but not on the literary corpora.
 
 \begin{figure}
   \caption{Veto strategies evaluations on St-Jean A and B depending on the threshold}
@@ -292,7 +296,7 @@ This strategy may be appliable on harder corpus such as the PAN 16 corpus.
   \label{tab:veto}
   \begin{tabular}{l r r}
     \toprule
-                   & Train A / Test B & Train B / Test A \\
+                   & Train A and Test B & Train B and Test A \\
     \midrule
     Set to $0$     & 1.98e-04/0.03 & -9.11e-05/0.01 \\
     Set to $-1$    & -3.28e-03/0.01 & 1.93e-02/0.01 \\
@@ -306,8 +310,9 @@ This strategy may be appliable on harder corpus such as the PAN 16 corpus.
 
 To evaluate the performance of the soft veto strategy, the idea is to compute the average precision gain obtained when using the soft-veto over the simple fusion without it.
 The gain is computed by subtracting the average precision of the Z-Score fusion without the soft-veto to the average precision of the Z-Score fusion with the soft-veto.
+
 The soft-veto has two parameters : $c$ and $r$, to be able to find the best parameters the grid search approach is used.
-Since the $c$ parameter must be in the interval $\left]0, \infty\right[$ and the $r$ parameter must be in the interval $\left]0, \infty\right[$, the grid is constructed from the Cartesian product of the following two sets.
+Since the $c$ parameter must be in the interval $\left]0, \infty\right[$ and the $r$ parameter must be in the interval $\left]0, \infty\right[$, the grid is constructed from the Cartesian product of the two following sets.
 $c = \left\{0 + \epsilon, 1, 2, 3, ..., 19, 20\right\}$, with $\epsilon$ a small value (for example $10^{-6}$) and $r = \left\{0.10, 0.14, 0.18, 0.22, ..., 0.86, 0.90\right\}$.
 When computing the soft-veto gain using the grid search on the retained rank lists from Oxquarry (see Table~\ref{tab:9rl}), Figure~\ref{fig:soft_veto} is obtained.
 
@@ -322,42 +327,59 @@ As for the veto experiment, no real average precision gain can be obtained using
 
 \subsection{Average Precision Fusion Gain Relation with the Rank Lists Diversity}
 
-As stated previously, we believe fusing high quality rank lists (high AP), with the most diverse results can increase the quality of the fusion.
+As stated previously, we believe fusing high quality rank lists (high AP), with the most diverse results can increase the quality of the fusion (obtained rank list with an even greater AP).
 First, a correlation metric to compare the rank lists must be selected.
-And second compare the correlation coefficient to the average precision gain to verify the assumption.
+Secondly, compare this correlation coefficient to the average precision gain to verify the assumption.
 
 To compute a correlation between two rank lists, the Kendall rank correlation coefficient is used~\cite{scipy}.
-The Kendall rank correlation computes a correlation index based on the ordinal association between the two rank lists ranks by computing the difference in terms of number of swaps needed to sorts the rank lists ranks of the two lists.
+The Kendall rank correlation computes a correlation index based on the ordinal association between the two rank lists by computing the number of swaps needed to obtain one rank list from the other.
+The fewer swaps needed, the closer the rank lists are.
 
 The default weighing strategy called \textit{hyperbolic weighing} is used, it favours top ranks in the same fashion as the reciprocal rank ($1 / (r + 1)$).
+Swaping top ranks are more important for the Kendall coefficient than bottom ranks.
+
 The Kendall coefficient is ranged between -1 and 1, with 1 being an identical correlation and -1 a completely different correlation.
 If our assumption is correct, the average precision gain obtained by fusing two rank lists should be negatively correlated to the rank list Kendall correlation coefficient.
 A large gain, when the rank lists are different, thus a low rank list correlation coefficient, and vice versa.
 
 The fusion strategy used here is the Z-Score fusion, since this strategy is parameterless and obtained satisfying results during previous experiments.
 As for previous experiments dealing with fusion, the gain in average precision when comparing a set of rank list to a fused rank list can be established in the two following ways : \textit{Single-Mean} and \textit{Single-Max}.
-Single-Mean represent the rank lists mean average precision and Single-Max the rank list maximal average precision.
+Single-Mean represent the rank lists' mean average precision and Single-Max the rank list maximal average precision.
 Example~\ref{ex:gain} in Section~\ref{sec:results_comparaison} contain a small example with two rank lists for the Single-Mean and Single-Max methods to compute the average precision gain.
 
 Table~\ref{tab:rl_correlations} show the Kendall correlation coefficient for every combination of retained rank list in St-Jean (see Table~\ref{tab:9rl}).
-The most similar rank list pair are the two rank list using letters $n$-grams (0.95), least similar are the BZip2 compression and the 250-MFW POS (0.66).
-For every pair of retained rank lists in St-Jean the Single-Mean fusion gain is computed and is compared to the distance in Figure~\ref{fig:rl_correlations}.
+The most similar rank lists pair are the two rank list using letters $n$-grams (0.95).
+This result can be easily understood, since both rank list use a similar text representation and distance measure, they will obtain similar rank lists.
+
+The least similar rank lists pair are the BZip2 compression and the 250-MF 2-POS (0.66).
+The compression method is the simplest approach, this method does not require to understand the text to create the rank list.
+As for the 250-MF 2-POS rank list, to create the rank list, it requires two level of understanding.
+First the parser need to understand texts to create the POS, and the second level are the short sequences which involve an even deep understanding of the text.
+Due to this large difference in rank list construction, the two rank lists obtain a small correlation coefficient.
+
+For every pair of retained rank lists in St-Jean, the Single-Mean fusion gain is computed and is compared to the correlation coefficient in Figure~\ref{fig:rl_correlations}.
 Using the linear regression, the best line for these point is computed~\cite{scipy}.
-Reproducing this experiment for every corpus and fusion gain computation methods, the results are in Table~\ref{tab:rl_correlations_regression}.
+After reproducing this experiment for every corpus and fusion gain computation methods, the results in Table~\ref{tab:rl_correlations_regression} are obtained.
 
 For all experiment the linear correlation coefficient, $r$-value, is negative, which indicate that the average precision gain is negatively correlated to the Kendall correlation coefficient between the rank lists.
 Thus, the assumption that suggested that the more diverse the rank lists are, the higher the quality of the fusion, seem to be confirmed.
 The $p$-value for the linear regression (null hypothesis: the slope is 0) obtained after the regression is below 5\% for every of the Single-Mean experiments and for the Single-Max St-Jean corpus.
-A clear linear relationship between the average precision gain and rank list diversity is observed on these datasets / average precision gain computation method.
-Using the Single-Max strategy on Oxquarry and Brunet give a p-value of 15.1\% and 7.04\% respectively which can indicate that the linear correlation between the average precision gain and the diversity of the rank list can be obtained by random factors on these datasets with this comparison strategy.
+A clear linear relationship between the average precision gain and rank list diversity is observed.
 
-Since the Single-Mean average precision gain follow a linear model, the gain can be predicted from the Kendall correlation coefficient. It's also possible to optimise the gain directly from the Kendall correlation coefficient, the lowest the correlation coefficient the greater the Single-Mean gain will be.
-Knowing the average precision of rank lists it is possible to estimate Single-Mean gain with a linear model.
-On main draw back is that the rank list used have to be known has good rank list already, since bad rank list will have a large Kendall correlation coefficient when compared to good rank lists but will not give good results when fused.
+Using the Single-Max strategy on Oxquarry and Brunet give a p-value of 15.1\% and 7.04\% respectively which can indicate that the linear correlation between the average precision gain and the diversity of the rank list can be obtained by random factors on these corpora with this comparison strategy.
+
+Since the Single-Mean average precision gain follow a linear model, the gain can be predicted from the Kendall correlation coefficient.
+In an unsupervised model, computing the Kendall correlation coefficient can allow to optimize the fusion gain.
+The lowest the correlation coefficient, the greater the average precision gain should be.
+
+One main draw back is that the rank list have to be known has \textit{good rank list}.
+Otherwise, if a \textit{bad rank list} and a \textit{good rank list} are compared using Kendall correlation coefficient, they will obtain a low correlation, since \textit{bad answers} are often very different from \textit{good answers}.
+This low correlation coefficient should indicate a positive good gain.
+But when fused, the gain will not be positive, since fusing \textit{bad rank lists} and \textit{good rank lists} tends to produce terrible results.
 
 \begin{table}
   \centering
-  \caption{Pairwise Kendall correlation coefficient on the retained rank lists St-Jean}
+  \caption{Pairwise Kendall correlation coefficient on St-Jean retained rank lists}
   \label{tab:rl_correlations}
   \resizebox{\linewidth}{!}{
   \begin{tabular}{r|r r r r r r r r}

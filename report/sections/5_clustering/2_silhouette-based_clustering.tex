@@ -33,7 +33,7 @@ An alternative to this method is the Iterative Positive Silhouette (IPS) and was
 
 For this experiment, the goal is to test the Silhouette-based hierarchical clustering cut method based on the maximization of the mean Silhouette score on the literature corpora.
 The right number of cluster is not known.
-When applying the procedure, the number of clusters start at 2 and end at the number of documents minus 1.
+When applying the procedure, the number of clusters start at $2$ and end at the number of documents minus $1$.
 The best clustering according to this method is the one that yield the greatest mean Silhouette score.
 
 The rank list used for this experiment is the one from the retained text representation (9 for St-Jean and 7 for Brunet and Oxquarry), see Table~\ref{tab:rls_oxquarry_brunet}~and~\ref{tab:rls_st_jean} in annex.
@@ -41,7 +41,7 @@ The rank list used for this experiment is the one from the retained text represe
 The $B^3_{F_1}$ score and $r_{diff}$ average on the Silhouette-based clustering are presented in Table~\ref{tab:silhouette-based_clustering}, the complete table is available in Table~\ref{tab:silhouette-based_clustering_full} in annex.
 
 The average r-ratio difference is a positive value ranging between $\left[0.17, 0.22\right]$ depending on the linkage criterion.
-Having a too large r-ratio indicate that estimated number of cluster is on every dataset overestimated.
+Having a too large r-ratio indicate that the estimated number of cluster on every corpus is overestimated.
 This means that the mean neareast-cluster distance is greater than the mean intra-cluster distance, even when dealing with the right number of clusters.
 This can be due to the fact that the rank list used for the clustering is not perfect (AP $\neq 1$).
 
