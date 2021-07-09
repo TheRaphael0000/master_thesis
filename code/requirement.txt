@@ -1,5 +1,8 @@
 matplotlib
+numpy
 bcubed
 sklearn
 adjustText
 tqdm
+scipy
+jupyter
