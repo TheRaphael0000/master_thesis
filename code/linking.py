@@ -1,4 +1,9 @@
-"""Linking module"""
+"""Linking module
+
+This module provide function to create rank list for authorship verification.
+It either use the most frequent approach (MF) or the compression based methods.
+For the MF, it can be tokens, lemma, letters n-grams or POS sequences.
+"""
 
 from collections import Counter
 from functools import reduce
@@ -22,6 +27,15 @@ from evaluate import evaluate_linking
 
 
 def create_n_grams(words, ns):
+    """Create a list of n-grams from a list words.
+
+    Arguments:
+        words -- It can be with strings or integers. String are for list of tokens / lemmas. Integers are for POS sequences
+        ns -- n-grams size
+
+    Return:
+        list -- A list containing every in n-grams of size ns with the list words.
+    """
     if type(ns) is int:
         ns = [ns]
     # if it's a list of numbers creating a long text of joined single character
@@ -40,7 +54,20 @@ def create_n_grams(words, ns):
     return n_grams
 
 
-def most_frequent_word(X, n, z_score=False, lidstone_lambda=0.1, remove_hapax=True):
+def most_frequent(X, n, z_score=False, lidstone_lambda=0.1, remove_hapax=True):
+    """Create the feature vector using the most frequent (MF) method
+
+    Arguments:
+        X -- A 2D array, items list for each document.
+        n -- The number of n-MF items to keep, this correspond to the feature vector size.
+        z_score -- If the vectors should by Z-Score normalized or not (default: False)
+        lidstone_lambda -- The Lidstone smoothing technique parameter (default: 0.1)
+        remove_hapax -- If the Hapax legomenon should be removed from the item count (default: True)
+
+    Return:
+        np.array -- A 2D array, a feature vector for each document in X
+        mfw -- A dict of the n most frequent items in X
+    """
     # Counting the terms in each documents
     counters = [Counter(xi) for xi in X]
     # Remove hapax legomenon for each texts
@@ -69,7 +96,21 @@ def most_frequent_word(X, n, z_score=False, lidstone_lambda=0.1, remove_hapax=Tr
     return features, mfw
 
 
-def compute_links_mfw(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func, remove_hapax=True):
+def compute_links_mf(X, n_grams, n_mf, z_score, lidstone_lambda, distance_func, remove_hapax=True):
+    """Create the rank list based on the MF method
+
+    Arguments:
+        X -- The documents list
+        n_grams -- The n-grams size, 0 correspond to no n-grams (whole tokens)
+        n_mf -- The number of n-MF items to keep, this correspond to the feature vector size.
+        z_score -- If the vectors should by Z-Score normalized or not
+        lidstone_lambda -- The Lidstone smoothing technique parameter (default: 0.1)
+        distance_func -- The distance function to use to compute the distance between vectors pairs (see distances module)
+        remove_hapax -- If the Hapax legomenon should be removed from the item count (default: True)
+
+    Return:
+        rank_list -- A list containg every pairwise document pair and their distance according to the parameters
+    """
     # Tokens normalization
     if type(X[0]) == str:
         X = [[normalize_text(t) for t in xi] for xi in X]
@@ -77,7 +118,7 @@ def compute_links_mfw(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func
     if type(n_grams) == list or type(n_grams) == tuple or n_grams > 0:
         X = [create_n_grams(xi, n_grams) for xi in X]
     # Create features
-    features, mfw = most_frequent_word(X, n_mfw, z_score, lidstone_lambda, remove_hapax)
+    features, mfw = most_frequent(X, n_mf, z_score, lidstone_lambda, remove_hapax)
     # Compute link distances into a 2D matrix
     distances_matrix = squareform(pdist(features, metric=distance_func))
     # Computing the rank list of for this distance matrix
@@ -86,6 +127,15 @@ def compute_links_mfw(X, n_grams, n_mfw, z_score, lidstone_lambda, distance_func
 
 
 def compute_links_compress(X, compression_method, distance_func):
+    """Create the rank list based on the compression method
+
+    Arguments:
+        X -- The documents list
+        compression_method -- The compression algorithm to use (see compressions module)
+        distance_func -- The distance function to use to compute the distance between vectors pairs (see distances module)
+    Return:
+        rank_list -- A list containg every pairwise document pair and their distance according to the parameters
+    """
     X = ["_".join(Xi).encode("utf8") for Xi in X]
 
     X_sizes = [compression_method(Xi) for Xi in X]
@@ -102,8 +152,19 @@ def compute_links_compress(X, compression_method, distance_func):
 
 
 def compute_links(text_representation):
+    """Function to help the computation of rank lists
+
+    Compute either the MF based rank list or the Compression based rank list depending on the type of container used for the arguments.
+
+    Arguments:
+        List -- for the MF-based rank lists
+        Tuples -- for the compression-based rank lists
+
+    Return:
+        list -- The rank list
+    """
     if type(text_representation) == list:
-        return compute_links_mfw(*text_representation)
+        return compute_links_mf(*text_representation)
     elif type(text_representation) == tuple:
         return compute_links_compress(*text_representation)
     else:

@@ -201,19 +201,19 @@ def find_two_beta_same_area(b1, b2):
         beta_left, beta_right = b2, b1
     else:
         beta_left, beta_right = b1, b2
-    
+
     i_max = 1000
     alpha = 1e-15
-    
+
     dt_l = 0
     dt_r = 1
     for _ in range(i_max):
         dt = (dt_r - dt_l) / 2 + dt_l
         s_l = beta_left.cdf(dt)
         s_r = 1 - beta_right.cdf(dt)
-        
+
         delta_s = s_r - s_l
-                
+
         if np.abs(delta_s) < alpha:
             break
 
@@ -221,5 +221,5 @@ def find_two_beta_same_area(b1, b2):
             dt_l = dt
         else:
             dt_r = dt
-            
+
     return dt

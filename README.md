@@ -46,3 +46,12 @@ After installing it, you can simply run, for example, JupyterLab, a web IDE for 
 cd code
 jupyter lab
 ```
+
+## Repository
+
+This repository history may be not accurate.
+This is due to a history rewrite that happened on July the 12th.
+The repository was private until this date.
+
+During the git history rewrite, copyrighted files were removed from the tree (copyrighted papers .pdf files), to be allowed on GitHub.
+`git filter-branch` was used to the rewrite the history.

@@ -1,4 +1,8 @@
-"""Clustering module."""
+"""Clustering module
+
+This module contains fonction relative to the clustering task.
+The clustering function require rank lists which are generated using for example function from the linking module.
+"""
 
 import numpy as np
 
@@ -21,6 +25,23 @@ from evaluate import evaluate_clustering
 
 
 def agglomerative_clustering(rank_list, linkage="average", distance_threshold=np.inf):
+    """Agglomerative clustering algorithm
+
+    Keyword arguments:
+        rank_list -- Rank list to used to base the clustering
+        linkage -- Linkage criterion to use at each merge (default: average)
+        distance_threshold -- Distance threshold at which the algorithm must stop (optional)
+
+    Return:
+        generator -- Generator over the algorithm steps
+
+    The generator yield at each step:
+        - The clusters
+        - The last distance used for the merge
+
+    If the minimal distance is greater than the distance_threshold, the generator stop at this step.
+    Otherwise the generator stop when it reaches 1 cluster.
+    """
     distances_matrix = distances_matrix_from_rank_list(rank_list)
     np.fill_diagonal(distances_matrix, np.inf)
     w, _ = distances_matrix.shape
@@ -82,6 +103,17 @@ def agglomerative_clustering(rank_list, linkage="average", distance_threshold=np
 
 
 def dist_thresh_logistic_regression(rl_training, Y_training, rl_testing, prob_threshold=0.5):
+    """Find a distance threshold using the clustering logistic regression-based algorithm.
+
+    Keyword arguments:
+        rl_training -- Rank list to use to train the logistic regression model
+        Y_training -- Labels for each document
+        rl_testing -- Rank list to fit the model on
+        prob_threshold -- Threshold to split the true from the false links
+
+    Return:
+        float -- the distance threshold value
+    """
     X_rl = features_from_rank_list(rl_training)
     Y_rl = labels_from_rank_list(rl_training, Y_training)
     model = LogisticRegression(random_state=0).fit(X_rl, Y_rl)
@@ -112,6 +144,15 @@ def dist_thresh_logistic_regression(rl_training, Y_training, rl_testing, prob_th
 
 
 def dist_thresh_two_beta(rl_training, Y_training):
+    """Find a distance threshold using the two beta-based algorithm.
+
+    Keyword arguments:
+        rl_training -- Rank list to use to find the true and false link distribution
+        Y_training -- Labels for each document
+
+    Return:
+        float -- the distance threshold value
+    """
     links = np.array(list(zip(*rl_training))[0])
     scores = np.array(list(zip(*rl_training))[1])
     labels = np.array([Y_training[a] == Y_training[b] for a, b in links])
@@ -137,6 +178,9 @@ def dist_thresh_two_beta(rl_training, Y_training):
 
 
 def clustering_at_dist_thresh(rank_list, linkage="average", distance_threshold=np.inf):
+    """Simple function that execute the clustering algorithm entierly and return the final labels.
+    This is useful when the distance threshold is known (supervised methods).
+    """
     ac = agglomerative_clustering(rank_list, linkage, distance_threshold)
     for labels, dt in ac:
         pass
@@ -144,15 +188,26 @@ def clustering_at_dist_thresh(rank_list, linkage="average", distance_threshold=n
 
 
 def silhouette_based_clustering(rank_list, linkage="average", alpha=0):
+    """Find a clustering using the Silhouette-based algorithm.
+
+    Keyword arguments:
+        rank_list -- Rank list to use on the hirachical clustering.
+        linkage -- Linkage criterion (default: average)
+        alpha -- The proportion to remove from the maximal mean Silhouette score. The sign gives the direction (negative: left, positive: right), a good value for authorship clustering is around 0.2 (default: 0)
+
+    Return:
+        labels_ -- The labels obtained at the end of the algorithm
+        (n, sss) -- A tuple of lists, they draw the (number clusters),(mean silhouette score) graph.
+    """
     ac = agglomerative_clustering(rank_list, linkage, np.inf)
     distances_matrix = distances_matrix_from_rank_list(rank_list)
-    
+
     # normalize the distance matrix for the silhouette computation
     min_ = np.nanmin(distances_matrix)
     max_ = np.nanmax(distances_matrix)
     distances_matrix = (distances_matrix - min_)  / (max_ - min_)
     np.fill_diagonal(distances_matrix, 0)
-    
+
     labels, dts = zip(*(list(ac)))
     labels = labels[1:-1][::-1]
 
@@ -163,16 +218,16 @@ def silhouette_based_clustering(rank_list, linkage="average", alpha=0):
         ss = silhouette_score(distances_matrix, labels_, metric="precomputed")
         sss.append(ss)
         n.append(len(np.unique(labels_)))
-    
+
     max_i = np.argmax(sss)
-    
+
     left_side, right_side = labels[:max_i], labels[max_i+1:]
     left_scores, right_scores = sss[:max_i], sss[max_i+1:]
     max_score = sss[max_i]
-    
+
     target = max_score - np.abs(alpha) * max_score
-    
-    if alpha < 0:        
+
+    if alpha < 0:
         scores = np.abs(target - left_scores)
         target_i = np.argmin(scores)
         labels_ = labels[target_i]
@@ -182,25 +237,41 @@ def silhouette_based_clustering(rank_list, linkage="average", alpha=0):
         labels_ = labels[target_i + max_i + 1]
     else:
         labels_ = labels[max_i]
-    
+
     return labels_, (n, sss)
 
 
 def clustering_at_every_n_clusters(rank_list, linkage="average"):
+    """Run the hierarchical clustering algorithm at each number of clusters
+
+    Keyword arguments:
+        rank_list -- Rank list to use on the hirachical clustering.
+        linkage -- Linkage criterion (default: average)
+
+    Return:
+        (n, labels) -- A tupple, the first element is a list which correspond to each number of clusters, the second element is a list of labels obtained at the end of the agglomerative clustering at each number of clusters.
+    """
     ac = agglomerative_clustering(rank_list, linkage, np.inf)
     labels, dts = zip(*list(ac))
     n = [len(np.unique(label)) for label in labels]
     return (n, labels)
 
 
-def best_clustering(rl, linkage, Y):
-    ac = agglomerative_clustering(rl, linkage, np.inf)
+def best_clustering(rank_list, linkage, Y):
+    """Run the hierarchical clustering algorithm at each step. Return the B^3_{F_1} for each step.
 
+    Keyword arguments:
+        rank_list -- Rank list to use on the hirachical clustering.
+        linkage -- Linkage criterion
+        Y -- The labels for the documents in the rank list
+
+    Return:
+        float -- The B^3_{F_1}
+    """
+    ac = agglomerative_clustering(rank_list, linkage, np.inf)
     best = None
-
     for labels, dt in ac:
         m = evaluate_clustering(Y, labels)
         if best is None or m[0] > best[0]:
             best = m
-            
     return best[0]

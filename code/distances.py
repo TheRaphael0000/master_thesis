@@ -1,4 +1,8 @@
-"""Distance module."""
+"""Distance module
+
+In this module, the numpy and scipy libraries are used to compute with the distances with hardware acceleration.
+Distance are either for feature vectors or compression sizes.
+"""
 
 import math
 import numpy as np
@@ -6,7 +10,16 @@ from misc import division, log
 from scipy.spatial.distance import euclidean as sp_euclidean
 from scipy.spatial.distance import cityblock as sp_manhanttan
 
-# Distance for vectors
+"""
+Distance for vectors
+
+Arguments:
+A -- The first feature document vector
+B -- The second feature document vector
+
+Return:
+float -- The distance between A and B according to this vector distance function
+"""
 
 
 def manhattan(A, B):
@@ -69,7 +82,7 @@ def j_divergence(A, B):
     s = np.sum((A - B) * l)
     return s
 
-
+# This array contain every distance function and tell if the ZScore normalization should be used.
 vector_distances = [
     (True, manhattan),
     (False, tanimoto),
@@ -82,7 +95,19 @@ vector_distances = [
 ]
 
 
-# Distances for compression strategies
+"""
+Distances for compression strategies.
+
+Arguments:
+A -- The first document size after compression
+B -- The second document size after compression
+AB -- The concatenation of A and B size after compression
+
+Return:
+float -- The distance between A and B according to this compresison distance function
+"""
+
+
 def ncd(A, B, AB):
     return (AB - min(A, B)) / max(A, B)
 

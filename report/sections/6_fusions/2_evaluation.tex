@@ -313,7 +313,7 @@ The gain is computed by subtracting the average precision of the Z-Score fusion 
 
 The soft-veto has two parameters : $c$ and $r$, to be able to find the best parameters the grid search approach is used.
 Since the $c$ parameter must be in the interval $\left]0, \infty\right[$ and the $r$ parameter must be in the interval $\left]0, \infty\right[$, the grid is constructed from the Cartesian product of the two following sets.
-$c = \left\{0 + \epsilon, 1, 2, 3, ..., 19, 20\right\}$, with $\epsilon$ a small value (for example $10^{-6}$) and $r = \left\{0.10, 0.14, 0.18, 0.22, ..., 0.86, 0.90\right\}$.
+$c = \left\{0 + \epsilon, 1, 2, ..., 19, 20\right\}$, with $\epsilon$ a small value (for example $10^{-6}$) and $r = \left\{0.10, 0.14, ..., 0.86, 0.90\right\}$.
 When computing the soft-veto gain using the grid search on the retained rank lists from Oxquarry (see Table~\ref{tab:9rl}), Figure~\ref{fig:soft_veto} is obtained.
 
 The best parameters are c=18 and r=0.14 with an average precision gain of 3.50e-04.
