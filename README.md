@@ -7,14 +7,13 @@ This repository contains files related to the *Rank Lists' Fusions using multipl
 ```
 .
 ├── README.md              | This document
-├── admin                  | Administrative files
+├── .githooks              | Hook to avoid commiting Jupyter notebook outputs
 ├── code                   | Python source code for the experiments realized
 │   ├── corpus             | Corpora used
 │   ├── *.py               | Proposed implemented methods
 │   ├── experiments.ipynb  | Experiments source code
 │   └── requirement.txt    | Requirement files for external Python packages
-├── report                 | Thesis report latex source code
-└── schema                 | Schemas for the report
+└── report                 | Thesis report latex source code
 ```
 
 ## Thesis / Report
