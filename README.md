@@ -13,9 +13,7 @@ This repository contains files related to the *Rank Lists' Fusions using multipl
 │   ├── *.py               | Proposed implemented methods
 │   ├── experiments.ipynb  | Experiments source code
 │   └── requirement.txt    | Requirement files for external Python packages
-├── papers                 | Papers read
 ├── report                 | Thesis report latex source code
-├── report_versions        | Complied version of the report as PDF
 └── schema                 | Schemas for the report
 ```
 
