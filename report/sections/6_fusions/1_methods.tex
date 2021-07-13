@@ -292,27 +292,27 @@ Assuming that the top ranks are true links after the rank lists' fusion, these l
 The same reasoning can be applied for the bottom links by assuming them as false links.
 A weighting curve, here called soft-veto, can be design accordingly such that the score of top links are boosted, and bottom links score hindered.
 
-Using the reciprocal of the sigmoid function, such a curve can be modelled.
-Definition~\ref{def:sigmoid} show the sigmoid function and its reciprocal.
+Using the inverse of the sigmoid function, such a curve can be modelled.
+Definition~\ref{def:sigmoid} show the sigmoid function and its inverse function.
 
-\begin{definition}[Sigmoid and Sigmoid reciprocal \label{def:sigmoid}]
+\begin{definition}[Sigmoid and Sigmoid inverse function \label{def:sigmoid}]
   Sigmoid:
   \begin{gather*}
     S(x) = \frac{1}{1+e^{-x}}
   \end{gather*}
 
-  Sigmoid reciprocal:
+  Sigmoid inverse:
   \begin{gather*}
     S^{-1}(x) = -\ln{\frac{x-1}{x}}
   \end{gather*}
 \end{definition}
 
-Since the reciprocal of the sigmoid function is continuous and the number of links in a rank list is discrete, the idea is to sample values in this curve at regular intervals.
+Since the inverse of the sigmoid function is continuous and the number of links in a rank list is discrete, the idea is to sample values in this curve at regular intervals.
 
 Controlling the steepness of this curve can influence the strength of the veto.
 To control the steepness, a parameter called $c$ is introduced.
 $c$ correspond to a position on the x-axis of the sigmoid function.
-The sampling of the sigmoid reciprocal is done in the interval $\left[S(c), S(c)\right]$.
+The sampling of the sigmoid inverse is done in the interval $\left[S(c), S(c)\right]$.
 A large interval gives a greater steepness and a small interval a less steep curve.
 $c$ can not be equal to 0 otherwise the interval is a single number (often called degenerate interval).
 The $c$ parameter must be in the interval $\left]0, \infty\right[$.

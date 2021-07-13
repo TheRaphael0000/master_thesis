@@ -1,4 +1,7 @@
-"""Rank list fusion module."""
+"""Rank list fusion module.
+
+This module focus on fusing rank lists.
+"""
 
 
 from sklearn.linear_model import LogisticRegression
@@ -19,6 +22,15 @@ from misc import labels_from_rank_list
 
 
 def rank_list_fusion(rls, order=1):
+    """Fuse multiple rank list by using the arithmetic mean on their scores
+
+    Arguments:
+        rls -- An array of rank lists
+        order -- 1 if the small values should be at the top (distance functions), -1 otherwise (default: 1)
+
+    Return:
+        rl -- The fused rank list
+    """
     # grouping same links
     grp_by_link = defaultdict(list)
     for rl in rls:
@@ -36,6 +48,14 @@ def rank_list_fusion(rls, order=1):
 
 
 def fusion_z_score(rls):
+    """Fuse rank list using the Z-Score strategy
+
+    Arguments:
+        rls -- A list of rank lists
+
+    Returns:
+        rl -- The fused rank list
+    """
     updated_rls = []
     for rl in rls:
         links = [link for link, score in rl]
@@ -53,6 +73,16 @@ def fusion_z_score(rls):
 
 
 def fusion_regression_training(rank_list, Y):
+    """Train a regression fusion model
+
+    Arguments:
+        rank_list -- The rank list to fit the model to (training set)
+        Y -- The labels for this rank list (labels)
+
+    Returns:
+        model -- The regression logistic model
+        float -- The mean squared error on the training set
+    """
     Xs = features_from_rank_list(rank_list)
     Ys = labels_from_rank_list(rank_list, Y)
     model = LogisticRegression()
@@ -62,6 +92,16 @@ def fusion_regression_training(rank_list, Y):
 
 
 def fusion_regression_trainings(rank_lists, Y):
+    """Fit the models for each rank list in the training set
+
+    Arguments:
+        rank_lists -- A list of rank lists
+        Y -- The labels
+
+    Returns:
+        models -- The logistic regression models
+        mses -- The mean square errors of the models
+    """
     models, mses = [], []
     for rank_list in rank_lists:
         model, mse = fusion_regression_training(rank_list, Y)
@@ -71,12 +111,31 @@ def fusion_regression_trainings(rank_lists, Y):
 
 
 def fusion_regression_testing(model, rank_list):
+    """Fit a rank list using a regression logistic trained model
+
+    Arguments:
+        model -- The logistic regression trained model
+        rank_list -- The rank list to fit the model to
+
+    Returns:
+        Y_pred -- The true probability vector for this rank list according to the model
+    """
     Xs = features_from_rank_list(rank_list)
     Y_pred = model.predict_proba(Xs)[:,1]
     return Y_pred
 
 
 def fusion_regression(models, rls, alter_scores=None):
+    """Regression fusion function, takes multiple rank lists and the trained models, return a rank list corresponding to the fusion of the rank list used.
+
+    Arguments:
+        models -- The logistic regression trained models
+        rls -- The rank lists to fit the models to
+        alter_scores -- The function to alter the scores before the fusion, used for the veto strategies
+
+    Returns:
+        rl -- A rank list corresponding to the fusion of the provided rank lists according to the fitted models
+    """
     updated_rls = []
     for model, rl in zip(models, rls):
         links = [link for link, score in rl]
