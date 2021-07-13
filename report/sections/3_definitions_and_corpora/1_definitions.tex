@@ -47,12 +47,12 @@ Basic metrics to evaluate simple properties of a corpus.
   \end{gather*}
   The set of $\hat{Y}_a$ is the set of document written by $Y_a$.
   \begin{gather*}
-    \hat{Y}_a = \{X_i | f(X_i) = a\}
+    \hat{Y}_a = \{X_i | f(X_i) = Y_a\}
   \end{gather*}
   \begin{gather*}
     N = \sum_{j}^k |\hat{Y}_j|
   \end{gather*}
-  In authorship verification, the goal is to find this $f$ function, which can estimate the author based on new document and previous documents from this author and documents from other authors.
+  In authorship attribution, the goal is to find an approximation of the $f$ function. This function can estimate the author based for any new document based on documents known to be from this author and documents from other authors.
 \end{definition}
 
 \begin{definition}[Relevant set\label{def:relevant_set}]
@@ -84,7 +84,7 @@ Basic metrics to evaluate simple properties of a corpus.
   \end{gather*}
   The inverse of the r ratio is equivalent to the mean number of documents per authors.
   \begin{gather*}
-    \frac{1}{r} = \frac{N}{k} = \frac{1}{k} \cdot \sum_{i} |\hat{Y}_j|
+    \frac{1}{r} = \frac{N}{k} = \frac{1}{k} \cdot \sum_{j}^{k} |\hat{Y}_j|
   \end{gather*}
   If $r$ is close to $0$, most documents are written by different authors and there is a great density of true links.
   On this other hand, if $r$ is close to $1$, most of the document are written by a single authors and there are few true links.
