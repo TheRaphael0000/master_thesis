@@ -3,16 +3,16 @@
 This module contains divers functions used in the project.
 """
 
-import itertools
 from collections import Counter
-
+import itertools
 import unicodedata
+
 import numpy as np
-from scipy.stats import binom_test
-from scipy.stats import wilcoxon
-from scipy.stats import weightedtau
-from scipy.stats import beta
 import matplotlib.pyplot as plt
+from scipy.stats import binom_test
+from scipy.stats import beta
+from scipy.stats import weightedtau
+from scipy.stats import wilcoxon
 
 
 def compute_r(Y):
@@ -106,9 +106,9 @@ def distances_matrix_from_rank_list(rank_list):
     """
     indices = list(itertools.chain.from_iterable([i[0] for i in rank_list]))
     w = len(np.unique(indices))
-#     print(w)
-    distances_matrix = np.full((w,w,), np.nan)
-#     distances_matrix = np.zeros((w, w,))
+    # print(w)
+    distances_matrix = np.full((w, w,), np.nan)
+    # distances_matrix = np.zeros((w, w,))
     for (a, b), dist in rank_list:
         distances_matrix[a, b] = dist
         distances_matrix[b, a] = dist
@@ -369,8 +369,8 @@ def sort_Y_and_distance_matrix(Y, distances_matrix):
     Y = np.array(Y)
     Y_arg = np.argsort(Y)
     Y = Y[Y_arg]
-    distances_matrix = distances_matrix[Y_arg,:]
-    distances_matrix = distances_matrix[:,Y_arg]
+    distances_matrix = distances_matrix[Y_arg, :]
+    distances_matrix = distances_matrix[:, Y_arg]
     return Y, distances_matrix
 
 
@@ -387,7 +387,8 @@ def subset_Y_and_distance_matrix(Y, distances_matrix, subset):
         distances_matrix -- The distances' matrix subset
     """
     Y = np.array(Y)
-    ids = np.array(list(itertools.chain(*[np.argwhere(Y == s_)[:,0] for s_ in subset]))).flatten()
+    ids = np.array(list(itertools.chain(
+        *[np.argwhere(Y == s_)[:, 0] for s_ in subset]))).flatten()
     Y = Y[ids]
     distances_matrix = distances_matrix[ids, :]
     distances_matrix = distances_matrix[:, ids]
@@ -405,7 +406,7 @@ def fit_beta(Xi):
     """
     mean = np.mean(Xi)
     var = np.std(Xi)**2
-    _ = ((mean * (1 - mean))/var - 1)
+    _ = ((mean * (1 - mean)) / var - 1)
     a = mean * _
     b = (1 - mean) * _
     return beta(a, b)

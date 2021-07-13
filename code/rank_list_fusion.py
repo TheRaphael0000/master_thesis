@@ -4,21 +4,23 @@ This module focus on fusing rank lists.
 """
 
 
-from sklearn.linear_model import LogisticRegression
-import numpy as np
-import scipy as sp
-
-from sklearn.metrics import mean_squared_error
-
 import random
-import s_curves
-import distances
-from corpus import brunet, oxquarry, st_jean
-from linking import compute_links
 from collections import defaultdict
+
+from corpus import brunet
+from corpus import oxquarry
+from corpus import st_jean
+import distances
 from evaluate import evaluate_linking
+from linking import compute_links
 from misc import features_from_rank_list
 from misc import labels_from_rank_list
+import s_curves
+
+import numpy as np
+import scipy as sp
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import mean_squared_error
 
 
 def rank_list_fusion(rls, order=1):
@@ -43,7 +45,7 @@ def rank_list_fusion(rls, order=1):
     rl = list(dict(grp_by_link).items())
     # shuffle to avoid keeping (score value) in the same order (for debug)
     random.shuffle(rl)
-    rl.sort(key=lambda x: order*x[-1])
+    rl.sort(key=lambda x: order * x[-1])
     return rl
 
 
@@ -62,7 +64,7 @@ def fusion_z_score(rls):
         scores = np.array([score for link, score in rl])
         infs = scores == np.inf
         ninfs = scores == -np.inf
-        scores[infs|ninfs] = np.nan
+        scores[infs | ninfs] = np.nan
         zscores = sp.stats.zscore(scores, nan_policy="omit")
         zscores[infs] = np.inf
         zscores[ninfs] = -np.inf
@@ -87,7 +89,7 @@ def fusion_regression_training(rank_list, Y):
     Ys = labels_from_rank_list(rank_list, Y)
     model = LogisticRegression()
     model.fit(Xs, Ys)
-    Y_pred = model.predict_proba(Xs)[:,1]
+    Y_pred = model.predict_proba(Xs)[:, 1]
     return model, mean_squared_error(Y_pred, Ys, squared=False)
 
 
@@ -121,7 +123,7 @@ def fusion_regression_testing(model, rank_list):
         Y_pred -- The true probability vector for this rank list according to the model
     """
     Xs = features_from_rank_list(rank_list)
-    Y_pred = model.predict_proba(Xs)[:,1]
+    Y_pred = model.predict_proba(Xs)[:, 1]
     return Y_pred
 
 

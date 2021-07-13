@@ -5,10 +5,13 @@ Distance are either for feature vectors or compression sizes.
 """
 
 import math
-import numpy as np
-from misc import division, log
-from scipy.spatial.distance import euclidean as sp_euclidean
+
+from misc import division
+from misc import log
+
 from scipy.spatial.distance import cityblock as sp_manhanttan
+from scipy.spatial.distance import euclidean as sp_euclidean
+import numpy as np
 
 """
 Distance for vectors

@@ -1,5 +1,5 @@
-import os
 import glob
+import os
 import re
 
 cwd = os.path.dirname(os.path.abspath(__file__))
@@ -7,17 +7,22 @@ folder = os.path.join(cwd, "st_jean")
 y_file = os.path.join(folder, "Author.txt")
 info_file = os.path.join(folder, "infos.csv")
 
+
 def parse_A():
     return parse_(0, 100)
+
 
 def parse_B():
     return parse_(100, 100)
 
+
 def parse():
     return parse_(0, 200)
 
+
 def parse_(offset, size):
-    x_files = glob.glob(os.path.join(folder, "CNSaintJean*"))[offset:offset+size]
+    x_files = glob.glob(os.path.join(
+        folder, "CNSaintJean*"))[offset:offset + size]
     x_lemma = []
     x_token = []
     x_pos = []
@@ -77,10 +82,11 @@ def parse_(offset, size):
         x_pos.append(pos)
 
     # id = [re.search(r"CNSaintJean(...).*", f)[1] for f in x_files][offset:offset+size]
-    infos = [l.split(",") for l in open(info_file, "rb").read().decode("utf8").split("\r\n")[1:-1]][offset:offset+size]
+    infos = [l.split(",") for l in open(info_file, "rb").read().decode(
+        "utf8").split("\r\n")[1:-1]][offset:offset + size]
 
     y = open(y_file).read().split("\n")
-    y = [yi for yi in y if yi != ""][offset:offset+size]
+    y = [yi for yi in y if yi != ""][offset:offset + size]
 
     return infos, x_pos, x_lemma, x_token, y
 

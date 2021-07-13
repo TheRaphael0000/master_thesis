@@ -4,11 +4,14 @@ The S-curves are curves used for the veto and soft-veto.
 These veto a used in the fusion step.
 """
 
-import matplotlib.pyplot as plt
-import numpy as np
 import math
 
-from misc import normalize, sigmoid, sigmoid_r
+from misc import normalize
+from misc import sigmoid
+from misc import sigmoid_r
+
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def soft_veto(rank_list, s_curve):
@@ -91,6 +94,7 @@ def full_boost(top, bottom):
         y[n2:] = np.inf
         return y
     return wrapper
+
 
 if __name__ == '__main__':
     plt.figure(figsize=(4, 3), dpi=200)

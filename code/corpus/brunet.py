@@ -1,5 +1,5 @@
-import os
 import glob
+import os
 import re
 
 cwd = os.path.dirname(os.path.abspath(__file__))

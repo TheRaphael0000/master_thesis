@@ -4,8 +4,8 @@ This module provide function that return sizes after compression for document di
 This module is mainly used in the linking module in conjonction with the compression distance function in the distances module.
 """
 
-import gzip as gzip_
 import bz2 as bz2_
+import gzip as gzip_
 import lzma as lzma_
 
 

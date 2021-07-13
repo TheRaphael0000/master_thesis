@@ -7,9 +7,8 @@ The clustering results are evaluated using the B^3 metrics family and a metric c
 
 from misc import compute_r
 
-import numpy as np
-
 import bcubed
+import numpy as np
 
 
 def evaluate_linking(rank_list, Y):
@@ -49,7 +48,8 @@ def evaluate_clustering(Y_true, Y_pred):
     bcubed_recall = bcubed.recall(cdict, ldict)
     bcubed_fscore = bcubed.fscore(bcubed_precision, bcubed_recall)
     r_ratios_diff_ = r_ratios_diff(Y_true, Y_pred)
-    M = np.array([bcubed_fscore, bcubed_precision, bcubed_recall, r_ratios_diff_])
+    M = np.array([bcubed_fscore, bcubed_precision,
+                  bcubed_recall, r_ratios_diff_])
     return M
 
 

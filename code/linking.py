@@ -9,21 +9,19 @@ from collections import Counter
 from functools import reduce
 import itertools
 
-import numpy as np
-from scipy.spatial.distance import pdist
-from scipy.spatial.distance import squareform
-
+import compressions
 from corpus import oxquarry
 from corpus import brunet
 from corpus import st_jean
 from corpus import pan16
-
 import distances
-import compressions
-
+from evaluate import evaluate_linking
 from misc import rank_list_from_distances_matrix
 from misc import normalize_text
-from evaluate import evaluate_linking
+
+import numpy as np
+from scipy.spatial.distance import pdist
+from scipy.spatial.distance import squareform
 
 
 def create_n_grams(words, ns):
@@ -72,7 +70,8 @@ def most_frequent(X, n, z_score=False, lidstone_lambda=0.1, remove_hapax=True):
     counters = [Counter(xi) for xi in X]
     # Remove hapax legomenon for each texts
     if remove_hapax:
-        counters = [Counter({w: n for w, n in dict(c).items() if n > 1}) for c in counters]
+        counters = [Counter({w: n for w, n in dict(c).items() if n > 1})
+                    for c in counters]
     # Computing the corpus word frequency
     total = reduce(lambda x, y: x + y, counters)
     # n bounding
@@ -118,7 +117,8 @@ def compute_links_mf(X, n_grams, n_mf, z_score, lidstone_lambda, distance_func, 
     if type(n_grams) == list or type(n_grams) == tuple or n_grams > 0:
         X = [create_n_grams(xi, n_grams) for xi in X]
     # Create features
-    features, mfw = most_frequent(X, n_mf, z_score, lidstone_lambda, remove_hapax)
+    features, mfw = most_frequent(
+        X, n_mf, z_score, lidstone_lambda, remove_hapax)
     # Compute link distances into a 2D matrix
     distances_matrix = squareform(pdist(features, metric=distance_func))
     # Computing the rank list of for this distance matrix

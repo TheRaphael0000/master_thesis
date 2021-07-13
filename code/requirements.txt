@@ -1,8 +1,8 @@
+adjustText
+bcubed
+jupyter
 matplotlib
 numpy
-bcubed
-sklearn
-adjustText
-tqdm
 scipy
-jupyter
+sklearn
+tqdm

@@ -1,8 +1,8 @@
-import os
 import glob
+import json
+import os
 import re
 import string
-import json
 
 cwd = os.path.dirname(os.path.abspath(__file__))
 

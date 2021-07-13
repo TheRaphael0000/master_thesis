@@ -4,24 +4,22 @@ This module contains fonction relative to the clustering task.
 The clustering function require rank lists which are generated using for example function from the linking module.
 """
 
-import numpy as np
-
 from collections import defaultdict
-
-from scipy.stats import beta
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import precision_recall_fscore_support
-from sklearn.metrics import silhouette_samples
-from sklearn.metrics import silhouette_score
-from sklearn.metrics import davies_bouldin_score
 
 from misc import distances_matrix_from_rank_list
 from misc import features_from_rank_list
-from misc import labels_from_rank_list
 from misc import fit_beta
 from misc import find_two_beta_same_area
-
+from misc import labels_from_rank_list
 from evaluate import evaluate_clustering
+
+import numpy as np
+from scipy.stats import beta
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import davies_bouldin_score
+from sklearn.metrics import precision_recall_fscore_support
+from sklearn.metrics import silhouette_samples
+from sklearn.metrics import silhouette_score
 
 
 def agglomerative_clustering(rank_list, linkage="average", distance_threshold=np.inf):
@@ -121,7 +119,7 @@ def dist_thresh_logistic_regression(rl_training, Y_training, rl_testing, prob_th
     # compute distance threshold
     X = features_from_rank_list(rl_testing)
     # fit the model
-    probs = model.predict_proba(X)[:,1]
+    probs = model.predict_proba(X)[:, 1]
 
     if np.sum(probs == prob_threshold) >= 1:
         # exact probability threshold
@@ -205,7 +203,7 @@ def silhouette_based_clustering(rank_list, linkage="average", alpha=0):
     # normalize the distance matrix for the silhouette computation
     min_ = np.nanmin(distances_matrix)
     max_ = np.nanmax(distances_matrix)
-    distances_matrix = (distances_matrix - min_)  / (max_ - min_)
+    distances_matrix = (distances_matrix - min_) / (max_ - min_)
     np.fill_diagonal(distances_matrix, 0)
 
     labels, dts = zip(*(list(ac)))
@@ -221,8 +219,8 @@ def silhouette_based_clustering(rank_list, linkage="average", alpha=0):
 
     max_i = np.argmax(sss)
 
-    left_side, right_side = labels[:max_i], labels[max_i+1:]
-    left_scores, right_scores = sss[:max_i], sss[max_i+1:]
+    left_side, right_side = labels[:max_i], labels[max_i + 1:]
+    left_scores, right_scores = sss[:max_i], sss[max_i + 1:]
     max_score = sss[max_i]
 
     target = max_score - np.abs(alpha) * max_score
