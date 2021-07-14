@@ -1,8 +1,9 @@
 \section{Most Frequent Approach}
 
 The first method to represent and compare the documents is called: Most frequent (MF).
-This method try to compare documents by creating feature vectors containing frequencies of the most frequent items in a text representation (TR).
-A text representation can be for example words in the text or a new representation generated from the text.
+This method try to compare documents by creating feature vectors containing frequencies of the most frequent items in a corpus for a specific text representation (TR).
+A text representation can be for example words in the text or any new representation generated from the text.
+In the case where words are used, the most frequent items will be the most common words in a corpus.
 This method is a generalized approach of the most frequent words technique (MFWs), which consider words as items.
 
 By only considering the most frequent items, this ensures that no all the document details will be synthesized in the vector, but rather the most important in the document.
@@ -17,17 +18,26 @@ This problematic is explored in Section~\ref{sec:importance_of_text_size}.
 To be able to express a document as a feature vector of size $n$, the strategy used is to find the $n$ most frequent ($n$-MF) items in a corpus.
 For each document, compute the items' relative frequency on the $n$-MF items.
 The items' occurrence vector is the number of times each item is present in a document text representation.
-The items' relative frequency vector is obtained by normalizing the items' occurrence vector such that its magnitude is 1.
+The items' relative frequency vector is obtained by normalizing the items' occurrence vector such that its $L_1$ norm is 1, see Definition~\ref{def:l_1}.
+
+\begin{definition}[$L_1$ norm]
+  \label{def:l_1}
+  The $L_1$ norm for a vector $x$ correspond to the sum all its elements.
+  \begin{gather*}
+    \|x\|_{1} = \sum _{i=1}^{n} \left| x_{i} \right|
+  \end{gather*}
+\end{definition}
+
 By normalizing the vector, this ensures that long and short texts are comparable.
 The items' relative frequency vector will represent the MF items proportions contained in a document.
 
 For example, if a corpus contains novels of multiple genres (e.g. Comedy, Sci-fi, Fantastic, Romance).
-With the right $n$, all the specific items of each genre will be discarded since their frequency should be lower than the non topic related items which are contained in every document.
+With the right $n$, most of the items specific to the genre will be discarded, since their frequency should be lower than the non topic related items which are contained in every document.
 The frequencies of these items should reflect the style of the author.
 
-In this study, multiple text representation are explored, such as tokens/lemmas (Section~\ref{sec:tokens_lemmas}), substrings (Section~\ref{sec:substrings}) and sequences of POS (Section~\ref{sec:pos_sequences}).
+In this study, multiple text representation are explored, such as tokens/lemmas (Section~\ref{sec:tokens_lemmas}), substrings (Section~\ref{sec:substrings}) and POS sequences (Section~\ref{sec:pos_sequences}).
 
-Example~\ref{ex:mf_vector} show a computation of the MF items vector, using words as items.
+Example~\ref{ex:mf_vector} show the computation of the MF items vector, using words as items.
 
 \begin{example}
   \centering
@@ -35,7 +45,7 @@ Example~\ref{ex:mf_vector} show a computation of the MF items vector, using word
   \label{ex:mf_vector}
 
   \begin{subexample}{\linewidth}
-    \subcaption{Text}
+    \subcaption{Document X}
     "\textit{i realize now , that i was not looking in . i was looking out . and he , on the other side was looking in .}"\cite{ddlc}
   \end{subexample}
 
@@ -45,7 +55,9 @@ Example~\ref{ex:mf_vector} show a computation of the MF items vector, using word
   \subcaption{Vector}
     Suppose that the $5$-MF tokens for this text's \textbf{corpus} are "\textit{the, was, i, she, he}".
 
+    The vector using the MF strategy in Document X is thus :
     \vspace{0.2cm}
+
     \centering
     \begin{tabular}{l c c c c c}
       \toprule

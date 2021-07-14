@@ -38,7 +38,7 @@ Definitions~\ref{def:manhattan} to~\ref{def:jeffrey_divergence} are one of the f
 
 \begin{definition}[Tanimoto distance]
   \begin{gather*}
-    dist_{Tanimoto}(A, B) = \frac{dist_{Manhattan}(A, B)}{\sum_{i=1}^{m} max(a_i, b_i)}
+    dist_{Tanimoto}(A, B) = \frac{dist_{Manhattan}(A, B)}{\sum_{i=1}^{m} \mathrm{max}(a_i, b_i)}
   \end{gather*}
   Tanimoto distance is a $L^1$ based, it's a component-wise normalized version of the Manhattan distance.
 \end{definition}

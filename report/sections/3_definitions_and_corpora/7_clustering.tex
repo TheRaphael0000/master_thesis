@@ -21,7 +21,7 @@ The clusters are created using transitivity.
 
 One main issue arise with this method.
 If the relevant set is not perfect (documents pairs with actual different authors are in the relevant set), the two authors will be in the same cluster.
-Noisy relevant set can quickly be considered as a single cluster with this method.
+Noisy relevant set can quickly considered every document in a single cluster with this method.
 
 Chapter~\ref{sec:clustering} will introduce and evaluate methods using rank lists to create the clusters instead of the relevant set.
 
@@ -47,24 +47,24 @@ Chapter~\ref{sec:clustering} will introduce and evaluate methods using rank list
 
 \subsection{Clustering Evaluation Metrics \label{sec:clustering_evaluation_meterics}}
 
-The methods introduced in this chapter are to evaluate and compare clustering models.
+The methods introduced in this section are to evaluate and compare clustering models.
 Therefore, the ground truth labels are required.
-The metrics used are the BCubed family (also called $B^3$, in this report)~\cite{bcubed}.
+The metrics used are from the BCubed family (also called $B^3$, in this report)~\cite{bcubed}.
 
 BCubed has shown to satisfy the four following important constraints when evaluating clusterings~\cite{bcubed}~:
 
 \begin{enumerate}
   \item
-  \textit{Cluster Homogeneity} : different authors should be in the different clusters
+  \textit{Cluster Homogeneity} : different authors should be in the different clusters.
   \item
-  \textit{Cluster Completeness} : same authors should belong to the same cluster
+  \textit{Cluster Completeness} : same authors should belong to the same cluster.
   \item
-  \textit{Rag Bag constraint} : noisy or miscellaneous authors should be in the same cluster and not in \textit{healthy} clusters
+  \textit{Rag Bag constraint} : noisy or miscellaneous authors should be in the same cluster and not in \textit{healthy} clusters.
   \item
-  \textit{Cluster size vs quantity constraints} : favour large cluster
+  \textit{Cluster size vs quantity constraints} : favor large clusters.
 \end{enumerate}
 
-These metrics are used in the clustering task at PAN @ CLEF~\cite{pan16}.
+These metrics are used to evaluate the clustering task during the PAN @ CLEF competitions~\cite{pan16}.
 In addition to the BCubed family, this study introduce a simple metric for evaluating the clustering called \textit{cluster difference}.
 
 \begin{definition}[Correctness~\cite{bcubed}]
@@ -72,41 +72,46 @@ In addition to the BCubed family, this study introduce a simple metric for evalu
   Let L(e) and C(e) be the author and the cluster of an element e.
   The Correctness is following the biconditional condition on the author and cluster equality (biconditional: $A \Longleftrightarrow B \equiv (A \land B) \lor (\neg A \land \neg B)$).
   \begin{gather*}
-    Correctness(e, e') = \\
+    \mathrm{Correctness}(e, e') = \\
     \begin{cases}
       1, & if (L(e) = L(e')) \Longleftrightarrow (C(e) = C(e'))\\
-      0, & otherwise
+      0, & \mathrm{otherwise}
     \end{cases}
   \end{gather*}
-  In other terms, the correctness has a value of 1 (100\% correct) if the two elements are in the both in the same cluster and have the same author OR both are in a different cluster and have a different author.
+  In other terms, the correctness has a value of 1 (100\% correct) if the two elements both are in the same cluster and have the same author OR are both in a different cluster and have a different author.
 \end{definition}
 
 \begin{definition}[$BCubed$ Precision~\cite{bcubed}]
-  The $BCubed$ Precision correspond to the average of correctness for all elements on the average of all element such that \textbf{their clusters are the same}.
+  The $BCubed$ Precision correspond to the correctness average for all elements on the average of all element such that \textbf{their clusters are the same}.
   \begin{gather*}
-    B^3_{precision} = \text{Avg}_{e}[\text{Avg}_{e' C(e)=C(e')}[Correctness(e, e')]]
+    B^3_{precision} = \mathrm{avg}_{e}[\mathrm{avg}_{e' C(e)=C(e')}[\mathrm{Correctness}(e, e')]]
   \end{gather*}
 \end{definition}
 
 \begin{definition}[$BCubed$ Recall~\cite{bcubed}]
-  The $BCubed$ Recall correspond to the average of correctness for all elements on the average of all element such that \textbf{their authors are the same}.
+  The $BCubed$ Recall correspond to the correctness average for all elements on the average of all element such that \textbf{their authors are the same}.
   \begin{gather*}
-    B^3_{recall} = \text{Avg}_{e}[\text{Avg}_{e' L(e)=L(e')}[Correctness(e, e')]]
+    B^3_{recall} = \mathrm{avg}_{e}[\mathrm{avg}_{e' L(e)=L(e')}[\mathrm{Correctness}(e, e')]]
   \end{gather*}
 \end{definition}
 
-\begin{definition}[$BCubed F_1$ Score~\cite{bcubed}]
-  $BCubed F_1$ Score uses the harmonic mean between the $B^3_{precision}$ and $B^3_{recall}$.
+\begin{definition}[$BCubed$ $F_1$ Score~\cite{bcubed}~\cite{wiki_f1}]
+  $BCubed F_1$ Score uses the $F_{\beta}$ metric with $\beta = 1$.
+
+  \begin{gather*}
+    F_\beta = (1 + \beta^2) \cdot \frac{\mathrm{precision} \cdot \mathrm{recall}}{(\beta^2 \cdot \mathrm{precision}) + \mathrm{recall}}.
+  \end{gather*}
+
+  The $BCubed F_1$ Score is thus computed the following way.
+
   \begin{gather*}
     B^3_{F_1} =
-    2 \cdot \frac{B^3_{precision} \cdot B^3_{recall}}
-    {B^3_{precision} + B^3_{recall}}
+    2 \cdot \frac{B^3_{precision} \cdot B^3_{recall}} {B^3_{precision} + B^3_{recall}}
   \end{gather*}
-  The $F_\beta$ measures, not shown here, provide a parametric way to represent with a single value the two counterbalancing measures in this case, the $B^3_{F_1}$ is computed using the $F$ measures with $\beta = 1$ and the $B^3_{precision}$ and $B^3_{recall}$ scores.
 \end{definition}
 
 \begin{definition}[Cluster difference]
-  This metric aim to evaluate if the clustering found the right number of cluster.
+  This metric aim to evaluate if the clustering model have found the right number of cluster.
   The cluster difference is the number of cluster found $p$ minus the actual number of cluster $k$ (number of distinct authors in the corpus).
   \begin{gather*}
     Cluster_{diff} = p - k

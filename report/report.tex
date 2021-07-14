@@ -21,10 +21,10 @@
 \usepackage{subfiles}
 % \usepackage{refcheck}
 \usepackage{tabularx}
+\usepackage[skins]{tcolorbox}
 \usepackage{thmtools}
 \usepackage{url}
 \usepackage{xcolor}
-
 
 % \renewcommand{\familydefault}{\sfdefault}
 
@@ -44,17 +44,19 @@
     breaklinks=true,
 }
 
+
 \newtheoremstyle{definition}% name of the style to be used
   {0.7cm}% measure of space to leave above the theorem. E.g.: 3pt
   {0.7cm}% measure of space to leave below the theorem. E.g.: 3pt
   {}% name of font to use in the body of the theorem
   { }% measure of space to indent
   {\bfseries}% name of head font
-  {\\*}% punctuation between head and body
+  {\\[0.1cm]}% punctuation between head and body
   { }% space after theorem head; " " = normal interword space
   {\thmname{#1}\thmnumber{ #2}\textnormal{\thmnote{ - #3}}}
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
+\tcolorboxenvironment{definition}{blanker,before skip=0.7cm,after skip=0.7cm}
 
 \DeclareFloatingEnvironment[
   fileext=lop,

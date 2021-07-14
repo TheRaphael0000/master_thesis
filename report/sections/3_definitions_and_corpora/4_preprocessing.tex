@@ -4,15 +4,16 @@ A pre-processing of the data is realized to prepare the data for the next steps.
 The pre-processing is in two parts.
 The first part is specific to each corpus, and the second is the same for every corpus.
 
-Oxquarry and Brunet are already tokenized such that every token is in a separate line.
+Oxquarry and Brunet are already tokenized such that every token is on a separated line.
 Additionally, Brunet have a lemma representation of the texts, which in this case in contained in a separate file in the same way as the token files.
 For these two corpora, a simple script is used to parse the file and create a vector of words for each document.
 
 St-Jean is also already tokenized with the one token, one line approach, but each document have its three representation (token, lemma and POS) in the same file, the three representation are separated by a comma on each line.
 There are a few additional preprocessing needed for this corpus.
-When the word \textit{des} (equivalent to a plural \textit{the} in French) is encounter, the tokenizer used to create the St-Jean files created two lines for this word since it can be lemmatized into either \textit{de} (\textit{some/any}) or \textit{le} (\textit{the}).
 
+When the word \textit{des} (equivalent to a plural \textit{the} in French) is encounter, the tokenizer used to create the St-Jean files created two lines for this word since it can be lemmatized into either \textit{de} (\textit{some/any}) or \textit{le} (\textit{the}).
 To avoid having these words weighted twice, only the first line is kept.
+
 St-Jean also have another specificity, it contains both the numerical representation of numbers and the textual representation.
 For example, the number \textit{89} is written in St-Jean as :
 \begin{verbatim}
@@ -31,7 +32,8 @@ septième,septième,72
 <Fin nombre>,<>,<>
 \end{verbatim}
 When the number is already written in full letters in the text, the parser did not tokenize it this way, only one line is created.
-The first two line of each document are ignored for St-Jean since they contain metadata for the document, such as the number of tokens in the document, the name of the collection and the ID written is full text.
+
+The first two line of each document are ignored for St-Jean since they contain metadata for the document, such as : the number of tokens in the document, the name of the collection and the ID written is full text.
 
 For Oxquarry, Brunet and St-Jean, the authors of each document are contained in a single text file.
 On each line the author of the document for the document with an ID equivalent to the line number, e.g. author on line 1 is for document 1, author on line 2 is for document 2, etc.
@@ -41,4 +43,4 @@ A simple tokenization is realized which consider every punctuation symbols (POSI
 Since they are written in multiple languages, no further rules are applied to tokenize more effectively the texts.
 
 The general preprocessing applied on every document of every corpus is to encode every text with only lower case ASCII characters.
-To do so every diacritic are removed, for example the word \textit{École} (school in French) is converted to \textit{ecole}.
+By doing so, every diacritic are removed, for example the word \textit{École} (school in French) is converted to \textit{ecole}.
