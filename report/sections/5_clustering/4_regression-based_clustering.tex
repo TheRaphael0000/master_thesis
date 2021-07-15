@@ -23,7 +23,7 @@ To find the cut on the test datasets, the fitted model predict the probability o
 
 From these predictions, a probability threshold must be chosen.
 For example, having a probability threshold at $0.5$, minimize both false negatives and the false positives.
-This can be adjusted, for example if false negatives are more important to minimize, a probability threshold at $0.6$ can be selected instead or $0.4$ if the false positive should be minimized.
+This can be adjusted in the case of cost minimization, for example if false negatives are more important to minimize, a probability threshold at $0.6$ can be selected instead or $0.4$ if the false positive should be minimized.
 Which will subsequently either improve the $B^3_{recall}$ or the $B^3_{precision}$ when evaluating the clustering.
 To optimize the $B^3_{F_1}$, the probability threshold should be $0.5$, since this metrics aim to optimize both the recall and the precision with the harmonic mean.
 

@@ -2,23 +2,21 @@
 
 \chapter{Introduction \label{sec:introduction}}
 
-In a world where the information starts to propagate really fast through social networks, forums or blogs and allow anonymous communication or pseudonymous communications, cyber-criminals have risen on the Internet~\cite{automated_unsupervised}~\cite{kocher_pan16}.
+In a world where the information starts to propagate fast through social networks, forums or blogs and allow anonymous communication or pseudonymous communications, security and authentication problems can occur~\cite{automated_unsupervised}~\cite{kocher_pan16}.
 A wide range of crimes are available for attackers, which can goes from a credit card theft to the Denial of Service (DoS) attack of a country infrastructure.
-Some fake news spreading or phishing by e-mails attempts can be detected using network based systems.
+In the current study, fake news spreading or phishing by e-mails attempts can be detected using stylometri.
 Depending on the quality of the attack, these systems can be insufficient to correctly discriminate between real e-mails and/or news to fake ones.
 While committing cyber-crimes, cyber-criminals ensure their anonymity and hide their traces by using techniques such as IP masking through proxies, DNSflux which consists into changing randomly DNS (Domain Name System) entries, spoofing email-sending address, using a fake account (for example a fake Facebook account), stealing an identity (for example the email account of an important politician), use distributed attacks (botnets) and more~\cite{attribution_in_cyberspace}.
 Due to the increase of criminal using these techniques, new systems able to detect authors based solely on the text are needed~\cite{automated_unsupervised}~\cite{unine_pan20_fake_news}.
 
 The field of stylometry consists in analyzing the style of a written text.
-This can be used to estimate text authorship based only on the text content when only the message is available and the medium can not be used to estimate the author.
-These techniques can be used for journalists, law courts, cybersecurity and forensic investigators to give authorship clues for their work when dealing with texts which are completely anonymized, for example: ransom notes, blog posts or cybercriminals source code comments ~\cite{pan16_clustering_site}.
+This can be used to identify the authorship or to draw the author profile.
+These techniques can be used for journalists, law courts, cybersecurity and forensic investigators to give authorship clues for their work when dealing with texts which are completely anonymized, e.g.: ransom notes, email threats, blog posts or cybercriminals source code comments ~\cite{pan16_clustering_site}.
 
-Another problem when dealing with, for example Internet crimes, is a lack of real world labelled datasets, since the labels for this type of data can not be determinate accurately due to the anonymity that provide the Internet.
 Developing automatic and unsupervised authorship techniques is required to solve these problems~\cite{automated_unsupervised}.
 A typical unsupervised authorship problem is to find in a large corpus of texts which are written by the same author.
 This problem is called authorship clustering.
-An example where the authorship clustering can be useful is to be able to group text written by anonymous writers.
-The writing anonymity can be due to: its need for cyber-criminals, terrorist organizations, or due to the identity lost of the author for old texts.
+An example where the authorship clustering can be useful is to be able to group text written by anonymous writers (e.g. group of terrorists or old documents from unknown authors).
 For this study, stylometric, compression, authorship verification and fusion techniques are applied to the authorship clustering problem.
 
 \subfile{1_research_questions}

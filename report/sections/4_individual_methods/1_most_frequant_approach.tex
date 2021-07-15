@@ -107,7 +107,7 @@ In this study, linear normalization is used to fit the beta distribution.
 
 Relative item frequencies can be considered as a probability of occurrence based on the maximum likelihood principle.
 The main problem with this approach is that the probability of occurrence of frequent items tend to be overestimated and underestimate the probability of occurrence of low frequency items or for items that never occur.
-If, for example, an item is not present in a document its relative item frequency is 0, but this should not mean that the probability of the author using this item is 0.
+For example, if an item is not present in a document its relative item frequency is 0, but this should not mean that the probability of the author using this item is 0.
 
 The solution proposed is to use a smoothing technique such as the Lidstone smoothing presented in Definition~\ref{def:lidstone_smoothing}.
 Smoothing techniques can help distance functions based on probabilities, such as the Kullback-Leibler Divergence~\cite{savoy_stylo}.

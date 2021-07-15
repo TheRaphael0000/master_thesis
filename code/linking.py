@@ -95,7 +95,7 @@ def most_frequent(X, n, z_score=False, lidstone_lambda=0.1, remove_hapax=True):
     return features, mfw
 
 
-def compute_links_mf(X, n_grams, n_mf, z_score, lidstone_lambda, distance_func, remove_hapax=True):
+def compute_links_mf(X, n_grams, n_mf, z_score, lidstone_lambda, distance_func, remove_hapax=True, return_mfw=False):
     """Create the rank list based on the MF method
 
     Arguments:
@@ -117,8 +117,11 @@ def compute_links_mf(X, n_grams, n_mf, z_score, lidstone_lambda, distance_func, 
     if type(n_grams) == list or type(n_grams) == tuple or n_grams > 0:
         X = [create_n_grams(xi, n_grams) for xi in X]
     # Create features
-    features, mfw = most_frequent(
-        X, n_mf, z_score, lidstone_lambda, remove_hapax)
+    features, mfw = most_frequent(X, n_mf, z_score, lidstone_lambda, remove_hapax)
+
+    if return_mfw:
+        return mfw
+
     # Compute link distances into a 2D matrix
     distances_matrix = squareform(pdist(features, metric=distance_func))
     # Computing the rank list of for this distance matrix
