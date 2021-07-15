@@ -1,26 +1,24 @@
-\chapter{Conclusion and future work\label{sec:conclusion}}
+\chapter{Conclusion and Future Work\label{sec:conclusion}}
 
-This study focus on solving the authorship clustering task.
-To improve its effectiveness, rank lists' fusion strategies are proposed and used.
+% \section{Conclusion}
 
-\section{Conclusion}
-
-Oxquarry, Brunet, St-Jean are three corpora containing for each document excepts of literature novels.
+Evaluation is an important aspect to improve our knowledge.
+In this view, this study is based on three known collections namely Oxquarry, Brunet and St-Jean.
+These three corpora containing excepts of literature novels.
 Nine different techniques to produce individual rank lists are cherry-picked for the clustering and fusion steps.
-These techniques are mostly based on the most frequent words' relative frequency in each document.
+These techniques are mostly based on the most frequent words.
 Compression techniques are also evaluated and used.
 
-Once each intermediate representations of the corpora, namely the rank lists, are created with the fusions, they are used to solve the authorship clustering task.
-The clustering model use for this task is the hierarchical clustering.
+Once each intermediate representations of the corpora, namely the rank lists, are created and evaluated.
+Then a hierarchical clustering model is applied.
 With this model, a cut in the rank list which discriminate the same authors documents to different authors documents is required.
+Three solutions to find the cut best position are proposed.
 
-Three solutions are proposed to find the cut position.
-
-The first, is a fully unsupervised method based on the Silhouette Score.
+The first is a fully unsupervised method based on the Silhouette Score.
 We added an extra hyperparameter to the Silhouette-based clustering and tweaked it for the authorship clustering problem.
 By doing so, this model improves its clustering results by 6\% across the three corpora.
 
-The second, is a supervised method and thus require a corpus with labels to calibrate the system.
+The second is a supervised method and thus require a corpus with labels to calibrate the system.
 We called this method distribution-based.
 This method output a single numerical value which is used to perform the cut for any subsequent corpus.
 This strategy gives the best results for the individual methods.
@@ -31,7 +29,7 @@ For any new corpus, this model is used to predict the best position in the rank 
 The three methods to find the cut for the hierarchical clustering give good results close to the best clustering achievable for the rank lists used.
 Additionally, we demonstrated a correlation between the rank lists quality and the clustering quality.
 
-In a second part, two rank lists' fusion method are proposed and evaluated.
+In a second part of this study, two rank lists' fusion method are proposed and evaluated.
 This proposition come from the idea that combining good rank lists can give one better than each individual one.
 One fusion technique uses the Z-Score normalization and the other one convert the rank list scores into probabilities using multiple logistic regression.
 The Z-Score fusion technique show a significant improvement of the results when compared to the best rank list used for the fusion.
@@ -43,7 +41,7 @@ Two veto-based techniques are proposed and evaluated to try to further improve t
 No real improvements are found using the proposed veto strategies.
 
 To further motivate the strength of the rank lists' fusions, we showed a correlation between the rank lists' variety and the improvements provided when fusing rank lists.
-We showed that by using for the fusion, rank lists produced along different text representations increase more the quality of resulting rank list than using rank lists with the same text representation but with different distance measure.
+We showed that by using for the fusion, rank lists produced along different text representations increase more the effectiveness of resulting rank list than using rank lists with the same text representation but with different distance measure.
 
 At the end of this study, we evaluated the clustering using the rank list obtained by fusion.
 As we expected from previous results, the clustering obtained with the rank lists obtained by Z-Score fusion is better than the individual methods.
@@ -51,10 +49,10 @@ We obtained a 6\% improvement using the Z-Score fusion over the individual metho
 This improvement in the clustering is due to the fact that the rank lists obtained by fusion are better than the ones obtained by individual methods.
 The tweaked Silhouette-based clustering method gives the best results for the rank lists obtained by Z-Score fusion.
 
-\section{Future Work}
+% \section{Future Work}
 
 The authorship clustering models used still need to be compared to other models from the state of the art.
-This can be done by testing this model with corpora, which were also used for this task.
+This can be done by testing this model with corpora written in other languages or extracted from domains or support (e.g. blogs), which were also used for this task.
 
 As the literature shows, many methods to generate rank lists are possible.
 We showed that using for the fusion diverse individual technique improve the results.
