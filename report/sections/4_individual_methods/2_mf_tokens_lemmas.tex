@@ -33,7 +33,7 @@ Table~\ref{tab:tokens_lemmas} in annex show the values used to create this graph
 
 This representation seem to have good results with $n=500$ for most of the distance metrics, this corroborates previous studies results.
 
-Few distance metrics, such as Manhattan distance, Tanimoto distance or Clark distance can give better results with slightly bigger vectors (750 or 1000 MF tokens/lemma).
+Few distance metrics, such as Manhattan distance, Tanimoto distance or Clark distance can give better results with slightly bigger vectors ($750$-MF or $1000$-MF tokens/lemma).
 For most distance metrics, the token representation provide on both corpora a greater average precision compared to the lemma representation.
 
 An interesting example to be worth noticing concern the Manhattan distance.
@@ -47,10 +47,10 @@ Over all, the Cosine distance seem to be one of the most appropriate choice when
 
 The retained distance metrics and $n$-MF for the tokens text representations are:
 \begin{itemize}
-  \item 750-MF tokens with Cosine distance.
-  \item 750-MF tokens with Clark
-  \item 750-MF tokens with Manhattan
-  \item 750-MF tokens with Tanimoto
+  \item $750$-MF tokens with Cosine distance.
+  \item $750$-MF tokens with Clark
+  \item $750$-MF tokens with Manhattan
+  \item $750$-MF tokens with Tanimoto
 \end{itemize}
 
 The $n = 750$ is used for every distance metric, since the results between $500$ and $1000$ are similar for most distance metrics.
@@ -110,21 +110,21 @@ Three approach are compared:
   \item
   \textit{without hapax legomena} : Every token appearing more than once are used to create these vectors.
   \item
-  \textit{750-MF} : The vector represents the 750 most frequent tokens.
+  \textit{$750$-MF} : The vector represents the 750 most frequent tokens.
 \end{enumerate}
 
 The eight proposed distance measures are evaluated for the three approach using the average precision metric on the three literature corpora.
 To understand more easily the results for the three approach, the \textit{every token} approach is used as a baseline, from where the average precision gain is computed.
 
 Table~\ref{tab:baseline_every_token} show the average precision baseline using the \textit{every token} approach.
-Table~\ref{tab:gain_without_hapax_legomena} and Table~\ref{tab:gain_750_mf} show the gain over the baseline for the \textit{without hapax legomena} approach and \textit{750-MF} approach respectively.
+Table~\ref{tab:gain_without_hapax_legomena} and Table~\ref{tab:gain_750_mf} show the gain over the baseline for the \textit{without hapax legomena} approach and \textit{$750$-MF} approach respectively.
 
 When looking at the baseline : the Manhattan, Euclidean and Clark distance measure have a poor average precision, all are below 0.3 in average.
 The other metric have medium to good results.
 It ranges from 0.58 for the KLD to 0.79 with the Cosine distance.
 The Cosine distance with \textit{every token} reach a 0.91 average precision for the Oxquarry corpus.
 When removing hapax legomena, for most distance metrics the gain in average precision is limited, except for the Clark distance where the mean average precision rise from 0.3 to 0.5.
-After limiting to the 750-MF, the Manhattan, Euclidean and Clark distance, the ones that had poor results for the baseline increase their average precision by around 48\% which correspond to an average precision of 0.71, 0.63 and 0.78 respectively, which makes them in the same range as the other metrics in the baseline.
+After limiting to the $750$-MF, the Manhattan, Euclidean and Clark distance, the ones that had poor results for the baseline increase their average precision by around 48\% which correspond to an average precision of 0.71, 0.63 and 0.78 respectively, which makes them in the same range as the other metrics in the baseline.
 Across every metric and corpus, removing hapax legomena increase the average precision in average by 0.04, and limiting to the $750$-MF by 0.21.
 This clearly indicate the importance of limiting the size of the vector for most distance metrics.
 
@@ -183,7 +183,7 @@ Further, test are required to classify these distance metrics.
 
   \vspace{0.5cm}
 
-  \subcaption{Gain \textit{750-MF} over baseline}
+  \subcaption{Gain \textit{$750$-MF} over baseline}
   \label{tab:gain_750_mf}
   \resizebox{\linewidth}{!}{
   \begin{tabular}{l r r r|r}
@@ -245,7 +245,7 @@ Thus, this experiment motivate the need of having multiple text representation t
 
 \begin{figure}
   \centering
-  \caption{Example of 750-MF relative frequency vectors for recurrent false link in the top 20 false links}
+  \caption{Example of $750$-MF relative frequency vectors for recurrent false link in the top 20 false links}
   \label{fig:mf_vector_error}
 
   \subcaption{First example}
@@ -261,7 +261,7 @@ Thus, this experiment motivate the need of having multiple text representation t
 
 \begin{figure}
   \centering
-  \caption{750-MF relative frequency for the two documents ranked $X$ in the rank list using the token representation on St-Jean}
+  \caption{$750$-MF relative frequency for the two documents ranked $X$ in the rank list using the token representation on St-Jean}
 
   \subcaption{$X$ = First}
   \label{fig:mf_vector_first_rl}

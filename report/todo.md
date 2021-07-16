@@ -9,7 +9,7 @@
 	- taille du voc, les hapax legomena, dis legomena, mean length + std, mfw
 	- etc..
 - la méthode / les méthodes
-	- expliquer ques les n-grams sont bon meme si on sait pas trop ce que ça veut dire
+	- expliquer ques les $n$-grams sont bon meme si on sait pas trop ce que ça veut dire
 	- présenter des problèmes avec "ques que un mot" genre aujourd'hui
 	- expliquer pourquoi ça fonctionne ou pas
 - évaluation

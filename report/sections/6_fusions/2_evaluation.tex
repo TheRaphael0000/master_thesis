@@ -331,7 +331,7 @@ As stated previously, we believe fusing high quality rank lists (high AP), with 
 First, a correlation metric to compare the rank lists must be selected.
 Secondly, compare this correlation coefficient to the average precision gain to verify the assumption.
 
-To compute a correlation between two rank lists, the Kendall rank correlation coefficient is used~\cite{scipy}.
+To compute a correlation between two rank lists, the Kendall rank correlation coefficient is used \cite{scipy}.
 The Kendall rank correlation computes a correlation index based on the ordinal association between the two rank lists by computing the number of swaps needed to obtain one rank list from the other.
 The fewer swaps needed, the closer the rank lists are.
 
@@ -351,9 +351,9 @@ Table~\ref{tab:rl_correlations} show the Kendall correlation coefficient for eve
 The most similar rank lists pair are the two rank list using letters $n$-grams (0.95).
 This result can be easily understood, since both rank list use a similar text representation and distance measure, they will obtain similar rank lists.
 
-The least similar rank lists pair are the BZip2 compression and the 250-MF 2-POS (0.66).
+The least similar rank lists pair are the BZip2 compression and the $250$-MF $2$-POS (0.66).
 The compression method is the simplest approach, this method does not require to understand the text to create the rank list.
-As for the 250-MF 2-POS rank list, to create the rank list, it requires two level of understanding.
+As for the $250$-MF $2$-POS rank list, to create the rank list, it requires two level of understanding.
 First the parser need to understand texts to create the POS, and the second level are the short sequences which involve an even deep understanding of the text.
 Due to this large difference in rank list construction, the two rank lists obtain a small correlation coefficient.
 

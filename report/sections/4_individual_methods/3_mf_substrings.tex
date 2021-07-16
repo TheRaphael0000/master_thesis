@@ -12,7 +12,7 @@ The underscore is used to remove visual ambiguity due to the nature of the space
   A letter $n$-grams is a tokenization which is constructed by creating a token of size $n$ for each substrings starting from the position $0$ to \textit{text\_size} $- n - 1$.
 
   Example: \\*
-  Using 3-grams the string: \textit{"fox\_is\_running"} \\*
+  Using $3$-grams the string: \textit{"fox\_is\_running"} \\*
   is converted to: (\textit{"fox", "ox\_", "x\_i", "\_is", "is\_", "s\_r", "\_ru", "run", "unn", "nni", "nin", "ing"})
 \end{definition}
 
@@ -23,7 +23,7 @@ This corresponds to both $a$-grams and $b$-grams in the same text representation
 $n$-grams can be really effective, even though no clear meaning can be exploited at first sight.
 A simple explanation on why $n$-grams can be effective is by using $n$-grams of size 3 to 5 in most Indo-European languages this can correspond to for example : the tense of the verbs (i.e. : \textit{"ing\_"}, \textit{"ed\_"}), some small common words (\textit{"\_the\_"}, \textit{"\_and\_"}, \textit{"\_that"}), or in French the adverbs (\textit{"\_ment"}) which can capture the style of an author~\cite{ngrams_authorship}.
 
-Table~\ref{tab:4_grams_occurences_st_jean} and Table~\ref{tab:5_grams_occurences_st_jean} in annex show respectively the 40 MF 4-grams and the 40 MF 5-grams for the Oxquarry corpus.
+Table~\ref{tab:4_grams_occurences_st_jean} and Table~\ref{tab:5_grams_occurences_st_jean} in annex show respectively the $40$-MF $4$-grams and the $40$-MF $5$-grams for the Oxquarry corpus.
 
 When considering letters $n$-grams, the number of character in the $n$-grams text representation approximately increases by a factor of $n$ compared to the token representation.
 To avoid having too large text representation, a possible idea is to remove the hapax legomena (tokens appearing only once in the corpus) before applying the $n$-grams algorithm.
@@ -39,7 +39,7 @@ An alternative version of the $n$-grams algorithm used here is defined in Defini
   When a token is smaller than $n$, the whole token is considered.
 
   Example: \\*
-  Using words 3-grams on the following tokens: ["fox", "is", "running"] \\
+  Using words $3$-grams on the following tokens: ["fox", "is", "running"] \\
   is converted to: (\textit{"fox", "is", "run", "unn", "nni", "nin", "ing"})
 \end{definition}
 
@@ -107,7 +107,7 @@ The number of different $n$-grams is assumed to be larger than the vocabulary of
 Figure~\ref{fig:letter_ngrams} show the average precision for the experiment first part on the Oxquarry corpus (\ref{fig:letter_ngrams_oxquarry}), Brunet (\ref{fig:letter_ngrams_brunet}) and St-Jean (\ref{fig:letter_ngrams_st_jean}).
 
 The trends seem to indicate that a lower $n$-grams size converge with lower $n$-MF vector size, but reach a maximal average precision faster.
-With $3$-grams, $\sim 3000-4000$-MF give good results on Oxquarry and Brunet with this distance metric.
+With $3$-grams, the $\sim 3000-4000$-MF give good results on Oxquarry and Brunet with this distance metric.
 On the Brunet corpus, after reaching the maximal average precision at $\sim 4000$-MF, a larger number of frequent words decrease the precision until reaching the maximal number of different $3$-grams at $\sim 6500$-MF.
 For Oxquarry, $3$-grams the average precision increase until $\sim 4000$-MF but stay still after this.
 On St-Jean, the $3$-grams and $(2,3)$-grams do not reach a high average precision with a low number of MF like for the Brunet and Oxquarry.
@@ -157,7 +157,7 @@ For this configuration of $4$-grams with $8000$-MF, using the right distance mea
 
 \begin{table}
   \centering
-  \caption{Average precision for $n$-grams with every metrics, on the three corpora (best result for the dataset in bold).}
+  \caption{Average precision for $n$-grams with every metric, on the three corpora (best result for the dataset in bold).}
   \label{tab:letter_ngrams}
 
   \subcaption{$3$-grams with $3000$-MF}
@@ -199,7 +199,7 @@ For this configuration of $4$-grams with $8000$-MF, using the right distance mea
 
 In this experiment, the goal is to compare the three following substring text representations : In-word $n$-grams, $n$-First and $n$-Last.
 
-Only the Z-Score normalized Cosine distance used and is evaluated using the average precision.
+To reduce the field of parameters, only the Z-Score normalized Cosine distance used and is evaluated using the average precision.
 For this experiment, the number of $n$-MF variate between 200 and 4000 with a step of 100.
 The $n$ for the In-word $n$-grams, $n$-First and $n$-Last variate between 3 and 5.
 
@@ -209,10 +209,11 @@ In the three dataset, the $3$-Last and $3$-First gives a lower average precision
 For the three methods, when $n = 5$, it tends to produce better results than $n = 3$ or $n = 4$ as the $n$-MF increase.
 In the Oxquarry corpus, in-word $4$-grams and in-word $5$-grams give an outstanding $\sim 95.0\%$ in average precision.
 But this method is not as effective for the Brunet dataset.
-For the Brunet dataset, the $5$-First can a good results compared to other text representations with small MF vector size.
-And for St-Jean, the $5$-First with a small MF vector size give the best results.
+For the Brunet dataset, the $5$-First have good results compared to other text representations with small MF vector size.
+Lastly, for St-Jean the $5$-First with a small MF vector size give the best results.
 
-No clear best configuration can be extracted with these results since the results are mixed across corpora, thus for this experiment, no text representation / distance measure are retained.
+No clear best configuration can be extracted with these results.
+Results are mixed across corpora, thus for this experiment, no text representation / distance measure are retained.
 
 \begin{figure}
   \centering
