@@ -7,7 +7,7 @@ The model must be linear, since only one cut should separate the true links and 
 To train the model, a sample is created for each link in a rank list.
 The links labels are either \textit{true} (1.0) when both document in the link are from the same author and \textit{false} (0.0) otherwise.
 
-The features used are : the log of the relative rank ($log \frac{rank}{|L|}$) and the score of the link.
+The features used are: the log of the relative rank ($log \frac{rank}{|L|}$) and the score of the link.
 The first feature to take into account that true links are generally on the top of the rank list.
 The value is normalized to be able to generalize this value to any rank list size.
 The logarithm allow to have a greater contrast in value for the top rank while considering bottom rank as more or less equal.

@@ -12,7 +12,7 @@ In this study, finding this position will also be referred to as finding the \te
 We define the true positive as true links above the cut, true negatives as false links under the cut.
 In addition, false positive are true links under the cut and false negatives are false links above the cut.
 
-To find this cut, three approaches are explored : a Silhouette-based model, a distribution-based model and a regression-based model.
+To find this cut, three approaches are explored: a Silhouette-based model, a distribution-based model and a regression-based model.
 
 The Silhouette-based method can be used when only one corpus is available and no learning procedures can be applied.
 
@@ -34,11 +34,11 @@ The agglomerative clustering follow this procedure:
   \item 3. and 4. can be repeated until a single cluster remain.
 \end{enumerate}
 
-Multiple linkage criteria are available : \textit{Ward} (metric that aim to minimize the variance of the cluster merged), \textit{average-linkage} (use the average score of each link of the cluster merged), \textit{complete-linkage} (use the cluster merged maximal score), \textit{single-linkage} (use the cluster merged minimal score).
+Multiple linkage criteria are available: \textit{Ward} (metric that aim to minimize the variance of the cluster merged), \textit{average-linkage} (use the average score of each link of the cluster merged), \textit{complete-linkage} (use the cluster merged maximal score), \textit{single-linkage} (use the cluster merged minimal score).
 Example~\ref{ex:agglomerative_clustering} show an example for the merging procedures and linkage criteria.
 
 Ward linkage was discarded since the current implementation only allow Euclidean distance for its computation.
-The merging procedure can be stopped in either one of the two following criteria : When a certain cluster number is reached or when the minimal score for the next merge is above a certain value.
+The merging procedure can be stopped in either one of the two following criteria: When a certain cluster number is reached or when the minimal score for the next merge is above a certain value.
 This value is called the distance threshold.
 
 The so-called cut can be associated to the distance threshold.
@@ -140,7 +140,7 @@ The implementation profit of the generator functions that Python offers.
 \subsection{Parameters\label{sec:hierarchical_clustering}}
 
 As explained in Section~\ref{sec:algorithm_and_implementation}, the hierarchical clustering decide clusters based on a bottom-up approach and have two main parameters, the stopping procedure and the linkage criterion.
-The linkage criterion can be : single, complete, average linkage.
+The linkage criterion can be: single, complete, average linkage.
 Oxquarry, Brunet, St-Jean A, St-Jean B and St-Jean corpora are used for this experiment.
 
 The goal is to understand how the linkage criterion behave for the best clustering achievable (best $B^3_{F_1}$)

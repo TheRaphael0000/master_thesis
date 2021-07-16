@@ -6,7 +6,7 @@ Some are from papers published in scientific journals, others are from PAN @ CLE
 This study focus on the authorship clustering task.
 
 Authorship clustering is a problem in which a set of documents written by different authors is given, and the goal is to group documents into clusters which only contain document written by the same author.
-Authorship clustering is closely related to two other authorship topics : authorship attribution and authorship verification.
+Authorship clustering is closely related to two other authorship topics: authorship attribution and authorship verification.
 Authorship attribution try to determine who wrote a document, given a collection of documents.
 Authorship verification aim to identify if two documents are written by the same author \cite{pan11_verif}.
 A clustering problem can be split into a series of authorship verification by considering every pair of documents as a verification task, the clusters are created grouping every positive verified pairs, these are also called true links \cite{pan16_clustering_site}.
@@ -29,8 +29,8 @@ The solutions proposed by Bagnall~\cite{bagnall_pan16} for this problem was to u
 On the other hand, Kocher~\cite{kocher_pan16} used a feature vector based on most frequent terms in the texts and a distance threshold between these vector to indicate a potential authorship link.
 
 In Kocher and Savoy (2018)'s paper~\cite{kocher_linking}, they aim to evaluate different text representation scheme for the authorship linking task.
-They compared the authors style, using feature vectors constructed on the most frequent occurrences of the following text representations : words frequencies, lemma frequencies, Part-Of-Speach (POS) tags frequencies, sequences of POS tags, as well as $n$-grams frequencies.
-The distance measures used to compare the vectors are : $L^1$ norms (Manhattan, Tanimoto), $L^2$ norm (Matusita, Clark), inner products (Cosine distance) and the Jeffery divergence.
+They compared the authors style, using feature vectors constructed on the most frequent occurrences of the following text representations: words frequencies, lemma frequencies, Part-Of-Speach (POS) tags frequencies, sequences of POS tags, as well as $n$-grams frequencies.
+The distance measures used to compare the vectors are: $L^1$ norms (Manhattan, Tanimoto), $L^2$ norm (Matusita, Clark), inner products (Cosine distance) and the Jeffery divergence.
 Depending on the corpus, the text representation and the evaluation metric used, no clear text representation and distance measures were the giving the best result for all the problems.
 
 In 2018, Savoy~\cite{savoy_starnone} was show that the pen name Elena Ferrante, a well known novels author, is certainly Domenico Starnone.
@@ -44,7 +44,7 @@ For this competition, a large corpus containing around 276,000 document pairs an
 The two corpora in the English language and their documents around 21,000 characters~\cite{overview_pan20}.
 
 For this task, Weerasinghe~and~Greenstadt~\cite{feature_vector_pan20} proposed using the Manhattan distance between two features vector based on multiple clues.
-They created the feature vector based on the following principles : Character $n$-grams, POS sequences, special characters, frequency of function words, number of characters, number of words, average number of character per word, word-length distribution (between one and ten), the vocabulary richness (using hapax-legomenon and dis-legomenon ratios), POS chunks and NP and VP construction.
+They created the feature vector based on the following principles: Character $n$-grams, POS sequences, special characters, frequency of function words, number of characters, number of words, average number of character per word, word-length distribution (between one and ten), the vocabulary richness (using hapax-legomenon and dis-legomenon ratios), POS chunks and NP and VP construction.
 For the classification, a linear regression and neural network model was trained on respectively the small and large dataset, they obtained one of the best model of the shared task.
 Another method for this task proposed by Araujo,~Gómez~and~Fuentes~\cite{siamese_network_pan20} was to use a Siamese neural network using $n$-grams words with a size from 1 to 3 (short sequences of words) for their feature vector.
 Instead, Ikae~\cite{unine_pan20_verif} for this task used Labbé similarity on the most frequent tokens from each author and the ones in the English language.

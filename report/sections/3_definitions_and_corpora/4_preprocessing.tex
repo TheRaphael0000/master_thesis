@@ -15,7 +15,7 @@ When the word \textit{des} (equivalent to a plural \textit{the} in French) is en
 To avoid having these words weighted twice, only the first line is kept.
 
 St-Jean also have another specificity, it contains both the numerical representation of numbers and the textual representation.
-For example, the number \textit{89} is written in St-Jean as :
+For example, the number \textit{89} is written in St-Jean as:
 \begin{verbatim}
 <Nombre 89>,<>,<>
 quatre,quatre,72
@@ -33,7 +33,7 @@ septième,septième,72
 \end{verbatim}
 When the number is already written in full letters in the text, the parser did not tokenize it this way, only one line is created.
 
-The first two line of each document are ignored for St-Jean since they contain metadata for the document, such as : the number of tokens in the document, the name of the collection and the ID written is full text.
+The first two line of each document are ignored for St-Jean since they contain metadata for the document, such as: the number of tokens in the document, the name of the collection and the ID written is full text.
 
 For Oxquarry, Brunet and St-Jean, the authors of each document are contained in a single text file.
 On each line the author of the document for the document with an ID equivalent to the line number, e.g. author on line 1 is for document 1, author on line 2 is for document 2, etc.

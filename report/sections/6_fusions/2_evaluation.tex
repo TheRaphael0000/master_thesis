@@ -20,7 +20,7 @@ For the Single-Mean, if it is over come it means that the obtained rank list hav
 
 For this experiment the St-Jean A and St-Jean B corpora are used.
 The results of every fusion combinations using the proposed rank list and strategies are graphically presented in Figure~\ref{fig:fusions}.
-Statistics on the 126 fusions on each metric and fusion schemes are resumed in Tables~\ref{tab:fusion_stats_A}/\ref{tab:fusion_stats_B}, it contains : the minimal value (min), the average and the standard deviation (Avg$\pm$Std), the maximal value, the argmin and argmax for the metrics (using ids of the rank list see Table~\ref{tab:9rl} in Section~\ref{sec:individual_methods_summary}).
+Statistics on the 126 fusions on each metric and fusion schemes are resumed in Tables~\ref{tab:fusion_stats_A}/\ref{tab:fusion_stats_B}, it contains: the minimal value (min), the average and the standard deviation (Avg$\pm$Std), the maximal value, the argmin and argmax for the metrics (using ids of the rank list see Table~\ref{tab:9rl} in Section~\ref{sec:individual_methods_summary}).
 A sign test between the two strategies and the two fusion methods is presented in Table~\ref{tab:fusion_sign_test}.
 
 Using these metrics on St-Jean, the sign test tends to indicate that the fusion increase the overall quality of the rank list.
@@ -311,7 +311,7 @@ This strategy may be appliable on harder corpus such as the PAN 16 corpus but no
 To evaluate the performance of the soft veto strategy, the idea is to compute the average precision gain obtained when using the soft-veto over the simple fusion without it.
 The gain is computed by subtracting the average precision of the Z-Score fusion without the soft-veto to the average precision of the Z-Score fusion with the soft-veto.
 
-The soft-veto has two parameters : $c$ and $r$, to be able to find the best parameters the grid search approach is used.
+The soft-veto has two parameters: $c$ and $r$, to be able to find the best parameters the grid search approach is used.
 Since the $c$ parameter must be in the interval $\left]0, \infty\right[$ and the $r$ parameter must be in the interval $\left]0, \infty\right[$, the grid is constructed from the Cartesian product of the two following sets.
 $c = \left\{0 + \epsilon, 1, 2, ..., 19, 20\right\}$, with $\epsilon$ a small value (for example $10^{-6}$) and $r = \left\{0.10, 0.14, ..., 0.86, 0.90\right\}$.
 When computing the soft-veto gain using the grid search on the retained rank lists from Oxquarry (see Table~\ref{tab:9rl}), Figure~\ref{fig:soft_veto} is obtained.
@@ -343,7 +343,7 @@ If our assumption is correct, the average precision gain obtained by fusing two 
 A large gain, when the rank lists are different, thus a low rank list correlation coefficient, and vice versa.
 
 The fusion strategy used here is the Z-Score fusion, since this strategy is parameterless and obtained satisfying results during previous experiments.
-As for previous experiments dealing with fusion, the gain in average precision when comparing a set of rank list to a fused rank list can be established in the two following ways : \textit{Single-Mean} and \textit{Single-Max}.
+As for previous experiments dealing with fusion, the gain in average precision when comparing a set of rank list to a fused rank list can be established in the two following ways: \textit{Single-Mean} and \textit{Single-Max}.
 Single-Mean represent the rank lists' mean average precision and Single-Max the rank list maximal average precision.
 Example~\ref{ex:gain} in Section~\ref{sec:evaluation_comparison} contain a small example with two rank lists for the Single-Mean and Single-Max methods to compute the average precision gain.
 

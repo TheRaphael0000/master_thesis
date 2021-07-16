@@ -13,10 +13,10 @@ Commonly, for the compression, a lossless compression algorithm is used, one fro
 This technique is based on the fact that lossless compression algorithms tries to lower the Shannon entropy of a document, thus when compressing a document with a large Shannon entropy the compressed document should have a larger size after compression than a document with a small Shannon entropy.
 When concatenating two documents that share many terms, the entropy of the concatenated document should be lower than if the two documents present distinct vocabulary.
 
-This approach has the benefit to produce rank lists in a nearly parameterless manner, only a distance metric and compression algorithm is needed.
+This approach has the benefit to produce rank lists in a nearly parameterless manner, only a distance metric and compression algorithm are needed.
 A main drawback with this technique is the fact that the results can not be properly explained compared to MF method.
 
-In this study the lossless compression algorithm used are : GZip, BZip2, LZMA.
+In this study the lossless compression algorithm used are: GZip, BZip2, LZMA.
 The implementations for these compression algorithms are the ones in the Python standard library, the programming language used for this study \cite{python_standard_library}.
 Each compression algorithm can be tweaked with different parameters, the default settings are used except for the compression level (trade-off compression time and compression size).
 By setting the compression level to the maximal setting, this ensures that the produced file will have the lowest possible Shannon entropy reachable with this algorithm, thus providing the best possible approximation of distance when used in conjunction with the compression distances.
@@ -50,7 +50,6 @@ Definitions~\ref{def:compress1},~\ref{def:compress2} and \ref{def:compress3} are
   This metric has the same properties as the cosine distance (Definition~\ref{def:cosine_dist}).
 \end{definition}
 
-
 \subsection{Evaluation}
 
 An experiment was conducted to try to compare the three proposed compression algorithm (GZip, BZip2, LZMA) for the compression based distance ranking.
@@ -60,13 +59,16 @@ This experiment is run on the three corpora three times to have a better approxi
 The results in terms of efficiency of the resulting rank list are shown in Table~\ref{tab:compression_evaluation_results}.
 The average time of the three runs are in Table~\ref{tab:compression_evaluation_times} when run on a desktop computer with an \textit{Intel(R) Core(TM) i7-5820K CPU @ 3.30GHz}.
 
-GZip seem to be giving the worse results on every corpus with an absolute average AP of $\sim -0.20$ in compared to LZMA and BZip2.
-LZMA gives the best results on every corpus tested, but BZip2 have close results.
+LZMA gives the best results on every corpus tested (Mean AP: 0.76 with NCD and 0.78 with CBC).
+BZip2 have results close results to LZMA (LZMA have an AP $\sim 2.5\%$ better).
+GZip seem to be giving the worse results on every corpus.
+It obtains an AP $\sim 30\%$ worse than LZMA.
 
-The Cosine-based compression distance (CBC) tend to give better results over the normalized compression distance (NCD).
-In terms of time complexity BZip2 is the fastest algorithm of the 3 proposed, LZMA is $\sim 5-6$ times slower than BZip2, and GZip slower than BZip2 by around $\sim 5-20$\%.
+The Cosine-based compression distance (CBC) tend to give slightly better results over the normalized compression distance (NCD), AP $\sim 1\%$ better.
 
+In terms of time complexity BZip2 is the fastest algorithm of the 3 proposed, LZMA is $\sim 5-6$ times slower than BZip2, and GZip slower than BZip2 by around $\sim 7\%$.
 No significant time differences is recorded between the NCD and CBC distance measures, since the greatest complexity reside in the compression algorithm.
+
 Even though LZMA algorithm give the best results, the configuration retained for the compression based distance is the BZip2 with the Cosine based compression distance, since it gives relative good results in a short amount of time.
 
 Previous study show that the distance measure choice was more impactful than the choice of the compression algorithm in the regarding the quality of the results \cite{comparing_compression}.
@@ -77,94 +79,63 @@ This difference may be caused by the difference of compression algorithm used.
 For this text representation, the retained configuration is the BZip2 algorithm with the CBC distance measure.
 The Bzip2 was selected even though LZMA give slightly better results, due to the huge difference in run time.
 
-\begin{table}
+\begin{table*}
   \centering
-  \caption{Evaluation of the different compression algorithm and distance metrics using Average Precision (AP), R-Precision (RPrec) and High Precision (HPrec)}
+  \caption{Compression methods evaluation with different compression algorithm and distance metrics}
   \label{tab:compression_evaluation_results}
 
-  \subcaption{Oxquarry}
-  \label{tab:compression_evaluation_oxquarry}
-  \begin{tabular}{l c c}
+  \subcaption{Distance: NCD}
+  \begin{tabular}{l c c c|c}
     \toprule
-    AP/RPrec/HPrec & NCD          & CBC \\
+    AP/RPrec/HPrec & Oxquarry     & Brunet       & St-Jean       & Mean \\
     \midrule
-    Bzip2          & 0.77/0.68/69 & 0.79/0.69/74 \\
-    GZip           & 0.62/0.56/41 & 0.64/0.56/43 \\
-    LZMA           & 0.81/0.70/82 & 0.84/0.73/85 \\
+    Bzip2          & 0.77/0.68/69 & 0.76/0.70/25 & 0.70/0.63/214 & 0.74/0.67/102\\
+    GZip           & 0.62/0.56/41 & 0.61/0.53/24 & 0.45/0.44/054 & 0.56/0.51/040\\
+    LZMA           & 0.81/0.70/82 & 0.78/0.73/27 & 0.71/0.63/241 & 0.76/0.68/117\\
     \bottomrule
   \end{tabular}
 
   \vspace{0.5cm}
 
-  \subcaption{Brunet}
-  \label{tab:compression_evaluation_brunet}
-  \begin{tabular}{l c c}
+  \subcaption{Distance: CBC}
+  \begin{tabular}{l c c c|c}
     \toprule
-    AP/RPrec/HPrec & NCD          & CBC \\
+    AP/RPrec/HPrec & Oxquarry     & Brunet       & St-Jean       & Mean\\
     \midrule
-    Bzip2          & 0.76/0.70/25 & 0.76/0.70/25 \\
-    GZip           & 0.61/0.53/24 & 0.60/0.52/23 \\
-    LZMA           & 0.78/0.73/27 & 0.79/0.73/31 \\
+    Bzip2          & 0.79/0.69/74 & 0.76/0.70/25 & 0.70/0.62/219 & 0.75/0.67/106\\
+    GZip           & 0.64/0.56/43 & 0.60/0.52/23 & 0.42/0.42/056 & 0.55/0.50/041\\
+    LZMA           & 0.84/0.73/85 & 0.79/0.73/31 & 0.71/0.62/214 & 0.78/0.69/110\\
     \bottomrule
   \end{tabular}
 
-  \vspace{0.5cm}
-
-  \subcaption{St-Jean}
-  \label{tab:compression_evaluation_st_jean}
-  \begin{tabular}{l c c}
-    \toprule
-    AP/RPrec/HPrec & NCD           & CBC \\
-    \midrule
-    Bzip2          & 0.70/0.63/214 & 0.70/0.62/219 \\
-    GZip           & 0.45/0.44/54  & 0.42/0.42/56 \\
-    LZMA           & 0.71/0.63/241 & 0.71/0.62/214 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
+\end{table*}
 
 \begin{table}
   \centering
-  \caption{Average run time for the rank list computation with the different compression algorithm and distance metrics}
+  \caption{Compression methods time evaluation with different compression algorithm and distance metrics}
   \label{tab:compression_evaluation_times}
 
-  \subcaption{Oxquarry}
-  \label{tab:compression_evaluation_time_oxquarry}
-  \begin{tabular}{l c c}
+  \subcaption{Distance: NCD}
+  \begin{tabular}{l c c c|c}
     \toprule
-    Time      & NCD   & CBC \\
+    Time      & Oxquarry  & Brunet & St-Jean & Mean\\
     \midrule
-    Bzip2     & 12.7s & 12.7s \\
-    GZip      & 15.0s & 14.9s \\
-    LZMA      & 69.0s & 68.8s \\
+    Bzip2     & 12.7s     & 8.4s   & 198.9s  & 73.3s\\
+    GZip      & 15.0s     & 8.8s   & 211.3s  & 78.4s\\
+    LZMA      & 69.0s     & 46.6s  & 1046.3s & 387.3s\\
     \bottomrule
   \end{tabular}
 
   \vspace{0.5cm}
 
-  \subcaption{Brunet}
-  \label{tab:compression_evaluation_time_brunet}
-  \begin{tabular}{l c c}
+  \subcaption{Distance: CBC}
+  \begin{tabular}{l c c c|c}
     \toprule
-    Time      & NCD   & CBC \\
+    Time      & Oxquarry & Brunet & St-Jean & Mean\\
     \midrule
-    Bzip2     & 8.4s & 8.4s \\
-    GZip      & 8.8s & 8.9s \\
-    LZMA      & 46.6s & 46.8s \\
-    \bottomrule
-  \end{tabular}
-
-  \vspace{0.5cm}
-
-  \subcaption{St-Jean}
-  \label{tab:compression_evaluation_time_st_jean}
-  \begin{tabular}{l c c}
-    \toprule
-    Time      & NCD    & CBC \\
-    \midrule
-    Bzip2     & 198.9s  & 198.4s \\
-    GZip      & 211.3s  & 214.5s \\
-    LZMA      & 1046.3s & 1052.0s \\
+    Bzip2     & 12.7s    & 8.4s   & 198.4s  & 73.2s\\
+    GZip      & 14.9s    & 8.9s   & 214.5s  & 79.4s\\
+    LZMA      & 68.8s    & 46.8s  & 1052.0s & 398.2s\\
     \bottomrule
   \end{tabular}
 \end{table}
