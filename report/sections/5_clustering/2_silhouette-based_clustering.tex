@@ -1,14 +1,15 @@
-\section{Silhouette-based clustering \label{sec:silhouette-based_clustering}}
+\section{Silhouette-based clustering\label{sec:silhouette-based_clustering}}
 
 \subsection{Method}
 
 The main idea of the Silhouette-based clustering is to evaluate in an unsupervised manner the clustering result for each number of clusters (at each merge step of the hierarchical clustering).
-When discarding clustering with $N$ and clusters $1$, this produce $N - 2$ possible clustering, each of those are evaluated using the mean Silhouette score.
-See Definition~\ref{def:silhouette}.
+When discarding the clustering with $N$ and clusters $1$, this produce $N - 2$ possible clustering, each of those are evaluated using the mean Silhouette score.
+The mean Silhouette score is defined in Definition~\ref{def:silhouette}.
 
 \begin{definition}[Mean Silhouette score~\cite{sklearn}~\cite{wiki_silhouette}]
   \label{def:silhouette}
-  The mean Silhouette score is an unsupervised clustering metric which evaluate a clustering result by measuring the cohesion and separation of the clusters.
+  The mean Silhouette score $s$ is an unsupervised clustering metric which evaluate a clustering result by measuring the cohesion $a(i)$ and separation of the clusters $b(i)$.
+
   \begin{gather*}
     s = \frac{1}{|C|} \sum_{i = 0}^{|C|} \frac{b(i) - a(i)}{max(a(i), b(i))}
   \end{gather*}
@@ -22,19 +23,20 @@ See Definition~\ref{def:silhouette}.
   \end{gather*}
   With $C$ the set of clusters, $C_i$ the i-th cluster, $d(i, j)$ the distance between the document i and j.
   $d(i, j)$ are pre-computed and used for the rank list.
+
   The value is ranged between -1 and 1, a large value indicate a good cohesion and good separation of the clusters (low intra-cluster distance, high nearest-cluster distance).
 \end{definition}
 
+The right number of cluster is not known.
 The idea is to apply the hierarchical clustering at each possible number of clusters (from $N - 1$ to $2$), and compute the mean Silhouette score.
-The best clustering is the one which have the largest mean Silhouette score.
+The best clustering is the one with the largest mean Silhouette score.
+
 An alternative to this method is the Iterative Positive Silhouette (IPS) and was proposed in Layton, Watters, Dazeley (2011)~\cite{automated_unsupervised}.
+This method uses the median Silhouette score instead, and use another stopping procedure based on the sign of the score.
 
 \subsection{Evaluation}
 
-For this experiment, the goal is to test the Silhouette-based hierarchical clustering cut method based on the maximization of the mean Silhouette score on the literature corpora.
-The right number of cluster is not known.
-When applying the procedure, the number of clusters start at $2$ and end at the number of documents minus $1$.
-The best clustering according to this method is the one that yield the greatest mean Silhouette score.
+For this experiment, the goal is to test the Silhouette-based hierarchical clustering method based on the maximization of the mean Silhouette score on the literature corpora.
 
 The rank list used for this experiment is the one from the retained text representation (9 for St-Jean and 7 for Brunet and Oxquarry), see Table~\ref{tab:rls_oxquarry_brunet}~and~\ref{tab:rls_st_jean} in annex.
 
@@ -43,11 +45,11 @@ The $B^3_{F_1}$ score and $r_{diff}$ average on the Silhouette-based clustering 
 The average r-ratio difference is a positive value ranging between $\left[0.17, 0.22\right]$ depending on the linkage criterion.
 Having a too large r-ratio indicate that the estimated number of cluster on every corpus is overestimated.
 This means that the mean neareast-cluster distance is greater than the mean intra-cluster distance, even when dealing with the right number of clusters.
-This can be due to the fact that the rank list used for the clustering is not perfect (AP $\neq 1$).
+In Table~\ref{tab:silhouette-based_clustering}, the r-ratio is clearly too high, and can be due to the fact that the rank list used for the clustering is not perfect (AP $\neq 1$).
 
 \begin{table}
   \centering
-  \caption{Silhouette-based clustering evaluation on retained rank lists, average $B^3_{F_1}$/$r_{diff}$, Maximal Silhouette ($\alpha = 0$)}
+  \caption{Silhouette-based clustering evaluation on retained rank lists, mean $B^3_{F_1}$/$r_{diff}$, Maximal Silhouette ($\alpha = 0$)}
   \label{tab:silhouette-based_clustering}
 
   \resizebox{\linewidth}{!}{
@@ -62,24 +64,30 @@ This can be due to the fact that the rank list used for the clustering is not pe
     St-Jean B & 0.91/0.08 & 0.91/0.06 & 0.90/0.06 \\
     \midrule
     Absolute mean & 0.74/0.22 & 0.76/0.17 & 0.75/0.17 \\
+    \midrule
+    \textit{Upper bound} & \textit{0.83/0.00} & \textit{0.88/0.00} & \textit{0.87/0.00} \\
     \bottomrule
   \end{tabular}
   }
 \end{table}
 
-\subsection{Algorithm tweaking for authorship clustering}
+\subsection{Tweak for Authorship Clustering}
 
-To mitigate the problem of having the number of cluster overestimated, an easy solution would be to use the labels produced by the clustering of a non-maximal value of the Silhouette score on the left side of the maximal Silhouette score.
+We want to mitigate having the number of cluster overestimated by the Silhouette-based clustering method.
+An easy solution is to use the labels produced by the clustering earlier in the procedure (less merges, less clusters).
+This corresponds to a non-maximal value of the mean Silhouette score, on the left side of the maximal mean Silhouette score.
+
 In this study, we introduce a parameter called $\alpha$.
-$\alpha$ represents a percentage of value to subtract to the maximal mean Silhouette score to obtain the new target (instead of the maximal value).
+$\alpha$ represents a percentage to subtract to the maximal mean Silhouette score to obtain a new target with a lower mean Silhouette score (instead of the maximal value).
 
-Since the mean Silhouette score is concave, the two sides of the maximal mean Silhouette can be the new target.
+The mean Silhouette score across the number of clusters is a concave function.
+The new target, can thus be either on the left or on the right of the maximal mean Silhouette.
 To remove this ambiguity, the sign of $\alpha$ indicate on which side of the maximal Silhouette score the target should be.
 
 With $\alpha = 0$, this corresponds to the maximal mean Silhouette score.
 With a negative $\alpha$ the left side is targeted and with a positive $\alpha$, the right side.
 
-The clustering with the Silhouette score the closest to the target on the indicated side is retained.
+The clustering with the Silhouette score the closest to the target on the desired side is retained.
 
 \begin{definition}[$\alpha$-Silhouette]
   The $\alpha$-Silhouette target score found by using the maximal Silhouette score as a baseline and is adjusted using a parameter called $\alpha$.
@@ -93,12 +101,12 @@ The clustering with the Silhouette score the closest to the target on the indica
 
 Example~\ref{ex:alpha_correction} show the $\alpha$ computation and usage.
 
-For example, by using $\alpha = -0.2$, we aim to correct this overshoot.
+For example, by using $\alpha = -0.2$, we aim to correct this overshoot and increase the quality of the clustering results.
 This value was chosen by grid search to optimize the $B^3_{F_1}$.
 
-Table~\ref{tab:silhouette-based_clustering_alpha} show the results with $\alpha = -0.2$, the complete table is available in Table~\ref{tab:silhouette-based_clustering_alpha_full} in annex.
+Table~\ref{tab:silhouette-based_clustering_alpha} show the evaluation with $\alpha = -0.2$, the complete table is available in Table~\ref{tab:silhouette-based_clustering_alpha_full} in annex.
 With this correction technique, in average the $r_{diff}$ is closer to 0 and the average $B^3_{F_1}$ is increased in average by 6\% across all the corpora.
-The average linkage criterion give the best results for this clustering method, the $B^3_{F_1}$ is in average 2\% better with this method.
+Like for the upper bound, the average linkage criterion give the best results for this clustering method, its $B^3_{F_1}$ is in average 2\% better.
 
 \begin{example}
   \centering
@@ -136,9 +144,9 @@ The average linkage criterion give the best results for this clustering method, 
   \vspace{0.5cm}
 
   \subcaption{Clustering selection}
-  Since $\alpha$ is negative, the left side of the clustering is used (smaller number of clusters).
+  Since $\alpha$ is negative, the left side of the maximal mean Silhouette is used (smaller number of clusters).
 
-  Thus, the clustering on the left side with the closest Silhouette score to the target is the one with 4 clusters.
+  Thus, the clustering on the left side with the closest Silhouette score to the target is the one with 4 clusters (score: 3.2).
 \end{example}
 
 \begin{table}
@@ -158,6 +166,8 @@ The average linkage criterion give the best results for this clustering method, 
     St-Jean B & 0.86/0.02 & 0.87/0.03 & 0.86/0.03 \\
     \midrule
     Absolute mean & 0.79/0.08 & 0.81/0.06 & 0.80/0.06 \\
+    \midrule
+    \textit{Upper bound} & \textit{0.83/0.00} & \textit{0.88/0.00} & \textit{0.87/0.00} \\
     \bottomrule
   \end{tabular}
   }

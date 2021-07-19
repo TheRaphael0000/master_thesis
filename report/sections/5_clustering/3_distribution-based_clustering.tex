@@ -1,42 +1,54 @@
-\section{Distribution-based clustering}
+\section{Distribution-based clustering\label{sec:distribution_based_clustering}}
 
 \subsection{Method}
 
-In Savoy (2014)'s \textit{Estimating the Probability of an Authorship Attribution}~\cite{savoy_probability} they modelled the distribution of the true and false links across the score obtained using a mixture of two beta distribution.
-Using these two beta distribution models, the position where the area under the curve for both models is maximized (same area under the cut for both models), correspond to the position where the true positive and true negatives are maximized.
+In Savoy (2014)'s \textit{Estimating the Probability of an Authorship Attribution}~\cite{savoy_probability} they modelled the distribution of the true and false links across the score obtained using two beta distribution.
+Using these two beta distribution models, the position where the area under the curve for both models is maximized (same area under the curve for both models), correspond to the position where the true positive and true negatives are maximized.
 Thus, the statistical best possible location whereto separate the rank list if we want to minimize the false positive and false negatives (non-weighted minimization errors).
-The idea is to reuse this position for any new rank lists.
-
-To find the position where both beta distribution have the same area under the curve, there might be analytical ways to solve this problematic using the \textit{beta distribution cumulative distribution function analytic form} (beta CDF, probability, area under the curve) but was ignored for this study.
-Instead, the equiprobable position is found using a binary search between 0 and 1.
-At each step, the CDF for the two beta distribution is evaluated until it converges to the same value (or until their difference is a small value, such as $10^{-15}$).
-The binary search have a complexity of $O(\log n)$.
-With an analytical solve, the complexity could drop to $O(1)$.
 
 As explained in~\cite{savoy_probability} the beta distribution is better suited for authorship problem than, for example, the Gaussian distribution since it can grasp a larger amount of distribution shapes with its parameters' flexibility.
-
-The idea is here to find the cut location using a corpus with known authors and re-use the same value for new corpora.
-This method is a supervised method since it requires examples to learn the cut.
-The distribution-based clustering do not consider any new corpus for its value computation.
-Each training corpus and rank list generation method combinations yield a \textit{static} model, which is represented by a single fixed real number, the distance threshold.
 
 Figure~\ref{fig:links_score_density} show the distance density for true and false link as well as a beta distribution estimation for the St-Jean B rank list generated with text representation 0 (ref. Section~\ref{sec:individual_methods_summary}).
 Notice that to be able to model the beta distribution, the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization}.
 
-The vertical line indicate the equiprobable position where both beta distribution have the same probability of being a true link and false link (same area under the curve), found using the binary search.
+The vertical line on the Figure, indicate the equiprobable position where both beta distribution have the same probability of being a true link and false link (same area under the curve).
 This point can be used as a decision point where the cut should be made in the rank list, this ensures that both false positives and false negatives are minimized.
 
-This technique can be adapted, in the case where the false positives do not have the same importance as false negatives.
-The position search criteria can be change such that instead of finding the position where both the true link and false link area correspond to 50\% of their sum (equiprobable case).
-It can be generalized such that the true link area represent $\alpha$ and the false link area to $1-\alpha$ with $\alpha \in \left[0,1\right]$.
-When $\alpha$ is greater than 0.5, more false positives will occur and less false negatives and when $\alpha$ is smaller than 0.5, more false positives and more false negatives.
-The same binary search can be used for this computation, just the target need to be changed.
+The equiprobable position is found using a binary search between $0.00$ and $1.00$.
+At each step, the cumulative distribution function (CDF, area under the curve) of the two beta distribution are evaluated.
+From left to right for the distribution on the left (True links in the Figure), and from right to left for the distribution on the right (False links in the Figure).
+The difference between the two area is computed.
+The binary search stops once the difference is a small value, such as $10^{-15}$.
+Binary searches have a complexity of $O(\log n)$.
+
+There might be analytical ways to solve this problematic using the \textit{beta distribution cumulative distribution function analytic form} (beta CDF analytic form) but was ignored for this study.
+With an analytical solve, the complexity could drop to $O(1)$.
+
+Once the equiprobable position is found for a corpus with known authors, it can be re-used for new corpora.
+After un-normalizing, the equiprobable position is used as a distance threshold for stopping the hierarchical clustering.
+
+This method is supervised since it requires examples to learn the cut.
+The distribution-based clustering do not consider any new corpus for its value computation.
+Each training rank list yields a single fixed real number, the optimal cut position for this rank list.
 
 \begin{figure}
   \caption{Links distances density and beta distribution estimation for St-Jean B with text representation 0}
   \label{fig:links_score_density}
   \includegraphics[width=\linewidth]{img/links_score_density.png}
 \end{figure}
+
+\subsection{Possible Cost Function}
+
+This technique can be adapted, in the case where a loss/cost function have to be minimized (the false positives do not have the same importance as false negatives).
+The position search criteria can be change such that instead of finding the position where both the true link and false link area correspond to $50\%$ of their sum (equiprobable case).
+
+It can be generalized such that the true link area represent $\alpha$ and the false link area to $1-\alpha$ with $\alpha \in \left[0,1\right]$.
+When $\alpha$ is greater than $0.50$, more false positives and less false negatives will occur.
+When $\alpha$ is smaller than $0.50$, less false positives and more false negatives will occur.
+
+For the clustering, the $\alpha$ parameter directly influence the $r_diff$ value and the $B^3_{precision}$ and $B^3_{recall}$.
+The same binary search can be used for this computation, just the target need to be changed.
+In this study, we only consider the equiprobable case.
 
 \subsection{Evaluation}
 
@@ -49,7 +61,7 @@ This corresponds to the testing phase.
 
 The evaluation results are aggregated by applying the arithmetic mean on the $B^3_{F_1}$ and $r_{diff}$ across all retained rank list.
 
-The evaluation is presented in Table~\ref{tab:semi_supervised_clustering} show the results for each linkage criterion (Single, Average, Complete).
+The evaluation is presented in Table~\ref{tab:semi_supervised_clustering} which show the results for each linkage criterion (Single, Average, Complete).
 
 The following conclusions can be drawn with these results:
 \begin{itemize}

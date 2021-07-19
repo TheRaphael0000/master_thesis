@@ -90,7 +90,7 @@ The main idea here is to learn a logistic regression model for each combination 
 From each distinct rank list, features for each link are created.
 We have selected the log of the relative rank and the link score.
 Since a probability of being a true link is desired, the target value for each link is either 1 for the true links or 0 when it is a false link.
-This feature construction is the same as the one used for the regression-based clustering method (ref. Section~\ref{sec:regression-based_clustering}).
+This feature construction is the same as the one used for the regression-based clustering method (ref. Section~\ref{sec:regression_based_clustering}).
 
 One model per type of rank list is trained, this model can provide for any new same type rank list, probabilities for each link being of being a true link.
 

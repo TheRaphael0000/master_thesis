@@ -15,15 +15,18 @@ In addition, false positive are true links under the cut and false negatives are
 To find this cut, three approaches are explored: a Silhouette-based model, a distribution-based model and a regression-based model.
 
 The Silhouette-based method can be used when only one corpus is available and no learning procedures can be applied.
+This method is presented and evaluated in Section~\ref{sec:silhouette-based_clustering}.
 
-The distribution-based model learn based on a corpus with labels (training corpus) a rank list score where the cut should be for any other corpus (called testing corpus).
+The distribution-based model learn based on a corpus' rank list with labels (training corpus) a score where the cut should be for any new corpus' rank list (called testing corpus).
+Section~\ref{sec:distribution_based_clustering} contains explanations for this method.
 
-Finally, the regression based model, learn to classify rank list's links from a corpus with labels (training corpus).
-The model can find the optimal cut for a rank list from a new corpus (called testing corpus), by estimating the true link probabilities for each link.
+Finally, the regression based model, learn to estimate the rank lists links' true link probability from a corpus with labels (examples, training corpus).
+The model can find the optimal cut for a rank list from a new corpus (called testing corpus), by estimating the true link probabilities for each link from the previous examples.
+This approach is explained in Section~\ref{sec:regression_based_clustering}.
 
 \subsection{Algorithm and Implementation \label{sec:algorithm_and_implementation}}
 
-The scikit-learn package \cite{sklearn} provide an implementation bottom-up implementation of the hierarchical clustering, which is called agglomerative clustering.
+The scikit-learn Python module \cite{sklearn} provide a bottom-up implementation of the hierarchical clustering, which is called agglomerative clustering.
 
 The agglomerative clustering follow this procedure:
 \begin{enumerate}
@@ -37,21 +40,27 @@ The agglomerative clustering follow this procedure:
 Multiple linkage criteria are available: \textit{Ward} (metric that aim to minimize the variance of the cluster merged), \textit{average-linkage} (use the average score of each link of the cluster merged), \textit{complete-linkage} (use the cluster merged maximal score), \textit{single-linkage} (use the cluster merged minimal score).
 Example~\ref{ex:agglomerative_clustering} show an example for the merging procedures and linkage criteria.
 
-Ward linkage was discarded since the current implementation only allow Euclidean distance for its computation.
-The merging procedure can be stopped in either one of the two following criteria: When a certain cluster number is reached or when the minimal score for the next merge is above a certain value.
+Ward linkage was discarded since the current \textit{scikit-learn} implementation only allow Euclidean distance for its computation.
+The merging procedure can be stopped with one of the two following criteria: When a certain cluster number is reached or when the lowest score for the next merge is above a certain value.
 This value is called the distance threshold.
 
 The so-called cut can be associated to the distance threshold.
-The cut is a position in the rank list and the distance threshold is the score which can help to separate the rank list.
+The cut is a theoretical position in the rank list which maximize true links above the cut and false link under.
+In the other hand, the distance threshold is the score at which the algorithm should stop merging clusters.
+They are not exactly the same, since when clusters are merged in the distances' matrix, the resulting distances' matrix can not be expressed as a rank list anymore.
 
-There is one main flaw with the scikit-learn implementation.
-It does not provide a way to access the current cluster at each merging step.
+The two supervised methods proposed in this study try to estimate the distance threshold, by estimating the optimal cut.
+Once a distance threshold is estimated, the hierarchical clustering is run on the rank list and is stopped according to the distance threshold.
+
+There is one main flaw with the current scikit-learn implementation.
+It does not provide a way to access the clusters at each merging step.
+This feature is required for the unsupervised method, which evaluated multiple clustering results.
+
 A possible workaround is to run the algorithm multiple time.
-Each time, the algorithm is stopped at a different cluster number.
-This workaround introduces an overhead of $O\frac{n * (n - 1)}{2} = O(n^2)$, with $n$ equal to the number of documents.
-
-The agglomerative clustering algorithm was reimplemented to allow access to the clusters at each step and avoid this overhead.
-The implementation profit of the generator functions that Python offers.
+Each time, the algorithm is stopped at a different cluster number (a different step).
+Though this workaround valid, it still introduces an unnecessary overhead of $O(1 + 2 + 3 + ... + n - 1) = O(\frac{n * (n - 1)}{2}) = O(n^2)$ additional merges, with $n$ equal to the number of documents.
+In other words, with the workaround, each time the algorithm is run, all the merges computed at the previous run must re-recomputed.
+The agglomerative clustering algorithm was reimplemented to allow access to the clusters at each step, to avoid this overhead.
 
 \begin{example}
   \small
@@ -77,12 +86,13 @@ The implementation profit of the generator functions that Python offers.
   \vspace{0.2cm}
   The link with the smallest distance is A-B with a distance of 1.
   At the next step, the clusters A and B are merged into a cluster called AB.
+  (b), (c) and (d) shows how to update the distances' matrix depending on the linkage criterion.
 
   \vspace{0.5cm}
 
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{First merge using single-linkage}
+    \subcaption{First merge using single-linkage\label{ex:agglomerative_clustering_single}}
     \begin{tabular}{c|c c c}
       \toprule
         & AB & C & D \\
@@ -101,7 +111,7 @@ The implementation profit of the generator functions that Python offers.
 
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{First merge using average-linkage}
+    \subcaption{First merge using average-linkage\label{ex:agglomerative_clustering_average}}
     \begin{tabular}{c|c c c}
       \toprule
         & AB & C & D \\
@@ -120,7 +130,7 @@ The implementation profit of the generator functions that Python offers.
 
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{First merge using complete-linkage}
+    \subcaption{First merge using complete-linkage\label{ex:agglomerative_clustering_complete}}
     \begin{tabular}{c|c c c}
       \toprule
         & AB & C & D \\
@@ -140,10 +150,10 @@ The implementation profit of the generator functions that Python offers.
 \subsection{Parameters\label{sec:hierarchical_clustering}}
 
 As explained in Section~\ref{sec:algorithm_and_implementation}, the hierarchical clustering decide clusters based on a bottom-up approach and have two main parameters, the stopping procedure and the linkage criterion.
-The linkage criterion can be: single, complete, average linkage.
+The linkage criterion can be: single, average or complete linkage.
 Oxquarry, Brunet, St-Jean A, St-Jean B and St-Jean corpora are used for this experiment.
 
-The goal is to understand how the linkage criterion behave for the best clustering achievable (best $B^3_{F_1}$)
+The goal is to understand how the linkage criterion behave for the best clustering achievable (best $B^3_{F_1}$).
 
 The custom implementation of the hierarchical clustering is used, at each merging step, the intermediary clustering is evaluated using the $B^3_{F_1}$.
 The clustering resulting in the best $B^3_{F_1}$ is kept.
@@ -151,15 +161,19 @@ This procedure is repeated for each linkage criteria and corpus / text represent
 
 The results are presented in Table~\ref{tab:hierarchical_clustering} and the mean for each corpus and linkage criterion.
 
-These results can be considered as the $B^3_{F_1}$ upper bound for the clustering case using the retained rank list on these corpora.
+These results can be considered as the $B^3_{F_1}$ upper bound for the hierarchical clustering using these rank lists on these corpora.
+In this study, we use the averages across all corpora to compare the cut methods, and we refer to them as \textit{upper bound} or \textit{rank lists upper bound}.
 
-The best linkage criterion depends on the corpus, but in average, the best $B^3_{F_1}$ is achieved with the average linkage criterion, a relative increase of 0.01 compared to the complete linkage and 0.05 compared to the single linkage.
+The best linkage criterion depends on the corpus, but in average, the best $B^3_{F_1}$ is achieved with the average linkage criterion.
+The average linkage is $\sim 1\%$ better than the complete linkage and $\sim 6\%$ better than the single linkage.
 
-We assumed that the better the rank list are, the better the clustering is when applying the hierarchical clustering.
+We assumed that the better the rank list are, the better the clustering result is when applying the hierarchical clustering.
 This assumption can be verified in Figure~\ref{fig:correlation_average_precision_b3f1}.
+In this Figure, we compare the average precision (AP) of each retained rank list to the $B^3_{F_1}$ of the best clustering obtainable with the hierarchical clustering on this rank list (ref.~\ref{tab:hierarchical_clustering}).
+
 We can clearly observe a linear relationship between the average precision and the $B^3_{F_1}$.
-The linear regression for the single linkage have an r-value of $1^{-11}$, $1^{-12}$ for the average linkage and $1^{-6}$ for the complete linkage.
-The results obtained further motive this assumption.
+The linear regression for the single linkage have an r-value of $10^{-11}$, $10^{-12}$ for the average linkage and $10^{-6}$ for the complete linkage.
+This result further motivate this assumption.
 
 \begin{table}
   \centering
