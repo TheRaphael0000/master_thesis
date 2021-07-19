@@ -52,13 +52,13 @@ In this study, we only consider the equiprobable case.
 
 \subsection{Evaluation}
 
-To evaluate the distribution-based clustering approach: Oxquarry, Brunet, St-Jean A and B corpora are used.
-Each retained rank list for each corpus is computed, see Table~\ref{tab:rls_oxquarry_brunet}~and~\ref{tab:rls_st_jean} in annex.
-For each rank list, the distance threshold is computed, using the two beta approach.
+The distribution-based clustering approach is evaluated using the Oxquarry, Brunet, St-Jean A and B corpora are used.
+The retained rank list for each corpus are used, see Table~\ref{tab:rls_oxquarry_brunet}~and~\ref{tab:rls_st_jean} in annex.
+For each rank list, the distance threshold is computed using the two beta approach.
 This step corresponds to the training phase.
-Then for every distance threshold and rank list pair, the clustering is evaluated using the $B^3_{F_1}$ and the $r_{diff}$.
-This corresponds to the testing phase.
 
+Then for every distance threshold and rank list pair, the clustering is evaluated using the $B^3_{F_1}$ and the $r_{diff}$ metrics.
+This corresponds to the testing phase.
 The evaluation results are aggregated by applying the arithmetic mean on the $B^3_{F_1}$ and $r_{diff}$ across all retained rank list.
 
 The evaluation is presented in Table~\ref{tab:semi_supervised_clustering} which show the results for each linkage criterion (Single, Average, Complete).
@@ -70,18 +70,25 @@ The following conclusions can be drawn with these results:
   \item
   Average linkage have the best $r_{diff} = 0.06$ which indicate that this criterion can estimate the most accurately the number of clusters.
   \item
-  Complete linkage have the best $B^3_{F_1} = 0.82$ which make it the best criterion for this method.
+  Complete linkage have the best $B^3_{F_1} = 0.82$ which make it the best criterion for this method. Which is $8\%$ better than the average linkage and $272\%$ better than the single linkage.
   \item
-  The training corpus does not influence a lot the quality of the results ($std(B^3_{F_1}) = 0.01$).
+  The training corpus does not influence a lot the quality of the results.
+
+  $std(\mathrm{MeanTraining}_{B^3_{F_1}}) = 0.01$
+
   The best corpus to train is Brunet, with slightly better results.
   \item
-  In the other hand, the quality of the rank list used for the testing phase is more impactful ($std(B^3_{F_1}) = 0.04$).
-  St-Jean B have the best rank list average precision and the best clustering results.
+  In the other hand, the quality of the rank list used for the testing phase is more impactful.
+
+  $std(\mathrm{MeanTesting}_{B^3_{F_1}}) = 0.04$
+
+  This further validate the assumption made in Section~\ref{sec:hierarchical_clustering}.
+  St-Jean B's rank list have the best average precision and the best clustering results.
 \end{itemize}
 
 \begin{table*}
   \centering
-  \caption{Distribution-based clustering evaluation, Mean retained rank lists $B^{3}_{F_1}$/$r_{diff}$ for each corpus pair}
+  \caption{Distribution-based clustering evaluation, mean $B^{3}_{F_1}$/$r_{diff}$ for each corpus pair}
   \label{tab:semi_supervised_clustering}
 
   \subcaption{Single Linkage}

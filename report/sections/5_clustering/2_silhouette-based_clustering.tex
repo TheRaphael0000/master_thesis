@@ -49,7 +49,7 @@ In Table~\ref{tab:silhouette-based_clustering}, the r-ratio is clearly too high,
 
 \begin{table}
   \centering
-  \caption{Silhouette-based clustering evaluation on retained rank lists, mean $B^3_{F_1}$/$r_{diff}$, Maximal Silhouette ($\alpha = 0$)}
+  \caption{Silhouette-based clustering evaluation (Maximal Silhouette, $\alpha = 0$), mean $B^3_{F_1}$/$r_{diff}$}
   \label{tab:silhouette-based_clustering}
 
   \resizebox{\linewidth}{!}{
@@ -105,8 +105,8 @@ For example, by using $\alpha = -0.2$, we aim to correct this overshoot and incr
 This value was chosen by grid search to optimize the $B^3_{F_1}$.
 
 Table~\ref{tab:silhouette-based_clustering_alpha} show the evaluation with $\alpha = -0.2$, the complete table is available in Table~\ref{tab:silhouette-based_clustering_alpha_full} in annex.
-With this correction technique, in average the $r_{diff}$ is closer to 0 and the average $B^3_{F_1}$ is increased in average by 6\% across all the corpora.
-Like for the upper bound, the average linkage criterion give the best results for this clustering method, its $B^3_{F_1}$ is in average 2\% better.
+With this correction technique, in average the $r_{diff}$ is closer to 0 and the average $B^3_{F_1}$ is increased in average by $7\%$ across all the corpora.
+Like for the upper bound, the average linkage criterion give the best results for this clustering method, its $B^3_{F_1}$ is in average $2\%$ better.
 
 \begin{example}
   \centering
@@ -151,7 +151,7 @@ Like for the upper bound, the average linkage criterion give the best results fo
 
 \begin{table}
   \centering
-  \caption{Silhouette-based clustering evaluation on retained rank lists, average  $B^3_{F_1}$/$r_{diff}$, $\alpha = -0.2$}
+  \caption{Silhouette-based clustering evaluation ($\alpha = -0.2$), mean $B^3_{F_1}$/$r_{diff}$}
   \label{tab:silhouette-based_clustering_alpha}
 
   \resizebox{\linewidth}{!}{
