@@ -1,13 +1,13 @@
 \section{Methods \label{sec:rank_lists_fusion}}
 
 The idea of rank lists' fusion is to combine multiple rank lists in such a way that the resulting rank list produced is a more accurate modelling of a perfect rank list.
-This perfect rank list contain every true links (same author document pairs) at the top and every false links (different author document pair) at the bottom, therefore maximizing every metrics in Section~\ref{sec:rl_eval}.
+A perfect rank list contain every true links (same author document pairs) at the top and every false links (different author document pair) at the bottom, therefore maximizing every metrics in Section~\ref{sec:rl_eval}.
 
-Two methods are proposed, one is based on the Z-Score normalization, and the second one use the logistic regression.
+One proposed method is based on the Z-Score normalization, and the second one use the logistic regression.
 
 \subsection{Z-Score Fusion}
 
-When merging rank lists, a problem arise: due to the difference of distance metric and/or text representation, the scores used in the rank list are of different order of magnitude.
+When merging rank lists, the following problem arise: Due to the difference of distance metric and/or text representation, the scores used in the different rank lists are of different order of magnitude.
 Thus, simply applying the arithmetic mean on the scores for each rank list is not effective.
 
 To mitigate this problem, a simple and rather effective approach is to normalize the scores of each rank lists independently using the Z-Score (See Definition~\ref{def:z_score} in Section~\ref{sec:normalization}).
@@ -15,14 +15,14 @@ Then one can compute a resulting score for each link as the arithmetic mean of s
 The rank list can then be sorted by this new score.
 
 Additionally, this method provide a framework for the fusion with both distance metrics and similarity metrics.
-If distances and similarity score are encountered for a fusion, flipping the score sign for either the distance rank lists or similarity rank lists after the Z-Score normalization allow to fix these metrics differences.
+If distances and similarity score are encountered for a fusion, flipping the score sign for either the distance rank lists or similarity rank lists before or after the Z-Score normalization allow to fix these metrics differences.
 
-This method can provide good results does not have any parameters, but lack theoretical foundations.
+Even though this method lack theoretical foundations, it can provide good results and does not have any parameters.
 
-Example~\ref{ex:z_score_fusion} show an example for the Z-Score fusion computation using two simple rank lists.
+Example~\ref{ex:z_score_fusion} exemplify the Z-Score fusion computation using two simple rank lists.
 
 \begin{example}
-  \caption{Z-Score fusion of two rank lists}
+  \caption{A two rank lists Z-Score fusion}
   \label{ex:z_score_fusion}
 
   \begin{subexample}{\linewidth}
@@ -41,7 +41,7 @@ Example~\ref{ex:z_score_fusion} show an example for the Z-Score fusion computati
 
   \vspace{0.5cm}
 
-  In this example, the scores does not satisfy the triangle inequality for the sake of simplicity.
+  In this example, for the sake of simplicity, the scores does not satisfy the triangle inequality.
 
   \vspace{0.5cm}
 
@@ -86,47 +86,61 @@ To avoid this problem, the second solution is to express the scores into a proba
 To do so, the logistic regression is used.
 This method is similar to the one proposed in \textit{Le Calvé and Savoy (2000)}'s paper~\cite{le_calve_database_merging} and was used for merging rank list issued from information retrieval systems.
 
-The main idea here is to learn a logistic regression model for each combination of text representation and distance metrics (here denoted \textit{type of rank list}).
+The idea is to learn a logistic regression model for each combination of text representation and distance metrics (here denoted \textit{type of rank list}).
 From each distinct rank list, features for each link are created.
-We have selected the log of the relative rank and the link score.
-Since a probability of being a true link is desired, the target value for each link is either 1 for the true links or 0 when it is a false link.
+The features are: the log of the relative rank and the link score.
+Since a probability of being a true link is desired, the target value (labels) for each link is either $1.00$ for the true links or $0.00$ when it is a false link.
 This feature construction is the same as the one used for the regression-based clustering method (ref. Section~\ref{sec:regression_based_clustering}).
 
-One model per type of rank list is trained, this model can provide for any new same type rank list, probabilities for each link being of being a true link.
+One model per type of rank list is trained.
+This model can provide, for any new same type rank lists, true link probabilities for each link.
 
-The probability framework can now be used on the rank list.
-To obtain the most reliable probability given multiple observations (different rank lists), the regression fusion consists in computing the expected value for each link's probability using these observations.
-In this case, the final value for sorting the rank list is an average of the probabilities, since no weighting is used on the rank lists.
+The probability framework can now be used on the rank lists.
+To obtain the most reliable probability given multiple observations (different rank lists), the regression fusion consists in computing the expected value of each link's probability using these observations.
+In this case, the final value for sorting the rank list is an arithmetic mean of the probabilities, since no weighting is used on the rank lists.
 
 The main advantage of this methodology is that it uses concrete statistical concepts.
-But this technique has one main issue, that is the need of having examples to train the model.
+But this technique has one main issue: it requires training samples to train the model.
 
 \subsection{Veto}
 
-The idea here is to provide a veto power for the rank lists, to try to improve the results.
-The following assumption is made: if a link have a low probability in a rank list before the fusion.
-This probably indicate a false link, thus having this link at the bottom of the rank list after the fusion can improve the results.
+To try to further improve the results, the idea here is to provide a veto power for the rank lists.
 
-To fulfil the previously stated assumption, a possible way is to find every link in all rank lists before the fusion, where the probability is under a certain threshold.
-Then we can alter their probabilities (probability of being a true link) with $-\infty$.
-Every links below the probability threshold will have its final score also equal to $-\infty$ since the average with any number and $-\infty$ is always $-\infty$.
+The following assumption is made:
+If a link have a low probability in a rank list before the fusion, it probably indicates a false link, thus having this link at the bottom of the rank list after the fusion should improve the results.
+
+To fulfil this assumption an introduce a veto, we used to following algorithm:
+
+\begin{enumerate}
+  \item In every rank lists before the fusion, find every links where the probability is under a certain threshold.
+  \item Alter their probabilities (probability of being a true link) with $-\infty$.
+  \item Perform the regression fusion (by averaging the probabilities)
+\end{enumerate}
+
+No matter the rank list, every links below the probability threshold will have its final score also equal to $-\infty$ since the average with any number and $-\infty$ is always $-\infty$.
 When sorting the rank list, the links with a resulting $-\infty$ score will subsequently be ranked at the bottom.
-This veto method is also called $-\infty$-veto in this study.
+This first veto method is called $-\infty$-veto in this study.
 
-Example~\ref{ex:veto_ninf} showcase an example when the veto can provide better results than the standard fusion in Example~\ref{ex:noveto}.
-As you can see with the rank lists in the example, rank list 1 give a 0.20 probability for a link with ID = 4 of being a true link, but rank list 3 give this link a 0.80 probability.
-The link with ID = 3 is ranked 3rd, but with the veto the link is ranked 5th.
+Example~\ref{ex:veto_ninf} showcase when the veto can provide better results than the standard fusion in Example~\ref{ex:noveto}.
+In the example, rank list $1$ gives a $0.20$ true link probability for a link with $ID = 4$, but rank list $3$ give this link a $0.80$ true link probability.
+The link with $ID = 3$ is ranked $3$rd, but with the veto the link is ranked $5$th.
 
 One problem arise with this solution, multiple links can have a $-\infty$ probability.
-The proposed solution is to set the probability of the affected links to one of these values instead: $0$, $-1$ or $-n$, with n equal to the number of rank lists to fuse.
-The greater, the value, the stronger the penalty of the veto.
+They thus can not be sorted anymore.
+False positives (true links affected by the veto), will thus be ranked randomly at the bottom.
+
+The proposed solution is to set the probability of the affected links to one of these values instead: $0$, $-1$ or $-n$, with $n$ equal to the number of rank lists to fuse.
+The greater, the value, the stronger the penalty for the affected links if they are under the threshold for multiple rank lists.
 The $-\infty$ method is the only real veto, in the first meaning of the veto definition, the other methods can be considered as a weighted veto.
 
 The $-n$, method provide a way to avoid having tie and keep the strong impact of the $-\infty$-veto when a lot of rank list are fused.
-By setting to $0$, $-1$ or $-n$ can lighten the veto effect and conserve an order in the bottom rank links.
-An example using the $0$-veto is presented in Example~\ref{ex:veto_0}.
-Here the link with ID = 4 is ranked 4th due to a lighter effect of this veto.
-Link with ID = 5 is still rank at the bottom.
+For example, if $9$ rank lists are fused.
+By setting any link score to $-9$ will ensure that even if every other rank lists this link have a true link probability of $1.00$, the probability is lower than $0.00$, the lowest probability obtainable by regression fusion.
+
+By setting to $0$, $-1$ or $-n$, it lightens the veto effect and conserve an order for the bottom rank links.
+Example~\ref{ex:veto_0} show the $0$-veto strategy.
+Here the link with $ID = 4$ is ranked $4$th due to a lighter effect of this veto.
+Link with $ID = 5$ is still rank at the bottom.
 
 \begin{example}
   \centering
@@ -284,15 +298,21 @@ Link with ID = 5 is still rank at the bottom.
 \subsection{Soft-veto}
 
 As an extension to the veto method, an additional desired constraint is to favor top ranked link and as well as penalizing bottom ranked links.
-This constraint can be easily explained by observing the distribution of the distances according to the rank.
-Figure~\ref{fig:distance_over_rank} clearly show us the top ranks and bottom ranks have a sharper difference in distance than in than the middle section.
 
-Top ranks correspond to documents with the same author, and bottom links correspond to documents with different authors.
-Assuming that the top ranks are true links after the rank lists' fusion, these links should also appear top rank.
+In any rank list, top ranked links should correspond to documents with the same author, and bottom ranked links should correspond to documents with different authors.
+Assuming that the top ranks are true links after the rank lists' fusion, these links should also appear top ranked.
 The same reasoning can be applied for the bottom links by assuming them as false links.
-A weighting curve, here called soft-veto, can be design accordingly such that the score of top links are boosted, and bottom links score hindered.
+A weighting curve can be design accordingly.
+The idea of this curve is to boost the score of top ranked links and hindered the score of bottom ranked links before the fusion.
 
-Using the inverse of the sigmoid function, such a curve can be modelled.
+First, the scores' distribution must be understood.
+By observing the graph score/distance over rank, Figure~\ref{fig:distance_over_rank}, we can clearly observe the top rank links and bottom rank links have a sharper difference in distance than the ones in the middle section.
+
+Using the inverse of the sigmoid function, a weighting curve satisfying our constraints can be modelled.
+The choice on the sigmoid function was arbitrary.
+Any function in form of an \textit{S} can be used.
+The hyperbolic tangent or the arc tangent function could also be possible.
+
 Definition~\ref{def:sigmoid} show the sigmoid function and its inverse function.
 
 \begin{definition}[Sigmoid and Sigmoid inverse function \label{def:sigmoid}]
@@ -307,14 +327,15 @@ Definition~\ref{def:sigmoid} show the sigmoid function and its inverse function.
   \end{gather*}
 \end{definition}
 
-Since the inverse of the sigmoid function is continuous and the number of links in a rank list is discrete, the idea is to sample values in this curve at regular intervals.
+Since the sigmoid inverse function is continuous and the number of links in a rank list is discrete, the idea is to sample values in this curve at regular intervals.
+Also, since the sigmoid function is defined from $-\infty$ to $+\infty$ and the rank list have a finite size, an interval must be select.
 
-Controlling the steepness of this curve can influence the strength of the veto.
+This interval directly control the steepness of the curve and thus influence the strength of the veto.
 To control the steepness, a parameter called $c$ is introduced.
 $c$ correspond to a position on the x-axis of the sigmoid function.
 The sampling of the sigmoid inverse is done in the interval $\left[S(c), S(c)\right]$.
 A large interval gives a greater steepness and a small interval a less steep curve.
-$c$ can not be equal to 0 otherwise the interval is a single number (often called degenerate interval).
+$c$ can not be equal to 0 otherwise the interval consist of a single number (also known as degenerate interval).
 The $c$ parameter must be in the interval $\left]0, \infty\right[$.
 With a value close to $0$, the soft-veto have a weak effect.
 With a large value, for example 20, the soft veto has a strong effect on the top and bottom, see Figure~\ref{fig:s_curve_c}.
