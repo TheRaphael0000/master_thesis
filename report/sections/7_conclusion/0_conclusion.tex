@@ -10,13 +10,13 @@ These techniques are mostly based on the most frequent words.
 Compression techniques are also evaluated and used.
 
 Once each intermediate representations of the corpora, namely the rank lists, are created and evaluated.
-Then a hierarchical clustering model is applied.
+A hierarchical clustering model is applied.
 With this model, a cut in the rank list which discriminate the same authors documents to different authors documents is required.
 Three solutions to find the cut best position are proposed.
 
 The first is a fully unsupervised method based on the Silhouette Score.
 We added an extra hyperparameter to the Silhouette-based clustering and tweaked it for the authorship clustering problem.
-By doing so, this model improves its clustering results by 6\% across the three corpora.
+By doing so, this model improves its clustering results in average by $7\%$ across the three corpora.
 
 The second is a supervised method and thus require a corpus with labels to calibrate the system.
 We called this method distribution-based.
@@ -38,16 +38,16 @@ The rank list produced with the logistic regression fusion give a rank list qual
 These results motivate the rank lists' fusion's beneficial aspect for unsupervised task such as the authorship clustering problem.
 
 Two veto-based techniques are proposed and evaluated to try to further improve the fused rank list's quality.
-No real improvements are found using the proposed veto strategies.
+No real improvements are found using the proposed veto strategies on high quality rank lists (more than $0.7$ in AP).
 
 To further motivate the strength of the rank lists' fusions, we showed a correlation between the rank lists' variety and the improvements provided when fusing rank lists.
-We showed that by using for the fusion, rank lists produced along different text representations increase more the effectiveness of resulting rank list than using rank lists with the same text representation but with different distance measure.
+We showed that by using for the fusion, rank lists produced along different text representations increase more the effectiveness of resulting rank list than using rank lists with the same text representation but with different distance measures.
 
 At the end of this study, we evaluated the clustering using the rank list obtained by fusion.
 As we expected from previous results, the clustering obtained with the rank lists obtained by Z-Score fusion is better than the individual methods.
-We obtained a 6\% improvement using the Z-Score fusion over the individual methods.
-This improvement in the clustering is due to the fact that the rank lists obtained by fusion are better than the ones obtained by individual methods.
-The tweaked Silhouette-based clustering method gives the best results for the rank lists obtained by Z-Score fusion.
+We obtained overall a $6\%$ improvement using the Z-Score fusion over the individual methods.
+This improvement in the clustering is due to the fact that the rank lists obtained by fusion are better than the ones obtained by individual methods and thus, as we showed previously, having good rank lists tends to produce good clusterings.
+The tweaked Silhouette-based clustering unsupervised method gives the best results for the rank lists obtained by Z-Score fusion.
 
 % \section{Future Work}
 
@@ -63,7 +63,8 @@ Though it was not retained for the fusion, since for other corpora it gave poor 
 A deeper analysis has to be made for this text representation.
 
 Other fusion methods still need to be tested to potentially further increase the fusions quality.
-For example: other normalization techniques can be used and/or other ways to compute a central tendency, such as the geometric mean or the harmonic mean.
+For example: other normalization techniques can be used and/or other ways to compute a central tendency (e.g. the geometric mean or the harmonic mean).
 
-Veto-based technique were only experimented to force bottom ranks links, according to one rank list, to fused rank list bottom.
-Another alternative to this veto, could be to force top rank lists, to be at the top for the fused rank list.
+Veto-based technique were experimented to force bottom ranked links according to one rank list to the bottom of a fused rank list.
+Another alternative to this veto, could be to force top rank lists, to be at the top of the fused rank list.
+This technique may improve the results.

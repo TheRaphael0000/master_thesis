@@ -452,6 +452,7 @@ The average precision gain is small and can be due to random factors.
 \subsection{Average Precision Fusion Gain Relation with the Rank Lists Diversity \label{sec:fusion_diversity}}
 
 As stated previously, we believe fusing high quality rank lists (high AP), with the most diverse results can increase the quality of the fusion (obtained rank list with an even greater AP).
+In this section, we aim to provide even more clues to motivate this assumption.
 First, a correlation metric to compare the rank lists must be selected.
 Secondly, compare this correlation coefficient to the average precision gain to verify the assumption.
 
@@ -459,7 +460,8 @@ To compute a correlation between two rank lists, the Kendall rank correlation co
 The Kendall rank correlation computes a correlation index based on the ordinal association between the two rank lists by computing the number of swaps needed to obtain one rank list from the other.
 The fewer swaps needed, the closer the rank lists are.
 
-The default weighing strategy called \textit{hyperbolic weighing} is used, it favours top ranks in the same fashion as the reciprocal rank ($1 / (r + 1)$).
+The default weighing strategy called \textit{hyperbolic weighing} is used for the Kendall rank correlation coefficient.
+It favours top ranks in the same fashion as the reciprocal rank ($1 / (r + 1)$).
 Swaping top ranks are more important for the Kendall coefficient than bottom ranks.
 
 The Kendall coefficient is ranged between -1 and 1, with 1 being an identical correlation and -1 a completely different correlation.
@@ -471,7 +473,8 @@ As for previous experiments dealing with fusion, the gain in average precision w
 Single-Mean represent the rank lists' mean average precision and Single-Max the rank list maximal average precision.
 Example~\ref{ex:gain} in Section~\ref{sec:evaluation_comparison} contain a small example with two rank lists for the Single-Mean and Single-Max methods to compute the average precision gain.
 
-Table~\ref{tab:rl_correlations} show the Kendall correlation coefficient for every combination of retained rank list in St-Jean (see Table~\ref{tab:9rl}).
+Table~\ref{tab:rl_correlations} show the Kendall correlation coefficient for every pairwise rank lists combination in St-Jean (retained rank lists, see Table~\ref{tab:9rl} in Section~\ref{sec:individual_methods_summary}).
+
 The most similar rank lists pair are the two rank list using letters $n$-grams (0.95).
 This result can be easily understood, since both rank list use a similar text representation and distance measure, they will obtain similar rank lists.
 

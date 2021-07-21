@@ -4,19 +4,24 @@ Table~\ref{tab:silhouette-based_clustering_zscore}~/~\ref{tab:silhouette-based_c
 
 Table~\ref{tab:clustering_zscore_evaluation_summary} is a summary of the results.
 The upper bound is, using the same rank lists, the best clustering achievable with the hierarchical clustering for specific linkage criterion.
-It is obtained by evaluating the clustering at each step, the ones with the greatest metrics is the upper bound.
+It is obtained by evaluating the hierarchical clustering at each step of the algorithm.
+The clustering result with the greatest metrics is the upper bound for the hierarchical clustering.
 
-With the Z-Score fusion the upper bound raise from 0.88 to 0.92 with the average linkage criterion, this corresponds to a 4\% relative increase.
-For the complete linkage, the $B^{3}_{F_1}$ rise from 0.87 to 0.89, which correspond to a 2\% relative increase.
-With the Z-Score fusion rank lists, every clustering models have theirs results improved over the individual approaches.
-This further motivate the rank list fusion usefulness.
+With the Z-Score fusion the upper bound raise from $0.88$ to $0.92$ with the average linkage criterion, this corresponds to a $\sim 5\%$ relative increase.
+For the complete linkage, the $B^{3}_{F_1}$ rise from $0.87$ to $0.89$, which correspond to a $\sim 2\%$ relative increase.
+With the Z-Score fusion rank lists, every clustering models have its results improved over the individual approaches.
+This result further motivate the rank list fusion usefulness.
 
 The Silhouette-based clustering method with the average linkage criterion yield the best results across the four models.
-This result is only slightly better than the Distribution-based model with the complete linkage criterion, the models which obtained the best results for the clustering on the individual rank lists methods.
+This result is only slightly better than the Distribution-based model with the complete linkage criterion.
+This model was the one that obtained the best results for the clustering on the individual rank lists methods.
 
-As for the individual methods, the average linkage criterion is the best criterion for each method, except the Distribution-based clustering, which also obtain better results with the complete linkage.
+For the individual methods, the average linkage criterion is the best criterion for each method, except the Distribution-based clustering, which obtain better results with the complete linkage.
 
-The best $B^{3}_{F_1}$ achieved for each model is $3-9\%$ worse than the upper bound, which is still $6\%$ better than the clustering with the individual methods.
+The $B^{3}_{F_1}$ achieved for each model with the best linkage criterion is $5$ to $10\%$ worse than the upper bound, if we exclude the Silhouette-based model (with $\alpha = 0$) which is $18\%$ worse than the upper bound.
+Excluding the non-tweak Silhouette-based model clustering, every other proposed clustering model seem to give reasonable results with fused rank lists.
+
+The clustering with the fused rank list is in average $6\%$ better than the clustering with the individual methods.
 
 \begin{table}[t]
   \centering
