@@ -16,35 +16,37 @@ Stylometry main focus is to identify the writing methods of an author, for examp
 
 When dealing with large amount of data, compression methods can be used to compute similarities.
 These methods were used and evaluated in Oliveira and Justino (2013)~\cite{comparing_compression} for the authorship attribution task.
-Compression based model had shown to be a good alternative to other traditional feature and pattern based models and is sometime used as a baseline \cite{overview_pan20}.
+Compression based model had shown to be a good alternative to other traditional feature and pattern based models.
+This method is also sometime used as a baseline \cite{overview_pan20}.
 
 In 2014, Kocher~and~Savoy~\cite{kocher_linking} proposed SPATIUM-L1, an unsupervised authorship verification model based on most frequent words in texts.
-It uses the L1 norm to be able to discriminate if a text come from the same author as another one.
+It uses the L1 norm to be able to discriminate, if a pair of texts is written by the same author or not.
 The model can also answer \textit{do not know} when not enough evidence are available to make a decision.
 It obtained one of the best results when compared to the other model of the PAN @ CLEF 2014.
 
 During the PAN @ CLEF 2016~\cite{pan16}, in the authorship clustering shared task, the participants were given multiple collections of documents, to identify authorship links and group documents by the same author.
-The documents are in 3 different languages, single authored.
-The solutions proposed by Bagnall~\cite{bagnall_pan16} for this problem was to use recurrent neural networks to create a language model for the given documents, and then use this model to compute similarities between documents.
-On the other hand, Kocher~\cite{kocher_pan16} used a feature vector based on most frequent terms in the texts and a distance threshold between these vector to indicate a potential authorship link.
+The documents are in 3 different languages and single authored.
+The solutions proposed by Bagnall~\cite{bagnall_pan16} for this problem was to use a recurrent neural network to create a language model for the given documents. This model can then compute similarities between documents.
+On the other hand, Kocher~\cite{kocher_pan16} create for each text a feature vectors based on the most frequent terms in the corpus.
+Above a certain distance threshold between the texts, it can indicate a potential authorship link.
 
 In Kocher and Savoy (2018)'s paper~\cite{kocher_linking}, they aim to evaluate different text representation scheme for the authorship linking task.
 They compared the authors style, using feature vectors constructed on the most frequent occurrences of the following text representations: words frequencies, lemma frequencies, Part-Of-Speach (POS) tags frequencies, sequences of POS tags, as well as $n$-grams frequencies.
 The distance measures used to compare the vectors are: $L^1$ norms (Manhattan, Tanimoto), $L^2$ norm (Matusita, Clark), inner products (Cosine distance) and the Jeffery divergence.
-Depending on the corpus, the text representation and the evaluation metric used, no clear text representation and distance measures were the giving the best result for all the problems.
+They find out that depending on the corpus, text representation and evaluation metric used, no clear distance measures text were giving the best result for all the text representations.
 
-In 2018, Savoy~\cite{savoy_starnone} was show that the pen name Elena Ferrante, a well known novels author, is certainly Domenico Starnone.
+In 2018, Savoy~\cite{savoy_starnone} show that the pen name Elena Ferrante, a well known novels author, is certainly Domenico Starnone.
 To do so, they apply six authorship identification models: Delta, Labbé's distance, the nearest shrunken centroids, naïve Bayes, k-nearest neighbors and character $n$-grams.
 The corpus used contain novels from forty authors (including ones from Ferrante and Starnone).
 They find Starnone appearing very often first place for the models used.
 Additionally, a lexical analysis was able to justify their conclusion.
 
 During the PAN @ CLEF 2020, the clustering task was not one of the shared task, but the closest related task was the authorship verification.
-For this competition, a large corpus containing around 276,000 document pairs and smaller with 52,000 document pairs.
-The two corpora in the English language and their documents around 21,000 characters~\cite{overview_pan20}.
+For this competition, a large corpus containing around 276,000 document pairs and smaller with 52,000 document pairs was used.
+The two corpora are in the English language and their documents have around 21,000 characters~\cite{overview_pan20}.
 
-For this task, Weerasinghe~and~Greenstadt~\cite{feature_vector_pan20} proposed using the Manhattan distance between two features vector based on multiple clues.
-They created the feature vector based on the following principles: Character $n$-grams, POS sequences, special characters, frequency of function words, number of characters, number of words, average number of character per word, word-length distribution (between one and ten), the vocabulary richness (using hapax-legomenon and dis-legomenon ratios), POS chunks and NP and VP construction.
+For this task, Weerasinghe~and~Greenstadt~\cite{feature_vector_pan20} proposed to use the Manhattan distance between two features vector based on multiple stylometric clues.
+They created the feature vector based on the following methods: Character $n$-grams, POS sequences, special characters, function words frequency, number of characters, number of words, average number of character per word, word-length distribution (between one and ten), the vocabulary richness (using hapax-legomenon and dis-legomenon ratios), POS chunks and NP and VP construction.
 For the classification, a linear regression and neural network model was trained on respectively the small and large dataset, they obtained one of the best model of the shared task.
 Another method for this task proposed by Araujo,~Gómez~and~Fuentes~\cite{siamese_network_pan20} was to use a Siamese neural network using $n$-grams words with a size from 1 to 3 (short sequences of words) for their feature vector.
 Instead, Ikae~\cite{unine_pan20_verif} for this task used Labbé similarity on the most frequent tokens from each author and the ones in the English language.

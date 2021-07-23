@@ -84,7 +84,7 @@ This second fusion method is based on logistic regression and is called regressi
 Each rank list is ordered by a score, this score depends on the distance measure and text representation used, thus the order of magnitude across rank list can be different.
 To avoid this problem, the second solution is to express the scores into a probability of being a true link.
 To do so, the logistic regression is used.
-This method is similar to the one proposed in \textit{Le Calvé and Savoy (2000)}'s paper~\cite{le_calve_database_merging} and was used for merging rank list issued from information retrieval systems.
+This method is similar to the one proposed in \textit{Le Calvé and Savoy (2000)}'s paper~\cite{le_calve_database_merging} and was used to merge rank list issued from information retrieval systems.
 
 The idea is to learn a logistic regression model for each combination of text representation and distance metrics (here denoted \textit{type of rank list}).
 From each distinct rank list, features for each link are created.
@@ -362,7 +362,7 @@ This strategy can be use on any type of scoring method (similarity, distances, Z
 
 \begin{figure}
   \centering
-  \caption{Curve parameters}
+  \caption{Soft-veto curve parameters}
   \label{fig:s_curve_params}
 
   \subcaption{$S^-1(x)$, 1000 samples (for a rank list with 1000 links) in $\left[S(-c), S(+c)\right]$}

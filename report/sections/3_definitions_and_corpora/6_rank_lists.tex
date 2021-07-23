@@ -27,7 +27,7 @@ For the scoring function based on similarity, the rank list is sorted in decreas
 The most similar documents pairs are the most likely written by the same author.
 Thus, the top ranks should contain pairs of documents written by the same author.
 
-The computational cost for computing a rank list is $\frac{n \cdot (n - 1)}{2}$ multiplied by the computational cost of the scoring function.
+The computational cost to compute a rank list is $\frac{n \cdot (n - 1)}{2}$ multiplied by the computational cost of the scoring function.
 Since the complexity of the score function is lower than $O(n^2)$, the $O(n^2)$ complexity remain.
 The space complexity is also $O(n^2)$, for each document pair, the pair and the score have to be stored.
 
