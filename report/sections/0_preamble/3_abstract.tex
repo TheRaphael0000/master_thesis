@@ -1,28 +1,29 @@
-\begin{abstract}
-  \thispagestyle{plain}
-  \setcounter{page}{4}
-  This study aim to select different methods, text representations and distance metrics to implement and evaluate different strategies to solve the authorship clustering problem.
-  In this case, having a set of $n$ texts written by an unknown number of authors, the task is to regroup under the same cluster every texts written by the same author.
-  The number of different author denoted $k$ can variate from 1 (all texts are written by the same author) to $n$ (each text is written by a distinct author).
+\vspace*{\fill}
+\chapter*{\centering Abstract}
+This study aim to select different methods, text representations and distance metrics to implement and evaluate different strategies to solve the authorship clustering problem.
+In this case, having a set of $n$ texts written by an unknown number of authors, the task is to regroup under the same cluster every texts written by the same author.
+The number of different author denoted $k$ can variate from 1 (all texts are written by the same author) to $n$ (each text is written by a distinct author).
 
-  To represent the underlying style of each document various text representation have been suggested: words frequencies, lemmas frequencies, letters $n$-grams frequencies or part-of-speech (POS) sequences frequencies.
-  Each text is then represented by a vector with a number of dimension corresponding to the number of features.
-  $L^1$, $L^2$ and inner product based distances are used in conjunction to compute distance between vectors representations.
-  In addition to the vector representation, compression techniques are also applied.
-  The Oxquarry, Brunet and St-Jean corpora are used to evaluate the system.
+To represent the underlying style of each document various text representation have been suggested: words frequencies, lemmas frequencies, letters $n$-grams frequencies or part-of-speech (POS) sequences frequencies.
+Each text is then represented by a vector with a number of dimension corresponding to the number of features.
+$L^1$, $L^2$ and inner product based distances are used in conjunction to compute distance between vectors representations.
+In addition to the vector representation, compression techniques are also applied.
+The Oxquarry, Brunet and St-Jean corpora are used to evaluate the system.
 
-  In a first part, the rank lists obtained by each individual representation are used to solve the authorship clustering task.
-  From a rank list, an automatic clustering algorithm can generate the corresponding clusters, hopefully regrouping all the texts written by a given author under the same cluster.
-  The clustering task is achieved by using three different models based on hierarchical clustering.
-  A Silhouette score based model, a distribution-based model and a regression-based clustering models are proposed and evaluated.
-  The clustering obtained by these models are close to the best achievable clustering for the rank lists used.
-  In a second part, a new rank list is created by fusing rank lists obtained using different strategies.
-  Two approaches are explored for the fusion: one use Z-Score normalization and another one use logistic regression.
-  The rank list obtained by fusion is shown to have better performances than the best individual rank list.
-  In addition to the fusion, two veto strategy are proposed to try to enhance the fusion quality.
-  The veto do not show any significant improvements with the rank lists used.
-  Lastly, we showed that using rank lists obtained by fusion yield better clustering results than the ones obtained by individual methods.
+In a first part, the rank lists obtained by each individual representation are used to solve the authorship clustering task.
+From a rank list, an automatic clustering algorithm can generate the corresponding clusters, hopefully regrouping all the texts written by a given author under the same cluster.
+The clustering task is achieved by using three different models based on hierarchical clustering.
+A Silhouette score based model, a distribution-based model and a regression-based clustering models are proposed and evaluated.
+The clustering obtained by these models are close to the best achievable clustering for the rank lists used.
+In a second part, a new rank list is created by fusing rank lists obtained using different strategies.
+Two approaches are explored for the fusion: one use Z-Score normalization and another one use logistic regression.
+The rank list obtained by fusion is shown to have better performances than the best individual rank list.
+In addition to the fusion, two veto strategy are proposed to try to enhance the fusion quality.
+The veto do not show any significant improvements with the rank lists used.
+Lastly, we showed that using rank lists obtained by fusion yield better clustering results than the ones obtained by individual methods.
 
-  {\small \textbf{\textit{Keywords---}} Authorship Clustering, Rank List, Text Representation, Silhouette, Regression, Beta distribution, Fusions, Z-Score}
-\end{abstract}
-\setcounter{page}{5}
+% Jacques Savoy, Computational Linguistics, Computer Science department (IIUN), University of Neuchâtel, Supervisor
+
+{\small \textbf{\textit{Keywords---}} Authorship Clustering, Rank List, Text Representation, Silhouette, Regression, Beta distribution, Fusions, Z-Score}
+
+\vspace*{\fill}
