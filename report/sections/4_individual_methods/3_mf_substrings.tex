@@ -1,15 +1,16 @@
 \section{MF Substrings \label{sec:substrings}}
 
-Instead of considering tokens or lemmas for the MF method, another strategy is to create a short sequences of letters called substrings.
+Instead of considering tokens or lemmas for the MF method, another strategy is to create short sequences of letters called substrings.
 
 \subsection{MF Letters $n$-grams}
 
 Letters $n$-grams is one possible substring method using Definition~\ref{def:letters_n_grams}.
-To consider overlapping words, the whole document is synthesized into a long string by joining every token with an \textit{underscore}: "$\_$".
+The whole document is synthesized into a long string by joining every token with an \textit{underscore}: "$\_$".
 The underscore is used to remove visual ambiguity due to the nature of the space character.
+The $n$-grams representation aim to create items by considering part of words.
 
 \begin{definition}[Letters $n$-grams \label{def:letters_n_grams}]
-  A letter $n$-grams is a tokenization which is constructed by creating a token of size $n$ for each substrings starting from the position $0$ to \textit{text\_size} $- n - 1$.
+  A letter $n$-grams is a tokenization which is constructed by creating a token of size $n$ for each substrings starting from the position $0$ to $|\mathrm{text}| - n - 1$.
 
   Example: \\*
   Using $3$-grams the string: \textit{"fox\_is\_running"} \\*
@@ -21,14 +22,30 @@ In this study, the following notation is used: $(a, b)$-grams.
 This corresponds to both $a$-grams and $b$-grams in the same text representation.
 
 $n$-grams can be really effective, even though no clear meaning can be exploited at first sight.
-A simple explanation on why $n$-grams can be effective is by using $n$-grams of size $3$ to $5$ in most Indo-European languages this can correspond to for example: the tense of the verbs (e.g.: \textit{"ing\_"}, \textit{"ed\_"}), some small common words (\textit{"\_the\_"}, \textit{"\_and\_"}, \textit{"\_that"}), or in French the adverbs (\textit{"\_ment"}) which can capture the style of an author~\cite{ngrams_authorship}.
+A simple explanation on why $n$-grams can be effective is by using $n$-grams of size $3$ to $5$ in most Indo-European languages.
+With these sizes, it can capture the style of an author on part-of-speach or other stylistic aspects~\cite{ngrams_authorship}.
+
+This can correspond for example to:
+\begin{itemize}
+  \item
+  In English, tense of the verbs: \textit{"ing\_"}, \textit{"ed\_"})
+  \item
+  In English, small common words: \textit{"\_the\_"}, \textit{"\_and\_"}, \textit{"\_that"}
+  \item
+  In French, adverbs : \textit{"\_ment"}
+  \item
+  In French, small common words : \textit{"\_le"}, \textit{"la\_"}, \textit{"des\_"}, \textit{"est\_"}
+  \item
+  (...)
+\end{itemize}
+
 
 Table~\ref{tab:4_grams_occurences_st_jean} and Table~\ref{tab:5_grams_occurences_st_jean} in annex show respectively the $40$-MF $4$-grams and the $40$-MF $5$-grams for the Oxquarry corpus.
 
 When considering letters $n$-grams, the number of character in the $n$-grams text representation approximately increases by a factor of $n$ compared to the token representation.
 To avoid having too large text representation, a possible idea is to remove the hapax legomena (tokens appearing only once in the corpus) before applying the $n$-grams algorithm.
 This method can also be generalized to remove words appearing less than $x$ times.
-This pruning approach was explored in Kocher and Savoy~\cite{kocher_linking} but was not used in this study.
+This pruning approach was explored in Kocher and Savoy \cite{kocher_linking} but was not used in this study.
 
 \subsection{MF In-word $n$-grams}
 
@@ -47,8 +64,8 @@ In this study, to differentiate it from the classical $n$-grams algorithm.
 The latter algorithm, is called \textit{In-word $n$-grams} (Definition~\ref{def:words_n_grams}) and the other one is called \textit{letters $n$-grams} (Definition~\ref{def:letters_n_grams}).
 
 This algorithm considers each token as a string to apply the letters $n$-grams algorithm to.
-In-word $n$-grams are a hybrid version between the letters $n$-grams and the word token text representations.
-This method yields a subset of the letters $n$-grams algorithm when the tokens are bigger than $n$.
+In-word $n$-grams is a hybrid version between the letters $n$-grams and the word token text representations.
+This method yields a subset of the letters $n$-grams algorithm for the tokens larger than $n$.
 
 \subsection{MF $n$-First / $n$-Last}
 
@@ -58,7 +75,7 @@ These methods are subsets of the in-word $n$-grams.
 These methods have the same number of items as the token text representation.
 
 \begin{definition}[$n$-First \label{def:n_first}]
-  The $n$-First algorithm create for every token a new string which a substring from the first character to the $n$-th.
+  The $n$-First algorithm create for every token a substring which is created from the first character to the $n$-th.
   If the token is smaller than $n$, the whole token is used.
 
   Example: \\
@@ -66,11 +83,12 @@ These methods have the same number of items as the token text representation.
   is converted to: (\textit{"fox", "is", "run"})
 \end{definition}
 
-The $n$-First correspond generally in Indo-European languages to the meaning of a word and can be related to the lemma approach.
+The $n$-First correspond generally in Indo-European languages to the meaning of a word (i.e.: a part of the stem)
+This method can be related to the lemma approach.
 
 \begin{definition}[$n$-Last]
   \label{def:n_last}
-  The $n$-Last algorithm create for every token a new string which is a substring from the last minus $n$ character to the last.
+  The $n$-Last algorithm create for every token a substring which is created from the last character position minus $n$ to the last.
   If the token is smaller than $n$, the whole token is used.
 
   Example: \\
@@ -78,10 +96,14 @@ The $n$-First correspond generally in Indo-European languages to the meaning of 
   is converted to: (\textit{"fox", "is", "ing"})
 \end{definition}
 
+The $n$-Last correspond generally in Indo-European languages to, for example, tense for verbs.
+The method can be related to the part-of-speech method.
+
 \subsection{MF Letters $n$-grams Evaluation}
 
 To evaluate the $n$-grams with the MF approach, another methodology is used.
-Since the $n$-grams create an additional parameter, the field of possible parameter increase.
+Since the $n$-grams create an additional parameter, the field of possible parameter increase and induce more computations.
+
 To reduce the field of the possible parameters, the experiment is split in two parts:
 The first part aim to find the optimal $n$-grams size, and the size of $n$-MF $n$-grams vector.
 The second is to compare the distance metrics with the previously found parameters.
@@ -102,15 +124,20 @@ The parameters used are:
   $n$-ngrams with $n$ = $3$, $4$, $5$, $(2, 3)$, $(3, 4)$, $(4, 5)$.
 \end{itemize}
 
-The number of different $n$-grams is assumed to be larger than the vocabulary of the texts, thus the importance of having a larger vector when dealing with long texts such as the literature corpora.
+The number of different $n$-grams is assumed to be larger than the vocabulary of the texts.
+Thus, having a feature vector larger than the one used for the token and lemma text representation is advised.
 
 Figure~\ref{fig:letter_ngrams} show the average precision for the experiment first part on the Oxquarry corpus (\ref{fig:letter_ngrams_oxquarry}), Brunet (\ref{fig:letter_ngrams_brunet}) and St-Jean (\ref{fig:letter_ngrams_st_jean}).
 
-The trends seem to indicate that a lower $n$-grams size converge with lower $n$-MF vector size, but reach a maximal average precision faster.
-With $3$-grams, the $\sim 3000-4000$-MF give good results on Oxquarry and Brunet with this distance metric.
-On the Brunet corpus, after reaching the maximal average precision at $\sim 4000$-MF, a larger number of frequent words decrease the precision until reaching the maximal number of different $3$-grams at $\sim 6500$-MF.
-For Oxquarry, $3$-grams the average precision increase until $\sim 4000$-MF but stay still after this.
-On St-Jean, the $3$-grams and $(2,3)$-grams do not reach a high average precision with a low number of MF like for the Brunet and Oxquarry.
+The trends seem to indicate that the smaller the $n$-grams are, the smaller the $n$-MF vector need to be to converge to a maximal effectiveness.
+This can be explained by the fact that the vocabulary of the large $n$-grams is larger than the ones with small $n$-grams.
+Thus it requires more MF items to discriminate the authors styles.
+
+The $\sim 3000-4000$-MF $3$-grams give good results on Oxquarry and Brunet.
+
+On the Brunet corpus, after reaching the maximal average precision at $\sim 4000$-MF with $3$-grams, a larger MF decrease the precision until it converges at $\sim 6500$-MF.
+For Oxquarry with $3$-grams, the average precision increase until $\sim 4000$-MF but stay still after this.
+On St-Jean, the $3$-grams and $(2,3)$-grams do not reach a high average precision with small $n$-MF like for the Brunet and Oxquarry.
 
 $4$-grams also can be efficient but require a larger MF vector, around $\sim 4000$-MF give good result for both Brunet and St-Jean but on Oxquarry it requires around $\sim 8000$ to have similar results as the $3000$ $3$-grams.
 
@@ -139,21 +166,24 @@ For the first part, the retained parameters for the $n$-grams text representatio
 
 \textbf{Second part}
 
-As stated earlier, in the second part the objective it to compare the distance metrics with the $3$-grams/$3000$-MF and $4$-grams/$8000$-MF.
+As stated earlier, in the second part the objective is to compare the distance metrics with the $3$-grams/$3000$-MF and $4$-grams/$8000$-MF.
 The distance metrics used are the ones presented in Section~\ref{sec:vectors_distances}.
 The results for this experiment are in Table~\ref{tab:letter_ngrams}.
-Since the number of MF and the size of the $n$-grams was optimized on the Cosine distance, the results may be biased.
+Since the combination of $n$-MF and $n$-grams size was optimized for the Cosine distance, the results may be biased.
 
 For the $3$-grams, the following results can be observed:
 The Cosine distance give the best results.
 Though, two distances metrics can compete with the Cosine distance on some corpora with the $3$-grams approach, namely the Manhattan distance and the Clark distance.
 A worth noticing results, is the Euclidean distance, which have polarized results: on Oxquarry the average precision is $0.72$ and on St-Jean only $0.47$.
-Using the right distance measure can have a relative increase up to $36$\%, when comparing the worse distance metric to the best of each dataset.
+Using the right distance measure can have a relative increase up to $57$\%, when comparing the worse distance metric to the best for each dataset.
+The $57$\% increase is obtained by using the Cosine distance ($0.74$) instead of Euclidean distance ($0.47$) with the St-Jean dataset.
 
 For the $4$-grams approach, as for the $3$-grams the Cosine is the best measure with this configuration.
 The Manhattan distance and the Clark distance also are the second choice.
 The Euclidean distance have the same behavior as for $3$-grams on the dataset.
-For this configuration of $4$-grams with $8000$-MF, using the right distance measure is less impactful than the $3$-grams approach but still can have a relative increase in performance of $28$\% when changing from the worse distance metric to the best, with these corpora.
+For this configuration of $4$-grams with $8000$-MF, using the right distance measure is less impactful than the $3$-grams approach.
+A relative increase in performance up to $42$\% can be observed when changing from the worse distance metric to the best for each corpus.
+The $42$\% increase is also obtained by using the Cosine distance ($0.78$) instead of Euclidean distance ($0.55$) with the St-Jean dataset.
 
 \begin{table}
   \centering
@@ -200,8 +230,8 @@ For this configuration of $4$-grams with $8000$-MF, using the right distance mea
 In this experiment, the goal is to compare the three following substring text representations: In-word $n$-grams, $n$-First and $n$-Last.
 
 To reduce the field of parameters, only the Z-Score normalized Cosine distance used and is evaluated using the average precision.
-For this experiment, the number of $n$-MF variate between 200 and 4000 with a step of 100.
-The $n$ for the In-word $n$-grams, $n$-First and $n$-Last variate between 3 and 5.
+For this experiment, the number of $n$-MF variate between $200$ and $4000$ with a step of $100$.
+The $n$ for the In-word $n$-grams, $n$-First and $n$-Last variate between $3$ and $5$.
 
 Figure~\ref{fig:first_last_letters_ngrams} shows the average precision for this experiment on the three corpora (Oxquarry, Brunet, St-Jean).
 

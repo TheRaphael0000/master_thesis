@@ -11,6 +11,18 @@ As explained in~\cite{savoy_probability} the beta distribution is better suited 
 Figure~\ref{fig:links_score_density} show the distance density for true and false link as well as a beta distribution estimation for the St-Jean B rank list generated with text representation 0 (ref. Section~\ref{sec:individual_methods_summary}).
 Notice that to be able to model the beta distribution, the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization}.
 
+\begin{definition}[Linear normalization]
+  \label{def:normalization}
+  \begin{gather*}
+    Norm(X) = \frac{X - Min(X)}{Max(X) - Min(X)}
+  \end{gather*}
+  Normalize a vector X in the interval $[0, 1]$.
+  \begin{gather*}
+    Norm_{ab}(X, a, b) = Norm(X) \cdot (b - a) + a
+  \end{gather*}
+  Normalize a vector X in the interval $[a, b]$, with $b > a$.
+\end{definition}
+
 The vertical line on the Figure, indicate the equiprobable position where both beta distribution have the same probability of being a true link and false link (same area under the curve).
 This point can be used as a decision point where the cut should be made in the rank list, this ensures that both false positives and false negatives are minimized.
 
