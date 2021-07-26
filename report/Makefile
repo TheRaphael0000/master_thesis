@@ -1,4 +1,4 @@
 all:
-	latexmk -pdf -f *.tex -xelatex -halt-on-error
+	latexmk -pdf -f *.tex -xelatex
 clean:
 	git clean -Xfd

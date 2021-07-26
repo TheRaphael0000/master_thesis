@@ -65,18 +65,19 @@ BCubed has shown to satisfy the four following important constraints when evalua
 \end{enumerate}
 
 These metrics are used to evaluate the clustering task during the PAN @ CLEF competitions~\cite{pan16}.
-In addition to the BCubed family, this study introduce a simple metric to evaluate the clustering results and is called \textit{cluster difference}.
+In addition to the BCubed family, this study introduce the \textit{cluster difference}, a simple metric to evaluate the clustering results.
 
 \begin{definition}[Correctness~\cite{bcubed}]
   The $BCubed$ metric family is based on the following \textit{Correctness} principle.
-  Let L(e) and C(e) be the author and the cluster of an element e.
-  The Correctness is following the biconditional condition on the author and cluster equality (biconditional: $A \Longleftrightarrow B \equiv (A \land B) \lor (\neg A \land \neg B)$).
+  Let L(e) and C(e) be the author and the cluster of an element e (an element is document in the case of authorship clustering).
+  The Correctness is following the biconditional condition on the author and cluster equality.
   \begin{gather*}
     \mathrm{Correctness}(e, e') = \\
     \begin{cases}
-      1, & if (L(e) = L(e')) \Longleftrightarrow (C(e) = C(e'))\\
+      1, & \mathrm{if} (L(e) = L(e')) \Longleftrightarrow (C(e) = C(e'))\\
       0, & \mathrm{otherwise}
-    \end{cases}
+    \end{cases} \\
+    \mathrm{biconditional}: A \Longleftrightarrow B \equiv (A \land B) \lor (\neg A \land \neg B)
   \end{gather*}
   In other terms, the correctness has a value of 1 (100\% correct) if the two elements both are in the same cluster and have the same author OR are both in a different cluster and have a different author.
 \end{definition}
@@ -96,13 +97,13 @@ In addition to the BCubed family, this study introduce a simple metric to evalua
 \end{definition}
 
 \begin{definition}[$BCubed$ $F_1$ Score~\cite{bcubed}~\cite{wiki_f1}]
-  $BCubed F_1$ Score uses the $F_{\beta}$ metric with $\beta = 1$.
+  $BCubed$ $F_1$ Score uses the $F_{\beta}$ metric with $\beta = 1$.
 
   \begin{gather*}
     F_\beta = (1 + \beta^2) \cdot \frac{\mathrm{precision} \cdot \mathrm{recall}}{(\beta^2 \cdot \mathrm{precision}) + \mathrm{recall}}.
   \end{gather*}
 
-  The $BCubed F_1$ Score is thus computed the following way.
+  The $BCubed$ $F_1$ Score is thus computed the following way.
 
   \begin{gather*}
     B^3_{F_1} =
@@ -118,6 +119,7 @@ In addition to the BCubed family, this study introduce a simple metric to evalua
   \end{gather*}
   A positive value indicates an overestimation of the real number of cluster, a negative value indicate the underestimation.
   Zero indicate that the right number of cluster was found.
+
   This value can also be used to summarize if the $B^3_{recall}$ is greater or not than the $B^3_{precision}$.
   A positive Cluster diff should indicate a larger $B^3_{precision}$ than $B^3_{recall}$, and vice versa.
 

@@ -2,14 +2,14 @@
 
 To be able to compare vectors, different metrics can be used depending on the usage.
 Usually, two types of metrics for vector comparison can be used: Vector similarities and vector distances.
-The first yield a large value when the two vectors are closely related, and the second a small value when they are similar.
-Definitions~\ref{def:manhattan} to~\ref{def:jeffrey_divergence} are one of the few most common $L^1$/$L^2$/$cosine$ based distances.
+The first yield a large value when the two vectors are similar, and the second a small value when they are closely related.
+Definitions~\ref{def:manhattan} to~\ref{def:jeffrey_divergence} are one of the few most common $L^1$/$L^2$/$cosine$-based distances.
 
 \begin{definition}[Manhattan distance\label{def:manhattan}]
   \begin{gather*}
     dist_{Manhattan}(A, B) = \sum_{i=1}^{m} |a_i - a_i|
   \end{gather*}
-  The Manhattan is a $L^1$ based distance measure.
+  The Manhattan distance is also known as the $L^1$ distance measure.
 
   Example:
 
@@ -40,14 +40,14 @@ Definitions~\ref{def:manhattan} to~\ref{def:jeffrey_divergence} are one of the f
   \begin{gather*}
     dist_{Tanimoto}(A, B) = \frac{dist_{Manhattan}(A, B)}{\sum_{i=1}^{m} \mathrm{max}(a_i, b_i)}
   \end{gather*}
-  Tanimoto distance is a $L^1$ based, it's a component-wise normalized version of the Manhattan distance.
+  Tanimoto distance is a $L^1$-based, it's a component-wise normalized version of the Manhattan distance.
 \end{definition}
 
 \begin{definition}[Euclidean distance]
   \begin{gather*}
     dist_{Euclidian}(A, B) = \sqrt{\sum_{i=1}^{m}(a_i - b_i)^2}
   \end{gather*}
-  $L^2$ based distance.
+  The $L^2$ distance.
 \end{definition}
 
 \begin{definition}[Matusita distance]
@@ -57,14 +57,14 @@ Definitions~\ref{def:manhattan} to~\ref{def:jeffrey_divergence} are one of the f
       \text{with }A' &= \sqrt{A}\text{ and }B' = \sqrt{B}
     \end{split}
   \end{gather*}
-  $L^2$ based distance, using the square root of the input vectors with the Euclidean distance.
+  An $L^2$-based distance, using the square root of the input vectors with the Euclidean distance.
 \end{definition}
 
 \begin{definition}[Clark distance~\cite{kocher_verification}]
   \begin{gather*}
     dist_{Clark}(A, B) = \sqrt{\sum_{i=1}^{m}\left(\frac{|a_i - b_i|}{a_i + b_i}\right)^2}
   \end{gather*}
-  $L^2$ based distance.
+  An $L^2$-based distance.
 \end{definition}
 
 \begin{definition}[Cosine distance]
@@ -88,7 +88,9 @@ Definitions~\ref{def:manhattan} to~\ref{def:jeffrey_divergence} are one of the f
   \begin{gather*}
     dist_{Angular\_cosine}(A, B) = \frac{cos^{-1}\left( sim_{Cosine}(A, B) \right)}{\pi}
   \end{gather*}
-  These measures are Inner product based.
+  These measures are based on the inner product.
+
+  In this study, the only inner product based metric used is the cosine distance.
 \end{definition}
 
 \begin{definition}[Kullback-Leibler divergence]

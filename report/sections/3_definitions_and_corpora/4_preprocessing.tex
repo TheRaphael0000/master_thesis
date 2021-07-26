@@ -1,14 +1,17 @@
 \section{Pre-processing}
 
-A pre-processing of the data is realized to prepare the data for the next steps.
+A pre-processing of the data is realized to prepare it for the next steps.
 The pre-processing is in two parts.
 The first part is specific to each corpus, and the second is the same for every corpus.
 
-Oxquarry and Brunet are already tokenized such that every token is on a separated line.
-Additionally, Brunet have a lemma representation of the texts, which in this case in contained in a separate file in the same way as the token files.
-For these two corpora, a simple script is used to parse the file and create a vector of words for each document.
+Oxquarry and Brunet are already tokenized such that every token are on a separated line.
+Additionally, Brunet have a lemma representation of the texts.
+This representation is contained in a separated file, each lemma is on a separated line.
+For these two corpora, a simple script is used to parse the file and creates a words vector for each document.
 
-St-Jean is also already tokenized with the one token, one line approach, but each document have its three representation (token, lemma and POS) in the same file, the three representation are separated by a comma on each line.
+St-Jean is also already tokenized with one token per line approach.
+Unlike the Brunet dataset, each document have its three representation (token, lemma and POS) in the same file.
+The three representation are separated by a comma on each line.
 There are a few additional preprocessing needed for this corpus.
 
 When the word \textit{des} (equivalent to a plural \textit{the} in French) is encounter, the tokenizer used to create the St-Jean files created two lines for this word since it can be lemmatized into either \textit{de} (\textit{some/any}) or \textit{le} (\textit{the}).
@@ -23,8 +26,8 @@ vingt,vingt,72
 neuf,neuf,72
 <Fin nombre>,<>,<>
 \end{verbatim}
-The first line is a tag which contain the actual number found in the text, the three next lines are the words used to spell this number in French (\textit{quatre}: $4$, \textit{vingt}: $20$, \textit{neuf}: $9$, $4 \cdot 20 + 9 = 89$) and the last lines a tag to escape the number sequence.
-Only the numerical representation found in the original text is kept, in the example \textit{89}.
+The first line is a tag which contain the actual number found in the text, the three next lines are the words used to spell this number in French (\textit{quatre}: $4$, \textit{vingt}: $20$, \textit{neuf}: $9$, $4 \cdot 20 + 9 = 89$) and the last lines is a tag to escape the number sequence.
+Only the numerical representation is kept, in the example \textit{89}.
 This type of numerical representation is also used for ordinal number, such as \textit{7e} (7th):
 \begin{verbatim}
 <Nombre 7e>,<>,<>
@@ -33,14 +36,20 @@ septième,septième,72
 \end{verbatim}
 When the number is already written in full letters in the text, the parser did not tokenize it this way, only one line is created.
 
-The first two line of each document are ignored for St-Jean since they contain metadata for the document, such as: the number of tokens in the document, the name of the collection and the ID written is full text.
+The first two line of each document are ignored for St-Jean since they contain metadata for the document.
+The following information can be found: the number of tokens in the document, the name of the collection and the document ID written is full text.
+Some inconsistencies on these two lines have been corrected manually.
+In some files, the only one line was available.
 
 For Oxquarry, Brunet and St-Jean, the authors of each document are contained in a single text file.
-On each line the author of the document for the document with an ID equivalent to the line number, e.g. author on line 1 is for document 1, author on line 2 is for document 2, etc.
+Each line contains the author of the document with an ID equivalent to the line number, e.g. author on line 1 is for document 1, author on line 2 is for document 2, etc.
 
-For the PAN16 corpus, there is no document tokenization.
+For the PAN16 corpus, there is no document tokenization available.
+Plain text files are given.
 A simple tokenization is realized which consider every punctuation symbols (POSIX punctuation symbols), line breaks and spaces (POSIX spaces) as a separator for the different tokens.
 Since they are written in multiple languages, no further rules are applied to tokenize more effectively the texts.
+The problem with this tokenization method is that it removes the punctuation symbols, which can carry information.
 
 The general preprocessing applied on every document of every corpus is to encode every text with only lower case ASCII characters.
 By doing so, every diacritic are removed, e.g. the word \textit{École} (school in French) is converted to \textit{ecole}.
+This method is not used for the PAN dataset, since the Greek alphabet is not in the ASCII character set.

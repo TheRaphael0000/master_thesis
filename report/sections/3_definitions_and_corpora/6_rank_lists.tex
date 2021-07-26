@@ -2,7 +2,7 @@
 
 Rank lists are used to order objects such that the most interesting object is at the top and every subsequent object become less interesting.
 In information retrieval systems, rank lists are used to order the results from the most relevant to the user's query to the least relevant.
-For the authorship verification problem, the rank list can also be used.
+For the authorship verification problem, the rank list can also be used to order links.
 
 \subsection{Definition and Example}
 
@@ -21,9 +21,12 @@ A ranked list for the authorship verification problem is an ordered list contain
 These pairs are also called links.
 In most cases, the rank list contain every possible pairs of documents.
 
-The ranked list is ordered by the score, such that the most similar document pair are at the top of the list.
+The ranked list is ordered by the score, such that the most similar document pair is at the top of the list.
+The least similar document pair is at the bottom of the list.
+
 When the scoring function is based on a distance metrics, the rank list is sorted in increasing order.
 For the scoring function based on similarity, the rank list is sorted in decreasing order.
+
 The most similar documents pairs are the most likely written by the same author.
 Thus, the top ranks should contain pairs of documents written by the same author.
 
@@ -98,11 +101,6 @@ In order to know the quality of a rank list, multiple rank list evaluation metri
 Definitions in these sections are adapted versions of the ones from Kocher and Savoy~\cite{kocher_linking}.
 The presented metrics are also well know in the authorship verification and the information retrieval field.
 
-The average precision, the R-Precision and the High Precision are strongly correlated.
-Thus, for this study, on some experiment, only the average precision is computed.
-
-Example~\ref{ex:rank_list_eval} showcase each metric for the rank list evaluation.
-
 \begin{definition}[Relevant link~\cite{kocher_linking}]
   A relevant link is a link in the relevant set.
   These are also called \textit{true links} in this study.
@@ -154,33 +152,38 @@ Example~\ref{ex:rank_list_eval} showcase each metric for the rank list evaluatio
   The average precision can be considered as an approximation of the area under the precision-recall curve.
 \end{definition}
 
+The average precision, the R-Precision and the High Precision are strongly correlated.
+Thus, for this study, on some experiment, only the average precision is computed.
+
+Example~\ref{ex:rank_list_eval} showcase each metric for the rank list evaluation.
+
 \begin{example}
   \centering
   \caption{Rank list evaluation example}
   \label{ex:rank_list_eval}
 
   \begin{subexample}{\linewidth}
-  \subcaption{Documents, authorship and rank list}
+    \subcaption{Documents, authorship and rank list}
 
-  Suppose that a corpus contain 4 documents.
-  Documents 0, 1 and 3 are written by the same author A.
-  Document 2 is written by author B.
+    Suppose that a corpus contain 4 documents.
+    Documents 0, 1 and 3 are written by the same author A.
+    Document 2 is written by author B.
 
-  The following relevant set $R$ and non-relevant set $\bar{R}$ can be computed using this information.
-  \begin{gather*}
-    \begin{split}
-            R =& \{(0, 1), (0, 3), (1, 3) \} \\
-      \bar{R} =& \{(0, 2), (1, 2), (2, 3) \} \\
-          |L| =& |R| \cup |\bar{R}| = 6
-    \end{split}
-  \end{gather*}
+    The following relevant set $R$ and non-relevant set $\bar{R}$ can be computed using this information.
+    \begin{gather*}
+      \begin{split}
+              R =& \{(0, 1), (0, 3), (1, 3) \} \\
+        \bar{R} =& \{(0, 2), (1, 2), (2, 3) \} \\
+            |L| =& |R| \cup |\bar{R}| = 6
+      \end{split}
+    \end{gather*}
 
-  Suppose that these links are in a rank list with the following order:
-  \begin{gather*}
-    \begin{split}
-      ((1, 3), (0, 1), (2, 3), (0, 3), (1, 2), (0, 2))
-    \end{split}
-  \end{gather*}
+    Suppose that these links are in a rank list with the following order:
+    \begin{gather*}
+      \begin{split}
+        ((1, 3), (0, 1), (2, 3), (0, 3), (1, 2), (0, 2))
+      \end{split}
+    \end{gather*}
   \end{subexample}
 
   \vspace{0.5cm}
@@ -246,12 +249,12 @@ Example~\ref{ex:rank_list_eval} showcase each metric for the rank list evaluatio
 
 When computing the rank lists, each link have its distance calculated and can be represented in a matrix.
 In this matrix, each document represent a row and a column.
-The elements of the matrix are the distances between the two.
+The matrix elements are the distances between the two documents of the row and column.
 For the non-commutative distances functions, the whole matrix is used.
 For the commutative distances functions, only a triangle or symmetric matrix is required.
 
-A transformation can be effectuated either from a rank list to a distances' matrix or from a distances' matrix to a rank list.
-For some algorithm or computations, the distances' matrix representation is required and for others the rank list.
+The transformation can be effectuated either from a rank list to a distances' matrix or from a distances' matrix to a rank list.
+For some algorithm or computations, the distances' matrix representation is preferable and for others the rank list representation is better.
 
 Example~\ref{ex:distances_matrix} show the two representations for the same distances.
 
@@ -302,49 +305,46 @@ It can be either positive or negative.
 A positive gain indicates that the rank list have better performances over another.
 When the gain is negative, the rank list have worse results than the other one.
 
-When multiple rank list need to be compared to one rank list, two simple aggregation methods are used.
-One use the mean of the results and the second the maximal value.
-These are called respectively Single-Mean and Single-Max.
-These aggregations strategies can be used in conjunction with the gain definition to compare one rank list to multiple rank lists.
-
 The fusion methods proposed in this study transform multiple rank lists into a single rank list.
-Thus, having aggregation strategies is required for its evaluation.
+Thus, having aggregation strategies is required.
+
+When multiple rank list need to be compared to a single one, two simple aggregation methods are used.
+One use the mean of the results and the second the maximal value.
+In this study, these are called respectively Single-Mean and Single-Max.
+These aggregations strategies can be used in conjunction with the gain definition to compare one rank list to multiple rank lists.
 
 Example~\ref{ex:gain} show the gain computation using average precision on rank lists and the aggregation with Single-Mean and Single-Max.
 
 \begin{example}
-  \centering
   \caption{Gain}
   \label{ex:gain}
 
   \begin{subexample}{\linewidth}
-    \centering
     \subcaption{Gain (One to one)}
-
-    Here two rank lists are compared by evaluating the gain is average precision.
+    Here two rank lists are compared by evaluating the gain in average precision.
 
     \vspace{0.2cm}
 
-    \begin{tabular}{l r}
-      \toprule
-      \textbf{Rank list} & \textbf{AP} \\
-      \midrule
-      Rank list A & $0.8$ \\
-      Rank list B & $0.6$ \\
-      \midrule
-      \textbf{Gain} & \textbf{AP gain} \\
-      A gain over B & $0.8 - 0.6 = +0.2$ \\
-      \bottomrule
-    \end{tabular}
+    \begin{center}
+      \begin{tabular}{l r}
+        \toprule
+        \textbf{Rank list} & \textbf{AP} \\
+        Rank list A & $0.8$ \\
+        Rank list B & $0.6$ \\
+        \midrule
+        \textbf{Gain} & \textbf{AP gain} \\
+        A gain over B & $0.8 - 0.6 = +0.2$ \\
+        \bottomrule
+      \end{tabular}
+    \end{center}
   \end{subexample}
 
   \vspace{0.5cm}
 
   \begin{subexample}{\linewidth}
-    \centering
     \subcaption{Gain (One to many)}
 
-    Here one rank list is compared to two others by evaluating the gain is average precision using two aggregations strategies (Single-Mean, Single-Max).
+    Here one rank list is compared to two others by evaluating the gain in average precision using two aggregations strategies (Single-Mean, Single-Max).
 
     \vspace{0.2cm}
 
@@ -352,7 +352,6 @@ Example~\ref{ex:gain} show the gain computation using average precision on rank 
     \begin{tabular}{l r}
       \toprule
       \textbf{Rank list} & \textbf{AP} \\
-      \midrule
       Rank list A & $0.8$ \\
       Rank list B & $0.6$ \\
       Rank list C & $0.9$ \\
