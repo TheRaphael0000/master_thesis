@@ -3,7 +3,7 @@
 \subsection{Method}
 
 The main idea of the Silhouette-based clustering is to evaluate in an unsupervised manner the clustering result for each number of clusters (at each merge step of the hierarchical clustering).
-When discarding the clustering with $N$ and clusters $1$, this produce $N - 2$ possible clustering, each of those are evaluated using the mean Silhouette score.
+When discarding the clustering with $N$ and clusters $1$, this produce $N - 2$ possible clustering, each of those are evaluated using the unsupervised mean Silhouette score metric.
 The mean Silhouette score is defined in Definition~\ref{def:silhouette}.
 
 \begin{definition}[Mean Silhouette score~\cite{sklearn}~\cite{wiki_silhouette}]
@@ -28,24 +28,28 @@ The mean Silhouette score is defined in Definition~\ref{def:silhouette}.
 \end{definition}
 
 The right number of cluster is not known.
-The idea is to apply the hierarchical clustering at each possible number of clusters (from $N - 1$ to $2$), and compute the mean Silhouette score.
-The best clustering is the one with the largest mean Silhouette score.
+Using this technique, we suppose that the best number of clusters, is the one with the largest mean Silhouette score.
+Each step of the hierarchical clustering is evaluated with the mean Silhouette Score.
+Only the one with the largest is kept.
 
 An alternative to this method is the Iterative Positive Silhouette (IPS) and was proposed in Layton, Watters, Dazeley (2011)~\cite{automated_unsupervised}.
 This method uses the median Silhouette score instead, and use another stopping procedure based on the sign of the score.
 
 \subsection{Evaluation}
 
-For this experiment, the goal is to test the Silhouette-based hierarchical clustering method based on the maximization of the mean Silhouette score on the literature corpora.
+For this experiment, the goal is to test the Silhouette-based hierarchical clustering method on the literature corpora.
 
-The rank list used for this experiment is the one from the retained text representation (9 for St-Jean and 7 for Brunet and Oxquarry), see Table~\ref{tab:rls_oxquarry_brunet}~and~\ref{tab:rls_st_jean} in annex.
+The rank lists used for this experiment are the ones from the retained text representation (9 for St-Jean and 7 for Brunet and Oxquarry), see Table~\ref{tab:rls_oxquarry_brunet}~and~\ref{tab:rls_st_jean} in annex.
 
-The $B^3_{F_1}$ score and $r_{diff}$ average on the Silhouette-based clustering are presented in Table~\ref{tab:silhouette-based_clustering}, the complete table is available in Table~\ref{tab:silhouette-based_clustering_full} in annex.
+The $B^3_{F_1}$ score and $r_{diff}$ average on the Silhouette-based clustering are presented in Table~\ref{tab:silhouette-based_clustering}.
+The complete table is available in Table~\ref{tab:silhouette-based_clustering_full} in annex.
 
 The average r-ratio difference is a positive value ranging between $\left[0.17, 0.22\right]$ depending on the linkage criterion.
-Having a too large r-ratio indicate that the estimated number of cluster on every corpus is overestimated.
+Having an r-ratio larger than $0$ indicate that the estimated number of cluster on every corpus is overestimated.
 This means that the mean neareast-cluster distance is greater than the mean intra-cluster distance, even when dealing with the right number of clusters.
-In Table~\ref{tab:silhouette-based_clustering}, the r-ratio is clearly too high, and can be due to the fact that the rank list used for the clustering is not perfect (AP $\neq 1$).
+In Table~\ref{tab:silhouette-based_clustering}, the r-ratio is clearly too high, and the $B^3_{F_1}$ score is $\sim 14\%$ worse than the upper bound.
+
+This can be due to the fact that the rank list used for the clustering is not perfect (AP $\neq 1$).
 
 \begin{table}
   \centering
@@ -74,8 +78,9 @@ In Table~\ref{tab:silhouette-based_clustering}, the r-ratio is clearly too high,
 \subsection{Tweak for Authorship Clustering}
 
 We want to mitigate having the number of cluster overestimated by the Silhouette-based clustering method.
-An easy solution is to use the labels produced by the clustering earlier in the procedure (less merges, less clusters).
+An easy solution is to use the clustering results produced earlier in the algorithm steps (less merges, less clusters, less overhestimation of the number of clusters).
 This corresponds to a non-maximal value of the mean Silhouette score, on the left side of the maximal mean Silhouette score.
+This procedure is a form of early stop.
 
 In this study, we introduce a parameter called $\alpha$.
 $\alpha$ represents a percentage to subtract to the maximal mean Silhouette score to obtain a new target with a lower mean Silhouette score (instead of the maximal value).
@@ -87,7 +92,7 @@ To remove this ambiguity, the sign of $\alpha$ indicate on which side of the max
 With $\alpha = 0$, this corresponds to the maximal mean Silhouette score.
 With a negative $\alpha$ the left side is targeted and with a positive $\alpha$, the right side.
 
-The clustering with the Silhouette score the closest to the target on the desired side is retained.
+The clustering result with the Silhouette score the closest to the target on the desired side is retained.
 
 \begin{definition}[$\alpha$-Silhouette]
   The $\alpha$-Silhouette target score found by using the maximal Silhouette score as a baseline and is adjusted using a parameter called $\alpha$.
@@ -97,6 +102,8 @@ The clustering with the Silhouette score the closest to the target on the desire
            &= max(Scores) \cdot (1 - |\alpha|)
     \end{aligned}
   \end{gather*}
+
+  Notice, the sign of the $\alpha$ parameter is not taken into account to select the score target.
 \end{definition}
 
 Example~\ref{ex:alpha_correction} show the $\alpha$ computation and usage.
@@ -105,8 +112,11 @@ For example, by using $\alpha = -0.2$, we aim to correct this overshoot and incr
 This value was chosen by grid search to optimize the $B^3_{F_1}$.
 
 Table~\ref{tab:silhouette-based_clustering_alpha} show the evaluation with $\alpha = -0.2$, the complete table is available in Table~\ref{tab:silhouette-based_clustering_alpha_full} in annex.
+
 With this correction technique, in average the $r_{diff}$ is closer to 0 and the average $B^3_{F_1}$ is increased in average by $7\%$ across all the corpora.
-Like for the upper bound, the average linkage criterion give the best results for this clustering method, its $B^3_{F_1}$ is in average $2\%$ better.
+With $\alpha = -0.2$, we obtained a $B^3_{F_1}$ only $8\%$ worse than the upper bound, instead of the $14\%$ obtained with $\alpha=0$.
+The average linkage criterion give the best results for this clustering method.
+The $B^3_{F_1}$ for the average linkage criterion is in average $2\%$ better than the other criterions.
 
 \begin{example}
   \centering
@@ -144,13 +154,17 @@ Like for the upper bound, the average linkage criterion give the best results fo
   \vspace{0.5cm}
 
   \subcaption{Clustering selection}
-  Since $\alpha$ is negative, the left side of the maximal mean Silhouette is used (smaller number of clusters).
+  Since $\alpha$ is negative, the left side of the maximal mean Silhouette is used (negative: smaller number of clusters).
 
-  Thus, the clustering on the left side with the closest Silhouette score to the target is the one with 4 clusters (score: 3.2).
+  Thus, the clustering on the left side with the closest Silhouette score to the target is the one with 4 clusters (score: $3.2$).
+
+  With $\alpha = 0.2$, the target would be the same, but the right side would be selected instead.
+  The number of cluster selected would be 7.
+
+  With $\alpha = 0$, the number of cluster selected would be 6, since the target would be $3.9$.
 \end{example}
 
 \begin{table}
-  \centering
   \caption{Silhouette-based clustering evaluation ($\alpha = -0.2$), mean $B^3_{F_1}$/$r_{diff}$}
   \label{tab:silhouette-based_clustering_alpha}
 
@@ -160,15 +174,19 @@ Like for the upper bound, the average linkage criterion give the best results fo
            & \multicolumn{3}{c}{Linkage criterion} \\
     Corpus    & Single     & Average   & Complete \\
     \midrule
-    Oxquarry  & 0.81/0.06 & 0.78/0.03 & 0.79/0.02 \\
-    Brunet    & 0.78/0.10 & 0.80/0.09 & 0.80/0.10 \\
-    St-Jean A & 0.70/0.14 & 0.77/0.08 & 0.76/0.09 \\
-    St-Jean B & 0.86/0.02 & 0.87/0.03 & 0.86/0.03 \\
+    Oxquarry  & \textbf{0.81/0.06} & 0.78/0.03 & 0.79/0.02 \\
+    Brunet    & 0.78/0.10 & \textbf{0.80/0.09} & \textbf{0.80/0.10} \\
+    St-Jean A & 0.70/0.14 & \textbf{0.77/0.08} & 0.76/0.09 \\
+    St-Jean B & 0.86/0.02 & \textbf{0.87/0.03} & 0.86/0.03 \\
     \midrule
-    Absolute mean & 0.79/0.08 & 0.81/0.06 & 0.80/0.06 \\
+    Absolute mean & 0.79/0.08 & \textbf{0.81/0.06} & 0.80/0.06 \\
     \midrule
     \textit{Upper bound} & \textit{0.83/0.00} & \textit{0.88/0.00} & \textit{0.87/0.00} \\
     \bottomrule
   \end{tabular}
   }
+
+  \vspace{0.2cm}
+
+  \textit{In bold: For each corpus, the criterion with the largest $B^3_{F_1}$}
 \end{table}

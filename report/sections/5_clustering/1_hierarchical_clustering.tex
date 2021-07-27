@@ -6,6 +6,7 @@ The hierarchical clustering regroup documents following this order.
 
 The hardest task with this clustering scheme is to find the position in the rank list where true link become less frequent than false link.
 In the clustering context, the optimal position is unknown since the true labels are not available.
+We call this type of problem unsupervised.
 The position should minimize the true links under it and the false links above it.
 
 In this study, finding this position will also be referred to as finding the \textit{cut}.
@@ -21,7 +22,7 @@ The distribution-based model learn based on a corpus' rank list with labels (tra
 Section~\ref{sec:distribution_based_clustering} contains explanations for this method.
 
 Finally, the regression based model, learn to estimate the rank lists links' true link probability from a corpus with labels (examples, training corpus).
-The model can find the optimal cut for a rank list from a new corpus (called testing corpus), by estimating the true link probabilities for each link from the previous examples.
+The model can find the optimal cut for a new corpus' rank list (called testing corpus), by estimating the true link probabilities for each link.
 This approach is explained in Section~\ref{sec:regression_based_clustering}.
 
 \subsection{Algorithm and Implementation \label{sec:algorithm_and_implementation}}
@@ -33,16 +34,35 @@ The agglomerative clustering follow this procedure:
   \item The rank list used is converted into a 2D distances' matrix, with each link representing an element of the matrix (ref. Section~\ref{sec:distances_matrix}).
   \item At the beginning, each document is considered as a single document cluster.
   \item The link (element) with the lowest score in the matrix is used to merge the next clusters.
-  \item The matrix is updated following a linkage criterion.
+  \item The matrix is updated following a linkage criterion. Columns and rows of the clusters merged are updated by appling a linkage criterion.
   \item 3. and 4. can be repeated until a single cluster remain.
 \end{enumerate}
 
-Multiple linkage criteria are available: \textit{Ward} (metric that aim to minimize the variance of the cluster merged), \textit{average-linkage} (use the average score of each link of the cluster merged), \textit{complete-linkage} (use the cluster merged maximal score), \textit{single-linkage} (use the cluster merged minimal score).
+Multiple linkage criteria are available:
+
+\begin{itemize}
+  \item
+  \textit{Ward} : metric that aim to minimize the variance of the cluster merged
+  \item
+  \textit{Average-linkage} : use the average score of each link of the cluster merged
+  \item
+  \textit{Complete-linkage} : use the maximal score of each link of the cluster merged
+  \item
+  \textit{Single-linkage} : use the minimal score of each link of the cluster merged
+\end{itemize}
+
 Example~\ref{ex:agglomerative_clustering} show an example for the merging procedures and linkage criteria.
 
 Ward linkage was discarded since the current \textit{scikit-learn} implementation only allow Euclidean distance for its computation.
-The merging procedure can be stopped with one of the two following criteria: When a certain cluster number is reached or when the lowest score for the next merge is above a certain value.
-This value is called the distance threshold.
+
+The merging procedure can be stopped with one of the two following criteria:
+
+\begin{itemize}
+  \item
+  When a certain cluster number is reached.
+  \item
+  When the lowest score for the next merge is above a certain value. This value is called the distance threshold.
+\end{itemize}
 
 The so-called cut can be associated to the distance threshold.
 The cut is a theoretical position in the rank list which maximize true links above the cut and false link under.
@@ -57,14 +77,13 @@ It does not provide a way to access the clusters at each merging step.
 This feature is required for the unsupervised method, which evaluated multiple clustering results.
 
 A possible workaround is to run the algorithm multiple time.
-Each time, the algorithm is stopped at a different cluster number (a different step).
-Though this workaround valid, it still introduces an unnecessary overhead of $O(1 + 2 + 3 + ... + n - 1) = O(\frac{n * (n - 1)}{2}) = O(n^2)$ additional merges, with $n$ equal to the number of documents.
+Each time, the algorithm is stopped at a different number of clusters (a different step).
+Though this workaround is valid, it still introduces unnecessary additional merges.
+This overhead have a complexity of $O(1 + 2 + 3 + ... + n - 1) = O(\frac{n * (n - 1)}{2}) = O(n^2)$, with $n$ equal to the number of documents.
 In other words, with the workaround, each time the algorithm is run, all the merges computed at the previous run must re-recomputed.
-The agglomerative clustering algorithm was reimplemented to allow access to the clusters at each step, to avoid this overhead.
+To avoid this overhead, the agglomerative clustering algorithm was reimplemented to allow access to the clusters at each step.
 
 \begin{example}
-  \small
-  \centering
   \caption{Agglomerative clustering}
   \label{ex:agglomerative_clustering}
 
@@ -84,9 +103,10 @@ The agglomerative clustering algorithm was reimplemented to allow access to the 
   \end{subexample}
 
   \vspace{0.2cm}
+
   The link with the smallest distance is A-B with a distance of 1.
   At the next step, the clusters A and B are merged into a cluster called AB.
-  (b), (c) and (d) shows how to update the distances' matrix depending on the linkage criterion.
+  (b), (c) and (d) shows how to update the distances' matrix in (a) depending on the linkage criterion.
 
   \vspace{0.5cm}
 
@@ -105,6 +125,7 @@ The agglomerative clustering algorithm was reimplemented to allow access to the 
   \end{subexample}
 
   \vspace{0.2cm}
+
   Next step will merge AB and C.
 
   \vspace{0.5cm}
@@ -124,6 +145,7 @@ The agglomerative clustering algorithm was reimplemented to allow access to the 
   \end{subexample}
 
   \vspace{0.2cm}
+
   Next step will merge AB and D.
 
   \vspace{0.5cm}
@@ -143,6 +165,7 @@ The agglomerative clustering algorithm was reimplemented to allow access to the 
   \end{subexample}
 
   \vspace{0.2cm}
+
   Next step will merge C and D.
 \end{example}
 
@@ -159,7 +182,7 @@ The custom implementation of the hierarchical clustering is used, at each mergin
 The clustering resulting in the best $B^3_{F_1}$ is kept.
 This procedure is repeated for each linkage criteria and corpus / text representation.
 
-The results are presented in Table~\ref{tab:hierarchical_clustering} and the mean for each corpus and linkage criterion.
+The results are presented in Table~\ref{tab:hierarchical_clustering}.
 
 These results can be considered as the $B^3_{F_1}$ upper bound for the hierarchical clustering using these rank lists on these corpora.
 In this study, we use the averages across all corpora to compare the cut methods, and we refer to them as \textit{upper bound} or \textit{rank lists upper bound}.
@@ -241,7 +264,7 @@ This result further motivate this assumption.
 \end{table}
 
 \begin{figure}
-  \caption{$B^3_{F_1}$ correlation with AP on each linkage criteria}
+  \caption{Optimal clustering $B^3_{F_1}$ correlation with rank list AP}
   \label{fig:correlation_average_precision_b3f1}
 
   \subcaption{Single Linkage}
