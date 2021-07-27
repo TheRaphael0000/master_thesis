@@ -8,36 +8,50 @@ The main idea is to first compress two documents A, B then compress the concaten
 
 Using the sizes after compression of A, B, AB and a compression distance measure, it is possible to compute a distance between A and B.
 
-Commonly, for the compression, a lossless compression algorithm is used, one from the Lempel-Ziv family (GZIP), the block sorting family (BZip2) or the statistical family (PPM) \cite{comparing_compression}.
+For the compression, a lossless compression algorithm is used.
+The Lempel-Ziv family (GZIP), the block sorting family (BZip2) and the statistical family (PPM) have been experimented in Oliveira and al. \cite{comparing_compression} and show good results.
 
-This technique is based on the fact that lossless compression algorithms tries to lower the Shannon entropy of a document, thus when compressing a document with a large Shannon entropy the compressed document should have a larger size after compression than a document with a small Shannon entropy.
+This technique is based on the fact that lossless compression algorithms tries to lower the Shannon entropy of a document.
+When compressing a document with a large Shannon entropy, the compressed document should have a larger size after compression than a document with a small Shannon entropy.
 When concatenating two documents that share many terms, the entropy of the concatenated document should be lower than if the two documents present distinct vocabulary.
 
 This approach has the benefit to produce rank lists in a nearly parameterless manner, only a distance metric and compression algorithm are needed.
-A main drawback with this technique is the fact that the results can not be properly explained compared to MF method.
+The main drawback with this technique is the fact that the results can not be entirely explained.
 
 In this study the lossless compression algorithm used are: GZip, BZip2, LZMA.
 The implementations for these compression algorithms are the ones in the Python standard library, the programming language used for this study \cite{python_standard_library}.
+
 Each compression algorithm can be tweaked with different parameters, the default settings are used except for the compression level (trade-off compression time and compression size).
-By setting the compression level to the maximal setting, this ensures that the produced file will have the lowest possible Shannon entropy reachable with this algorithm, thus providing the best possible approximation of distance when used in conjunction with the compression distances.
-Definitions~\ref{def:compress1},~\ref{def:compress2} and \ref{def:compress3} are the most popular compression distance measure~\cite{comparing_compression}~\cite{savoy_stylo}.
+We set the compression level to the maximal setting.
+This allows to ensure that the produced file will have the lowest possible Shannon entropy reachable with this algorithm.
+Thus providing the best possible approximation of distance when used in conjunction with the compression distances.
+
+Definitions~\ref{def:compress1},~\ref{def:compress2} and \ref{def:compress3} are compression distance measure found in the literature  \cite{comparing_compression} \cite{savoy_stylo}.
 
 \begin{definition}[Conditional complexity of compression~\cite{comparing_compression}~\cite{savoy_stylo}\label{def:compress1}]
   The conditional complexity of compression of two documents A and B is computed as follows:
   \begin{gather*}
     CCC(A, B) = C(AB) - C(A)
   \end{gather*}
-  Where C(AB) is the size after compression of the concatenation of A and B, and C(A) the size after compression of A.
+  C(AB) is the size after compression of the concatenation of A and B
+
+  C(A) the size after compression of A.
+
   This metrics is not easy to use since the order of magnitude is not bounded and can depend a lot on the text sizes.
   The next ones try to mitigate this problem.
 \end{definition}
 
 \begin{definition}[Normalized compression distance~\cite{comparing_compression}~\cite{savoy_stylo}\label{def:compress2}]
-  The normalized compression distance of two documents A and B as follows:
+  The normalized compression distance of two documents A and B is computed as follows:
   \begin{gather*}
     NCD(A, B) = \frac{C(AB) - \min(C(A), C(B))}{\max(C(A), C(B))}
   \end{gather*}
-  Where C(AB) is the size after compression of the concatenation of A and B, C(A) the size after compression of A and C(B) the size after compression of B.
+  C(AB) is the size after compression of the concatenation of A and B
+
+  C(A) the size after compression of A
+
+  C(B) the size after compression of B.
+
   This metric gives a value in the range $\left[0, 1+\epsilon\right]$, with $\epsilon$ being a small positive value created by the imperfection of compression algorithms.
 \end{definition}
 
@@ -46,38 +60,53 @@ Definitions~\ref{def:compress1},~\ref{def:compress2} and \ref{def:compress3} are
   \begin{gather*}
     CBC(A, B) = 1 - \frac{C(A) + C(B) - C(AB)}{\sqrt{C(A) \cdot C(B)}}
   \end{gather*}
-  Where C(AB) is the size after compression of the concatenation of A and B, C(A) the size after compression of A and C(B) the size after compression of B.
-  This metric has the same properties as the cosine distance (Definition~\ref{def:cosine_dist}).
+  C(AB) is the size after compression of the concatenation of A and B
+
+  C(A) the size after compression of A
+
+  C(B) the size after compression of B.
+
+  This metric has the bounds as the cosine distance (Definition~\ref{def:cosine_dist}).
 \end{definition}
 
 \subsection{Evaluation}
 
 An experiment was conducted to try to compare the three proposed compression algorithm (GZip, BZip2, LZMA) for the compression based distance ranking.
-For each algorithm and for each document, the size after compression is computed, as well as the concatenation of every document pairs.
-Using these sizes and the NCD or CBC distance metrics (ref. Section~\ref{sec:compression_based_distances}), the rank list is evaluated.
-This experiment is run on the three corpora three times to have a better approximation of the run time.
+
+For each document, the size after compression is computed with each algorithm.
+We also compute the size after compression of the concatenation of each document pair.
+
+Using these sizes and the NCD or CBC distance metrics (ref. Section~\ref{sec:compression_based_distances}), the rank list are computed and evaluated.
 The results in terms of efficiency of the resulting rank list are shown in Table~\ref{tab:compression_evaluation_results}.
-The average time of the three runs are in Table~\ref{tab:compression_evaluation_times} when run on a desktop computer with an \textit{Intel(R) Core(TM) i7-5820K CPU @ 3.30GHz}.
+
+The experiment is run on the three corpora three times to have a better approximation of the run time.
+The average time of the three runs are in Table~\ref{tab:compression_evaluation_times}.
+The CPU used for the experiment is an \textit{Intel(R) Core(TM) i7-5820K CPU @ 3.30GHz} .
 
 LZMA gives the best results on every corpus tested (Mean AP: 0.76 with NCD and 0.78 with CBC).
-BZip2 have results close results to LZMA (LZMA have an AP $\sim 2.5\%$ better).
-GZip seem to be giving the worse results on every corpus.
+BZip2 have results close to LZMA (LZMA have an AP $\sim 2.5\%$ better).
+GZip give the worse results on every corpus.
 It obtains an AP $\sim 30\%$ worse than LZMA.
 
-The Cosine-based compression distance (CBC) tend to give slightly better results over the normalized compression distance (NCD), AP $\sim 1\%$ better.
+The Cosine-based compression distance (CBC) tend to give slightly better results over the normalized compression distance (NCD).
+The AP is $\sim 1\%$ better with the CBC.
 
-In terms of time complexity BZip2 is the fastest algorithm of the 3 proposed, LZMA is $\sim 5-6$ times slower than BZip2, and GZip slower than BZip2 by around $\sim 7\%$.
-No significant time differences is recorded between the NCD and CBC distance measures, since the greatest complexity reside in the compression algorithm.
+In terms of time complexity, BZip2 is the fastest algorithm of the 3 proposed.
+GZip is slower than BZip2 by around $\sim 7\%$.
+LZMA is $\sim 5-6$ times slower than BZip2.
 
-Even though LZMA algorithm give the best results, the configuration retained for the compression based distance is the BZip2 with the Cosine based compression distance, since it gives relative good results in a short amount of time.
+No significant time differences are recorded between the NCD and CBC distance measures.
+This is explained by the fact that, the greatest complexity reside in the compression algorithm.
 
 Previous study show that the distance measure choice was more impactful than the choice of the compression algorithm in the regarding the quality of the results \cite{comparing_compression}.
 Our results tend to indicate the opposite, ref. Table~\ref{tab:compression_evaluation_results}.
-The distance measures does not impact a lot the quality of the results, but the compression algorithm does.
-This difference may be caused by the difference of compression algorithm used.
+The distance measures does not have a large impact on the quality of the results.
+Though the compression algorithm does.
+This difference may be caused by the difference of compression algorithm used between the two experiments.
 
 For this text representation, the retained configuration is the BZip2 algorithm with the CBC distance measure.
-The Bzip2 was selected even though LZMA give slightly better results, due to the huge difference in run time.
+Even though the LZMA algorithm give the best results, we decided to trade quality for time.
+BZip2 produces relatively good results in a shorter amount of time ($\sim 5-6$ times faster).
 
 \begin{table*}
   \centering

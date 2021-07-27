@@ -1,23 +1,42 @@
 \section{MF POS Sequences \label{sec:pos_sequences}}
 
 Another possible stylistic aspect that can be detected is to consider the sentence constructions.
-A part-of-speech (POS) tagging algorithm is required to apply these the technique proposed on any text.
+A part-of-speech (POS) tagging algorithm is required to apply the technique proposed on any text.
 In this study, we will not cover this aspect and assume that the POS are available and more or less correct.
 
 \subsection{Method}
 
-This can be solved by creating a short POS sequences text representation.
+The idea here is to create a text representation based on POS sequences.
 Used in conjunction with the MF method, this can produce feature vectors which can be used to compare documents.
 
 These short sequences are created using the same principle as for the $n$-grams.
 From a list of POS, each POS is considered as a letter when applying the $n$-grams algorithm.
 This type of $n$-grams is also known as $w$-shingling.
 
-For example, the sentence: \textit{"The cat eat a fish"} has the following POS tag \textit{"Article Noun Verb Article Noun"} which correspond to the following POS sequence of size 3: \textit{"Article Noun Verb"} / \textit{"Noun Verb Article"} / \textit{"Verb Article Noun"}.
+\begin{definition}[POS Short Sequences]
+  Each word is tagged with a corresponding POS.
+  The document is represented as a long ordered list of POS.
 
-In practice the POS is more detailed, for example instead of just considering \textit{eat} as a verb, a more detailed POS can be the verb and its tense \textit{Verb-SimplePresent}, the same goes for the other type of POS.
+  From the list of POS, a moving window of size $n$, creates the POS sequences.
+  For the sake of simplicity, in this study, a POS sequence of size $n$ is written $n$-POS.
 
-For the sake of simplicity, in this study, a POS sequence of size $n$ is written $n$-POS.
+  The following example showcases a sentence in the 3-POS (POS sequences of size 3) text representation.
+
+  \vspace{0.2cm}
+
+  \begin{tabular}{l p{5cm}}
+      \toprule
+      Sentence & \textit{"The", "cat", "eat", "a", "fish"} \\
+      POS & \textit{"Article", "Noun", "Verb", "Article", "Noun"} \\
+      \midrule
+      POS sequences & \textit{"Article Noun Verb", "Noun Verb Article", "Verb Article Noun"} \\
+      \bottomrule
+  \end{tabular}
+
+  \vspace{0.2cm}
+
+  In practice the POS are more detailed, for example instead of just considering \textit{eat} as a verb, a more detailed POS can be the verb and its tense \textit{VerbSimplePresent}, the same goes for the other type of POS.
+\end{definition}
 
 The MF method can be applied to the $n$-POS text representation to turn each document into a feature vector.
 Then they can be compared using distance metrics to find distance between documents.
@@ -34,7 +53,7 @@ Keep in mind, as for the previous experiment in two parts, this experimentation 
 
 \textbf{First part}
 
-In the first part, only $2$-POS, $3$-POS, $4$-POS and the combination of the $2$-POS and $3$-POS denoted: $(2, 3)$-POS are used.
+In the first part, $2$-POS, $3$-POS, $4$-POS and the combination of the $2$-POS and $3$-POS denoted: $(2, 3)$-POS are used.
 The distance metric used for this part is the smoothed Z-Score normalized Cosine distance.
 For this representation no clear $n$-MF vector size is advised, the size used is between $200$ and $2000$ with a step of $100$.
 
@@ -48,7 +67,8 @@ The two following information can be intuitively observed on this plot:
   \item
   A larger / more complex $n$-POS require a larger $n$-MF to achieve its maximal effectiveness.
   In the St-Jean corpus, a total of 26 different POS are used to describe every word in the corpus.
-  Which correspond to $26^2 = 676$ possible unique $2$-POS, to $26^3 = 17,576$ $3$-POS and $26^4 = 456,976$ $4$-POS, thus $2$-POS converges and not $3$/$4$-POS.
+  Which correspond to $26^2 = 676$ possible unique $2$-POS, to $26^3 = 17,576$ $3$-POS and $26^4 = 456,976$ $4$-POS.
+  Thus the $2$-POS converges on this plot but not $3$-POS and $4$-POS.
   \item
   Like other methods, if the $n$-MF is too large, an overfitting to less important items is possible, thus reducing the average precision.
   In Figure~\ref{fig:n_pos} the $2$-POS clearly have a drop in average precision after $\sim 250$-MF.
@@ -68,14 +88,16 @@ Using the smoothed Z-Score Cosine distance, the most appropriate configuration f
 In this second part, the goal is to find the most appropriate distance metric for the $n$-POS text representation, with the configuration retained in the first part.
 After running with these parameters on every proposed distance metrics, Table~\ref{tab:n_pos} shows a resume of the experiment.
 
-When considering $n$-POS as text representation on the St-Jean corpus, over all the best distance metrics are Manhattan, Matusita, Cosine distance.
+When considering $n$-POS as text representation on the St-Jean corpus, over all the best distance metrics are Manhattan, Matusita, JD, Cosine distance.
 The Clark distance, give overall the worse results, even though in other text representation, this metric was giving the best results.
 
-Optimizing the parameters with this text representation can increase the average precision by up to $36$\% in average.
+Optimizing the parameters with this text representation can increase the average precision by up to $46$\%.
+This increase is obtained by using the Cosine distance instead of the Clark distance for the $250$-MF/$2$-POS.
+
 
 Two configurations are retained using the $n$-POS text representation.
-The first is the $2$-POS with $250$-MF and the smoothed Z-Score Cosine Distance.
-And the second is $3$-POS $1000$-MF using the smoothed Z-Scored Manhattan distance.
+The first is the $2$-POS with the $250$-MF and the Z-Score Cosine Distance.
+The second is $3$-POS with the $1000$-MF and the Z-Score Manhattan distance.
 
 \begin{table}
   \centering
@@ -85,8 +107,8 @@ And the second is $3$-POS $1000$-MF using the smoothed Z-Scored Manhattan distan
   \resizebox{\linewidth}{!}{
   \begin{tabular}{l c c c}
     \toprule
-                    & \multicolumn{2}{c}{$n$-POS/$n$-MF} \\
-    Distance metric & $2$-POS/$250$-MF & $3$-POS/$1000$-MF \\
+                    & \multicolumn{2}{c}{$n$-MF/$n$-POS} \\
+    Distance metric & $250$-MF/$2$-POS & $1000$-MF/$3$-POS \\
     \midrule
     Manhattan & 0.70 & \textbf{0.75} \\
     Tanimoto & 0.67 & 0.72 \\
