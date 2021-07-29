@@ -2,44 +2,80 @@
 
 \subsection{Method}
 
-In Savoy (2014)'s \textit{Estimating the Probability of an Authorship Attribution}~\cite{savoy_probability} they modelled the distribution of the true and false links across the score obtained using two beta distribution.
-Using these two beta distribution models, the position where the area under the curve for both models is maximized (same area under the curve for both models), correspond to the position where the true positive and true negatives are maximized.
-Thus, the statistical best possible location whereto separate the rank list if we want to minimize the false positive and false negatives (non-weighted minimization errors).
+In Savoy (2014)'s \textit{Estimating the Probability of an Authorship Attribution}~\cite{savoy_probability} they modelled the true and false links score distribution using two beta distribution.
 
 As explained in~\cite{savoy_probability} the beta distribution is better suited for authorship problem than, for example, the Gaussian distribution since it can grasp a larger amount of distribution shapes with its parameters' flexibility.
 
-Figure~\ref{fig:links_score_density} show the distance density for true and false link as well as a beta distribution estimation for the St-Jean B rank list generated with text representation 0 (ref. Section~\ref{sec:individual_methods_summary}).
-Notice that to be able to model the beta distribution, the distances have been normalized between 0 and 1 using Definition~\ref{def:normalization}.
+In this study, we use these two models to find the position where the sum of the two areas under the curve is maximized.
+It corresponds to the position in the rank list where the links true positive and true negatives are maximized according to the model (in a non-weighted minimization errors schema).
+This position also correspond to where the two models have the same area under the curve and is called the equiprobable position.
 
-\begin{definition}[Linear normalization]
-  \label{def:normalization}
-  \begin{gather*}
-    Norm(X) = \frac{X - Min(X)}{Max(X) - Min(X)}
-  \end{gather*}
+Each beta distribution require two parameters: $a$ and $b$.
+Firstly to compute the parameters, the population must be normalized between 0 and 1 using Definition~\ref{def:normalization}.
+The population are represented, for each distribution, by the true links or the false links scores.
+
+\begin{definition}[Linear normalization \label{def:normalization}]
   Normalize a vector X in the interval $[0, 1]$.
   \begin{gather*}
-    Norm_{ab}(X, a, b) = Norm(X) \cdot (b - a) + a
+    \begin{aligned}
+      \alpha &= Min(X) \\
+      \beta &= Max(X) - Min(X) \\
+      Norm(X) &= \frac{X - \alpha}{\beta}
+    \end{aligned}
   \end{gather*}
-  Normalize a vector X in the interval $[a, b]$, with $b > a$.
+  Denormalize the vector X
+  \begin{gather*}
+    DeNorm(X) = X \cdot \beta + \alpha
+  \end{gather*}
 \end{definition}
+
+The $a$ and $b$ parameters are estimated using the distribution population mean and the variance, see Definition~\ref{def:beta_parameters}
+
+\begin{definition}[Beta distribution parameters \label{def:beta_parameters} \cite{savoy_probability}]
+  \begin{gather*}
+    \begin{aligned}
+      \mu&: \mathrm{The\ population\ mean} \\
+      \sigma&: \mathrm{The\ population\ standard\ deviation} \\
+       \\
+      \Delta &= \frac{\mu \cdot (1 - \mu)}{\sigma} - 1 \\
+      a &= \mu \cdot \Delta \\
+      b &= (1 - \mu) \cdot \Delta \\
+    \end{aligned}
+  \end{gather*}
+\end{definition}
+
+The beta distribution probability density function (PDF) is computed using the formula in Definition~\ref{def:beta_pdf}
+
+\begin{definition}[Beta distribution PDF \label{def:beta_pdf} \cite{savoy_probability}]
+  \begin{gather*}
+    \begin{aligned}
+      Beta(X|a,b) = \frac{\Gamma(a + b)}{\Gamma(a) \cdot \Gamma(b)} \cdot X^{a-1} \cdot (1 - X)^{b-1}\\
+      \mathrm{with\ }a > 0\mathrm{,\ }b > 0\mathrm{\ and\ }\Gamma()\mathrm{\ the\ Gamma\ function}
+    \end{aligned}
+  \end{gather*}
+\end{definition}
+
+The equiprobable position is found using a binary search between $0.00$ and $1.00$.
+At each step, the cumulative distribution function (CDF) of the two beta distribution are evaluated.
+From left to right for the distribution on the left, and from right to left for the distribution on the right.
+To compute this function, the scipy library is used.
+
+Once the two area are obtained, their difference is computed.
+The binary search stops once the difference is a small value, such as $10^{-15}$.
+Binary searches have a complexity of $O(\log n)$.
+
+There might be analytical ways to solve this problematic using the \textit{beta distribution cumulative distribution function analytic form} (beta CDF analytic form) but was out of the scope of this study.
+With an analytical solve, the complexity could drop to $O(1)$.
+
+Figure~\ref{fig:links_score_density} show the distance density for true and false link as well as a beta distribution estimation for the St-Jean B rank list generated with text representation 0 (ref. Section~\ref{sec:individual_methods_summary}).
 
 The vertical line on the Figure, indicate the equiprobable position where both beta distribution have the same probability of being a true link and false link (same area under the curve).
 This point can be used as a decision point where the cut should be made in the rank list, this ensures that both false positives and false negatives are minimized.
 
-The equiprobable position is found using a binary search between $0.00$ and $1.00$.
-At each step, the cumulative distribution function (CDF, area under the curve) of the two beta distribution are evaluated.
-From left to right for the distribution on the left (True links in the Figure), and from right to left for the distribution on the right (False links in the Figure).
-The difference between the two area is computed.
-The binary search stops once the difference is a small value, such as $10^{-15}$.
-Binary searches have a complexity of $O(\log n)$.
-
-There might be analytical ways to solve this problematic using the \textit{beta distribution cumulative distribution function analytic form} (beta CDF analytic form) but was ignored for this study.
-With an analytical solve, the complexity could drop to $O(1)$.
-
 Once the equiprobable position is found for a corpus with known authors, it can be re-used for new corpora.
-After un-normalizing, the equiprobable position is used as a distance threshold to stop the hierarchical clustering.
+After denormalizing (see Definition~\ref{def:normalization}), the equiprobable position is used as a distance threshold to stop the hierarchical clustering.
 
-This method is supervised since it requires examples to learn the cut.
+This method is supervised, since it requires examples to learn the cut.
 The distribution-based clustering do not consider any new corpus for its value computation.
 Each training rank list yields a single fixed real number, the optimal cut position for this rank list.
 
@@ -51,8 +87,12 @@ Each training rank list yields a single fixed real number, the optimal cut posit
 
 \subsection{Possible Cost Function}
 
-This technique can be adapted, in the case where a loss/cost function have to be minimized (the false positives do not have the same importance as false negatives).
-The position search criteria can be change such that instead of finding the position where both the true link and false link area correspond to $50\%$ of their sum (equiprobable case).
+This technique can be adapted, in the case where a loss/cost function have to be minimized.
+This can be used when the false positives do not have the same importance as false negatives.
+
+To introduce a cost function to the two beta method, the position search criterion is changed.
+Instead of finding the position where both the true link and false link area correspond to $50\%$ of their sum (equiprobable case).
+We can aim to find where true links area correspond to, for example, $60\%$ and false links area to $40\%$ in this case.
 
 It can be generalized such that the true link area represent $\alpha$ and the false link area to $1-\alpha$ with $\alpha \in \left[0,1\right]$.
 When $\alpha$ is greater than $0.50$, more false positives and less false negatives will occur.
@@ -60,17 +100,18 @@ When $\alpha$ is smaller than $0.50$, less false positives and more false negati
 
 For the clustering, the $\alpha$ parameter directly influence the $r_diff$ value and the $B^3_{precision}$ and $B^3_{recall}$.
 The same binary search can be used for this computation, just the target need to be changed.
-In this study, we only consider the equiprobable case.
+In this study, we only considered the equiprobable case.
 
 \subsection{Evaluation}
 
-The distribution-based clustering approach is evaluated using the Oxquarry, Brunet, St-Jean A and B corpora are used.
+The distribution-based clustering approach is evaluated using the Oxquarry, Brunet, St-Jean A and B corpora.
 The retained rank list for each corpus are used, see Table~\ref{tab:rls_oxquarry_brunet}~and~\ref{tab:rls_st_jean} in annex.
 For each rank list, the distance threshold is computed using the two beta approach.
 This step corresponds to the training phase.
 
-Then for every distance threshold and rank list pair, the clustering is evaluated using the $B^3_{F_1}$ and the $r_{diff}$ metrics.
+Then for every distance threshold and rank list pair, the hierarchical clustering is applied.
 This corresponds to the testing phase.
+The results are evaluated using the $B^3_{F_1}$ and the $r_{diff}$ metrics.
 The evaluation results are aggregated by applying the arithmetic mean on the $B^3_{F_1}$ and $r_{diff}$ across all retained rank list.
 
 The evaluation is presented in Table~\ref{tab:semi_supervised_clustering} which show the results for each linkage criterion (Single, Average, Complete).
@@ -82,7 +123,7 @@ The following conclusions can be drawn with these results:
   \item
   Average linkage have the best $r_{diff} = 0.06$ which indicate that this criterion can estimate the most accurately the number of clusters.
   \item
-  Complete linkage have the best $B^3_{F_1} = 0.82$ which make it the best criterion for this method. Which is $8\%$ better than the average linkage and $272\%$ better than the single linkage.
+  Complete linkage have the best $B^3_{F_1} = 0.82$ which make it the best criterion for this method. Which is $8\%$ better than the average linkage and $273\%$ better than the single linkage.
   \item
   The training corpus does not influence a lot the quality of the results.
 
