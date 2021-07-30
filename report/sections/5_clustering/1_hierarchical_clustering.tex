@@ -180,23 +180,30 @@ The goal is to understand how the linkage criterion behave for the best clusteri
 
 The custom implementation of the hierarchical clustering is used, at each merging step, the intermediary clustering is evaluated using the $B^3_{F_1}$.
 The clustering resulting in the best $B^3_{F_1}$ is kept.
-This procedure is repeated for each linkage criteria and corpus / text representation.
+For each linkage criteria, corpus and text representation clustering and its evaluation is achieved.
 
 The results are presented in Table~\ref{tab:hierarchical_clustering}.
 
 These results can be considered as the $B^3_{F_1}$ upper bound for the hierarchical clustering using these rank lists on these corpora.
-In this study, we use the averages across all corpora to compare the cut methods, and we refer to them as \textit{upper bound} or \textit{rank lists upper bound}.
+We refer to them as \textit{upper bound} or \textit{rank lists upper bound}.
 
 The best linkage criterion depends on the corpus, but in average, the best $B^3_{F_1}$ is achieved with the average linkage criterion.
 The average linkage is $\sim 1\%$ better than the complete linkage and $\sim 6\%$ better than the single linkage.
 
 We assumed that the better the rank list are, the better the clustering result is when applying the hierarchical clustering.
 This assumption can be verified in Figure~\ref{fig:correlation_average_precision_b3f1}.
-In this Figure, we compare the average precision (AP) of each retained rank list to the $B^3_{F_1}$ of the best clustering obtainable with the hierarchical clustering on this rank list (ref.~\ref{tab:hierarchical_clustering}).
+In this Figure, we compare the average precision (AP) of each retained rank list to the $B^3_{F_1}$ of the best clustering obtainable with the hierarchical clustering on this rank list (ref. Table~\ref{tab:hierarchical_clustering}).
 
 We can clearly observe a linear relationship between the average precision and the $B^3_{F_1}$.
 The linear regression for the single linkage have an r-value of $10^{-11}$, $10^{-12}$ for the average linkage and $10^{-6}$ for the complete linkage.
 This result further motivate this assumption.
+
+\begin{figure*}
+  \centering
+  \caption{Evaluation methodology for the clustering}
+  \label{fig:clustering_evaluation_methodology}
+  \includegraphics[width=0.7\linewidth]{img/clustering_evaluation_methodology.png}
+\end{figure*}
 
 \begin{table}
   \centering

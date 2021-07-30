@@ -1,27 +1,33 @@
 \section{Clustering Summary}
 
-Three methods based on the hierarchical clustering were proposed to solve the authorship clustering task.
+Three methods based on the hierarchical clustering are proposed to solve the authorship clustering task.
 
-The first is based on the Silhouette score to find the best clustering at each step of the hierarchical clustering.
+The first is based on the mean Silhouette score to find the best clustering at each step of the hierarchical clustering.
 The second uses an author links distribution model to find the best step to stop the hierarchical clustering.
 And the last is based on a logistic regression model to estimate the true link probability for new rank lists.
 These methods are summarized in the schema in Figure~\ref{fig:schema-clustering}.
 
-Table~\ref{tab:clustering_evaluation_summary} contains a summary of the proposed method evaluation using the $B^3_{F_1}$ score and the $r_{diff}$.
+Table~\ref{tab:clustering_evaluation_summary} contains a evaluation summary of the proposed method.
+The evaluation use the $B^3_{F_1}$ score and the $r_{diff}$ metrics.
 
-Each method produces similar results, but the distribution-based clustering with complete linkage give the best results, $B^3_{F_1} = 0.82$.
+Each method produce similar results, but the distribution-based clustering with complete linkage give the best results, $B^3_{F_1} = 0.82$.
 The Silhouette-based methods and the regression-based method produce slightly less accurate results.
 The non-tweak Silhouette-based model give the least accurate results.
-The upper bound is the best clustering achievable with the rank lists used.
-The upper bound is found by evaluating the clusters of each step of the hierarchical clustering for each rank lists.
-The ones with the best metrics are kept, and the value exposed in this table is the average metrics of each \textit{best clustering} for these rank lists.
 
-The complete linkage and average linkage criterion give good results depending on the model used.
+The complete linkage and average linkage criterion give the best results.
 Though the average linkage criterion have better results with 3 out of the 4 models, the distribution based model with the complete linkage give the best results across the board.
-Since the single linkage criterion show terrible results for every model, this criterion is left aside for the next experiments.
+It reaches an $B^3_{F_1} = 0.82$.
+Since the single linkage criterion produce weak results for every model, this criterion is left aside for the next experiments.
 
 Three models give the best approximation of the number of clusters with $r_{diff} = 0.06$:
 The Silhouette-based model with average linkage or complete linkage, and the distribution-based model with average linkage.
+These models are close to find the right number of clusters almost every time.
+
+We compare the models with the upper bound.
+The upper bound is the best clustering achievable using the same rank lists as for the models' evaluation.
+The upper bound is found by evaluating the clusters $B^3_{F_1}$ score at each step of the hierarchical clustering.
+The step with the best metrics are kept for each rank list.
+The values exposed in this table are the average metrics of each \textit{best clustering} for the rank lists.
 
 Overall, the results are close to the upper bound.
 The best $B^{3}_{F_1}$ achieved with each model is $8-15\%$ worse than the upper bound.

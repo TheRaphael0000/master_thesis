@@ -18,6 +18,7 @@
 \usepackage{multirow}
 \usepackage{newfloat}
 \usepackage[parfill]{parskip}
+\usepackage{sectsty}
 \usepackage{subcaption}
 \usepackage{subfiles}
 % \usepackage{refcheck}
@@ -28,6 +29,10 @@
 \usepackage{xcolor}
 
 \renewcommand{\listtheoremname}{List of definitions}
+
+\sectionfont{\raggedright}
+\subsectionfont{\raggedright}
+\subsubsectionfont{\raggedright}
 
 \usepackage[pdfauthor={Raphaël Margueron},
             pdftitle={Rank Lists' Fusions using multiple Text Representations Strategies for Authorship Clustering},
@@ -43,7 +48,6 @@
     urlcolor=cyan,
     breaklinks=true,
 }
-
 
 \newtheoremstyle{definition}% name of the style to be used
   {0.7cm}% measure of space to leave above the theorem. E.g.: 3pt
@@ -70,11 +74,9 @@
 \counterwithout{definition}{chapter}
 \counterwithout{example}{chapter}
 
-\date{Mars-August, 2021}
+\date{August, 2021}
 \author{Raphaël Margueron}
 
 \begin{document}
-
 \subfile{sections/sections.tex}
-
 \end{document}
