@@ -1,21 +1,25 @@
 \section{Methods \label{sec:rank_lists_fusion}}
 
-The idea of rank lists' fusion is to combine multiple rank lists in such a way that the resulting rank list produced is a more accurate modelling of a perfect rank list.
-A perfect rank list contain every true links (same author document pairs) at the top and every false links (different author document pair) at the bottom, therefore maximizing every metrics in Section~\ref{sec:rl_eval}.
+The idea of rank lists' fusion is to combine multiple rank lists in such a way that the resulting rank list is a more accurate modelling of a perfect rank list.
+A perfect rank list contain every true links (same author document pairs) at the top and every false links (different author document pair) at the bottom, therefore maximizing the metrics in Section~\ref{sec:rl_eval}.
 
-One proposed method is based on the Z-Score normalization, and the second one use the logistic regression.
+The first proposed method is based on the Z-Score normalization.
+The second one use the logistic regression.
+
+In this thesis, we assume that each rank for the fusion have the same importance.
+Thus, the fusions are based on a non-weighted arithmetic mean.
 
 \subsection{Z-Score Fusion}
 
 When merging rank lists, the following problem arise: Due to the difference of distance metric and/or text representation, the scores used in the different rank lists are of different order of magnitude.
-Thus, simply applying the arithmetic mean on the scores for each rank list is not effective.
+Simply applying the arithmetic mean on the scores for each rank list is thus not effective.
 
-To mitigate this problem, a simple and rather effective approach is to normalize the scores of each rank lists independently using the Z-Score (See Definition~\ref{def:z_score} in Section~\ref{sec:normalization}).
+To mitigate this problem, a simple and rather effective approach is to normalize the scores of all rank lists independently using the Z-Score (See Definition~\ref{def:z_score} in Section~\ref{sec:normalization}).
 Then one can compute a resulting score for each link as the arithmetic mean of scores in every Z-Score normalized rank lists.
 The rank list can then be sorted by this new score.
 
 Additionally, this method provide a framework for the fusion with both distance metrics and similarity metrics.
-If distances and similarity score are encountered for a fusion, flipping the score sign for either the distance rank lists or similarity rank lists before or after the Z-Score normalization allow to fix these metrics differences.
+If distances and similarity score are encountered for a fusion, flipping the score sign for either the distance rank lists or similarity rank lists before or after the Z-Score normalization allow to merge them.
 
 Even though this method lack theoretical foundations, it can provide good results and does not have any parameters.
 
@@ -27,34 +31,34 @@ Example~\ref{ex:z_score_fusion} exemplify the Z-Score fusion computation using t
 
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{Rank list A (Mean = 50, Std = 40.82)}
-    \begin{tabular}{c l r r}
+    \subcaption{Rank list A (Mean = 50, Std = 50)}
+    \begin{tabular}{c l r c}
       \toprule
       Rank & Link & Score & Z-Score \\
       \midrule
-      1st & (0, 2) & $0$ & $-1.22$ \\
-      2nd & (1, 2) & $50$ & $0$ \\
-      3rd & (0, 1) & $100$ & $1.22$ \\
+      1st & (0, 2) & $0$ & $\frac{(0-50)}{40.82}=-1.22$ \\
+      2nd & (1, 2) & $50$ & $\frac{(50-50)}{40.82}=0$ \\
+      3rd & (0, 1) & $100$ & $\frac{(100-50)}{40.82}=1.22$ \\
       \bottomrule
     \end{tabular}
   \end{subexample}
 
   \vspace{0.5cm}
 
-  In this example, for the sake of simplicity, the scores does not satisfy the triangle inequality.
+  In this example, for the sake of simplicity, the scores/distances does not satisfy the triangle inequality.
 
   \vspace{0.5cm}
 
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{Rank list B (Mean = 0.33, Std = 0.17)}
-    \begin{tabular}{c l r r}
+    \subcaption{Rank list B (Mean = 0.4, Std = 0.435)}
+    \begin{tabular}{c l r c}
       \toprule
       Rank & Link & Score & Z-Score \\
       \midrule
-      1st & (0, 2) & $0.1$ & $-1.37$ \\
-      2nd & (0, 1) & $0.4$ & $0.39$ \\
-      3rd & (1, 2) & $0.5$ & $0.98$ \\
+      1st & (0, 2) & $0.1$ & $\frac{(0.1-0.4)}{0.435}=-0.69$ \\
+      2nd & (0, 1) & $0.2$ & $\frac{(0.2-0.4)}{0.435}=-0.46$ \\
+      3rd & (1, 2) & $0.9$ & $\frac{(0.9-0.4)}{0.435}=1.15$ \\
       \bottomrule
     \end{tabular}
   \end{subexample}
@@ -64,13 +68,13 @@ Example~\ref{ex:z_score_fusion} exemplify the Z-Score fusion computation using t
   \begin{subexample}{\linewidth}
     \centering
     \subcaption{Z-Score fusion}
-    \begin{tabular}{c l r}
+    \begin{tabular}{c l c}
       \toprule
       Rank & Link & Mean Z-Score \\
       \midrule
-      1st & (0, 2) & $(-1.22 + (-1.37)) / 2$ = $-1.30$ \\
-      2nd & (1, 2) & $(0 + 0.98) / 2$ = $0.49$ \\
-      3rd & (0, 1) & $(0.39 + 1.22) / 2$ = $0.81$ \\
+      1st & (0, 2) & $\frac{-1.22 + (-0.69)}{2}$ = $-0.96$ \\
+      2rd & (0, 1) & $\frac{1.22 + (-0.46)}{2}$ = $0.38$ \\
+      3nd & (1, 2) & $\frac{0 + (1.15)}{2}$ = $0.575$ \\
       \bottomrule
     \end{tabular}
   \end{subexample}
@@ -81,8 +85,8 @@ Example~\ref{ex:z_score_fusion} exemplify the Z-Score fusion computation using t
 
 This second fusion method is based on logistic regression and is called regression fusion in this study.
 
-Each rank list is ordered by a score, this score depends on the distance measure and text representation used, thus the order of magnitude across rank list can be different.
-To avoid this problem, the second solution is to express the scores into a probability of being a true link.
+Each rank list is ordered by a score, this score depends on the distance measure and text representation used, thus the order of magnitude across the rank list can be different.
+To avoid this problem, the second solution is to express the scores into a probability of being a true link acording to a model.
 To do so, the logistic regression is used.
 This method is similar to the one proposed in \textit{Le Calvé and Savoy (2000)}'s paper~\cite{le_calve_database_merging} and was used to merge rank list issued from information retrieval systems.
 
@@ -95,29 +99,31 @@ This feature construction is the same as the one used for the regression-based c
 One model per type of rank list is trained.
 This model can provide, for any new same type rank lists, true link probabilities for each link.
 
-The probability framework can now be used on the rank lists.
-To obtain the most reliable probability given multiple observations (different rank lists), the regression fusion consists in computing the expected value of each link's probability using these observations.
+The probability framework can be used on the rank lists with probability scores.
+To obtain the most reliable probability given multiple observations (multiple rank lists), the regression fusion consists in computing the expected value of each link's probability using these observations.
 In this case, the final value for sorting the rank list is an arithmetic mean of the probabilities, since no weighting is used on the rank lists.
 
 The main advantage of this methodology is that it uses concrete statistical concepts.
-But this technique has one main issue: it requires training samples to train the model.
+But this technique has one main issue: it requires training samples to train a model.
 
 \subsection{Veto}
 
 To try to further improve the results, the idea here is to provide a veto power for the rank lists.
 
 The following assumption is made:
-If a link have a low probability in a rank list before the fusion, it probably indicates a false link, thus having this link at the bottom of the rank list after the fusion should improve the results.
+If a link have a low probability in an individual rank list (before the fusion), it probably indicates a false link.
+Having this link at the bottom of the rank list after the fusion should improve the results.
 
-To fulfil this assumption an introduce a veto, we used to following algorithm:
+To fulfil this assumption, we introduce veto. Veto follows this algorithm:
 
 \begin{enumerate}
-  \item In every rank lists before the fusion, find every links where the probability is under a certain threshold.
+  \item In every rank lists just before the fusion in the regression (after converting into probabilities), find every link where the probability is under a certain threshold.
   \item Alter their probabilities (probability of being a true link) with $-\infty$.
   \item Perform the regression fusion (by averaging the probabilities)
 \end{enumerate}
 
-No matter the rank list, every links below the probability threshold will have its final score also equal to $-\infty$ since the average with any number and $-\infty$ is always $-\infty$.
+No matter the rank list, every links below the probability threshold will have its final score also equal to $-\infty$.
+The average with any number and $-\infty$ is always $-\infty$.
 When sorting the rank list, the links with a resulting $-\infty$ score will subsequently be ranked at the bottom.
 This first veto method is called $-\infty$-veto in this study.
 
@@ -126,16 +132,27 @@ In the example, rank list $1$ gives a $0.20$ true link probability for a link wi
 The link with $ID = 3$ is ranked $3$rd, but with the veto the link is ranked $5$th.
 
 One problem arise with this solution, multiple links can have a $-\infty$ probability.
-They thus can not be sorted anymore.
-False positives (true links affected by the veto), will thus be ranked randomly at the bottom.
+Thus, after the sort their position are random.
+In the case where false positives occurs (true links under the threshold), they will be randomly ranked at the bottom.
+This method is non-deterministic and non-idempotent.
 
-The proposed solution is to set the probability of the affected links to one of these values instead: $0$, $-1$ or $-n$, with $n$ equal to the number of rank lists to fuse.
-The greater, the value, the stronger the penalty for the affected links if they are under the threshold for multiple rank lists.
+To make them deterministic and idempotent, the proposed solution is to set the probability of the affected links to one of these values instead: $0$, $-1$ or $-n$, with $n$ equal to the number of rank lists to fuse.
+The greater, the value, the stronger the penalty for the links affected by the veto.
 The $-\infty$ method is the only real veto, in the first meaning of the veto definition, the other methods can be considered as a weighted veto.
 
 The $-n$, method provide a way to avoid having tie and keep the strong impact of the $-\infty$-veto when a lot of rank list are fused.
+The $n$ correspond to the number of rank lists to fuse.
 For example, if $9$ rank lists are fused.
-By setting any link score to $-9$ will ensure that even if every other rank lists this link have a true link probability of $1.00$, the probability is lower than $0.00$, the lowest probability obtainable by regression fusion.
+By setting any link score to $-9$, this ensures that even if every other rank lists have a true link probability of $1.00$ for this link.
+The resulting probability will be $(-9 + 8 \cdot 1.00) / 9 = -0.11$, which is lower than $0.00$, the lowest probability obtainable by the regression.
+
+The theoretical maximal veto that keep the order is $nt + 1 - n - \epsilon$, with $\epsilon$ a small value (e.g. $10^{-38}$) and $t$ the threshold.
+Since even if all the other rank list have a probability of $1.00$ with this veto, the values obtained after applying the veto are smaller than the threshold thus ranked at the rank list bottom.
+
+Proof:
+$$\frac{(nt + 1 - n - \epsilon) + (n - 1) \cdot 1.00}{n} = \frac{nt - \epsilon}{n} = t - \frac{\epsilon}{n}$$
+
+Instead $-n$ was chosen to keep this approach simple.
 
 By setting to $0$, $-1$ or $-n$, it lightens the veto effect and conserve an order for the bottom rank links.
 Example~\ref{ex:veto_0} show the $0$-veto strategy.
@@ -310,8 +327,8 @@ By observing the graph score/distance over rank, Figure~\ref{fig:distance_over_r
 
 Using the inverse of the sigmoid function, a weighting curve satisfying our constraints can be modelled.
 The choice on the sigmoid function was arbitrary.
-Any function in form of an \textit{S} can be used.
-The hyperbolic tangent or the arc tangent function could also be possible.
+Any function in the form of an \textit{S} can be used, these are also called S-curves.
+The hyperbolic tangent or the arc tangent function are also possible functions.
 
 Definition~\ref{def:sigmoid} show the sigmoid function and its inverse function.
 
@@ -338,7 +355,7 @@ A large interval gives a greater steepness and a small interval a less steep cur
 $c$ can not be equal to 0 otherwise the interval consist of a single number (also known as degenerate interval).
 The $c$ parameter must be in the interval $\left]0, \infty\right[$.
 With a value close to $0$, the soft-veto have a weak effect.
-With a large value, for example 20, the soft veto has a strong effect on the top and bottom, see Figure~\ref{fig:s_curve_c}.
+With a large value, for example 5, the soft veto has a strong effect on the top and bottom, see Figure~\ref{fig:s_curve_c}.
 
 To break the curve symmetry and to be able to increase the conservation of the top rank while decreasing the conservation of the bottom ranked.
 The solution proposed is to have a new parameter $r$.
@@ -355,7 +372,7 @@ This strategy can be use on any type of scoring method (similarity, distances, Z
 
 \begin{figure}
   \centering
-  \caption{Distance values over rank in the rank list using the smoothed Manhattan distance, $500$-MF tokens on the Brunet dataset}
+  \caption{Distance values over rank, rank list created using the smoothed Manhattan distance, $500$-MF tokens on the Brunet dataset}
   \label{fig:distance_over_rank}
   \includegraphics[width=\linewidth]{img/distance_over_rank.png}
 \end{figure}
@@ -365,13 +382,13 @@ This strategy can be use on any type of scoring method (similarity, distances, Z
   \caption{Soft-veto curve parameters}
   \label{fig:s_curve_params}
 
-  \subcaption{$S^-1(x)$, 1000 samples (for a rank list with 1000 links) in $\left[S(-c), S(+c)\right]$}
+  \subcaption{1000 samples for $S^-1(x)$ in the interval $\left[S(-c), S(+c)\right]$}
   \label{fig:s_curve_c}
   \includegraphics[width=\linewidth]{img/s_curve_c.png}
 
   \vspace{0.5cm}
 
-  \subcaption{1000 sample of $S^-1(x)$ with $r \cdot N$ samples for $\left[S(-c), S(0)\right]$ and $(1-r) \cdot N$ samples for $\left[S(0), S(c)\right]$}
+  \subcaption{1000 samples for $S^-1(x)$ with $r \cdot N$ samples in the interval $\left[S(-4), S(0)\right]$ and $(1-r) \cdot N$ samples in the interval $\left[S(0), S(4)\right]$}
   \label{fig:s_curve_r}
   \includegraphics[width=\linewidth]{img/s_curve_r.png}
 
