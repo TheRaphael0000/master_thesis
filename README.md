@@ -1,4 +1,6 @@
-# Rank Lists' Fusions using multiple Text Representations Strategies for Authorship Clustering
+# Authorship Clustering
+
+### Rank Lists' Fusions using multiple Text Representations Strategies for Authorship Clustering
 
 This repository contains files related to the *Rank Lists' Fusions using multiple Text Representations Strategies for Authorship Clustering* master thesis.
 
