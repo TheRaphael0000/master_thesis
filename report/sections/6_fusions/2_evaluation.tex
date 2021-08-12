@@ -400,10 +400,10 @@ The best result obtained have only a $0.0193$ gain in average precision, with a 
 This tiny improvement may be due to random factors.
 Using the $-\infty$ strategy only give worse results.
 
-A possible reason on why the veto fail to improve the results.
 The veto strategy is only impactful when most of the rank lists rank a false link at the top, except one rank list which correctly identify this false link and rank him at the bottom.
 The rank list used for the experiment do not have such special case, since most of them correct classify false link at the bottom and true links at the top.
-This strategy may be appliable on harder corpus such as the PAN 16 corpus or with even more diverse strategies.
+This can be one possible reason on why the veto fail to improve the results.
+This strategy may be appliable on harder corpus such as the PAN 16 corpus or with even more diverse rank list generation strategies.
 
 \begin{figure}
   \caption{Veto strategies evaluations on St-Jean A and B depending on the threshold}
@@ -451,10 +451,10 @@ The average precision gain is small and can be due to random factors.
 
 \subsection{Average Precision Fusion Gain Relation with the Rank Lists Diversity \label{sec:fusion_diversity}}
 
-As stated previously, we believe fusing high quality rank lists (high AP), with the most diverse results can increase the quality of the fusion (obtained rank list with an even greater AP).
+As stated previously, we believe fusing high quality rank lists (high AP), with the most diverse results can increase the quality of the rank list obatined by fusion.
 In this section, we aim to provide even more clues to motivate this assumption.
 First, a correlation metric to compare the rank lists must be selected.
-Secondly, compare this correlation coefficient to the average precision gain to verify the assumption.
+Secondly, we compare the correlation coefficients to the average precision gain to verify the assumption.
 
 To compute a correlation between two rank lists, the Kendall rank correlation coefficient is used \cite{scipy}.
 The Kendall rank correlation computes a correlation index based on the ordinal association between the two rank lists by computing the number of swaps needed to obtain one rank list from the other.
@@ -476,7 +476,8 @@ Example~\ref{ex:gain} in Section~\ref{sec:evaluation_comparison} contain a small
 Table~\ref{tab:rl_correlations} show the Kendall correlation coefficient for every pairwise rank lists combination in St-Jean (retained rank lists, see Table~\ref{tab:9rl} in Section~\ref{sec:individual_methods_summary}).
 
 The most similar rank lists pair are the two rank list using letters $n$-grams (0.95).
-This result can be easily understood, since both rank list use a similar text representation and distance measure, they will obtain similar rank lists.
+This result can be easily understood, since both rank list use a similar text representation and distance measure.
+They thus obtain similar rank lists.
 
 The least similar rank lists pair are the BZip2 compression and the $250$-MF $2$-POS (0.66).
 The compression method is the simplest approach, this method does not require to understand the text to create the rank list.
@@ -485,7 +486,7 @@ First the parser need to understand texts to create the POS, and the second leve
 Due to this large difference in rank list construction, the two rank lists obtain a small correlation coefficient.
 
 For every pair of retained rank lists in St-Jean, the Single-Mean fusion gain is computed and is compared to the correlation coefficient in Figure~\ref{fig:rl_correlations}.
-Using the linear regression, the best line for these point is computed~\cite{scipy}.
+Using the linear regression, the best line for these point is computed \cite{scipy}.
 After reproducing this experiment for every corpus and fusion gain computation methods, the results in Table~\ref{tab:rl_correlations_regression} are obtained.
 
 For all experiment the linear correlation coefficient, $r$-value, is negative, which indicate that the average precision gain is negatively correlated to the Kendall correlation coefficient between the rank lists.
@@ -493,13 +494,15 @@ Thus, the assumption that suggested that the more diverse the rank lists are, th
 The $p$-value for the linear regression (null hypothesis: the slope is 0) obtained after the regression is below 5\% for every of the Single-Mean experiments and for the Single-Max St-Jean corpus.
 A clear linear relationship between the average precision gain and rank list diversity is observed.
 
-Using the Single-Max strategy on Oxquarry and Brunet give a p-value of 15.1\% and 7.04\% respectively which can indicate that the linear correlation between the average precision gain and the diversity of the rank list can be obtained by random factors on these corpora with this comparison strategy.
+Using the Single-Max strategy on Oxquarry and Brunet give a p-value of 15.1\% and 7.04\% respectively.
+This can indicate that the linear correlation between the average precision gain and the diversity of the rank list can be due to random factors.
 
-Since the Single-Mean average precision gain follow a linear model, the gain can be predicted from the Kendall correlation coefficient.
+Since the Single-Mean average precision gain follow a linear model, the gain can be predicted using the slope and the y-intercept of the linear regression.
 In an unsupervised model, computing the Kendall correlation coefficient can allow to optimize the fusion gain.
 The lowest the correlation coefficient, the greater the average precision gain should be.
 
-One main draw back is that the rank list have to be known has \textit{good rank list}.
+This approach have one main draw back.
+The rank list used have to be known has \textit{good rank list}.
 Otherwise, if a \textit{bad rank list} and a \textit{good rank list} are compared using Kendall correlation coefficient, they will obtain a low correlation, since \textit{bad answers} are often very different from \textit{good answers}.
 This low correlation coefficient should indicate a positive good gain.
 But when fused, the gain will not be positive, since fusing \textit{bad rank lists} and \textit{good rank lists} tends to produce terrible results.

@@ -14,11 +14,11 @@ The average precision obtained with the Z-Score rank lists is greater than each 
 The Oxquarry Z-Score rank list have an average precision of 0.84 but using the individual methods: \textit{the Cosine distance or the Clark distance with the $750$-MF tokens} gives an average precision of $0.89$.
 The corpus with the worst average precision using the Z-Score rank lists is obtained on Brunet with $0.76$ and is as efficient as the individual \textit{BZip2 compression with CBC distance} method.
 Even though here the Z-Score rank list have lower quality than an individual method, as stated previous, in an unsupervised environment this can not be detected (average precision require labels).
-For unsupervised tasks, we advise to still use the Z-Score fusion, since it provides in average better results than each individual methods.
+For unsupervised tasks, we advise to still use the Z-Score fusion, since we showed that it provides in average better results than each individual methods.
 
 Table~\ref{tab:fusion_evaluation_summary} is a summary of the results for the fusion using every individual methods.
 For both methods, the mean average precision across all corpora reach $0.85$.
-The mean average precision for the fused rank lists is $7\%$ better using the fusion than the individual methods average.
+The mean average precision for the fused rank lists is $7\%$ better using the fusion than the individual methods average ($AP = 0.79$).
 Since the regression fusion require a training corpus and had shown some weakness during its evaluation.
 We recommend using the Z-Score fusion instead.
 

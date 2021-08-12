@@ -43,7 +43,7 @@ No real improvements are found using the proposed veto strategies on high qualit
 To further motivate the strength of the rank lists' fusions, we showed a correlation between the rank lists' variety and the improvements provided when fusing rank lists.
 We showed that by using for the fusion, rank lists produced along different text representations increase more the effectiveness of resulting rank list than using rank lists with the same text representation but with different distance measures.
 
-At the end of this study, we evaluated the clustering using the rank list obtained by fusion.
+At the end of this study, we evaluated the clustering models using the rank list obtained by fusion.
 As we expected from previous results, the clustering obtained with the rank lists obtained by Z-Score fusion is better than the individual methods.
 We obtained overall a $6\%$ improvement using the Z-Score fusion over the individual methods.
 This improvement in the clustering is due to the fact that the rank lists obtained by fusion are better than the ones obtained by individual methods and thus, as we showed previously, having good rank lists tends to produce good clusterings.
@@ -55,8 +55,8 @@ The authorship clustering models used still need to be compared to other models 
 This can be done by testing this model with corpora written in other languages or extracted from domains or support (e.g. blogs), which were also used for this task.
 
 As the literature shows, many methods to generate rank lists are possible.
-We showed that using for the fusion diverse individual technique improve the results.
-Thus, testing our current fusion schemes with other individual methods, could potentially further improve the results.
+We showed that using the most diverse individual technique, improve the fusion quality.
+Thus, testing our current fusion schemes with other individual methods, could potentially further improve the fusions results.
 
 The $N$-First characters text representation gave outstanding results on some corpora.
 Though it was not retained for the fusion, since for other corpora it gave poor results.
@@ -68,6 +68,6 @@ The POS sequences seem a good choice to explore with compression techniques.
 Other fusion methods still need to be tested to potentially further increase the fusions quality.
 For example: other normalization techniques can be used and/or other ways to compute a central tendency (e.g. the geometric mean or the harmonic mean).
 
-Veto-based technique were experimented to force bottom ranked links according to one rank list to the bottom of a fused rank list.
-Another alternative to this veto, could be to force top rank lists, to be at the top of the fused rank list.
-This technique may improve the results.
+Veto-based technique were experimented to force bottom ranked links according to one rank list to be at the bottom of a fused rank list.
+An alternative to this veto, could be to force top rank lists, to be at the top of the fused rank list.
+This technique still have to be explored and may have more impactful results.
