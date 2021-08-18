@@ -9,7 +9,8 @@ Authorship clustering is a problem in which a set of documents written by differ
 Authorship clustering is closely related to two other authorship topics: authorship attribution and authorship verification.
 Authorship attribution try to determine who wrote a document, given a collection of documents.
 Authorship verification aim to identify if two documents are written by the same author \cite{pan11_verif}.
-A clustering problem can be split into a series of authorship verification by considering every pair of documents as a verification task, the clusters are created grouping every positive verified pairs, these are also called true links \cite{pan16_clustering_site}.
+An authorship clustering problem can be split into a series of authorship verification problems by considering every pair of documents as a verification task.
+The clusters are created by grouping every positively verified pairs, these are also called true links \cite{pan16_clustering_site}.
 
 Stylometry is a domain often used with most authorship techniques.
 Stylometry main focus is to identify the writing methods of an author, for example: the choice of words, the combinations of words, sentence structure, punctuation \cite{savoy_stylo}.
@@ -19,7 +20,7 @@ These methods were used and evaluated in Oliveira and Justino (2013)~\cite{compa
 Compression based model had shown to be a good alternative to other traditional feature and pattern based models.
 This method is also sometime used as a baseline \cite{overview_pan20}.
 
-In 2014, Kocher~and~Savoy~\cite{kocher_linking} proposed SPATIUM-L1, an unsupervised authorship verification model based on most frequent words in texts.
+In 2014, Kocher~and~Savoy~\cite{kocher_linking} proposed SPATIUM-L1, an unsupervised authorship verification model based on the most frequent words in texts.
 It uses the L1 norm to be able to discriminate, if a pair of texts is written by the same author or not.
 The model can also answer \textit{do not know} when not enough evidence are available to make a decision.
 It obtained one of the best results when compared to the other model of the PAN @ CLEF 2014.

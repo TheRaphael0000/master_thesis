@@ -1,4 +1,4 @@
-\documentclass[11pt, oneside, a4paper]{book}
+\documentclass[11pt, twoside, a4paper]{book}
 
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage{amsfonts}
@@ -11,6 +11,7 @@
 \usepackage{caption}
 \usepackage{chngcntr}
 \usepackage{float}
+\usepackage[bottom]{footmisc}
 \usepackage[margin=2cm]{geometry}
 \usepackage{graphicx}
 \usepackage[utf8]{inputenc}
@@ -29,6 +30,10 @@
 \usepackage{xcolor}
 
 \renewcommand{\listtheoremname}{List of definitions}
+
+\let\origdoublepage\cleardoublepage
+\newcommand{\clearemptydoublepage}{\clearpage{\pagestyle{empty}\origdoublepage}}
+\let\cleardoublepage\clearemptydoublepage
 
 \sectionfont{\raggedright}
 \subsectionfont{\raggedright}
