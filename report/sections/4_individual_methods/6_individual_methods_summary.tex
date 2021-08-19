@@ -19,30 +19,31 @@ The complete evaluation of the rank list produced on these text representation f
 
 \begin{table*}
   \centering
-  \caption{Retained text representation}
+  \caption{Retained text representation and configuration}
   \label{tab:9rl}
-  \begin{tabular}{c l l c}
+  \begin{tabular}{c l l c c}
     \toprule
     Id &
     Text representation &
     Distance measure &
-    Z-Score \\
+    Z-Score &
+    Lidstone $\lambda$\\
     \midrule
-    0 & $750$-MF tokens & Cosine Distance & x\\
-    1 & $750$-MF tokens & Clark & \\
-    2 & $750$-MF tokens & Manhattan & x\\
-    3 & $750$-MF tokens & Tanimoto & \\
-    4 & $3000$-MF tokens $3$-grams & Cosine distance & x\\
-    5 & $8000$-MF tokens $4$-grams & Cosine distance & x\\
-    6 & BZip2 compression & CBC distance & \\
-    *7 & $250$-MF $2$-POS & Cosine distance & x\\
-    *8 & $1000$-MF $3$-POS & Manhattan distance & x\\
+    0 & $750$-MF tokens & Cosine Distance & Yes & $10^{-1}$\\
+    1 & $750$-MF tokens & Clark & No & $10^{-1}$\\
+    2 & $750$-MF tokens & Manhattan & Yes & $10^{-1}$\\
+    3 & $750$-MF tokens & Tanimoto & No & $10^{-1}$\\
+    4 & $3000$-MF tokens $3$-grams & Cosine distance & Yes & $10^{-1}$\\
+    5 & $8000$-MF tokens $4$-grams & Cosine distance & Yes & $10^{-1}$\\
+    6 & BZip2 compression & CBC distance & No & $10^{-1}$\\
+    *7 & $250$-MF $2$-POS & Cosine distance & Yes & $10^{-1}$\\
+    *8 & $1000$-MF $3$-POS & Manhattan distance & Yes & $10^{-1}$\\
     \bottomrule
   \end{tabular}
 
   \vspace{0.2cm}
 
-  \textit{Note: text representations with a star (*) are only used for the St-Jean corpus}
+  \textit{Note: text representation and configuration with a star (*) are only used for the St-Jean corpus.}\\
 \end{table*}
 
 \subsection{Distances' Matrix Visualization}
@@ -110,7 +111,7 @@ Also, the authors publish their books during their career, which is limited to t
 In fact, $281$ of the $670$ ($\sim 42\%$) true links are excerpts published the same year.
 $453$ out of $670$ ($\sim 68\%$) true links have a publication date difference below or equal to $5$ years.
 
-For St-Jean the largest date difference from the same author (correspond to the longest career) is $31$ years, which correspond to the two following books from Victor Hugo: \textit{Notre Dame de Paris} (The Hunchback of Notre-Dame), in 1831 and \textit{Les Misérables}, in 1862.
+For St-Jean the largest date difference from the same author (correspond to the longest career in the corpus) is $31$ years, which correspond to the two following books from Victor Hugo: \textit{Notre Dame de Paris} (The Hunchback of Notre-Dame), in 1831 and \textit{Les Misérables}, in 1862.
 
 The average date difference for the false links is $28.24$ years, with a standard deviation of $20.73$ years.
 The overall average (both true and false links) is at $29.04$ years, with a standard deviation of $20.58$ years.

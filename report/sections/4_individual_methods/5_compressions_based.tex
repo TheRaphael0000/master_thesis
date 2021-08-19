@@ -16,7 +16,7 @@ When compressing a document with a large Shannon entropy, the compressed documen
 When concatenating two documents that share many terms, the entropy of the concatenated document should be lower than if the two documents present distinct vocabulary.
 
 This approach has the benefit to produce rank lists in a nearly parameterless manner, only a distance metric and compression algorithm are needed.
-The main drawback with this technique is the fact that the results can not be entirely explained.
+The main drawback with this technique is the fact that the results/decisions can not be entirely explained.
 
 In this study the lossless compression algorithm used are: GZip, BZip2, LZMA.
 The implementations for these compression algorithms are the ones in the Python standard library, the programming language used for this study \cite{python_standard_library}.
@@ -66,7 +66,7 @@ Definitions~\ref{def:compress1},~\ref{def:compress2} and \ref{def:compress3} are
 
   C(B) the size after compression of B.
 
-  This metric has the bounds as the cosine distance (Definition~\ref{def:cosine_dist}).
+  This metric has the same bounds as the cosine distance (Definition~\ref{def:cosine_dist}).
 \end{definition}
 
 \subsection{Evaluation}
@@ -81,7 +81,7 @@ The results in terms of efficiency of the resulting rank list are shown in Table
 
 The experiment is run on the three corpora three times to have a better approximation of the run time.
 The average time of the three runs are in Table~\ref{tab:compression_evaluation_times}.
-The CPU used for the experiment is an \textit{Intel(R) Core(TM) i7-5820K CPU @ 3.30GHz} .
+The CPU used for the experiment is an \textit{Intel(R) Core(TM)} \textit{i7-5820K CPU} \textit{@ 3.30GHz}.
 
 LZMA gives the best results on every corpus tested (Mean AP: 0.76 with NCD and 0.78 with CBC).
 BZip2 have results close to LZMA (LZMA have an AP $\sim 2.5\%$ better).
