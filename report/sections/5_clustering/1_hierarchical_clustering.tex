@@ -51,22 +51,22 @@ Multiple linkage criteria are available:
   \textit{Single-linkage} : use the minimal score of each link of the cluster merged
 \end{itemize}
 
-Example~\ref{ex:agglomerative_clustering} show an example for the merging procedures and linkage criteria.
-
 Ward linkage was discarded since the current \textit{scikit-learn} implementation only allow Euclidean distance for its computation.
+
+Example~\ref{ex:agglomerative_clustering} show an example for the merging procedures and linkage criteria.
 
 The merging procedure can be stopped with one of the two following criteria:
 
 \begin{itemize}
   \item
-  When a certain cluster number is reached.
+  When a certain cluster number is reached. This method is not really helpful for our problem, since we assumed that we do not know the number of authors in the corpus.
   \item
   When the lowest score for the next merge is above a certain value. This value is called the distance threshold.
 \end{itemize}
 
-The so-called cut can be associated to the distance threshold.
+The so-called cut can be associated to position where the procedure is stopped.
 The cut is a theoretical position in the rank list which maximize true links above the cut and false link under.
-In the other hand, the distance threshold is the score at which the algorithm should stop merging clusters.
+In the other hand, the stop position is the position at which the algorithm should stop merging clusters.
 They are not exactly the same, since when clusters are merged in the distances' matrix, the resulting distances' matrix can not be expressed as a rank list anymore.
 
 The two supervised methods proposed in this study try to estimate the distance threshold, by estimating the optimal cut.
@@ -190,7 +190,7 @@ We refer to them as \textit{upper bound} or \textit{rank lists upper bound}.
 The best linkage criterion depends on the corpus, but in average, the best $B^3_{F_1}$ is achieved with the average linkage criterion.
 The average linkage is $\sim 1\%$ better than the complete linkage and $\sim 6\%$ better than the single linkage.
 
-We assumed that the better the rank list are, the better the clustering result is when applying the hierarchical clustering.
+We assumed that the better a rank list is, the better the clustering result is when applying the hierarchical clustering.
 This assumption can be verified in Figure~\ref{fig:correlation_average_precision_b3f1}.
 In this Figure, we compare the average precision (AP) of each retained rank list to the $B^3_{F_1}$ of the best clustering obtainable with the hierarchical clustering on this rank list (ref. Table~\ref{tab:hierarchical_clustering}).
 

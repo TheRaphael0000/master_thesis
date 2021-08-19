@@ -23,9 +23,9 @@ The population are represented, for each distribution, by the true links or the 
       Norm(X) &= \frac{X - \alpha}{\beta}
     \end{aligned}
   \end{gather*}
-  Denormalize the vector X
+  Denormalize a scalar or a vector X from the interval $[0, 1]$ to the interval $[\alpha, \alpha + \beta]$
   \begin{gather*}
-    DeNorm(X) = X \cdot \beta + \alpha
+    DeNorm(X, \alpha, \beta) = X \cdot \beta + \alpha
   \end{gather*}
 \end{definition}
 
@@ -100,7 +100,7 @@ When $\alpha$ is smaller than $0.50$, less false positives and more false negati
 
 For the clustering, the $\alpha$ parameter directly influence the $r_diff$ value and the $B^3_{precision}$ and $B^3_{recall}$.
 The same binary search can be used for this computation, just the target need to be changed.
-In this study, we only considered the equiprobable case.
+In this study, we only considered the equiprobable case for the experiments.
 
 \subsection{Evaluation}
 
