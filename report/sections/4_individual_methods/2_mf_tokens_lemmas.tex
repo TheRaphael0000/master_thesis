@@ -45,7 +45,7 @@ The Euclidean distance seems to be the least appropriate distance measure for th
 The Clark distance have a really poor average precision when the MF tokens vector is too small, but after reaching $750$ it produces one of the best pay-off of the experiment.
 
 Using the best $n$ with these text representations, the best distance metric can increase the average precision by a factor of $13$ to $17$ \%.
-Over all, the Cosine distance seem to be one of the most appropriate choice when dealing with these corpora and text representations.
+Overall, the Cosine distance seem to be one of the most appropriate choice when dealing with these corpora and text representations.
 
 The retained distance metrics and $n$-MF for the tokens text representations are:
 \begin{itemize}
@@ -118,7 +118,8 @@ Three approach are compared:
 The eight proposed distance measures are evaluated for the three approach using the average precision metric on the three literature corpora.
 To understand more easily the results for the three approach, the \textit{every token} approach is used as a baseline, from where the average precision gain is computed.
 
-Table~\ref{tab:baseline_every_token} show the average precision baseline using the \textit{every token} approach.
+Table~\ref{tab:baseline_every_token} shows the average precision baseline using the \textit{every token} approach.
+Table~\ref{tab:750_mf} shows the average precision for the \textit{$750$-MF} approach.
 Table~\ref{tab:gain_without_hapax_legomena} and Table~\ref{tab:gain_750_mf} show the gain over the baseline for the \textit{without hapax legomena} approach and \textit{$750$-MF} approach respectively.
 
 When looking at the baseline: the Manhattan, Euclidean and Clark distance measure have a poor average precision, all are below 0.3 in average.
@@ -139,7 +140,7 @@ From this experiment, each distance metric can be placed in one of the two follo
 In the first category are: Manhattan, Clark and Euclidean, in the second: Cosine, Matusita and Tanimoto.
 
 As for KLD and JD, they are neither in the first nor the second, since both of them had a small gain in regard to the Oxquarry corpus but larger gain for the St-Jean corpus.
-This, not so clear behavior, must further investigated.
+This, not so clear behavior, must be further investigated.
 
 \begin{table}
   \centering
@@ -185,6 +186,29 @@ This, not so clear behavior, must further investigated.
     JD        & -0.01 & +0.01 & -0.02 & -0.01 \\
     \midrule
     Mean      & +0.05 & +0.03 & +0.03 & +0.04 \\
+    \bottomrule
+  \end{tabular}
+  }
+
+  \vspace{0.5cm}
+
+  \subcaption{$750$-MF}
+  \label{tab:750_mf}
+  \resizebox{\linewidth}{!}{
+  \begin{tabular}{l r r r|r}
+    \toprule
+    Distance & Oxquarry & Brunet & St-Jean & Mean \\
+    \midrule
+    Manhattan & 0.67 & 0.68 & 0.76 & 0.71 \\
+    Tanimoto  & 0.63 & 0.68 & 0.75 & 0.69 \\
+    Euclidean & 0.62 & 0.64 & 0.65 & 0.63 \\
+    Matusita  & 0.63 & 0.68 & 0.73 & 0.68 \\
+    Clark     & 0.89 & 0.72 & 0.74 & 0.78 \\
+    Cosine    & 0.89 & 0.71 & 0.79 & 0.80 \\
+    KLD       & 0.60 & 0.66 & 0.68 & 0.65 \\
+    JD        & 0.61 & 0.67 & 0.71 & 0.66 \\
+    \midrule
+    Mean      & 0.69 & 0.68 & 0.73 & 0.70 \\
     \bottomrule
   \end{tabular}
   }

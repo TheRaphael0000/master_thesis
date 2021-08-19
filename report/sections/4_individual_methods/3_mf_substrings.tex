@@ -32,7 +32,7 @@ This can correspond for example to:
   \item
   In English, small common words: \textit{"\_the\_"}, \textit{"\_and\_"}, \textit{"\_that"}
   \item
-  In French, adverbs : \textit{"\_ment"}
+  In French, adverbs : \textit{"ment\_"}
   \item
   In French, small common words : \textit{"\_le"}, \textit{"la\_"}, \textit{"des\_"}, \textit{"est\_"}
   \item
@@ -69,7 +69,7 @@ This method yields a subset of the letters $n$-grams algorithm for the tokens la
 
 \subsection{MF $n$-First / $n$-Last}
 
-Two other similar approach to the $n$-grams are to consider only the $n$ first letters of each token or the $n$-Last letters of each token.
+Two other similar approach to the $n$-grams are to consider only the $n$ first letters of each token or the $n$ last letters of each token, denoted respectively $n$-First and $n$-Last.
 Definition~\ref{def:n_first} and Definition~\ref{def:n_last} explain and propose an example.
 These methods are subsets of the in-word $n$-grams.
 These methods have the same number of items as the token text representation.
@@ -243,7 +243,7 @@ For the Brunet dataset, the $5$-First have good results compared to other text r
 Lastly, for St-Jean the $5$-First with a small MF vector size give the best results.
 
 No clear best configuration can be extracted with these results.
-Results are mixed across corpora, thus for this experiment, no text representation / distance measure are retained.
+Results are mixed across corpora, thus for this experiment, no text representation / distance measure are retained since we aim to find high quality and consistent methods.
 
 \begin{figure}
   \centering

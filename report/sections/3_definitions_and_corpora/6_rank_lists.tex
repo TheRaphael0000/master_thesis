@@ -30,8 +30,9 @@ For the scoring function based on similarity, the rank list is sorted in decreas
 The most similar documents pairs are the most likely written by the same author.
 Thus, the top ranks should contain pairs of documents written by the same author.
 
-The computational cost to compute a rank list is $\frac{n \cdot (n - 1)}{2}$ multiplied by the computational cost of the scoring function.
-Since the complexity of the score function is lower than $O(n^2)$, the $O(n^2)$ complexity remain.
+The computational cost to compute a rank list is $\frac{n \cdot (n - 1)}{2}$, with $n$ the number of documents.
+Thus, the computation complexity is $O(n^2)$.
+The computation cost to sort the rank list is ignored since it has a complexity of $O(n\log(n))$.
 The space complexity is also $O(n^2)$, for each document pair, the pair and the score have to be stored.
 
 Example~\ref{ex:rank_list} show the creation of a rank list using two-dimensional vectors and the Manhattan distance (presented in Section~\ref{sec:vectors_distances}).
@@ -98,7 +99,7 @@ Example~\ref{ex:rank_list} show the creation of a rank list using two-dimensiona
 \subsection{Evaluation Metrics \label{sec:rl_eval}}
 
 In order to know the quality of a rank list, multiple rank list evaluation metrics are used and presented in this section.
-Definitions in these sections are adapted versions of the ones from Kocher and Savoy~\cite{kocher_linking}.
+Definitions in this section are adapted versions of the ones from Kocher and Savoy~\cite{kocher_linking}.
 The presented metrics are also well know in the authorship verification and the information retrieval field.
 
 \begin{definition}[Relevant link~\cite{kocher_linking}]

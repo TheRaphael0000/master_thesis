@@ -39,17 +39,19 @@ When the number is already written in full letters in the text, the parser did n
 The first two line of each document are ignored for St-Jean since they contain metadata for the document.
 The following information can be found: the number of tokens in the document, the name of the collection and the document ID written is full text.
 Some inconsistencies on these two lines have been corrected manually.
-In some files, the only one line was available.
+For example, in some files, only one of these lines was available.
 
 For Oxquarry, Brunet and St-Jean, the authors of each document are contained in a single text file.
 Each line contains the author of the document with an ID equivalent to the line number, e.g. author on line 1 is for document 1, author on line 2 is for document 2, etc.
 
 For the PAN16 corpus, there is no document tokenization available.
 Plain text files are given.
-A simple tokenization is realized which consider every punctuation symbols (POSIX punctuation symbols), line breaks and spaces (POSIX spaces) as a separator for the different tokens.
+A simple tokenization is realized which consider every punctuation symbols (POSIX punctuation symbols class), line breaks and spaces (POSIX spaces class) as a separator for the different tokens.
 Since they are written in multiple languages, no further rules are applied to tokenize more effectively the texts.
-The problem with this tokenization method is that it removes the punctuation symbols, which can carry information.
+The problem with this tokenization method is that it removes the punctuation symbols, which carry information.
 
 The general preprocessing applied on every document of every corpus is to encode every text with only lower case ASCII characters.
 By doing so, every diacritic are removed, e.g. the word \textit{École} (school in French) is converted to \textit{ecole}.
+This can create ambiguity in French but was ignored.
+Here is an example of ambiguity created with this method: the words \textit{jeune} (\textit{young} in French) and \textit{jeûne} (\textit{fasting} in French).
 This method is not used for the PAN dataset, since the Greek alphabet is not in the ASCII character set.

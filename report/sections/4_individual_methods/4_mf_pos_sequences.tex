@@ -88,12 +88,11 @@ Using the smoothed Z-Score Cosine distance, the most appropriate configuration f
 In this second part, the goal is to find the most appropriate distance metric for the $n$-POS text representation, with the configuration retained in the first part.
 After running with these parameters on every proposed distance metrics, Table~\ref{tab:n_pos} shows a resume of the experiment.
 
-When considering $n$-POS as text representation on the St-Jean corpus, over all the best distance metrics are Manhattan, Matusita, JD, Cosine distance.
+When considering $n$-POS as text representation on the St-Jean corpus, overall the best distance metrics are Manhattan, Matusita, JD, Cosine distance.
 The Clark distance, give overall the worse results, even though in other text representation, this metric was giving the best results.
 
 Optimizing the parameters with this text representation can increase the average precision by up to $46$\%.
 This increase is obtained by using the Cosine distance instead of the Clark distance for the $250$-MF/$2$-POS.
-
 
 Two configurations are retained using the $n$-POS text representation.
 The first is the $2$-POS with the $250$-MF and the Z-Score Cosine Distance.
