@@ -23,7 +23,7 @@ If distances and similarity score are encountered for a fusion, flipping the sco
 
 Even though this method lack theoretical foundations, it can provide good results and does not have any parameters.
 
-Example~\ref{ex:z_score_fusion} exemplify the Z-Score fusion computation using two simple rank lists.
+Example~\ref{ex:z_score_fusion} exemplifies the Z-Score fusion computation using two simple rank lists.
 
 \begin{example}
   \caption{A two rank lists Z-Score fusion}
@@ -127,7 +127,7 @@ The average with any number and $-\infty$ is always $-\infty$.
 When sorting the rank list, the links with a resulting $-\infty$ score will subsequently be ranked at the bottom.
 This first veto method is called $-\infty$-veto in this study.
 
-Example~\ref{ex:veto_ninf} showcase when the veto can provide better results than the standard fusion in Example~\ref{ex:noveto}.
+Example~\ref{ex:veto_ninf} showcases when the veto can provide better results than the standard fusion in Example~\ref{ex:noveto}.
 In the example, rank list $1$ gives a $0.20$ true link probability for a link with $ID = 4$, but rank list $3$ give this link a $0.80$ true link probability.
 The link with $ID = 3$ is ranked $3$rd, but with the veto the link is ranked $5$th.
 
@@ -146,7 +146,7 @@ For example, if $9$ rank lists are fused.
 By setting any link score to $-9$, this ensures that even if every other rank lists have a true link probability of $1.00$ for this link.
 The resulting probability will be $(-9 + 8 \cdot 1.00) / 9 = -0.11$, which is lower than $0.00$, the lowest probability obtainable by the regression.
 
-The theoretical maximal veto that keep the order is $nt + 1 - n - \epsilon$, with $\epsilon$ a small value (e.g. $10^{-38}$) and $t$ the threshold.
+The theoretical maximal veto that keep the order is $nt + 1 - n - \epsilon$, with $\epsilon$ a small value (e.g. $2^{-20}$) and $t$ the threshold.
 Since even if all the other rank list have a probability of $1.00$ with this veto, the values obtained after applying the veto are smaller than the threshold thus ranked at the rank list bottom.
 
 Proof:

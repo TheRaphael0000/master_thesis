@@ -35,7 +35,7 @@ Thus, the computation complexity is $O(n^2)$.
 The computation cost to sort the rank list is ignored since it has a complexity of $O(n\log(n))$.
 The space complexity is also $O(n^2)$, for each document pair, the pair and the score have to be stored.
 
-Example~\ref{ex:rank_list} show the creation of a rank list using two-dimensional vectors and the Manhattan distance (presented in Section~\ref{sec:vectors_distances}).
+Example~\ref{ex:rank_list} shows the creation of a rank list using two-dimensional vectors and the Manhattan distance (presented in Section~\ref{sec:vectors_distances}).
 
 \begin{example}
   \centering
@@ -156,7 +156,7 @@ The presented metrics are also well know in the authorship verification and the 
 The average precision, the R-Precision and the High Precision are strongly correlated.
 Thus, for this study, on some experiment, only the average precision is computed.
 
-Example~\ref{ex:rank_list_eval} showcase each metric for the rank list evaluation.
+Example~\ref{ex:rank_list_eval} showcases each metric for the rank list evaluation.
 
 \begin{example}
   \centering
@@ -265,7 +265,7 @@ Example~\ref{ex:distances_matrix} show the two representations for the same dist
   \label{ex:distances_matrix}
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{Rank list for distances' matrix in Example~\ref{ex:distances_matrix_mx}\label{ex:distances_matrix_rl}}
+    \subcaption{Rank list for distances' matrix from Example~\ref{ex:distances_matrix_mx}\label{ex:distances_matrix_rl}}
     \begin{tabular}{l c r}
       \toprule
       Rank & Vector Pair IDs & Distance \\
@@ -284,7 +284,7 @@ Example~\ref{ex:distances_matrix} show the two representations for the same dist
 
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{Distances' matrix for rank list in Example~\ref{ex:distances_matrix_rl}\label{ex:distances_matrix_mx}}
+    \subcaption{Distances' matrix for rank list from Example~\ref{ex:distances_matrix_rl}\label{ex:distances_matrix_mx}}
     \begin{tabular}{c|c c c c}
       \toprule
         & 0 & 1 & 2  & 3 \\
@@ -314,7 +314,7 @@ One use the mean of the results and the second the maximal value.
 In this study, these are called respectively Single-Mean and Single-Max.
 These aggregations strategies can be used in conjunction with the gain definition to compare one rank list to multiple rank lists.
 
-Example~\ref{ex:gain} show the gain computation using average precision on rank lists and the aggregation with Single-Mean and Single-Max.
+Example~\ref{ex:gain} shows the gain computation using average precision on rank lists and the aggregation with Single-Mean and Single-Max.
 
 \begin{example}
   \caption{Gain}

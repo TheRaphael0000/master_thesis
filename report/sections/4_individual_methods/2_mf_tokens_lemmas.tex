@@ -31,8 +31,8 @@ The corpus used for this experiment is St-Jean, since have the two text represen
 The proposed methodology is to create rank lists for every proposed distance measures (ref. Section~\ref{sec:vectors_distances}) on the two text representations.
 The $n$ value is also explored between $250$ and $2000$ with a step of $250$.
 
-The two plots in Figure~\ref{fig:tokens_lemmas} show the average precision (AP) for the resulting rank lists over $n$ for each distance measure.
-Table~\ref{tab:tokens_lemmas} in annex show the values used to create this graph.
+The two plots in Figure~\ref{fig:tokens_lemmas} shows the average precision (AP) for the resulting rank lists over $n$ for each distance measure.
+Table~\ref{tab:tokens_lemmas} in annex shows the values used to create this graph.
 
 This representation seem to have good results with $n=500$ for most of the distance metrics, this corroborates previous studies results.
 Few distance metrics, such as Manhattan distance, Tanimoto distance or Clark distance can give better results with slightly bigger vectors ($750$-MF or $1000$-MF tokens/lemma).
@@ -83,7 +83,7 @@ To test this, the number of token is artificially modified by considering only t
 Here $t$ range between 9000 and 250 with steps of 250 tokens.
 From these texts, the $750$-MF tokens text representation is used in conjunction with the Z-Score normalized Cosine distance to compute the rank lists.
 
-Figure~\ref{fig:degradation} show the rank lists evaluated using the average precision, RPrec and HPrec over the number of tokens.
+Figure~\ref{fig:degradation} shows the rank lists evaluated using the average precision, RPrec and HPrec over the number of tokens.
 The full evaluation is showed in Table~\ref{tab:degradation} in annex.
 
 Every metric decrease over the text size.
@@ -261,7 +261,7 @@ When a large proportion of the vectors overlap, it indicates a high similarity b
 Both document style are close when their feature vector are closely related.
 Visually when most of the surface overlap, the distance function will give a low value, and with a correct distance measure this link should be ranked high in the rank list.
 
-Figure~\ref{fig:mf_vector_error} show the feature vector of two frequent errors document pairs (\textit{Cinq-Mars}$_{48}$ from Vigny / \textit{Les trois mousquetaires}$_{62}$ from Dumas and \textit{Bel-Ami}$_{10}$ from Maupassant / \textit{Madame Bovary}$_{52}$ from Flaubert), these link appear in the top 20 false links of 3 out 4 rank lists.
+Figure~\ref{fig:mf_vector_error} shows the feature vector of two frequent errors document pairs (\textit{Cinq-Mars}$_{48}$ from Vigny / \textit{Les trois mousquetaires}$_{62}$ from Dumas and \textit{Bel-Ami}$_{10}$ from Maupassant / \textit{Madame Bovary}$_{52}$ from Flaubert), these link appear in the top 20 false links of 3 out 4 rank lists.
 The frequent errors vector pairs presented in Figure~\ref{fig:mf_vector_error} can be visually compared to actual true links and actual false links, to have a better understanding of this problematic.
 For example, the most similar true link (ranked 1 using Manhattan distance) in Figure~\ref{fig:mf_vector_first_rl} (\textit{La Petite Fadette}$_{30}$ and \textit{La Petite Fadette}$_{116}$ from Sand) or the HPrec-th (last continuous correct pair from the top of the list) in Figure~\ref{fig:mf_vector_first_last_rl} (\textit{Les Diaboliques}$_{184}$ and \textit{Les Diaboliques}$_{192}$ from Barbey), both of these links show a large proportion of overlapping surface, like for the frequent errors vectors.
 

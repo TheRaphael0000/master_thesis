@@ -100,7 +100,7 @@ The Z-Score fusion give best results overall.
   \vspace{0.5cm}
 
   \subcaption{Statistics}
-  Then we can compute statistics for all the rank lists combinations (each column from the previous table).
+  Then we can compute statistics for all the rank lists combinations (each line from the previous table).
 
   \vspace{0.2cm}
 
@@ -413,12 +413,12 @@ This strategy may be appliable on harder corpus such as the PAN 16 corpus or wit
 
 \begin{table}
   \centering
-  \caption{Maximal gain on the average precision using the veto / Argmax}
+  \caption{Maximal gain on the average precision using the veto and Argmax}
   \label{tab:veto}
   \begin{tabular}{l c c}
     \toprule
-                   & \multicolumn{2}{c}{Train/Test} \\
-                   & A/B            & B/A \\
+                   & \multicolumn{2}{c}{Train,Test} \\
+                   & Train A, Test B & Train B, Test A \\
     \midrule
     Set to $0$     & 1.98e-04/0.03  & -9.11e-05/0.01 \\
     Set to $-1$    & -3.28e-03/0.01 & 1.93e-02/0.01 \\
