@@ -18,9 +18,9 @@ This repository contains files related to the *Rank Lists' Fusions using multipl
 └── report                 | Thesis report latex source code
 ```
 
-## Thesis / Report
+<!--## Thesis / Report
 
-- [Final version TODO]()
+- [Final version TODO]()-->
 
 ## Code
 
