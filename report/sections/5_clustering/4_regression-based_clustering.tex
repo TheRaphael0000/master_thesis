@@ -43,7 +43,7 @@ One way to find a slightly more accurate distance threshold is to use a linear i
 The score is interpolated to the true links probabilities the closest to the threshold, respectively, the one directly above and the one directly below in the rank list.
 Example~\ref{ex:linear_interpolation} showcases a linear interpolation of the score using a $0.5$ probability threshold in a synthetic rank list.
 
-\begin{example}
+\begin{example}[!t]
   \centering
   \caption{Linear interpolation for regression-based clustering distance threshold selection (probability threshold fixed at 0.5)}
   \label{ex:linear_interpolation}
@@ -116,7 +116,7 @@ The conclusion to the previous points is that having a good rank list is more im
 Though some corpus can be better than others for training.
 No clear rank lists property was found, which makes them better to train the model over others.
 
-\begin{table*}
+\begin{table*}[!t]
   \centering
   \caption{Regression-based clustering evaluation, Mean retained rank lists $B^{3}_{F_1}$/$r_{diff}$ for each corpus pair}
   \label{tab:regression-based_clustering}
@@ -127,7 +127,7 @@ No clear rank lists property was found, which makes them better to train the mod
     \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing} \\
     \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B & Mean \\
     \midrule
-    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
+    \parbox[!t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
     & Oxquarry  & 0.58/0.09 & 0.59/0.09 & 0.29/0.14 & 0.22/0.16 & 0.42/0.12 \\
     & Brunet    & 0.77/0.17 & 0.78/0.09 & 0.58/0.10 & 0.83/0.03 & 0.74/0.10 \\
     & St-Jean A & 0.79/0.14 & 0.77/0.06 & 0.50/0.09 & 0.69/0.07 & 0.69/0.09 \\
@@ -145,7 +145,7 @@ No clear rank lists property was found, which makes them better to train the mod
     \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing} \\
     \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B & Mean \\
     \midrule
-    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
+    \parbox[!t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
     & Oxquarry  & 0.83/0.11 & 0.80/0.11 & 0.83/0.04 & 0.91/0.01 & 0.84/0.07 \\
     & Brunet    & 0.72/0.22 & 0.75/0.20 & 0.73/0.15 & 0.89/0.07 & 0.77/0.16 \\
     & St-Jean A & 0.73/0.21 & 0.76/0.17 & 0.76/0.13 & 0.92/0.05 & 0.79/0.14 \\
@@ -163,7 +163,7 @@ No clear rank lists property was found, which makes them better to train the mod
     \multicolumn{2}{c}{\multirow{2}{*}{}} & \multicolumn{4}{c}{Testing} \\
     \multicolumn{2}{c}{} & Oxquarry & Brunet & St-Jean A & St-Jean B & Mean \\
     \midrule
-    \parbox[t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
+    \parbox[!t]{2mm}{\multirow{4}{*}{\rotatebox[origin=c]{90}{Training}}}
     & Oxquarry  & 0.76/0.15 & 0.79/0.16 & 0.72/0.14 & 0.91/0.04 & 0.79/0.12 \\
     & Brunet    & 0.63/0.30 & 0.71/0.24 & 0.65/0.21 & 0.82/0.13 & 0.71/0.22 \\
     & St-Jean A & 0.66/0.27 & 0.73/0.23 & 0.67/0.19 & 0.85/0.10 & 0.73/0.20 \\

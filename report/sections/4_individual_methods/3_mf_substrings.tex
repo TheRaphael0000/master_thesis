@@ -143,7 +143,7 @@ $4$-grams also can be efficient but require a larger MF vector, around $\sim 400
 
 For the first part, the retained parameters for the $n$-grams text representation are the $3$-grams with $3000$-MF and $4$-grams with $8000$-MF.
 
-\begin{figure}
+\begin{figure}[!t]
   \caption{Letters $n$-grams representation over number of MF with different $n$}
   \label{fig:letter_ngrams}
 
@@ -185,7 +185,7 @@ For this configuration of $4$-grams with $8000$-MF, using the right distance mea
 A relative increase in performance up to $42$\% can be observed when changing from the worse distance metric to the best for each corpus.
 The $42$\% increase is also obtained by using the Cosine distance ($0.78$) instead of Euclidean distance ($0.55$) with the St-Jean dataset.
 
-\begin{table}
+\begin{table}[!t]
   \centering
   \caption{Average precision for $n$-grams with every metric, on the three corpora (best result for the dataset in bold).}
   \label{tab:letter_ngrams}
@@ -245,7 +245,7 @@ Lastly, for St-Jean the $5$-First with a small MF vector size give the best resu
 No clear best configuration can be extracted with these results.
 Results are mixed across corpora, thus for this experiment, no text representation / distance measure are retained since we aim to find high quality and consistent methods.
 
-\begin{figure}
+\begin{figure}[!t]
   \centering
   \caption{Average precision over the $n$-MF In-word $n$-grams, $n$-First and $n$-Last using Z-Score normalized Cosine distance}
   \label{fig:first_last_letters_ngrams}

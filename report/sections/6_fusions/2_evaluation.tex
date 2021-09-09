@@ -49,7 +49,7 @@ This observation will be further explorer in Section~\ref{sec:fusion_diversity}.
 
 Overall, The Z-Score fusion give best results.
 
-\begin{example*}
+\begin{example*}[!t]
   \caption{Fusion evaluation methodology}
   \label{ex:fusion_eval}
 
@@ -150,7 +150,7 @@ Overall, The Z-Score fusion give best results.
 \end{example*}
 
 
-\begin{figure}
+\begin{figure}[!t]
   \centering
   \caption{Evaluation of every combination of 4 rank lists fusions using Z-Score and Regression}
   \label{fig:fusion}
@@ -166,7 +166,7 @@ Overall, The Z-Score fusion give best results.
   \includegraphics[width=\linewidth]{img/fusion_evaluation_B.png}
 \end{figure}
 
-\begin{table}
+\begin{table}[!t]
   \centering
   \caption{Fusion statistics on St-Jean A}
   \label{tab:fusion_stats_A}
@@ -250,7 +250,7 @@ Overall, The Z-Score fusion give best results.
   }
 \end{table}
 
-\begin{table}
+\begin{table}[!t]
   \centering
   \caption{Fusion statistics on St-Jean B}
   \label{tab:fusion_stats_B}
@@ -334,7 +334,7 @@ Overall, The Z-Score fusion give best results.
   }
 \end{table}
 
-\begin{table*}
+\begin{table*}[!t]
   \centering
   \caption{Rank lists fusion sign test. \textit{The star (*) indicate a Binomial test p-value smaller than 5\%}}
   \label{tab:fusion_sign_test}
@@ -404,13 +404,13 @@ The rank list used for the experiment do not have such special case, since most 
 This can be one possible reason on why the veto fail to improve the results.
 This strategy may be appliable on harder corpus such as the PAN 16 corpus or with even more diverse rank list generation strategies.
 
-\begin{figure}
+\begin{figure}[!t]
   \caption{Veto strategies evaluations on St-Jean A and B depending on the threshold}
   \label{fig:veto}
   \includegraphics[width=\linewidth]{img/veto.png}
 \end{figure}
 
-\begin{table}
+\begin{table}[!t]
   \centering
   \caption{Maximal gain on the average precision using the veto and Argmax}
   \label{tab:veto}
@@ -444,7 +444,7 @@ The best parameters are $c=18$ and $r=0.14$ with an average precision gain of $3
 Like for the veto experiment, no real average precision gain can be obtained using the soft-veto strategy.
 The average precision gain is small and can be due to random factors.
 
-\begin{figure}
+\begin{figure}[!t]
   \caption{Average precision gain with soft veto s-curve on Oxquarry}
   \label{fig:soft_veto}
   \includegraphics[width=\linewidth]{img/soft_veto.png}
@@ -508,7 +508,7 @@ Otherwise, if a \textit{bad rank list} and a \textit{good rank list} are compare
 This low correlation coefficient should indicate a positive good gain.
 But when fused, the gain will not be positive, since fusing \textit{bad rank lists} and \textit{good rank lists} tends to produce terrible results.
 
-\begin{table}
+\begin{table}[!t]
   \centering
   \caption{Pairwise Kendall correlation coefficient on St-Jean retained rank lists}
   \label{tab:rl_correlations}
@@ -530,14 +530,14 @@ But when fused, the gain will not be positive, since fusing \textit{bad rank lis
   }
 \end{table}
 
-\begin{figure}
+\begin{figure}[!t]
   \centering
   \caption{Fusion average precision gain (using Single-Mean scheme) over rank list distance on St-Jean}
   \label{fig:rl_correlations}
   \includegraphics[width=\linewidth]{img/rank_list_correlation_mean_st_jean.png}
 \end{figure}
 
-\begin{table}
+\begin{table}[!t]
   \centering
   \caption{Linear regression on the average precision gain over Kendall r-coefficient}
   \label{tab:rl_correlations_regression}

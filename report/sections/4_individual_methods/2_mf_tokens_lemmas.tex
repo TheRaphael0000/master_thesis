@@ -1,5 +1,4 @@
 \section{MF Tokens and Lemmas \label{sec:tokens_lemmas}}
-
 This section aim to evaluate the vector representation using the most frequent (MF) tokens and lemmas.
 
 \subsection{MF Tokens and Lemmas Method}
@@ -60,7 +59,7 @@ The $n = 750$ is used for every distance metric, since the results between $500$
 Even though, the lemma representation sometimes give betters results than the token representation.
 Only the token representation is kept since every dataset come with a token representation and no significant improvements are observed for these datasets.
 
-\begin{figure}
+\begin{figure}[!t]
   \centering
   \caption{Tokens and Lemmas representation over number of MF tokens using different distances metrics}
   \label{fig:tokens_lemmas}
@@ -93,7 +92,7 @@ PAN16 corpus is a difficult corpus due to its small size, thus extracting reliab
 After multiple tests, the PAN @ CLEF 2016 corpus is not used further in this study due to its difficulty in finding reliables stylometric clues.
 For this study, having standard and easier corpus is required in order to show the proposed methods.
 
-\begin{figure}
+\begin{figure}[!t]
   \centering
   \caption{St-Jean ranks list evaluation on AP, RPrec and HPrec over the text size. Rank list computed using $750$-MF tokens and the Z-Score normalized Cosine distance}
   \label{fig:degradation}
@@ -142,7 +141,7 @@ In the first category are: Manhattan, Clark and Euclidean, in the second: Cosine
 As for KLD and JD, they are neither in the first nor the second, since both of them had a small gain in regard to the Oxquarry corpus but larger gain for the St-Jean corpus.
 This, not so clear behavior, must be further investigated.
 
-\begin{table}
+\begin{table}[!t]
   \centering
   \caption{Rank lists average precision depending on the number of token used}
 
@@ -275,7 +274,7 @@ We can assume that most distance function will not grasp a real difference and t
 When two vectors are relatively close together, determining that two texts are from a different author can not clearly be established using only one type of representation, no matter the distance metric applied.
 Thus, this experiment motivate the need of having multiple text representation to obtain more robust solutions to be able to discriminate between true and false links for these types of errors.
 
-\begin{figure}
+\begin{figure}[!t]
   \centering
   \caption{Example of $750$-MF relative frequency vectors for recurrent false link in the top 20 false links}
   \label{fig:mf_vector_error}
@@ -291,7 +290,7 @@ Thus, this experiment motivate the need of having multiple text representation t
   \includegraphics[width=\linewidth]{img/mf_vector_error_1.png}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[!t]
   \centering
   \caption{$750$-MF relative frequency for the two documents ranked $X$ in the rank list using the token representation on St-Jean}
 

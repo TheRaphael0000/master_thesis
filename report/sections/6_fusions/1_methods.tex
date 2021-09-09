@@ -25,7 +25,7 @@ Even though this method lack theoretical foundations, it can provide good result
 
 Example~\ref{ex:z_score_fusion} exemplifies the Z-Score fusion computation using two simple rank lists.
 
-\begin{example}
+\begin{example}[!t]
   \caption{A two rank lists Z-Score fusion}
   \label{ex:z_score_fusion}
 
@@ -159,7 +159,7 @@ Example~\ref{ex:veto_0} show the $0$-veto strategy.
 Here the link with $ID = 4$ is ranked $4$th due to a lighter effect of this veto.
 Link with $ID = 5$ is still rank at the bottom.
 
-\begin{example}
+\begin{example}[!t]
   \centering
   \caption{Fusion without veto}
   \label{ex:noveto}
@@ -210,7 +210,7 @@ Link with $ID = 5$ is still rank at the bottom.
   \end{subexample}
 \end{example}
 
-\begin{example}
+\begin{example}[!t]
   \centering
   \caption{Fusion with $-\infty$-veto at 0.25}
   \label{ex:veto_ninf}
@@ -261,7 +261,7 @@ Link with $ID = 5$ is still rank at the bottom.
   \end{subexample}
 \end{example}
 
-\begin{example}
+\begin{example}[!t]
   \centering
   \caption{Fusion with $0$-veto at 0.25}
   \label{ex:veto_0}
@@ -370,14 +370,14 @@ To apply the soft-veto, each score in the rank list is multiplied by the curve a
 This soft-veto methodology aimed to be used on rank list before fusing, to have a more cleaved decision on the links positions.
 This strategy can be use on any type of scoring method (similarity, distances, Z-Score scores or probabilities).
 
-\begin{figure}
+\begin{figure}[!t]
   \centering
   \caption{Distance values over rank, rank list created using the smoothed Manhattan distance, $500$-MF tokens on the Brunet dataset}
   \label{fig:distance_over_rank}
   \includegraphics[width=\linewidth]{img/distance_over_rank.png}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[!t]
   \centering
   \caption{Soft-veto curve parameters}
   \label{fig:s_curve_params}

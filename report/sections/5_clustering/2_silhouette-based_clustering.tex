@@ -53,7 +53,7 @@ In Table~\ref{tab:silhouette-based_clustering}, the r-ratio is clearly too high,
 
 This can be due to the fact that the rank list used for the clustering is not perfect (AP $\neq 1$).
 
-\begin{table}
+\begin{table}[!t]
   \caption{Silhouette-based clustering evaluation (Maximal Silhouette, $\alpha = 0$), mean $B^3_{F_1}$/$r_{diff}$}
   \label{tab:silhouette-based_clustering}
 
@@ -122,7 +122,7 @@ With $\alpha = -0.2$, we obtained a $B^3_{F_1}$ only $8\%$ worse than the upper 
 The average linkage criterion give the best results for this clustering method.
 The $B^3_{F_1}$ for the average linkage criterion is in average $2\%$ better than the other criterions.
 
-\begin{example}
+\begin{example}[!t]
   \centering
   \caption{$\alpha$ correction}
   \label{ex:alpha_correction}
@@ -168,7 +168,7 @@ The $B^3_{F_1}$ for the average linkage criterion is in average $2\%$ better tha
   With $\alpha = 0$, the number of cluster selected would be 6, since the target would be $3.9$.
 \end{example}
 
-\begin{table}
+\begin{table}[!t]
   \caption{Silhouette-based clustering evaluation ($\alpha = -0.2$), mean $B^3_{F_1}$/$r_{diff}$}
   \label{tab:silhouette-based_clustering_alpha}
 

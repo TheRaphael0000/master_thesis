@@ -1,6 +1,5 @@
 \documentclass[a4paper, twoside, 11pt]{book}
 
-\usepackage[ruled, vlined]{algorithm2e}
 \usepackage{amsfonts}
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -29,6 +28,26 @@
 \usepackage{url}
 \usepackage{xcolor}
 
+\usepackage{titlesec}
+
+
+\titleformat
+{\chapter} % command
+[display] % shape
+{\bfseries} % format
+{\huge \chaptertitlename\ \thechapter} % label
+{2em} % sep
+{\Huge \strut} % before-code (strut avoid having descenders mess up the formating)
+[] % after-code
+
+% % align title to the left
+\sectionfont{\raggedright}
+\subsectionfont{\raggedright}
+\subsubsectionfont{\raggedright}
+
+\makeatletter
+\setlength{\@fptop}{5pt}
+\makeatother
 
 %header and footer
 \pagestyle{fancy}
@@ -36,16 +55,10 @@
 \renewcommand{\headrulewidth}{0pt}
 \cfoot{\thepage}
 
-
 % remove page numerotation on empty pages
 \let\origdoublepage\cleardoublepage
 \newcommand{\clearemptydoublepage}{\clearpage{\pagestyle{empty}\origdoublepage}}
 \let\cleardoublepage\clearemptydoublepage
-
-% align title to the left
-\sectionfont{\raggedright}
-\subsectionfont{\raggedright}
-\subsubsectionfont{\raggedright}
 
 % metadata
 \usepackage[pdfauthor={Raphaël Margueron},
@@ -69,17 +82,17 @@
 \renewcommand{\listtheoremname}{List of definitions}
 
 \newtheoremstyle{definition}% name of the style to be used
-  {0.7cm}% measure of space to leave above the theorem. E.g.: 3pt
-  {0.7cm}% measure of space to leave below the theorem. E.g.: 3pt
+  {5pt}% measure of space to leave above the theorem. E.g.: 3pt
+  {}% measure of space to leave below the theorem. E.g.: 3pt
   {}% name of font to use in the body of the theorem
   { }% measure of space to indent
   {\bfseries}% name of head font
-  {\\[0.1cm]}% punctuation between head and body
+  {\\}% punctuation between head and body
   { }% space after theorem head; " " = normal interword space
   {\thmname{#1}\thmnumber{ #2}\textnormal{\thmnote{ - #3}}}
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
-\tcolorboxenvironment{definition}{blanker,before skip=0.7cm,after skip=0.7cm}
+\tcolorboxenvironment{definition}{blanker}
 
 % example envs
 \DeclareFloatingEnvironment[

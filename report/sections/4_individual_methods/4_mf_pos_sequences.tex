@@ -16,29 +16,24 @@ This type of $n$-grams is also known as $w$-shingling.
 \begin{definition}[POS Short Sequences]
   Each word is tagged with a corresponding POS.
   The document is represented as a long ordered list of POS.
-
   From the list of POS, a moving window of size $n$, creates the POS sequences.
   For the sake of simplicity, in this study, a POS sequence of size $n$ is written $n$-POS.
-
-  The following example showcases a sentence in the 3-POS (POS sequences of size 3) text representation.
-
-  \vspace{0.2cm}
-
-  \resizebox{\linewidth}{!}{
-  \begin{tabular}{l p{5cm}}
-      \toprule
-      Sentence & \textit{"The", "cat", "eat", "a", "fish"} \\
-      POS & \textit{"Article", "Noun", "Verb", "Article", "Noun"} \\
-      \midrule
-      3-POS sequences & \textit{"Article Noun Verb", "Noun Verb Article", "Verb Article Noun"} \\
-      \bottomrule
-  \end{tabular}
-  }
-
-  \vspace{0.2cm}
-
-  In practice the POS are more detailed, for example instead of just considering \textit{eat} as a verb, a more detailed POS can be the verb and its tense \textit{VerbSimplePresent}, the same goes for the other type of POS.
 \end{definition}
+
+The following example showcases a sentence in the 3-POS (POS sequences of size 3) text representation.
+
+\resizebox{\linewidth}{!}{
+\begin{tabular}{l p{5cm}}
+    \toprule
+    Sentence & \textit{"The", "cat", "eat", "a", "fish"} \\
+    POS & \textit{"Article", "Noun", "Verb", "Article", "Noun"} \\
+    \midrule
+    3-POS sequences & \textit{"Article Nounp Verb", "Noun Verb Article", "Verb Article Noun"} \\
+    \bottomrule
+\end{tabular}
+}
+
+In practice the POS are more detailed, for example instead of just considering \textit{eat} as a verb, a more detailed POS can be the verb and its tense \textit{VerbSimplePresent}, the same goes for the other type of POS.
 
 The MF method can be applied to the $n$-POS text representation to turn each document into a feature vector.
 Then they can be compared using distance metrics to find distance between documents.
@@ -78,7 +73,7 @@ The two following information can be intuitively observed on this plot:
 
 Using the smoothed Z-Score Cosine distance, the most appropriate configuration for the $n$-POS text representation on St-Jean is $2$-POS with $250$-MF and $3$-POS with $1000$-MF.
 
-\begin{figure}
+\begin{figure}[!t]
   \centering
   \caption{Average precision over the $n$-MF for the rank list generated using the Z-Score normalized Cosine distance on St-Jean's $n$-POS text representation.}
   \label{fig:n_pos}
@@ -100,7 +95,7 @@ Two configurations are retained using the $n$-POS text representation.
 The first is the $2$-POS with the $250$-MF and the Z-Score Cosine Distance.
 The second is $3$-POS with the $1000$-MF and the Z-Score Manhattan distance.
 
-\begin{table}
+\begin{table}[!t]
   \centering
   \caption{Average precision for every distance metrics with the $n$-POS representation on St-Jean}
   \label{tab:n_pos}

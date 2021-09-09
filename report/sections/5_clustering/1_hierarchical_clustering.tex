@@ -80,7 +80,7 @@ This overhead have a complexity of $O(1 + 2 + 3 + ... + N - 1) = O(\frac{N * (N 
 In other words, with the workaround, each time the algorithm is run, all the merges computed at the previous run must re-recomputed.
 To avoid this overhead, the agglomerative clustering algorithm was reimplemented to allow access to the clusters at each step.
 
-\begin{example}
+\begin{example}[!t]
   \caption{Agglomerative clustering}
   \label{ex:agglomerative_clustering}
 
@@ -195,14 +195,14 @@ We can clearly observe a linear relationship between the average precision and t
 The linear regression for the single linkage have an r-value of $10^{-11}$, $10^{-12}$ for the average linkage and $10^{-6}$ for the complete linkage.
 This result further motivate this assumption.
 
-\begin{figure*}
+\begin{figure*}[!t]
   \centering
   \caption{Evaluation methodology for the clustering}
   \label{fig:clustering_evaluation_methodology}
   \includegraphics[width=0.7\linewidth]{img/clustering_evaluation_methodology.png}
 \end{figure*}
 
-\begin{table}
+\begin{table}[!t]
   \centering
   \caption{Best $B^3_{F_1}$ with hierarchical clustering on every rank lists and linkage criterion}
   \label{tab:hierarchical_clustering}
@@ -263,7 +263,7 @@ This result further motivate this assumption.
   }
 \end{table}
 
-\begin{figure}
+\begin{figure}[!t]
   \caption{Optimal clustering $B^3_{F_1}$ correlation with rank list AP}
   \label{fig:correlation_average_precision_b3f1}
 
