@@ -12,9 +12,9 @@ Compression techniques are also evaluated and used.
 Once each intermediate representations of the corpora, namely the rank lists, are created and evaluated.
 A hierarchical clustering model is applied.
 With this model, a cut in the rank list which discriminate the same authors documents to different authors documents is required.
-Three solutions to find the cut best position are proposed.
+Three solutions to find the best cut position are proposed.
 
-The first is a fully unsupervised method based on the Silhouette Score.
+The first is a fully unsupervised method based on the Silhouette score.
 We added an extra hyperparameter to the Silhouette-based clustering and tweaked it for the authorship clustering problem.
 By doing so, this model improves its clustering results in average by $7\%$ across the three corpora.
 
@@ -26,21 +26,21 @@ This strategy gives the best results for the individual methods.
 The last technique to perform the cut is also supervised and is based on a logistic regression model.
 For any new corpus, this model is used to predict the best position in the rank list for the cut.
 
-The three methods to find the cut for the hierarchical clustering give good results close to the best clustering achievable for the rank lists used.
+The three methods to find the best cut for the hierarchical clustering give good results close to the best clustering achievable for the rank lists used.
 Additionally, we demonstrated a correlation between the rank lists quality and the clustering quality.
 
-In a second part of this study, two rank lists' fusion method are proposed and evaluated.
+In a second part of this study, two rank list fusion method are proposed and evaluated.
 This proposition come from the idea that combining good rank lists can give one better than each individual one.
 One fusion technique uses the Z-Score normalization and the other one convert the rank list scores into probabilities using multiple logistic regression.
 The Z-Score fusion technique show a significant improvement of the results when compared to the best rank list used for the fusion.
 Whereas the logistic regression fusion procedure give slightly worse results but still shown a significant stabilization of the results.
 The rank list produced with the logistic regression fusion give a rank list quality equivalent to the average quality of the rank list used.
-These results motivate the rank lists' fusion's beneficial aspect for unsupervised task such as the authorship clustering problem.
+These results motivate the rank list fusion's beneficial aspect for unsupervised task such as the authorship clustering problem.
 
 Two veto-based techniques are proposed and evaluated to try to further improve the fused rank list's quality.
 No real improvements are found using the proposed veto strategies on high quality rank lists (more than $0.7$ in AP).
 
-To further motivate the strength of the rank lists' fusions, we showed a correlation between the rank lists' variety and the improvements provided when fusing rank lists.
+To further motivate the strength of the rank list fusion, we showed a correlation between the rank lists variety and the improvements provided when fusing rank lists.
 We showed that by using for the fusion, rank lists produced along different text representations increase more the effectiveness of resulting rank list than using rank lists with the same text representation but with different distance measures.
 
 At the end of this study, we evaluated the clustering models using the rank list obtained by fusion.

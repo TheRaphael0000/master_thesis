@@ -7,7 +7,7 @@ This section aim to evaluate the vector representation using the most frequent (
 The MF method only have one parameter: $n$.
 $n$ is the number of most frequent items to consider.
 For the tokens and lemmas text representation, no clear $n$ value is to choose over others.
-Depending on the documents' length, previous studies have shown that using a $n$ value between $50$ and $500$ tends to produce good results for the token text representation~\cite{savoy_text_representation}.
+Depending on the document length, previous studies have shown that using a $n$ value between $50$ and $500$ tends to produce good results for the token text representation~\cite{savoy_text_representation}.
 
 One of the main advantage of this representation is that they can be easily explained.
 The feature vectors can be show to the users to justify the answers.
@@ -20,7 +20,7 @@ In the previous example, the lemmatization remove the ambiguity caused by \texti
 \textit{Saw} can either be: The past tense of the verb \textit{to see} or the \textit{saw}, the tool.
 The lemmatization algorithm, using the context of the sentence, can remove the ambiguity.
 
-The 40 most frequent tokens and lemmas in the St-Jean corpus are showed in Table~\ref{tab:tokens_occurences_st_jean} and Table~\ref{tab:lemmas_occurences_st_jean} in annex.
+The 40 most frequent tokens and lemmas in the St-Jean corpus are showed in Annex (Table~\ref{tab:tokens_occurences_st_jean} and Table~\ref{tab:lemmas_occurences_st_jean}).
 
 \subsection{MF Tokens and Lemmas evaluation \label{sec:tokens_lemmas_eval}}
 
@@ -32,7 +32,7 @@ The proposed methodology is to create rank lists for every proposed distance mea
 The $n$ value is also explored between $250$ and $2000$ with a step of $250$.
 
 The two plots in Figure~\ref{fig:tokens_lemmas} shows the average precision (AP) for the resulting rank lists over $n$ for each distance measure.
-Table~\ref{tab:tokens_lemmas} in annex shows the values used to create this graph.
+Table~\ref{tab:tokens_lemmas} in Annex shows the values used to create this graph.
 
 This representation seem to have good results with $n=500$ for most of the distance metrics, this corroborates previous studies results.
 Few distance metrics, such as Manhattan distance, Tanimoto distance or Clark distance can give better results with slightly bigger vectors ($750$-MF or $1000$-MF tokens/lemma).
@@ -44,7 +44,7 @@ The AP when using the token representation tends to decrease faster than the AP 
 The Euclidean distance seems to be the least appropriate distance measure for this task.
 The Clark distance have a really poor average precision when the MF tokens vector is too small, but after reaching $750$ it produces one of the best pay-off of the experiment.
 
-Using the best $n$ with these text representations, the best distance metric can increase the average precision by a factor of $13$ to $17$ \%.
+Using the best $n$ with these text representations, the best distance metric can increase the average precision by $13$ to $17$ \%.
 Overall, the Cosine distance seem to be one of the most appropriate choice when dealing with these corpora and text representations.
 
 The retained distance metrics and $n$-MF for the tokens text representations are:
@@ -84,13 +84,13 @@ Here $t$ range between 9000 and 250 with steps of 250 tokens.
 From these texts, the $750$-MF tokens text representation is used in conjunction with the Z-Score normalized Cosine distance to compute the rank lists.
 
 Figure~\ref{fig:degradation} shows the rank lists evaluated using the average precision, RPrec and HPrec over the number of tokens.
-The full evaluation is showed in Table~\ref{tab:degradation} in annex.
+The full evaluation is showed in Annex (Table~\ref{tab:degradation}).
 
-Every metric decrease over the text size.
+Every metric decreases over the text size.
 This indicates that it becomes harder to determinate documents pairs with the same author as the text size decrease.
 
 PAN16 corpus is a difficult corpus due to its small size, thus extracting reliable features for each text to estimate each style is also a difficult task.
-After multiple tests, the PAN @ CLEF 2016 corpus is not used further in this study due to its difficulty in finding reliable Stylometric clues.
+After multiple tests, the PAN @ CLEF 2016 corpus is not used further in this study due to its difficulty in finding reliables stylometric clues.
 For this study, having standard and easier corpus is required in order to show the proposed methods.
 
 \begin{figure}

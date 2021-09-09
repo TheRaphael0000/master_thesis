@@ -3,7 +3,7 @@
 \subsection{Method}
 
 To learn at which position in the rank list the cut should be, this third idea is to train a linear model.
-The model aim to learn to discriminate the same authors document pairs from different authors document pairs in a rank list.
+The model aims to learn to discriminate the same authors document pairs from different authors document pairs in a rank list.
 
 To train the model, samples are created for each link in a training rank list.
 The links labels are either \textit{true links} when both document in the link are from the same author or \textit{false link} otherwise.
@@ -15,7 +15,7 @@ The value is normalized by the size of the rank list.
 This allows to train in more generically manner, such that the model can be used to predict on any rank list size.
 The logarithm scale is used to have a greater granularity for the top ranked links.
 
-Second feature aim to provide to the model that the small distances or large similarities are generally true links.
+Second feature aims to provide to the model that the small distances or large similarities are generally true links.
 
 Using these two features, the model can, depending on each link rank and the score, determinate if the link is a true link.
 A model trained with these features does not depend on the text language nor the corpus size.
@@ -27,8 +27,8 @@ To find the cut in the testing rank list, the fitted model predict the probabili
 A trained logistic regression model can be used to predict true link probabilities on any other rank lists produced with the same distance metrics.
 
 From these predictions, a probability threshold must be chosen.
-For example, having a probability threshold at $0.5$, aim to minimize both false negatives and the false positives.
-The threshold used to optimize the $B^3_{F_1}$ should be $0.5$, since this metrics aim to optimize both the recall and the precision which respectively aim to minimize false negatives and false positives.
+For example, having a probability threshold at $0.5$, aims to minimize both false negatives and the false positives.
+The threshold used to optimize the $B^3_{F_1}$ should be $0.5$, since this metrics aims to optimize both the recall and the precision which respectively aims to minimize false negatives and false positives.
 
 The probability threshold can be adjusted for a cost minimization case.
 For example if false negatives are more important to minimize, a probability threshold at $0.6$ can be selected instead or $0.4$ if the false positive should be minimized.
@@ -82,7 +82,7 @@ Example~\ref{ex:linear_interpolation} showcases a linear interpolation of the sc
 
 To evaluate the regression-based clustering approach: the Oxquarry, Brunet, St-Jean A and B corpora were used.
 
-Each retained rank list for each corpus is computed and used for the experiment, see their evaluation in Table~\ref{tab:rls_oxquarry_brunet}~and~\ref{tab:rls_st_jean} in annex.
+Each retained rank list for each corpus is computed and used for the experiment, see their evaluation in Annex (Table~\ref{tab:rls_oxquarry_brunet} and Table~\ref{tab:rls_st_jean}).
 A logistic regression model is trained with each rank list.
 This step corresponds to the training phase.
 

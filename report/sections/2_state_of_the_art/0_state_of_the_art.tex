@@ -26,12 +26,12 @@ The model can also answer \textit{do not know} when not enough evidence are avai
 It obtained one of the best results when compared to the other model of the PAN @ CLEF 2014.
 
 During the PAN @ CLEF 2016~\cite{pan16}, in the authorship clustering shared task, the participants were given multiple collections of documents, to identify authorship links and group documents by the same author.
-The documents are in 3 different languages and single authored.
+The documents are in three different languages and single authored.
 The solutions proposed by Bagnall~\cite{bagnall_pan16} for this problem was to use a recurrent neural network to create a language model for the given documents. This model can then compute similarities between documents.
 On the other hand, Kocher~\cite{kocher_pan16} create for each text a feature vectors based on the most frequent terms in the corpus.
 Above a certain distance threshold between the texts, it can indicate a potential authorship link.
 
-In Kocher and Savoy (2018)'s paper~\cite{kocher_linking}, they aim to evaluate different text representation scheme for the authorship linking task.
+In Kocher and Savoy's (2018) paper~\cite{kocher_linking}, they aim to evaluate different text representation scheme for the authorship linking task.
 They compared the authors style, using feature vectors constructed on the most frequent occurrences of the following text representations: words frequencies, lemma frequencies, Part-Of-Speach (POS) tags frequencies, sequences of POS tags, as well as $n$-grams frequencies.
 The distance measures used to compare the vectors are: $L^1$ norms (Manhattan, Tanimoto), $L^2$ norm (Matusita, Clark), inner products (Cosine distance) and the Jeffery divergence.
 They find out that depending on the corpus, text representation and evaluation metric used, no clear distance measures text were giving the best result for all the text representations.

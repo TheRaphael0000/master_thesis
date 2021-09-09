@@ -1,6 +1,6 @@
 \section{Methods \label{sec:rank_lists_fusion}}
 
-The idea of rank lists' fusion is to combine multiple rank lists in such a way that the resulting rank list is a more accurate modelling of a perfect rank list.
+The idea of rank list fusion is to combine multiple rank lists in such a way that the resulting rank list is a more accurate modelling of a perfect rank list.
 A perfect rank list contain every true links (same author document pairs) at the top and every false links (different author document pair) at the bottom, therefore maximizing the metrics in Section~\ref{sec:rl_eval}.
 
 The first proposed method is based on the Z-Score normalization.
@@ -88,19 +88,19 @@ This second fusion method is based on logistic regression and is called regressi
 Each rank list is ordered by a score, this score depends on the distance measure and text representation used, thus the order of magnitude across the rank list can be different.
 To avoid this problem, the second solution is to express the scores into a probability of being a true link acording to a model.
 To do so, the logistic regression is used.
-This method is similar to the one proposed in \textit{Le Calvé and Savoy (2000)}'s paper~\cite{le_calve_database_merging} and was used to merge rank list issued from information retrieval systems.
+This method is similar to the one proposed in \textit{Le Calvé and Savoy's (2000)} paper~\cite{le_calve_database_merging} and was used to merge rank list issued from information retrieval systems.
 
-The idea is to learn a logistic regression model for each combination of text representation and distance metrics (here denoted \textit{type of rank list}).
+The idea is to learn a logistic regression model for each combination of text representation and distance metrics (denoted \textit{type of rank list}).
 From each distinct rank list, features for each link are created.
 The features are: the log of the relative rank and the link score.
-Since a probability of being a true link is desired, the target value (labels) for each link is either $1.00$ for the true links or $0.00$ when it is a false link.
+Since a probability of being a true link is desired, the target value (labels) for each link is either $1.0$ for the true links or $0.0$ when it is a false link.
 This feature construction is the same as the one used for the regression-based clustering method (ref. Section~\ref{sec:regression_based_clustering}).
 
 One model per type of rank list is trained.
 This model can provide, for any new same type rank lists, true link probabilities for each link.
 
 The probability framework can be used on the rank lists with probability scores.
-To obtain the most reliable probability given multiple observations (multiple rank lists), the regression fusion consists in computing the expected value of each link's probability using these observations.
+To obtain the most reliable probability given multiple observations (multiple rank lists), the regression fusion consists in computing the expected value of each link probability using these observations.
 In this case, the final value for sorting the rank list is an arithmetic mean of the probabilities, since no weighting is used on the rank lists.
 
 The main advantage of this methodology is that it uses concrete statistical concepts.
@@ -143,14 +143,14 @@ The $-\infty$ method is the only real veto, in the first meaning of the veto def
 The $-n$, method provide a way to avoid having tie and keep the strong impact of the $-\infty$-veto when a lot of rank list are fused.
 The $n$ correspond to the number of rank lists to fuse.
 For example, if $9$ rank lists are fused.
-By setting any link score to $-9$, this ensures that even if every other rank lists have a true link probability of $1.00$ for this link.
-The resulting probability will be $(-9 + 8 \cdot 1.00) / 9 = -0.11$, which is lower than $0.00$, the lowest probability obtainable by the regression.
+By setting any link score to $-9$, this ensures that even if every other rank lists have a true link probability of $1.0$ for this link.
+The resulting probability will be $(-9 + 8 \cdot 1.0) / 9 = -0.11$, which is lower than $0.0$, the lowest probability obtainable by the regression.
 
 The theoretical maximal veto that keep the order is $nt + 1 - n - \epsilon$, with $\epsilon$ a small value (e.g. $2^{-20}$) and $t$ the threshold.
-Since even if all the other rank list have a probability of $1.00$ with this veto, the values obtained after applying the veto are smaller than the threshold thus ranked at the rank list bottom.
+Since even if all the other rank list have a probability of $1.0$ with this veto, the values obtained after applying the veto are smaller than the threshold thus ranked at the rank list bottom.
 
 Proof:
-$$\frac{(nt + 1 - n - \epsilon) + (n - 1) \cdot 1.00}{n} = \frac{nt - \epsilon}{n} = t - \frac{\epsilon}{n}$$
+$$\frac{(nt + 1 - n - \epsilon) + (n - 1) \cdot 1.0}{n} = \frac{nt - \epsilon}{n} = t - \frac{\epsilon}{n}$$
 
 Instead $-n$ was chosen to keep this approach simple.
 
@@ -192,7 +192,7 @@ Link with $ID = 5$ is still rank at the bottom.
 
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{Rank lists' fusion}
+    \subcaption{Rank lists fusion}
     \resizebox{\linewidth}{!}{
     \begin{tabular}{l l l}
       \toprule
@@ -243,7 +243,7 @@ Link with $ID = 5$ is still rank at the bottom.
 
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{Rank lists' fusion}
+    \subcaption{Rank lists fusion}
     \resizebox{\linewidth}{!}{
     \begin{tabular}{l l l}
       \toprule
@@ -294,7 +294,7 @@ Link with $ID = 5$ is still rank at the bottom.
 
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{Rank lists' fusion}
+    \subcaption{Rank lists fusion}
     \resizebox{\linewidth}{!}{
     \begin{tabular}{l l l}
       \toprule
@@ -317,12 +317,12 @@ Link with $ID = 5$ is still rank at the bottom.
 As an extension to the veto method, an additional desired constraint is to favor top ranked link and as well as penalizing bottom ranked links.
 
 In any rank list, top ranked links should correspond to documents with the same author, and bottom ranked links should correspond to documents with different authors.
-Assuming that the top ranks are true links after the rank lists' fusion, these links should also appear top ranked.
+Assuming that the top ranks are true links after the rank list fusion, these links should also appear top ranked.
 The same reasoning can be applied for the bottom links by assuming them as false links.
 A weighting curve can be design accordingly.
 The idea of this curve is to boost the score of top ranked links and hindered the score of bottom ranked links before the fusion.
 
-First, the scores' distribution must be understood.
+First, the score distribution must be understood.
 By observing the graph score/distance over rank, Figure~\ref{fig:distance_over_rank}, we can clearly observe the top rank links and bottom rank links have a sharper difference in distance than the ones in the middle section.
 
 Using the inverse of the sigmoid function, a weighting curve satisfying our constraints can be modelled.
@@ -350,7 +350,7 @@ Also, since the sigmoid function is defined from $-\infty$ to $+\infty$ and the 
 This interval directly control the steepness of the curve and thus influence the strength of the veto.
 To control the steepness, a parameter called $c$ is introduced.
 $c$ correspond to a position on the x-axis of the sigmoid function.
-The sampling of the sigmoid inverse is done in the interval $\left[S(c), S(c)\right]$.
+The sampling of the sigmoid inverse is done in the interval $\left[S(-c), S(c)\right]$.
 A large interval gives a greater steepness and a small interval a less steep curve.
 $c$ can not be equal to 0 otherwise the interval consist of a single number (also known as degenerate interval).
 The $c$ parameter must be in the interval $\left]0, \infty\right[$.

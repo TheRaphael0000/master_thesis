@@ -9,7 +9,7 @@ When fusing rank lists with the regression fusion, pairs of corpora are required
 When evaluating this method with four corpora (Oxquarry, Brunet, St-Jean A and St-Jean B), this creates $4^2 = 16$ possible corpus pairs which yield one rank list each.
 These two methods are summarized in the schema in Figure~\ref{fig:schema-fusion}.
 
-Table~\ref{tab:fusions_scores} in annex contain the rank lists' evaluation, for every corpus, with every retained rank lists for the fusion.
+Table~\ref{tab:fusions_scores} in Annex contain the rank list evaluation, for every corpus, with every retained rank lists for the fusion.
 The average precision obtained with the Z-Score rank lists is greater than each individual methods for every corpus except for the Oxquarry corpus.
 The Oxquarry Z-Score rank list have an average precision of 0.84 but using the individual methods: \textit{the Cosine distance or the Clark distance with the $750$-MF tokens} gives an average precision of $0.89$.
 The corpus with the worst average precision using the Z-Score rank lists is obtained on Brunet with $0.76$ and is as efficient as the individual \textit{BZip2 compression with CBC distance} method.

@@ -2,21 +2,20 @@
 
 \subsection{Definition and Examples}
 
-The clustering aim to group items such that the most similar items are in the same group.
+The clustering aim to group items such that most similar items appear in the same group.
 These groups of similar items are called clusters.
 
 Example~\ref{ex:clustering} shows the clustering task for 2D points.
 The points are grouped according to their distance.
 
-For the case of authorship clustering, finding the authorship function can be useful (Definition~\ref{def:authorship} in Section~\ref{sec:definitions}).
+For the case of authorship clustering, finding the authorship function can be useful (Definition~\ref{def:authorship}).
 But this task can be hard since the real author (ground truth labels) are generally not available.
 Without example, finding the authorship function is not possible.
 
 For the authorship clustering, we only aim to group similar texts instead of finding the actual authors.
-This task can be solved by finding the relevant set (Definition~\ref{def:relevant_set} in Section~\ref{sec:definitions}).
+This task can be solved by finding the relevant set (Definition~\ref{def:relevant_set}).
 
-To find clusters from the relevant set, a simple method is to:
-Consider each pair of documents in the relevant set as: \textit{in the same cluster}.
+To find clusters from the relevant set, a simple method is to, consider each pair of documents in the relevant set as \textit{in the same cluster}.
 The clusters are created using transitivity.
 
 One main issue arise with this method.
@@ -47,7 +46,7 @@ Chapter~\ref{sec:clustering} will introduce and evaluate methods using rank list
 
 \subsection{Clustering Evaluation Metrics \label{sec:clustering_evaluation_meterics}}
 
-The methods introduced in this section are to evaluate and compare clustering models.
+The methods introduced in this section are applied to evaluate and compare clustering models.
 Therefore, the ground truth labels are required.
 The metrics used are from the BCubed family (also called $B^3$, in this report) \cite{bcubed}.
 

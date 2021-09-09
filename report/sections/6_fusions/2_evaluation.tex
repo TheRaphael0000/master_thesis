@@ -1,11 +1,11 @@
 \section{Evaluation}
 
-\subsection{Rank Lists' Fusions Evaluation \label{sec:eval_fusion}}
+\subsection{Rank Lists Fusion Evaluation \label{sec:eval_fusion}}
 
 In this experiment, the goal is to understand if fusing individual rank lists can create better rank lists.
 The methodology used, is to create $n$ isolated rank lists and fuse them for every $r$ rank lists combinations ($C^n_r$ possible rank lists combinations).
 
-The rank list used are the ones obtained by using the $9$ retained rank list methods ($n=9$), see Table~\ref{tab:9rl} in Section~\ref{sec:individual_methods_summary}.
+The rank list used are the ones obtained by using the nine retained rank list methods ($n=9$), see Table~\ref{tab:9rl} in Section~\ref{sec:individual_methods_summary}.
 They represent the best configuration retained for each text representation.
 The rank list are fused using the two proposed methods: Z-Score fusion and regression fusion.
 
@@ -47,13 +47,13 @@ Every rank list is present in the argmax.
 With the Z-Score fusion, the best results are obtained with rank lists using different text representations.
 This observation will be further explorer in Section~\ref{sec:fusion_diversity}.
 
-The Z-Score fusion give best results overall.
+Overall, The Z-Score fusion give best results.
 
 \begin{example*}
   \caption{Fusion evaluation methodology}
   \label{ex:fusion_eval}
 
-  Imagine a simple scenario where 3 individual rank lists are fused 2 by 2.
+  Imagine a simple scenario where three individual rank lists are fused two by two.
   This corresponds to $C^3_2 = 3$ possible fusions combinations.
 
   \subcaption{Rank lists}
@@ -130,7 +130,6 @@ The Z-Score fusion give best results overall.
   If the rank list by fusion is better for one combination than Single-Mean, the fusion earn 1 point.
   If the rank list by fusion have the same results as Single-Mean, it is a tie.
   Otherwise, the Single-Mean earn 1 point.
-
   The same goes for Single-Max.
 
   Here is the sign test for the example.
@@ -153,7 +152,7 @@ The Z-Score fusion give best results overall.
 
 \begin{figure}
   \centering
-  \caption{Evaluation of every combination of 4 rank lists' fusions using Z-Score and Regression}
+  \caption{Evaluation of every combination of 4 rank lists fusions using Z-Score and Regression}
   \label{fig:fusions}
 
   \subcaption{Testing on St-Jean A (training St-Jean B, for the Regression fusion)}
@@ -337,7 +336,7 @@ The Z-Score fusion give best results overall.
 
 \begin{table*}
   \centering
-  \caption{Rank lists' fusion sign test. \textit{The star (*) indicate a Binomial test p-value smaller than 5\%}}
+  \caption{Rank lists fusion sign test. \textit{The star (*) indicate a Binomial test p-value smaller than 5\%}}
   \label{tab:fusion_sign_test}
 
   \subcaption{Testing St-Jean A (training St-Jean B, for the Regression fusion)}
@@ -379,7 +378,7 @@ The Z-Score fusion give best results overall.
 \subsection{Veto Evaluation}
 
 In this experiment, the goal is to understand if the veto method can improve the average precision on the fused rank lists when using the regression fusion method.
-To do so, the St-Jean retained rank list are used (ref. Table~\ref{tab:rls_st_jean} in annex).
+To do so, the St-Jean retained rank list are used (ref. Table~\ref{tab:rls_st_jean} in Annex).
 The fusion scheme is learnt on first St-Jean A and trained on St-Jean B (ref. Section~\ref{sec:regression_fusion}), then inversely.
 
 After computing the probabilities for each link in each rank list on the testing set, the probabilities under the threshold are set according to each proposed veto strategy (set to $0$, $-1$, $-n$, $-\infty$).
@@ -389,7 +388,7 @@ A threshold of $0.50$ is a theoretical upper bound.
 After a threshold of $0.50$, the false link probability is smaller than the true link probability.
 Having a veto on a link more likely to be true link than false link is a bad idea.
 
-Rank lists' regression fusion are normally computed with the probabilities average, with one small difference for the $-\infty$ strategy when a $-\infty$ is encountered in the mean, the mean will always be $-\infty$.
+Rank lists regression fusion are normally computed with the probabilities average, with one small difference for the $-\infty$ strategy when a $-\infty$ is encountered in the mean, the mean will always be $-\infty$.
 To understand if the veto improve the results, the average precision gain is compute between the rank list with and without the veto strategy.
 
 The average precision gain over the threshold value is visually presented in Figure~\ref{fig:veto}.
@@ -470,16 +469,16 @@ A large gain, when the rank lists are different, thus a low rank list correlatio
 
 The fusion strategy used here is the Z-Score fusion, since this strategy is parameterless and obtained satisfying results during previous experiments.
 As for previous experiments dealing with fusion, the gain in average precision when comparing a set of rank list to a fused rank list can be established in the two following ways: \textit{Single-Mean} and \textit{Single-Max}.
-Single-Mean represent the rank lists' mean average precision and Single-Max the rank list maximal average precision.
+Single-Mean represent the rank list mean average precision and Single-Max the rank list maximal average precision.
 Example~\ref{ex:gain} in Section~\ref{sec:evaluation_comparison} contain a small example with two rank lists for the Single-Mean and Single-Max methods to compute the average precision gain.
 
 Table~\ref{tab:rl_correlations} show the Kendall correlation coefficient for every pairwise rank lists combination in St-Jean (retained rank lists, see Table~\ref{tab:9rl} in Section~\ref{sec:individual_methods_summary}).
 
-The most similar rank lists pair are the two rank list using letters $n$-grams (0.95).
+The most similar rank lists pair are the two rank list using letters $n$-grams (0.95, id 4 and 5).
 This result can be easily understood, since both rank list use a similar text representation and distance measure.
 They thus obtain similar rank lists.
 
-The least similar rank lists pair are the BZip2 compression and the $250$-MF $2$-POS (0.66).
+The least similar rank lists pair are the BZip2 compression and the $250$-MF $2$-POS (0.66, id 6 and 7).
 The compression method is the simplest approach, this method does not require to understand the text to create the rank list.
 As for the $250$-MF $2$-POS rank list, to create the rank list, it requires two level of understanding.
 First the parser need to understand texts to create the POS, and the second level are the short sequences which involve an even deep understanding of the text.

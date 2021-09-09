@@ -22,14 +22,14 @@ The mean Silhouette score is defined in Definition~\ref{def:silhouette}.
     \end{split}
   \end{gather*}
   With $C$ the set of clusters, $C_i$ the i-th cluster, $d(i, j)$ the distance between the document i and j.
-  $d(i, j)$ are pre-computed and used for the rank list.
+  $d(i, j)$ are pre-computed and also appear in the rank list.
 
   The value is ranged between -1 and 1, a large value indicate a good cohesion and good separation of the clusters (low intra-cluster distance, high nearest-cluster distance).
 \end{definition}
 
 The right number of cluster is not known.
 Using this technique, we suppose that the best number of clusters, is the one with the largest mean Silhouette score.
-Each step of the hierarchical clustering is evaluated with the mean Silhouette Score.
+Each step of the hierarchical clustering is evaluated with the mean Silhouette score.
 Only the one with the largest is kept.
 
 An alternative to this method is the Iterative Positive Silhouette (IPS) and was proposed in Layton, Watters, Dazeley (2011)~\cite{automated_unsupervised}.
@@ -39,11 +39,12 @@ This method uses the median Silhouette score instead, and use another stopping p
 
 For this experiment, the goal is to test the Silhouette-based hierarchical clustering method on the literature corpora.
 
-The rank lists used for this experiment are the ones from the retained text representation (9 for St-Jean and 7 for Brunet and Oxquarry), see Table~\ref{tab:rls_oxquarry_brunet}~and~\ref{tab:rls_st_jean} in annex.
+The rank lists used for this experiment are the ones from the retained text representation (9 for St-Jean and 7 for Brunet and Oxquarry).
+These are presented in Annex (Table~\ref{tab:rls_oxquarry_brunet} and Table~\ref{tab:rls_st_jean}).
 
 The evaluation methodology is presented in the schema in Figure~\ref{fig:clustering_evaluation_methodology}.
 The $B^3_{F_1}$ score and $r_{diff}$ average on the Silhouette-based clustering are presented in Table~\ref{tab:silhouette-based_clustering}.
-The complete table is available in Table~\ref{tab:silhouette-based_clustering_full} in annex.
+The complete table is available in Annex (Table~\ref{tab:silhouette-based_clustering_full}).
 
 The average r-ratio difference is a positive value ranging between $\left[0.17, 0.22\right]$ depending on the linkage criterion.
 Having an r-ratio larger than $0$ indicate that the estimated number of cluster on every corpus is overestimated.
@@ -112,7 +113,7 @@ Example~\ref{ex:alpha_correction} shows the $\alpha$ computation and usage.
 For example, by using $\alpha = -0.2$, we aim to correct this overshoot and increase the quality of the clustering results.
 This value was chosen by grid search to optimize the $B^3_{F_1}$.
 
-Table~\ref{tab:silhouette-based_clustering_alpha} show the evaluation with $\alpha = -0.2$, the complete table is available in Table~\ref{tab:silhouette-based_clustering_alpha_full} in annex.
+Table~\ref{tab:silhouette-based_clustering_alpha} show the evaluation with $\alpha = -0.2$, the complete table is available in Annex (Table~\ref{tab:silhouette-based_clustering_alpha_full}).
 
 With this correction technique, in average the $r_{diff}$ is closer to 0 and the average $B^3_{F_1}$ is increased in average by $7\%$ across all the corpora.
 With $\alpha = -0.2$, we obtained a $B^3_{F_1}$ only $8\%$ worse than the upper bound, instead of the $14\%$ obtained with $\alpha=0$.

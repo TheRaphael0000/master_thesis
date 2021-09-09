@@ -3,11 +3,11 @@
 To be able to compare vectors, different metrics can be used depending on the usage.
 Usually, two types of metrics for vector comparison can be used: Vector similarities and vector distances.
 The first yield a large value when the two vectors are similar, and the second a small value when they are closely related.
-Definitions~\ref{def:manhattan} to~\ref{def:jeffrey_divergence} are one of the few most common $L^1$/$L^2$/$cosine$-based distances.
+Definitions~\ref{def:manhattan} to~\ref{def:jeffrey_divergence} are one of the few most common $L^1$/$L^2$/$cosine$-based distances. We used the variable $n$ to indicate the vectors size.
 
 \begin{definition}[Manhattan distance\label{def:manhattan}]
   \begin{gather*}
-    dist_{Manhattan}(A, B) = \sum_{i=1}^{m} |a_i - a_i|
+    dist_{Manhattan}(A, B) = \sum_{i=1}^{n} |a_i - a_i|
   \end{gather*}
   The Manhattan distance is also known as the $L^1$ distance measure.
 
@@ -38,14 +38,14 @@ Definitions~\ref{def:manhattan} to~\ref{def:jeffrey_divergence} are one of the f
 
 \begin{definition}[Tanimoto distance]
   \begin{gather*}
-    dist_{Tanimoto}(A, B) = \frac{dist_{Manhattan}(A, B)}{\sum_{i=1}^{m} \mathrm{max}(a_i, b_i)}
+    dist_{Tanimoto}(A, B) = \frac{dist_{Manhattan}(A, B)}{\sum_{i=1}^{n} \mathrm{max}(a_i, b_i)}
   \end{gather*}
   Tanimoto distance is a $L^1$-based, it's a component-wise normalized version of the Manhattan distance.
 \end{definition}
 
 \begin{definition}[Euclidean distance]
   \begin{gather*}
-    dist_{Euclidian}(A, B) = \sqrt{\sum_{i=1}^{m}(a_i - b_i)^2}
+    dist_{Euclidian}(A, B) = \sqrt{\sum_{i=1}^{n}(a_i - b_i)^2}
   \end{gather*}
   The $L^2$ distance.
 \end{definition}
@@ -62,7 +62,7 @@ Definitions~\ref{def:manhattan} to~\ref{def:jeffrey_divergence} are one of the f
 
 \begin{definition}[Clark distance~\cite{kocher_verification}]
   \begin{gather*}
-    dist_{Clark}(A, B) = \sqrt{\sum_{i=1}^{m}\left(\frac{|a_i - b_i|}{a_i + b_i}\right)^2}
+    dist_{Clark}(A, B) = \sqrt{\sum_{i=1}^{n}\left(\frac{|a_i - b_i|}{a_i + b_i}\right)^2}
   \end{gather*}
   An $L^2$-based distance.
 \end{definition}
@@ -95,14 +95,14 @@ Definitions~\ref{def:manhattan} to~\ref{def:jeffrey_divergence} are one of the f
 
 \begin{definition}[Kullback-Leibler divergence]
   \begin{gather*}
-    dist_{kld}(A, B) = \sum_{i=1}^{m} a_i \cdot \log(\frac{a_i}{b_i})
+    dist_{kld}(A\ ||\ B) = \sum_{i=1}^{n} a_i \cdot \log(\frac{a_i}{b_i})
   \end{gather*}
   Kullback-Leibler divergence use the principle of relative entropy.
 \end{definition}
 
 \begin{definition}[Jeffrey divergence~\cite{kocher_verification}\label{def:jeffrey_divergence}]
   \begin{gather*}
-    dist_{j\_divergence}(A, B) = \sum_{i=1}^{m} (a_i - b_i) \cdot \log(\frac{a_i}{b_i})
+    dist_{j\_divergence}(A\ ||\ B) = \sum_{i=1}^{n} (a_i - b_i) \cdot \log(\frac{a_i}{b_i})
   \end{gather*}
   It represents the difference between two probability distribution.
 \end{definition}

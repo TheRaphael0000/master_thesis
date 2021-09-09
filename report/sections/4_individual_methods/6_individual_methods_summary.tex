@@ -8,7 +8,7 @@ Figure~\ref{fig:schema-rank_lists} contains a schema summarizing the steps to ob
 The nine retained methods are presented in Table~\ref{tab:9rl}.
 Four of them are using the $n$-MF tokens, two $n$-MF tokens $n$-grams, one compression techniques and two the $n$-POS with $n$-MF.
 
-The complete evaluation of the rank list produced on these text representation for the three literary corpora are presented in Table~\ref{tab:rls_oxquarry_brunet}~and~\ref{tab:rls_st_jean} in annex.
+The complete evaluation of the rank list produced on these text representation for the three literary corpora are presented in Annex (Table~\ref{tab:rls_oxquarry_brunet} and Table~\ref{tab:rls_st_jean}).
 
 \begin{figure*}
   \centering
@@ -43,22 +43,22 @@ The complete evaluation of the rank list produced on these text representation f
 
   \vspace{0.2cm}
 
-  \textit{Note: text representation and configuration with a star (*) are only used for the St-Jean corpus.}\\
+  \textit{Note: Text representation and configuration with a star (*) are only used for the St-Jean corpus.}\\
 \end{table*}
 
-\subsection{Distances' Matrix Visualization}
+\subsection{Distance Matrix Visualization}
 
-From a rank list, it is possible to create a distances' matrix (ref. Section~\ref{sec:distances_matrix}).
-Distances' matrices created from rank list can be visualized.
-To represent distances' matrices, each element of the matrix is mapped to a pixel in an 2D image.
+From a rank list, it is possible to create a distance matrix (ref. Section~\ref{sec:distances_matrix}).
+Distance matrices created from rank list can be visualized.
+To represent distance matrices, each element of the matrix is mapped to a pixel in an 2D image.
 The element value in the matrix is mapped to the pixel brightness.
 The low values are in light colors and large values in dark colors
 
 A good distance matrix should have each same author documents pair with a low distance (light color in the image) and different authors documents pairs with a large distance (dark color in the image).
-The greater the contrast between the true links (same author documents) and the false links is (different authors documents), the better the distances' matrix is.
+The greater the contrast between the true links (same author documents) and the false links is (different authors documents), the better the distance matrix is.
 
 To better understand more easily this matrix, authors are sorted alphabetically.
-If the distances' matrix can represent correctly the author style, same authors documents should have a low distance (light color in the image).
+If the distance matrix can represent correctly the author style, same authors documents should have a low distance (light color in the image).
 This should create light color squares in the diagonal.
 The square size is related to the number of document written by this author.
 The diagonal is the lightest color (white), since the distance between two same documents is always 0, with respect to the distance functions identity of indiscernible axiom.

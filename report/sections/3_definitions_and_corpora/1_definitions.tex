@@ -11,7 +11,7 @@ This section contains basic definitions and metrics to evaluate simple propertie
     X = ("\text{the}", "\text{quick}", "\text{brown}", "\text{fox}", "\text{.}")
   \end{gather*}
   To obtain tokens from a long string containing a non-tokenized document, a tokenizer is needed.
-  A document correspond to a sample without feature selection in the data science field.
+  A document correspond to a sample without feature selection.
 \end{definition}
 
 \begin{definition}[Author]
@@ -76,7 +76,7 @@ This section contains basic definitions and metrics to evaluate simple propertie
   \end{gather*}
 \end{definition}
 
-\begin{definition}[r ratio~\cite{pan16}]
+\begin{definition}[r Ratio~\cite{pan16}]
   The r ratio is the ratio between the number of different authors $k$ and the number of documents $N$ in a given corpus.
   \begin{gather*}
     r = \frac{k}{N}
@@ -89,16 +89,16 @@ This section contains basic definitions and metrics to evaluate simple propertie
   On this other hand, if $r$ is close to $1$, most of the document are written by a single authors and there are few true links.
 \end{definition}
 
-\begin{definition}[true links' ratio]
-  The true links' ratio is the ratio between the number of true links $|R|$ and the number of links $|L|$ in a given corpus.
+\begin{definition}[True link ratio]
+  The true link ratio denoted $tl_{r}$ is the ratio between the number of true links $|R|$ and the number of links $|L|$ in a given corpus.
   This ratio is an alternative to the r ratio and is correlated for corpus having the same number of documents per authors.
   \begin{gather*}
     tl_r = \frac{|R|}{|L|}
   \end{gather*}
   The value range in the interval $\left[0, 1\right]$.
 
-  The lower the true links' ratio is, the closer to the Singleton Cluster baseline the corpus is.
+  The lower the true link ratio is, the closer to the Singleton Cluster baseline the corpus is.
   The Singleton Cluster baseline considers every sample as a different label (aim to estimate: every document is from a different author).
 
-  With a large true links' ratio, the corpus can be estimated with a Single Cluster baseline, which consider every sample is in the same cluster (aim to estimate: every document are written by the same author).
+  With a large true link ratio, the corpus can be estimated with a Single Cluster baseline, which consider every sample is in the same cluster (aim to estimate: every document are written by the same author).
 \end{definition}

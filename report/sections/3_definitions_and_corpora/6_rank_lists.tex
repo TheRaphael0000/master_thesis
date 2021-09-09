@@ -17,7 +17,7 @@ For the authorship verification problem, the rank list can also be used to order
   \end{gather*}
 \end{definition}
 
-A ranked list for the authorship verification problem is an ordered list containing document pairs and a score for the pair.
+A ranked list denoted $L$ for the authorship verification problem is an ordered list containing document pairs and a score for the pair.
 These pairs are also called links.
 In most cases, the rank list contain every possible pairs of documents.
 
@@ -30,10 +30,10 @@ For the scoring function based on similarity, the rank list is sorted in decreas
 The most similar documents pairs are the most likely written by the same author.
 Thus, the top ranks should contain pairs of documents written by the same author.
 
-The computational cost to compute a rank list is $\frac{n \cdot (n - 1)}{2}$, with $n$ the number of documents.
-Thus, the computation complexity is $O(n^2)$.
-The computation cost to sort the rank list is ignored since it has a complexity of $O(n\log(n))$.
-The space complexity is also $O(n^2)$, for each document pair, the pair and the score have to be stored.
+The computational cost to compute a rank list is $\frac{N \cdot (N - 1)}{2}$, with $N$ the number of documents.
+Thus, the computation complexity is $O(N^2)$.
+The computation cost to sort the rank list is ignored since it has a complexity of $O(N\log(N))$.
+The space complexity is also $O(N^2)$, for each document pair, the pair and the score have to be stored.
 
 Example~\ref{ex:rank_list} shows the creation of a rank list using two-dimensional vectors and the Manhattan distance (presented in Section~\ref{sec:vectors_distances}).
 
@@ -246,16 +246,17 @@ Example~\ref{ex:rank_list_eval} showcases each metric for the rank list evaluati
 
 \end{example}
 
-\subsection{Rank Lists Relationship with Distances' Matrix \label{sec:distances_matrix}}
+\subsection{Rank Lists Relationship with Distance Matrix \label{sec:distances_matrix}}
 
-When computing the rank lists, each link have its distance calculated and can be represented in a matrix.
+When computing the rank lists, each document pair have its distance calculated.
+These can be represented into a matrix.
 In this matrix, each document represent a row and a column.
 The matrix elements are the distances between the two documents of the row and column.
 For the non-commutative distances functions, the whole matrix is used.
 For the commutative distances functions, only a triangle or symmetric matrix is required.
 
-The transformation can be effectuated either from a rank list to a distances' matrix or from a distances' matrix to a rank list.
-For some algorithm or computations, the distances' matrix representation is preferable and for others the rank list representation is better.
+The transformation can be effectuated either from a rank list to a distance matrix or from a distance matrix to a rank list.
+For some algorithm or computations, the distance matrix representation is preferable and for others the rank list representation is better.
 
 Example~\ref{ex:distances_matrix} show the two representations for the same distances.
 
@@ -265,7 +266,7 @@ Example~\ref{ex:distances_matrix} show the two representations for the same dist
   \label{ex:distances_matrix}
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{Rank list for distances' matrix from Example~\ref{ex:distances_matrix_mx}\label{ex:distances_matrix_rl}}
+    \subcaption{Rank list for distance matrix from Example~\ref{ex:distances_matrix_mx}\label{ex:distances_matrix_rl}}
     \begin{tabular}{l c r}
       \toprule
       Rank & Vector Pair IDs & Distance \\
@@ -284,7 +285,7 @@ Example~\ref{ex:distances_matrix} show the two representations for the same dist
 
   \begin{subexample}{\linewidth}
     \centering
-    \subcaption{Distances' matrix for rank list from Example~\ref{ex:distances_matrix_rl}\label{ex:distances_matrix_mx}}
+    \subcaption{Distance matrix for rank list from Example~\ref{ex:distances_matrix_rl}\label{ex:distances_matrix_mx}}
     \begin{tabular}{c|c c c c}
       \toprule
         & 0 & 1 & 2  & 3 \\

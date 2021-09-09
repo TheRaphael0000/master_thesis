@@ -8,7 +8,7 @@ In the case where words are used, the most frequent items will be the most commo
 
 By only considering the most frequent items, this ensures that no all the document details will be synthesized in the vector, but rather the most important in the document.
 The vector will thus contain the style of the document rather than the topic of the document.
-When comparing these vector, this method focus on the difference between the authors styles rather than the topic of the documents or the time period the text was written in.
+When comparing these vector, this method focus on the difference between the author styles rather than the topic of the documents or the time period the text was written in.
 This assumption is experimented in this study in Section~\ref{sec:influance_mf_restriction}.
 
 Previous studies have shown the importance of having documents of good quality and with at least 5000 tokens to have reliable results.
@@ -16,9 +16,9 @@ Skilled authors can easily change their style to imitate others for small texts,
 This problematic is explored in Section~\ref{sec:importance_of_text_size}.
 
 To be able to express a document as a feature vector of size $n$, the strategy used is to find the $n$ most frequent ($n$-MF) items in a corpus.
-For each document, compute the items' relative frequency on the $n$-MF items.
-The items' occurrence vector is the number of times each item is present in a document text representation.
-The items' relative frequency vector is obtained by normalizing the items' occurrence vector such that its $L_1$ norm is 1, see Definition~\ref{def:l_1}.
+For each document, compute the item relative frequency on the $n$-MF items.
+The item occurrence vector is the number of times each item is present in a document text representation.
+The item relative frequency vector is obtained by normalizing the item occurrence vector such that its $L_1$ norm is 1, see Definition~\ref{def:l_1}.
 
 \begin{definition}[$L_1$ norm]
   \label{def:l_1}
@@ -29,10 +29,9 @@ The items' relative frequency vector is obtained by normalizing the items' occur
 \end{definition}
 
 By normalizing the vector, this ensures that long and short texts are comparable.
-The items' relative frequency vector will represent the MF items proportions contained in a document.
+The item relative frequency vector will represent the MF items proportions contained in a document.
 
-For example, if a corpus contains novels of multiple genres (e.g. Comedy, Sci-fi, Fantastic, Romance).
-With the right $n$, most of the items specific to the genre will be discarded, since their frequency should be lower than the non topic related items which are contained in every document.
+For example, if a corpus contains novels of multiple genres (e.g. Comedy, Sci-fi, Fantastic, Romance) adopting the right $n$, most of the items specific to the genre will be discarded, since their frequency should be lower than the non topic related items which are contained in every document.
 The frequencies of these items should reflect the style of the author.
 
 In this study, multiple text representation are explored, such as tokens/lemmas (Section~\ref{sec:tokens_lemmas}), substrings (Section~\ref{sec:substrings}) and POS sequences (Section~\ref{sec:pos_sequences}).
@@ -100,7 +99,8 @@ In this study, except stated otherwise, the Lidstone smoothing is used with $\la
 Previous research show that it tends to produce better results~\cite{savoy_stylo}.
 
 \begin{definition}[Lidstone smoothing~\cite{savoy_stylo} \label{def:lidstone_smoothing}]
-  $p(t_i, X_j)$ is the probability of occurrence of an item $t_i$ in the document $X_j$ using the maximum likelihood principle with the Lidstone smoothing.
+  $p(t_i, X_j)$ denotes the probability of occurrence of an item $t_i$ in the document $X_j$.
+  Using the maximum likelihood principle with the Lidstone smoothing this probability is estimated as :
   \begin{gather*}
     p(t_i, X_j) = \frac{tf_{i,j} + \lambda}{|X_j| + \lambda \cdot |V|}
   \end{gather*}
