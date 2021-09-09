@@ -54,7 +54,6 @@ In Table~\ref{tab:silhouette-based_clustering}, the r-ratio is clearly too high,
 This can be due to the fact that the rank list used for the clustering is not perfect (AP $\neq 1$).
 
 \begin{table}
-  \centering
   \caption{Silhouette-based clustering evaluation (Maximal Silhouette, $\alpha = 0$), mean $B^3_{F_1}$/$r_{diff}$}
   \label{tab:silhouette-based_clustering}
 
@@ -64,17 +63,20 @@ This can be due to the fact that the rank list used for the clustering is not pe
            & \multicolumn{3}{c}{Linkage criterion} \\
     Corpus    & Single     & Average   & Complete \\
     \midrule
-    Oxquarry  & 0.76/0.18 & 0.79/0.12 & 0.78/0.13 \\
-    Brunet    & 0.69/0.28 & 0.71/0.26 & 0.73/0.23 \\
-    St-Jean A & 0.59/0.33 & 0.64/0.24 & 0.61/0.26 \\
-    St-Jean B & 0.91/0.08 & 0.91/0.06 & 0.90/0.06 \\
+    Oxquarry  & 0.76/0.18 & \textbf{0.79/0.12} & 0.78/0.13 \\
+    Brunet    & 0.69/0.28 & 0.71/0.26 & \textbf{0.73/0.23} \\
+    St-Jean A & 0.59/0.33 & \textbf{0.64/0.24} & 0.61/0.26 \\
+    St-Jean B & \textbf{0.91/0.08} & \textbf{0.91/0.06} & 0.90/0.06 \\
     \midrule
-    Absolute mean & 0.74/0.22 & 0.76/0.17 & 0.75/0.17 \\
+    Absolute mean & 0.74/0.22 & \textbf{0.76/0.17} & 0.75/0.17 \\
     \midrule
     \textit{Upper bound} & \textit{0.83/0.00} & \textit{0.88/0.00} & \textit{0.87/0.00} \\
     \bottomrule
   \end{tabular}
   }
+  \vspace{0.2cm}
+
+  \textbf{In bold:} For each corpus, the criterion with the largest $B^3_{F_1}$
 \end{table}
 
 \subsection{Tweak for Authorship Clustering}
@@ -187,8 +189,7 @@ The $B^3_{F_1}$ for the average linkage criterion is in average $2\%$ better tha
     \bottomrule
   \end{tabular}
   }
-
   \vspace{0.2cm}
 
-  \textit{In bold: For each corpus, the criterion with the largest $B^3_{F_1}$}
+  \textbf{In bold:} For each corpus, the criterion with the largest $B^3_{F_1}$
 \end{table}

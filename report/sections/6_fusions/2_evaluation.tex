@@ -21,10 +21,10 @@ If the rank lists produced by a fusion overcome the Single-Max evaluation, it me
 This represents the best case where the fusion actually improve the results.
 
 If the rank lists produced by a fusion overcome the Single-Mean evaluation, it means that the fused rank list have better results than the expected value of the individual rank lists (when a rank list is selected randomly).
-When using the fusions for unsupervised problems (such as clustering), it is a good approach since it gives stability.
+When using the fusion for unsupervised problems (such as clustering), it is a good approach since it gives stability.
 
 For this experiment, the St-Jean A and St-Jean B corpora are used.
-The results of every fusion combinations using the proposed rank list and strategies are graphically presented in Figure~\ref{fig:fusions}.
+The results of every fusion combinations using the proposed rank list and strategies are graphically presented in Figure~\ref{fig:fusion}.
 
 Statistics on the 126 fusions on each metric and fusion schemes are resumed in Tables~\ref{tab:fusion_stats_A}/\ref{tab:fusion_stats_B}.
 These tables contain: the minimal value (min), the average and the standard deviation (Avg$\pm$Std), the maximal value, the argmin and argmax for the metrics (using ids of the rank list see Table~\ref{tab:9rl} in Section~\ref{sec:individual_methods_summary}).
@@ -38,7 +38,7 @@ The Z-Score fusion, produce for every metrics better results than both Single-Me
 In the other hand, the regression fusion, have an average increase of $\sim 3$\% in average precision for the Single-Mean and have a decrease of around $1\%$ when comparing to the Single-Max.
 The standard deviation of the regression fusion is greater than the Z-Score fusion, this indicates a slightly greater instability in the results.
 
-A general observation of the Tables~\ref{tab:fusion_stats_A} and \ref{tab:fusion_stats_B} and Figure~\ref{fig:fusions}, show that the HPrec tends to be the least easy metric to increase when using the fusion.
+A general observation of the Tables~\ref{tab:fusion_stats_A} and \ref{tab:fusion_stats_B} and Figure~\ref{fig:fusion}, show that the HPrec tends to be the least easy metric to increase when using the fusion.
 The results of fusing multiple rank lists when using regression fusion strategy tends to indicate that the resulting rank list has in average an equivalent quality as the best rank list used for the fusion, with some slight decreases.
 This can be further confirmed by looking at Table~\ref{tab:fusion_B}, line Regression/T/Single-Max contains more ties than other lines.
 
@@ -54,7 +54,7 @@ Overall, The Z-Score fusion give best results.
   \label{ex:fusion_eval}
 
   Imagine a simple scenario where three individual rank lists are fused two by two.
-  This corresponds to $C^3_2 = 3$ possible fusions combinations.
+  This corresponds to $C^3_2 = 3$ possible fusion combinations.
 
   \subcaption{Rank lists}
   The three individual rank lists have the following AP evaluation.
@@ -153,7 +153,7 @@ Overall, The Z-Score fusion give best results.
 \begin{figure}
   \centering
   \caption{Evaluation of every combination of 4 rank lists fusions using Z-Score and Regression}
-  \label{fig:fusions}
+  \label{fig:fusion}
 
   \subcaption{Testing on St-Jean A (training St-Jean B, for the Regression fusion)}
   \label{fig:fusion_evaluation_A}
