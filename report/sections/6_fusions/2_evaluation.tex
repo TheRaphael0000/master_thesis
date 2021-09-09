@@ -414,6 +414,7 @@ This strategy may be appliable on harder corpus such as the PAN 16 corpus or wit
   \centering
   \caption{Maximal gain on the average precision using the veto and Argmax}
   \label{tab:veto}
+  \resizebox{\linewidth}{!}{
   \begin{tabular}{l c c}
     \toprule
                    & \multicolumn{2}{c}{Train,Test} \\
@@ -425,6 +426,7 @@ This strategy may be appliable on harder corpus such as the PAN 16 corpus or wit
     Set to $-\inf$ & -2.40e-02/0.01 & -1.14e-01/0.01 \\
     \bottomrule
   \end{tabular}
+  }
 \end{table}
 
 \subsection{Soft-veto Evaluation}
@@ -541,6 +543,7 @@ But when fused, the gain will not be positive, since fusing \textit{bad rank lis
   \label{tab:rl_correlations_regression}
 
   \subcaption{Single-Mean}
+  \resizebox{\linewidth}{!}{
   \begin{tabular}{l r r r r r}
     \toprule
     Corpus/Method & $r$-value & $p$-value & Std. error \\
@@ -550,10 +553,12 @@ But when fused, the gain will not be positive, since fusing \textit{bad rank lis
     St-Jean  & -0.93 & 9.30e-17 & 2.49e-02 \\
     \bottomrule
   \end{tabular}
+  }
 
   \vspace{0.5cm}
 
   \subcaption{Single-Max}
+  \resizebox{\linewidth}{!}{
   \begin{tabular}{l r r r r r}
     \toprule
     Corpus/Method & $r$-value & $p$-value & Std. error \\
@@ -563,4 +568,5 @@ But when fused, the gain will not be positive, since fusing \textit{bad rank lis
     St-Jean   & -0.86 & 1.60e-11 & 3.72e-02 \\
     \bottomrule
   \end{tabular}
+  }
 \end{table}
