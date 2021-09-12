@@ -16,6 +16,13 @@ For the clustering part, multiple methods based on hierarchical clustering are p
   Regression-based clustering: A supervised clustering technique which takes clues from previous corpora analysis to lead the clustering.
 \end{itemize}
 
+The hierarchical clustering is the simplest connectivity model to achieve clustering from a distance matrix.
+As explained in Section~\ref{sec:distances_matrix}, rank lists and distance matrices are related, thus after computing rank lists this clustering method seems to us to be the right choice.
+Additionally the hierarchical clustering model can use any distance measure which allow flexibility.
+
+The main draw back of this method is the computation cost to compute the rank lists / distance matrices ($O(n^2)$).
+This problem is partially ignorable since this study focus on texts which are easily to handle, for example when compared to images.
+
 \subfile{1_hierarchical_clustering}
 \subfile{2_silhouette-based_clustering}
 \subfile{3_distribution-based_clustering}
